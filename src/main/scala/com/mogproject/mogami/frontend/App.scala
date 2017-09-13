@@ -1,5 +1,8 @@
 package com.mogproject.mogami.frontend
 
+import com.mogproject.mogami.frontend.board.SVGBoard
+import org.scalajs.dom
+
 import scala.scalajs.js.JSApp
 
 /**
@@ -7,6 +10,7 @@ import scala.scalajs.js.JSApp
   */
 object App extends JSApp {
   override def main(): Unit = {
-    println("hello")
+    val rootElem = dom.document.getElementById("app")
+    SVGBoard(600).materialize(rootElem)
   }
 }
