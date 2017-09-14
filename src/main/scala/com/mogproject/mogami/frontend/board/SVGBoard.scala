@@ -4,9 +4,10 @@ import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.core.{Piece, Square}
 import com.mogproject.mogami.frontend.WebComponent
 import com.mogproject.mogami.frontend.coordinate.{Coord, Rect}
-import org.scalajs.dom.Element
+import org.scalajs.dom.{Element, Node}
 import org.scalajs.dom.svg.{Circle, Line}
 
+import scala.collection.mutable
 import scalatags.JsDom.all._
 import scalatags.JsDom.TypedTag
 import scalatags.JsDom.svgTags._
@@ -18,6 +19,10 @@ import scalatags.JsDom.svgAttrs
 class SVGBoard extends WebComponent {
 
   import SVGBoard._
+
+  // Local variables
+  private[this] val pieceMap: mutable.Map[Square, Node] = mutable.Map.empty
+
 
   //
   // Utility
@@ -55,14 +60,24 @@ class SVGBoard extends WebComponent {
     val elems = pieces.map { case (sq, p) =>
       val path = s"assets/img/p/${pieceFace}/${p.ptype.toCsaString}.svg"
       val rc = getRect(9 - sq.file, sq.rank - 1).toInnerRect(PIECE_FACE_SIZE, PIECE_FACE_SIZE)
-      if (p.owner.isBlack ^ flip) {
+      sq -> (if (p.owner.isBlack ^ flip) {
         rc.toSVGImage(svgAttrs.xLinkHref := path)
       } else {
         (-rc).toSVGImage(svgAttrs.xLinkHref := path, cls := "flip")
-      }
+      })
     }
 
-    elems.foreach(elem => svgElement.appendChild(elem.render))
+    pieceMap.clear()
+    elems.foreach { case (sq, elem) =>
+      val ee = elem.render
+      pieceMap += (sq -> ee)
+      svgElement.appendChild(ee)
+    }
+  }
+
+  def clearPieces(): Unit = {
+    pieceMap.values.foreach(svgElement.removeChild)
+    pieceMap.clear()
   }
 
 }
