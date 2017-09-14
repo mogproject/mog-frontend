@@ -1,1 +1,31 @@
 
+
+
+
+
+/*
+ * SVG Elements
+ */
+
+.board-border {
+  fill: none;
+  stroke: black;
+  stroke-width: 2px;
+}
+
+.board-line {
+  stroke: black;
+}
+
+.board-circle {
+  fill: black;
+}
+
+.flip {
+  -ms-transform: rotate(180deg); /* IE 9 */
+  -ms-transform-origin: left top; /* IE 9 */
+  -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+  -webkit-transform-origin: left top; /* Chrome, Safari, Opera */
+  transform: rotate(180deg);
+  transform-origin: left top;
+}

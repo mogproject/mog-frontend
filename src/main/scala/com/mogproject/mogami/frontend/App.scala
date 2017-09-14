@@ -1,5 +1,6 @@
 package com.mogproject.mogami.frontend
 
+import com.mogproject.mogami.core.state.State
 import com.mogproject.mogami.frontend.board.SVGBoard
 import org.scalajs.dom
 
@@ -11,6 +12,9 @@ import scala.scalajs.js.JSApp
 object App extends JSApp {
   override def main(): Unit = {
     val rootElem = dom.document.getElementById("app")
-    SVGBoard(600).materialize(rootElem)
+    val board = SVGBoard(600)
+    board.materialize(rootElem)
+    board.drawPieces(State.HIRATE.board)
+
   }
 }
