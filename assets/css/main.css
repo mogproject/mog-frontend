@@ -10,11 +10,12 @@
 .board-border {
   fill: none;
   stroke: black;
-  stroke-width: 2px;
+  stroke-width: 10px;
 }
 
 .board-line {
   stroke: black;
+  stroke-width: 5px;
 }
 
 .board-circle {
