@@ -18,6 +18,7 @@ object App extends JSApp {
     rootElem.appendChild(div(width := 400.px, board.element).render)
 
     board.drawPieces(State.HIRATE.board)
+    board.drawPieces(State.HIRATE.board.mapValues(_.promoted))
     // board.clearPieces()
   }
 }

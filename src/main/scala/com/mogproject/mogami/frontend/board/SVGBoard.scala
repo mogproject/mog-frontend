@@ -57,6 +57,8 @@ class SVGBoard extends WebComponent {
   override lazy val element: Element = svgElement
 
   def drawPieces(pieces: Map[Square, Piece], flip: Boolean = false, pieceFace: String = "jp1"): Unit = {
+    clearPieces()
+
     val elems = pieces.map { case (sq, p) =>
       val path = s"assets/img/p/${pieceFace}/${p.ptype.toCsaString}.svg"
       val rc = getRect(9 - sq.file, sq.rank - 1).toInnerRect(PIECE_FACE_SIZE, PIECE_FACE_SIZE)
