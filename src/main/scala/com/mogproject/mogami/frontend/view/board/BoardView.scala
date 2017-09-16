@@ -14,13 +14,13 @@ trait BoardView extends SAMView {
 
   def initialize(): Unit = {
     val rootElem = dom.document.getElementById("app")
-    rootElem.appendChild(board.element)
+    board.materialize(rootElem)
 
     board.drawPieces(State.HIRATE.board)
-    board.drawPieces(State.HIRATE.board.mapValues(_.promoted))
 
     dom.window.setTimeout(() => board.resize(200), 2000)
     dom.window.setTimeout(() => board.resize(400), 4000)
+    dom.window.setTimeout(() => board.drawPieces(State.HIRATE.board.mapValues(_.promoted)), 8000)
   }
 
 }

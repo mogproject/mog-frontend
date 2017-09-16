@@ -17,7 +17,7 @@ trait SVGBoardEffector {
     val elem = getRect(square).shrink(12).toSVGRect(cls := "board-cursor").render
     stopCursorEffect()
     cursorElem = Some(elem)
-    svgElement.appendChild(elem)
+    svgElement.insertBefore(elem, borderElement)
   }
 
   def stopCursorEffect(): Unit = {
