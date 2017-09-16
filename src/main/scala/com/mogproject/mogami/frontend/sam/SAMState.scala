@@ -3,6 +3,10 @@ package com.mogproject.mogami.frontend.sam
 /**
   *
   */
-trait SAMState {
-  def render(model: SAMModel, view: SAMView): (SAMState, Option[SAMAction])
+trait SAMState[M <: SAMModel] {
+  def model: M
+
+  def view: SAMView
+
+  def render(newModel: M): (SAMState[M], Option[SAMAction[M]])
 }

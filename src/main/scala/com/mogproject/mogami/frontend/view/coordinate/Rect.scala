@@ -1,4 +1,4 @@
-package com.mogproject.mogami.frontend.coordinate
+package com.mogproject.mogami.frontend.view.coordinate
 
 import org.scalajs.dom.raw.{SVGImageElement, SVGLineElement}
 import org.scalajs.dom.svg.RectElement
@@ -36,4 +36,11 @@ case class Rect(leftTop: Coord, width: Int, height: Int) {
   def toInnerRect(width: Int, height: Int) = Rect(Coord(left + (this.width - width) / 2, top + (this.height - height) / 2), width, height)
 
   def unary_- : Rect = copy(leftTop = -rightBottom)
+
+  /**
+    * Create a smaller rect.
+    * @param d px
+    * @return
+    */
+  def shrink(d: Int): Rect = Rect(Coord(left + d, top + d), width - 2 * d + 1, height - 2 * d + 1)
 }

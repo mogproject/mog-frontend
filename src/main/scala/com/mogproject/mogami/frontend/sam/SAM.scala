@@ -7,46 +7,55 @@ import scala.annotation.tailrec
   *
   * @see http://sam.js.org/
   */
-object SAM {
+class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
 
-  private[this] final val VERBOSE_LOG_ENABLED: Boolean = false
-
-  private[this] def debug(message: String): Unit = if (VERBOSE_LOG_ENABLED) println(message)
-
-  private[this] var view: SAMView = NullView
-
-  private[this] var state: SAMState = NullState
-
-  private[this] var model: SAMModel = NullModel
+  override def doAction[N <: SAMModel](action: SAMAction[N]): Unit = action match {
+    case a: SAMAction[M] => doActionImpl(a)
+    case _ => // do nothing
+  }
 
   @tailrec
-  def doAction(action: SAMAction): Unit = {
-    debug(s"doAction: ${action}")
+  private[this] def doActionImpl(action: SAMAction[M]): Unit = {
+    SAM.debug(s"doAction: ${action}")
 
-    val result = action.execute(model)
-    debug(s"result: ${result}")
+    val result = action.execute(state.model)
+    SAM.debug(s"result: ${result}")
 
     result match {
       case Some(nextModel) =>
-        val (nextState, nextAction) = state.render(nextModel, view)
-        debug(s"nextState: ${nextState}")
-        debug(s"nextAction: ${nextAction}")
+        val (nextState, nextAction) = state.render(nextModel)
+        SAM.debug(s"nextState: ${nextState}")
+        SAM.debug(s"nextAction: ${nextAction}")
 
         state = nextState
-        model = nextModel
+
         nextAction match {
-          case Some(a) => doAction(a)
+          case Some(a) => doActionImpl(a)
           case None =>
         }
       case None =>
     }
   }
+}
 
-  def initialize(newView: SAMView, newState: SAMState, newModel: SAMModel): Unit = {
-    view = newView
-    state = newState
-    model = newModel
-    doAction(NullAction)
+object SAM {
+
+  private[this] final val VERBOSE_LOG_ENABLED: Boolean = false
+
+  protected def debug(message: String): Unit = if (VERBOSE_LOG_ENABLED) println(message)
+
+  private[this] var samImpl: SAMLike = new SAMLike {}
+
+  /**
+    * Do action
+    * @param action action
+    * @tparam M model
+    */
+  def doAction[M <: SAMModel](action: SAMAction[M]): Unit = samImpl.doAction(action)
+
+  def initialize[M <: SAMModel](state: SAMState[M]): Unit = {
+    samImpl = new SAM(state)
+    state.view.initialize()
   }
 }
 

@@ -1,4 +1,4 @@
-package com.mogproject.mogami.frontend.coordinate
+package com.mogproject.mogami.frontend.view.coordinate
 
 /**
   * 2-D coordinates

@@ -22,6 +22,12 @@
   fill: black;
 }
 
+.board-cursor {
+  fill: none;
+  stroke: #e1b265;
+  stroke-width: 18px;
+}
+
 .flip {
   -ms-transform: rotate(180deg); /* IE 9 */
   -ms-transform-origin: left top; /* IE 9 */

@@ -3,6 +3,6 @@ package com.mogproject.mogami.frontend.sam
 /**
   *
   */
-trait SAMAction {
-  def execute(model: SAMModel): Option[SAMModel]
+trait SAMAction[M <: SAMModel] {
+  def execute(model: M): Option[M]
 }
