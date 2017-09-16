@@ -22,12 +22,6 @@
   fill: black;
 }
 
-.board-cursor {
-  fill: none;
-  stroke: #e1b265;
-  stroke-width: 18px;
-}
-
 .flip {
   -ms-transform: rotate(180deg); /* IE 9 */
   -ms-transform-origin: left top; /* IE 9 */
@@ -35,4 +29,31 @@
   -webkit-transform-origin: left top; /* Chrome, Safari, Opera */
   transform: rotate(180deg);
   transform-origin: left top;
+}
+
+/*
+ * SVG Effects
+ */
+
+.board-cursor {
+  fill: none;
+  stroke: #e1b265;
+  stroke-width: 18px;
+}
+
+.board-flash {
+  fill: none;
+  stroke: #805819;
+  stroke-width: 18px;
+}
+
+.board-selected {
+  fill: #e1b265;
+  stroke: none;
+}
+
+.board-move {
+  fill: none;
+  stroke: #805819;
+  stroke-width: 20px;
 }

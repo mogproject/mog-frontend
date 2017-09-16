@@ -12,8 +12,11 @@ case class BoardState(model: BoardModel = BoardModel(None), view: BoardView = ne
   override def render(newModel: BoardModel): (SAMState[BoardModel], Option[SAMAction[BoardModel]]) = {
     newModel.activeCursor match {
       case x if x == model.activeCursor =>
-      case Some(sq) => view.board.startCursorEffect(sq)
-      case None => view.board.stopCursorEffect()
+      case Some(sq) =>
+        view.board.effect.startCursorEffect(sq)
+        view.board.effect.startFlashCursorEffect(sq)
+      case None =>
+        view.board.effect.stopCursorEffect()
     }
 
     (copy(model = newModel), None)

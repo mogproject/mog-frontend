@@ -27,11 +27,16 @@ case class Rect(leftTop: Coord, width: Int, height: Int) {
 
   def rightBottom: Coord = Coord(right, bottom)
 
-  def toSVGRect(modifier: Modifier*): TypedTag[RectElement] = rect(Seq(svgAttrs.x := left, svgAttrs.y := top, svgAttrs.width := width, svgAttrs.height := height) ++ modifier: _*)
+  def center: Coord = Coord(left + width / 2, top + height / 2)
 
-  def toSVGLine(modifier: Modifier*): TypedTag[SVGLineElement] = line(Seq(svgAttrs.x1 := left, svgAttrs.y1 := top, svgAttrs.x2 := right, svgAttrs.y2 := bottom) ++ modifier: _*)
+  def toSVGRect(modifier: Modifier*): TypedTag[RectElement] =
+    rect(Seq(svgAttrs.x := left, svgAttrs.y := top, svgAttrs.width := width, svgAttrs.height := height) ++ modifier: _*)
 
-  def toSVGImage(modifier: Modifier*): TypedTag[SVGImageElement] = image(Seq(svgAttrs.x := left, svgAttrs.y := top, svgAttrs.width := width, svgAttrs.height := height) ++ modifier: _*)
+  def toSVGLine(modifier: Modifier*): TypedTag[SVGLineElement] =
+    line(Seq(svgAttrs.x1 := left, svgAttrs.y1 := top, svgAttrs.x2 := right, svgAttrs.y2 := bottom) ++ modifier: _*)
+
+  def toSVGImage(modifier: Modifier*): TypedTag[SVGImageElement] =
+    image(Seq(svgAttrs.x := left, svgAttrs.y := top, svgAttrs.width := width, svgAttrs.height := height) ++ modifier: _*)
 
   def toInnerRect(width: Int, height: Int) = Rect(Coord(left + (this.width - width) / 2, top + (this.height - height) / 2), width, height)
 

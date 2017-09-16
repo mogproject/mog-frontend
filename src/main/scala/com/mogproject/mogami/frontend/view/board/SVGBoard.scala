@@ -11,7 +11,7 @@ import org.scalajs.dom.{Element, Node}
 
 import scala.collection.mutable
 import scalatags.JsDom.all._
-import scalatags.JsDom.svgTags._
+import scalatags.JsDom.svgTags.svg
 import scalatags.JsDom.{TypedTag, svgAttrs}
 
 /**
@@ -41,7 +41,6 @@ class SVGBoard extends WebComponent with SVGBoardEffector with SVGBoardEventHand
   //
   // Operation
   //
-
   def setFlip(flip: Boolean): Unit = boardFlipped = flip
 
   def resize(newWidth: Int): Unit = element.asInstanceOf[Div].style.width = newWidth.px
@@ -71,8 +70,7 @@ class SVGBoard extends WebComponent with SVGBoardEffector with SVGBoardEventHand
   } yield r.toSVGLine(cls := "board-line")
 
   private[this] lazy val boardCircles: Seq[TypedTag[Circle]] = (0 to 3).map { i =>
-    val pc = getCoord(3 << (i & 1), 3 << ((i >> 1) & 1))
-    circle(cls := "board-circle", svgAttrs.cx := pc.x, svgAttrs.cy := pc.y, svgAttrs.r := CIRCLE_SIZE)
+    getCoord(3 << (i & 1), 3 << ((i >> 1) & 1)).toSVGCircle(CIRCLE_SIZE, cls := "board-circle")
   }
 
   protected val borderElement: RectElement = boardBoarder.render
