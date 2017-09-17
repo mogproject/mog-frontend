@@ -20,7 +20,9 @@ class BoardTestView extends WebComponent {
 
   val squareInput: Input = input(tpe := "text", cls := "form-control").render
 
-  private[this] def getSquare: Option[Square] = Try(Square.parseCsaString(squareInput.value)).toOption
+  private[this] def getSquare: Option[Square] = getSquares.headOption
+
+  private[this] def getSquares: Set[Square] = squareInput.value.grouped(2).flatMap(s => Try(Square.parseCsaString(s)).toOption).toSet
 
   // Base element
   override def element: Element = div(
@@ -52,8 +54,32 @@ class BoardTestView extends WebComponent {
         div(cls := "col-md-3", squareInput)
       ),
       div(cls := "row",
+        div(cls := "col-md-3", label("Cursor")),
+        div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getSquare.foreach(board.effect.cursorEffector.start) }, "Start")),
+        div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.cursorEffector.stop() }, "Stop"))
+      ),
+      div(cls := "row",
         div(cls := "col-md-3", label("Flash")),
-        div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getSquare.foreach(board.effect.startFlashCursorEffect) }, "Start"))
+        div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getSquare.foreach(board.effect.flashEffector.start) }, "Start"))
+      ),
+      div(cls := "row",
+        div(cls := "col-md-3", label("Selected")),
+        div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getSquare.foreach(board.effect.selectedEffector.start) }, "Start")),
+        div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.selectedEffector.stop() }, "Stop"))
+      ),
+      div(cls := "row",
+        div(cls := "col-md-3", label("Selecting")),
+        div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getSquare.foreach(board.effect.selectingEffector.start) }, "Start")),
+        div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.selectingEffector.stop() }, "Stop"))
+      ),
+      div(cls := "row",
+        div(cls := "col-md-3", label("Move")),
+        div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getSquare.foreach(board.effect.moveEffector.start) }, "Start"))
+      ),
+      div(cls := "row",
+        div(cls := "col-md-3", label("Last Move")),
+        div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.lastMoveEffector.start(getSquares) }, "Start")),
+        div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.lastMoveEffector.stop() }, "Stop"))
       )
 
     )

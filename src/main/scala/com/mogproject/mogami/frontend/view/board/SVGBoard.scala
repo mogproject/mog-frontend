@@ -38,7 +38,7 @@ class SVGBoard extends WebComponent with SVGBoardEffector with SVGBoardEventHand
 
   protected def getRect(fileIndex: Int, rankIndex: Int): Rect = Rect(getCoord(fileIndex, rankIndex), PIECE_WIDTH, PIECE_HEIGHT)
 
-  protected def getRect(square: Square): Rect = {
+  def getRect(square: Square): Rect = {
     val s = boardFlipped.when[Square](!_)(square)
     getRect(9 - s.file, s.rank - 1)
   }
@@ -55,9 +55,18 @@ class SVGBoard extends WebComponent with SVGBoardEffector with SVGBoardEventHand
   // Operation
   //
   def setFlip(flip: Boolean): Unit = if (boardFlipped != flip) {
-    // re-draw pieces
     boardFlipped = flip
+
+    // clear effects
+    effect.cursorEffector.stop()
+    effect.selectedEffector.stop()
+    effect.selectingEffector.stop()
+    effect.lastMoveEffector.restart()
+
+    // re-draw pieces
     drawPieces(currentPieces, currentPieceFace)
+
+    // todo: indexes, de-select squares
   }
 
   def resize(newWidth: Int): Unit = element.asInstanceOf[Div].style.width = newWidth.px
@@ -86,9 +95,9 @@ class SVGBoard extends WebComponent with SVGBoardEffector with SVGBoardEventHand
     getCoord(3 << (i & 1), 3 << ((i >> 1) & 1)).toSVGCircle(CIRCLE_SIZE, cls := "board-circle")
   }
 
-  protected val borderElement: RectElement = boardBoarder.render
+  val borderElement: RectElement = boardBoarder.render
 
-  protected val svgElement: SVGElement = svg(
+  val svgElement: SVGElement = svg(
     svgAttrs.width := 100.pct,
     svgAttrs.height := 100.pct,
     svgAttrs.viewBox := s"0 0 ${BOARD_WIDTH + MARGIN_SIZE * 2} ${BOARD_HEIGHT + MARGIN_SIZE * 2}",
