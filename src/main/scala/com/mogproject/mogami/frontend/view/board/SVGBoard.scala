@@ -23,6 +23,10 @@ class SVGBoard extends WebComponent with SVGBoardEffector with SVGBoardEventHand
   import SVGBoard._
 
   // Local variables
+  private[this] var currentPieces: Map[Square, Piece] = Map.empty
+
+  private[this] var currentPieceFace: String = "jp1"
+
   private[this] val pieceMap: mutable.Map[Square, Node] = mutable.Map.empty
 
   protected var boardFlipped: Boolean = false
@@ -50,13 +54,19 @@ class SVGBoard extends WebComponent with SVGBoardEffector with SVGBoardEventHand
   //
   // Operation
   //
-  def setFlip(flip: Boolean): Unit = boardFlipped = flip
+  def setFlip(flip: Boolean): Unit = if (boardFlipped != flip) {
+    // re-draw pieces
+    boardFlipped = flip
+    drawPieces(currentPieces, currentPieceFace)
+  }
 
   def resize(newWidth: Int): Unit = element.asInstanceOf[Div].style.width = newWidth.px
 
   def drawPieces(pieces: Map[Square, Piece], pieceFace: String = "jp1"): Unit = {
     clearPieces()
 
+    currentPieces = pieces
+    currentPieceFace = pieceFace
     pieceMap ++= pieces.map { case (sq, p) => sq -> getPieceFace(sq, p, pieceFace).render }
     pieceMap.values.foreach(svgElement.appendChild)
   }

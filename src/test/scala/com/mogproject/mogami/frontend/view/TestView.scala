@@ -12,21 +12,24 @@ import org.scalajs.dom.Element
   */
 case class TestView(rootElem: Element) extends SAMView {
 
-  lazy val board = new SVGBoard()
+  lazy val boardTest = new BoardTestView
+
+  def board = boardTest.board
 
   override def initialize(): Unit = {
 
-    board.materialize(rootElem)
+    boardTest.materialize(rootElem)
+    board.resize(400)
 
-    board.drawPieces(State.HIRATE.board)
-
-    dom.window.setTimeout(() => board.resize(200), 2000)
-    dom.window.setTimeout(() => board.resize(400), 4000)
-    dom.window.setTimeout(() => board.drawPieces(State.HIRATE.board.mapValues(_.promoted)), 8000)
-
-    board.effect.startSelectedSquareEffect(Square(7, 7))
-    dom.window.setTimeout(() => board.effect.startMoveEffect(Square(3, 3)), 5000)
-    board.effect.startSelectingEffect(Square(7, 7))
-    board.effect.startLastMoveEffect(Seq(Square(1, 2), Square(1, 3)))
+    //    board.drawPieces(State.HIRATE.board)
+    //
+    //    dom.window.setTimeout(() => board.resize(200), 2000)
+    //    dom.window.setTimeout(() => board.resize(400), 4000)
+    //    dom.window.setTimeout(() => board.drawPieces(State.HIRATE.board.mapValues(_.promoted)), 8000)
+    //
+    //    board.effect.startSelectedSquareEffect(Square(7, 7))
+    //    dom.window.setTimeout(() => board.effect.startMoveEffect(Square(3, 3)), 5000)
+    //    board.effect.startSelectingEffect(Square(7, 7))
+    //    board.effect.startLastMoveEffect(Set(Square(1, 2), Square(1, 3)))
   }
 }

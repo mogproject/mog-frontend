@@ -34,7 +34,7 @@ trait SVGBoardEffector {
 
     private[this] var moveEffectElem: Option[SVGCircleElement] = None
 
-    private[this] var lastMoveElems: Seq[RectElement] = Seq.empty
+    private[this] var lastMoveElems: Set[RectElement] = Set.empty
 
 
     def startCursorEffect(square: Square): Unit = {
@@ -124,7 +124,7 @@ trait SVGBoardEffector {
       selectingElem = None
     }
 
-    def startLastMoveEffect(lastMoveSquares: Seq[Square]): Unit = {
+    def startLastMoveEffect(lastMoveSquares: Set[Square]): Unit = {
       val elems = lastMoveSquares.map(getRect(_).toSVGRect(cls := "board-last").render)
       stopLastMoveEffect()
       elems.foreach(insertElement)
@@ -133,7 +133,7 @@ trait SVGBoardEffector {
 
     def stopLastMoveEffect(): Unit = {
       lastMoveElems.foreach(removeElement)
-      lastMoveElems = Seq.empty
+      lastMoveElems = Set.empty
     }
 
   }
