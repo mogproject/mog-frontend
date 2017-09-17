@@ -1,11 +1,12 @@
 package com.mogproject.mogami.frontend.view.board
 
+import com.mogproject.mogami.Ptype
 import com.mogproject.mogami.core.{Piece, Square}
 import com.mogproject.mogami.frontend.WebComponent
 import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom.html.Div
-import org.scalajs.dom.raw.SVGElement
+import org.scalajs.dom.raw.{SVGElement, SVGImageElement}
 import org.scalajs.dom.svg.{Circle, Line, RectElement}
 import org.scalajs.dom.{Element, Node}
 
@@ -38,6 +39,14 @@ class SVGBoard extends WebComponent with SVGBoardEffector with SVGBoardEventHand
     getRect(9 - s.file, s.rank - 1)
   }
 
+  protected def getPieceFacePath(ptype: Ptype, pieceFace: String): String = s"assets/img/p/${pieceFace}/${ptype.toCsaString}.svg"
+
+  protected def getPieceFace(square: Square, piece: Piece, pieceFace: String, modifiers: Modifier*): TypedTag[SVGImageElement] = {
+    val rc = getRect(square).toInnerRect(PIECE_FACE_SIZE, PIECE_FACE_SIZE)
+    val as = modifiers :+ (svgAttrs.xLinkHref := getPieceFacePath(piece.ptype, pieceFace))
+    (piece.owner.isBlack ^ boardFlipped).fold(rc.toSVGImage(as), (-rc).toSVGImage(as, cls := "flip"))
+  }
+
   //
   // Operation
   //
@@ -46,15 +55,9 @@ class SVGBoard extends WebComponent with SVGBoardEffector with SVGBoardEventHand
   def resize(newWidth: Int): Unit = element.asInstanceOf[Div].style.width = newWidth.px
 
   def drawPieces(pieces: Map[Square, Piece], pieceFace: String = "jp1"): Unit = {
-    val elems = pieces.map { case (sq, p) =>
-      val path = s"assets/img/p/${pieceFace}/${p.ptype.toCsaString}.svg"
-      val rc = getRect(sq).toInnerRect(PIECE_FACE_SIZE, PIECE_FACE_SIZE)
-      val as = svgAttrs.xLinkHref := path
-      sq -> (p.owner.isBlack ^ boardFlipped).fold(rc.toSVGImage(as), (-rc).toSVGImage(as, cls := "flip"))
-    }
-
     clearPieces()
-    pieceMap ++= elems.mapValues(_.render)
+
+    pieceMap ++= pieces.map { case (sq, p) => sq -> getPieceFace(sq, p, pieceFace).render }
     pieceMap.values.foreach(svgElement.appendChild)
   }
 

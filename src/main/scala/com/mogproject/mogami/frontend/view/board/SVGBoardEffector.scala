@@ -4,7 +4,7 @@ import com.mogproject.mogami.Square
 import com.mogproject.mogami.frontend.api.AnimateElementExtended
 import org.scalajs.dom
 import org.scalajs.dom.Element
-import org.scalajs.dom.raw.{SVGCircleElement, SVGElement}
+import org.scalajs.dom.raw.SVGCircleElement
 import org.scalajs.dom.svg.RectElement
 
 import scalatags.JsDom.all._
