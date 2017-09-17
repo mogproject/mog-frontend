@@ -25,6 +25,8 @@ trait BoardView extends SAMView {
 
     board.effect.startSelectedSquareEffect(Square(7, 7))
     dom.window.setTimeout(() => board.effect.startMoveEffect(Square(3, 3)), 5000)
+    board.effect.startSelectingEffect(Square(7, 7))
+    board.effect.startLastMoveEffect(Seq(Square(1, 2), Square(1, 3)))
   }
 
 }

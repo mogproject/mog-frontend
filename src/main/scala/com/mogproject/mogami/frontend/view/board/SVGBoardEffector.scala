@@ -30,7 +30,12 @@ trait SVGBoardEffector {
 
     private[this] var selectedElem: Option[RectElement] = None
 
+    private[this] var selectingElem: Option[SVGCircleElement] = None
+
     private[this] var moveEffectElem: Option[SVGCircleElement] = None
+
+    private[this] var lastMoveElems: Seq[RectElement] = Seq.empty
+
 
     def startCursorEffect(square: Square): Unit = {
       val elem = getRect(square).shrink(12).toSVGRect(cls := "board-cursor").render
@@ -86,6 +91,49 @@ trait SVGBoardEffector {
       animateElems.foreach(_.beginElement())
 
       dom.window.setTimeout(() => removeElement(elem), 400)
+    }
+
+    def startSelectingEffect(square: Square): Unit = {
+      import scalatags.JsDom.svgAttrs._
+
+      val sr = SVGBoard.PIECE_WIDTH * 2 / 5
+
+      val props = Seq(
+        dur := "3s",
+        begin := "indefinite",
+        fill := "freeze",
+        repeatCount := "indefinite"
+      )
+
+      val animateElems = Seq(
+        animate(attributeName := "r", to := SVGBoard.PIECE_WIDTH * 2, props),
+        animate(attributeName := "opacity", from := 1, to := -0.5, props)
+      ).map(_.render.asInstanceOf[AnimateElementExtended])
+
+      val elem = getRect(square).center.toSVGCircle(sr, cls := "board-move", animateElems).render
+      moveEffectElem = Some(elem)
+
+      stopSelectingEffect()
+      appendElement(elem)
+      animateElems.foreach(_.beginElement())
+      selectingElem = Some(elem)
+    }
+
+    def stopSelectingEffect(): Unit = {
+      selectingElem.foreach(removeElement)
+      selectingElem = None
+    }
+
+    def startLastMoveEffect(lastMoveSquares: Seq[Square]): Unit = {
+      val elems = lastMoveSquares.map(getRect(_).toSVGRect(cls := "board-last").render)
+      stopLastMoveEffect()
+      elems.foreach(insertElement)
+      lastMoveElems = elems
+    }
+
+    def stopLastMoveEffect(): Unit = {
+      lastMoveElems.foreach(removeElement)
+      lastMoveElems = Seq.empty
     }
 
   }

@@ -52,6 +52,11 @@
   stroke: none;
 }
 
+.board-last {
+  fill: #f0f0f0;
+  stroke: none;
+}
+
 .board-move {
   fill: none;
   stroke: #805819;
