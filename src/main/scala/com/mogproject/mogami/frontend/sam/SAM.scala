@@ -5,6 +5,11 @@ import scala.annotation.tailrec
 /**
   * Implementation of the SAM (State-Action-Model) pattern
   *
+  *    ______Action_______
+  *   |        :         |
+  * Model      :       View
+  *   |______State______|
+  *
   * @see http://sam.js.org/
   */
 class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {

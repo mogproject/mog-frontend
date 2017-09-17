@@ -1,4 +1,4 @@
-package com.mogproject.mogami.frontend
+package com.mogproject.mogami.frontend.view
 
 import org.scalajs.dom.Element
 

@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.view.board
 
 import com.mogproject.mogami.Ptype
 import com.mogproject.mogami.core.{Piece, Square}
-import com.mogproject.mogami.frontend.WebComponent
+import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom.html.Div
