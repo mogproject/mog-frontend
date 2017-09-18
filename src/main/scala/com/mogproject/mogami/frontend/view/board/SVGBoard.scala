@@ -3,6 +3,7 @@ package com.mogproject.mogami.frontend.view.board
 import com.mogproject.mogami.Ptype
 import com.mogproject.mogami.core.{Piece, Square}
 import com.mogproject.mogami.frontend.view.WebComponent
+import com.mogproject.mogami.frontend.view.board.effect._
 import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom.html.Div
@@ -17,17 +18,13 @@ import scalatags.JsDom.{TypedTag, svgAttrs}
 /**
   *
   */
-class SVGBoard extends WebComponent with SVGBoardEffector with SVGBoardEventHandler {
+class SVGBoard extends WebComponent with SVGBoardPieceManager with SVGBoardIndexManager with SVGBoardEventHandler {
+
+  private[this] val self = this
 
   import SVGBoard._
 
   // Local variables
-  private[this] var currentPieces: Map[Square, Piece] = Map.empty
-
-  private[this] var currentPieceFace: String = "jp1"
-
-  private[this] var pieceMap: Map[Square, Element] = Map.empty
-
   protected var boardFlipped: Boolean = false
 
   //
@@ -55,52 +52,11 @@ class SVGBoard extends WebComponent with SVGBoardEffector with SVGBoardEventHand
   //
   def setFlip(flip: Boolean): Unit = if (boardFlipped != flip) {
     boardFlipped = flip
-
-    // re-draw pieces
-    val cp = currentPieces
-    clearPieces()
-    drawPieces(cp, currentPieceFace, keepLastMove = true)
-
-    // todo: indexes
+    refreshPieces()
+    refreshIndexes()
   }
 
   def resize(newWidth: Int): Unit = element.asInstanceOf[Div].style.width = newWidth.px
-
-  def drawPieces(pieces: Map[Square, Piece], pieceFace: String = "jp1", keepLastMove: Boolean = false): Unit = {
-    // unselect and stop/restart effects
-    unselect()
-    keepLastMove.fold(effect.lastMoveEffector.restart(), effect.lastMoveEffector.stop())
-
-    // get diffs
-    val (xs, ys) = (currentPieces.toSet, pieces.toSet)
-
-    val removedPieces = xs -- ys
-    val newPieces = ys -- xs
-
-    // clear old pieces
-    removedPieces.foreach(x => WebComponent.removeElement(pieceMap(x._1)))
-
-    // update local variables
-    currentPieces = pieces
-    currentPieceFace = pieceFace
-
-    // render and materialize
-    val newPieceMap = newPieces.map { case (sq, p) =>
-      val elem = getPieceFace(sq, p, pieceFace).render
-      svgElement.appendChild(elem)
-      sq -> elem
-    }
-
-    println(s"remove: ${removedPieces.size}, new: ${newPieces.size}")
-
-    pieceMap = pieceMap -- removedPieces.map(_._1) ++ newPieceMap
-  }
-
-  private[this] def clearPieces(): Unit = {
-    pieceMap.values.foreach(svgElement.removeChild)
-    pieceMap = Map.empty
-    currentPieces = Map.empty
-  }
 
   def unselect(): Unit = {
     effect.selectedEffector.stop() // a selected square is released here
@@ -136,6 +92,23 @@ class SVGBoard extends WebComponent with SVGBoardEffector with SVGBoardEventHand
     svgElement
   ).render
 
+  //
+  // Effect
+  //
+
+  object effect {
+    lazy val cursorEffector = CursorEffector(self)
+    lazy val selectedEffector = SelectedEffector(self)
+    lazy val lastMoveEffector = LastMoveEffector(self)
+    lazy val flashEffector = FlashEffector(self)
+    lazy val moveEffector = MoveEffector(self)
+    lazy val selectingEffector = SelectingEffector(self)
+    lazy val legalMoveEffector = LegalMoveEffector(self)
+  }
+
+  //
+  // Event
+  //
   element.addEventListener("mousemove", mouseMove)
 }
 

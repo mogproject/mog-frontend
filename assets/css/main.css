@@ -22,6 +22,11 @@
   fill: black;
 }
 
+.board-index-text {
+  text-anchor: middle;
+  font-size: 60px;
+}
+
 .flip {
   -ms-transform: rotate(180deg); /* IE 9 */
   -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */

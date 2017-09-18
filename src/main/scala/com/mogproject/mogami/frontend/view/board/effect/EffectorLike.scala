@@ -36,7 +36,7 @@ trait EffectorLike[A] {
     val svgElems = generateElements(x).map { elem =>
       val x = elem.render
       val y = generateAnimateElems().map(_.render.asInstanceOf[AnimateElementExtended])
-      y.foreach(x.appendChild)
+      y.foreach(x.appendChild) // add animate elements to the parent SVG tag
       (x, y)
     }
 
