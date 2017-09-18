@@ -65,7 +65,7 @@ trait EffectorLike[A] {
     */
   def restart(): Unit = currentValue.foreach(start)
 
-  protected final def createAnimateElem(attribute: String, toValue: Any, duration: String = ""): TypedTag[SVGElement] = {
+  protected final def createAnimateElem(attribute: String, toOrValues: Any, duration: String = ""): TypedTag[SVGElement] = {
     import scalatags.JsDom.all._
     import scalatags.JsDom.svgAttrs._
     import scalatags.JsDom.svgTags.animate
@@ -76,7 +76,13 @@ trait EffectorLike[A] {
       Seq(dur := duration, repeatCount := "indefinite")
     )
 
-    val props = Seq(attributeName := attribute, to := toValue.toString, begin := "indefinite") ++ fromAutoDestruct
+    val vals: Modifier = toOrValues match {
+      case xs: Seq[Any] if xs.length > 1 => values := xs.mkString(";")
+      case Seq(x) => to := x.toString
+      case _ => to := toOrValues.toString
+    }
+
+    val props = Seq(attributeName := attribute, begin := "indefinite") ++ fromAutoDestruct :+ vals
     animate(props: _*)
   }
 }

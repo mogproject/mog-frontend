@@ -10,5 +10,5 @@ case class SelectingEffector(svgBoard: SVGBoard) extends CircularEffectorLike {
 
   override val finalRadius: Int = SVGBoard.PIECE_WIDTH * 4
 
-  override val finalOpacity: Double = -10.0
+  override val opacityValues: Seq[Double] = Seq(1, 0, 0, 0)
 }
