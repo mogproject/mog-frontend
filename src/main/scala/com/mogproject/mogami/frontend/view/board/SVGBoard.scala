@@ -39,6 +39,16 @@ class SVGBoard extends WebComponent with SVGBoardPieceManager with SVGBoardIndex
     getRect(9 - s.file, s.rank - 1)
   }
 
+  def materializeBackground[A <: Element](elems: Seq[A]): Seq[A] = {
+    elems.foreach(svgElement.insertBefore(_, borderElement))
+    elems
+  }
+
+  def materializeForeground[A <: Element](elems: Seq[A]): Seq[A] = {
+    elems.foreach(svgElement.appendChild(_))
+    elems
+  }
+
   //
   // Operation
   //

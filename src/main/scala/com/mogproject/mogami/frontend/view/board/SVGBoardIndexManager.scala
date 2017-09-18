@@ -18,15 +18,24 @@ trait SVGBoardIndexManager {
 
   import SVGBoard._
 
+  private[this] val textClass = "board-index-text"
+
   // local variables
   private[this] var currentStatus: Option[Boolean] = None
-
-  private[this] var currentElements: Set[SVGElement] = Set.empty
+  private[this] var currentFileElements: Seq[SVGElement] = Seq.empty
+  private[this] var currentRankElements: Seq[SVGElement] = Seq.empty
 
   //
   // Utility
   //
   private[this] def getImagePath(index: Int): String = s"assets/img/n/N${index}.svg"
+
+  private[this] def generateFileIndex(index: Int): TypedTag[SVGElement] = {
+      val base = getRect(Square(index, 1))
+      val left = base.left + SVGBoard.PIECE_WIDTH / 2
+      val top = SVGBoard.MARGIN_SIZE * 5 / 6
+      text(svgAttrs.x := left, svgAttrs.y := top, cls := textClass, index.toString)
+  }
 
   private[this] def generateJapaneseRankIndex(index: Int): TypedTag[SVGElement] = {
     val base = getRect(Square(1, index))
@@ -38,7 +47,7 @@ trait SVGBoardIndexManager {
     val base = getRect(Square(1, index))
     val left = SVGBoard.MARGIN_SIZE * 3 / 2 + SVGBoard.BOARD_WIDTH
     val top = base.top + (SVGBoard.PIECE_HEIGHT + SVGBoard.INDEX_SIZE) / 2
-    text(svgAttrs.x := left, svgAttrs.y := top, cls := "board-index-text", ('a' + (index - 1)).toChar.toString)
+    text(svgAttrs.x := left, svgAttrs.y := top, cls := textClass, ('a' + (index - 1)).toChar.toString)
   }
 
 
@@ -49,28 +58,25 @@ trait SVGBoardIndexManager {
     clearIndexes()
 
     // filewise
-    //todo: consider diff when JP <-> Western
-    val xs = (1 to 9).map { n =>
-      val base = getRect(Square(n, 1))
-      val left = base.left + SVGBoard.PIECE_WIDTH / 2
-      val top = SVGBoard.MARGIN_SIZE * 5 / 6
-      text(svgAttrs.x := left, svgAttrs.y := top, cls := "board-index-text", n.toString)
+    if (currentStatus.isEmpty) {
+      val fileElems = (1 to 9).map(generateFileIndex(_).render)
+      currentFileElements = materializeBackground(fileElems)
     }
 
     // rankwise
-    val ys = (1 to 9).map(useJapanese.fold(generateJapaneseRankIndex(_), generateWesternRankIndex(_)))
+    val rankElems = (1 to 9).map(useJapanese.fold(generateJapaneseRankIndex(_), generateWesternRankIndex(_))).map(_.render)
+    currentRankElements = materializeBackground(rankElems)
 
-    val elems = (xs.toSet ++ ys.toSet).map(_.render)
-    elems.foreach(svgElement.appendChild)
-
+    // update local variables
     currentStatus = Some(useJapanese)
-    currentElements = elems
   }
 
   def clearIndexes(): Unit = {
-    currentElements.foreach(WebComponent.removeElement)
+    currentFileElements.foreach(WebComponent.removeElement)
+    currentRankElements.foreach(WebComponent.removeElement)
     currentStatus = None
-    currentElements = Set.empty
+    currentFileElements = Seq.empty
+    currentRankElements = Seq.empty
   }
 
   def refreshIndexes(): Unit = {
