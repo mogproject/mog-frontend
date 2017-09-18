@@ -56,23 +56,22 @@ class SVGBoard extends WebComponent with SVGBoardEffector with SVGBoardEventHand
   def setFlip(flip: Boolean): Unit = if (boardFlipped != flip) {
     boardFlipped = flip
 
-    // clear selection and its effects
-    unselect()
-
-    // re-draw last move
-    effect.lastMoveEffector.restart()
-
     // re-draw pieces
     val cp = currentPieces
     clearPieces()
-    drawPieces(cp, currentPieceFace)
+    drawPieces(cp, currentPieceFace, keepLastMove = true)
 
     // todo: indexes
   }
 
   def resize(newWidth: Int): Unit = element.asInstanceOf[Div].style.width = newWidth.px
 
-  def drawPieces(pieces: Map[Square, Piece], pieceFace: String = "jp1"): Unit = {
+  def drawPieces(pieces: Map[Square, Piece], pieceFace: String = "jp1", keepLastMove: Boolean = false): Unit = {
+    // unselect and stop/restart effects
+    unselect()
+    keepLastMove.fold(effect.lastMoveEffector.restart(), effect.lastMoveEffector.stop())
+
+    // get diffs
     val (xs, ys) = (currentPieces.toSet, pieces.toSet)
 
     val removedPieces = xs -- ys

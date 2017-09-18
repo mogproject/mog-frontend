@@ -57,6 +57,7 @@ trait EffectorLike[A] {
   def stop(): Unit = {
     currentElements.foreach(WebComponent.removeElement)
     currentElements = Set.empty
+    currentValue = None
   }
 
   /**
