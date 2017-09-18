@@ -5,6 +5,9 @@ import org.scalajs.dom
 import org.scalajs.dom.Element
 import org.scalajs.dom.raw.SVGElement
 
+import scalatags.JsDom.TypedTag
+
+
 /**
   * Generic effector trait
   */
@@ -15,7 +18,9 @@ trait EffectorLike[A] {
 
   private[this] def removeElement(elem: Element): Unit = elem.parentNode.removeChild(elem)
 
-  def generateElements(x: A): Set[SVGElement]
+  def generateElements(x: A): Set[TypedTag[SVGElement]]
+
+  def generateAnimateElems(): Seq[TypedTag[SVGElement]] = Seq.empty
 
   def materialize(elem: SVGElement): Unit
 
@@ -24,19 +29,28 @@ trait EffectorLike[A] {
     */
   def autoDestruct: Option[Int] = None
 
-  def animateElems: Seq[AnimateElementExtended] = Seq.empty
+  protected lazy val animateElems: Seq[Seq[AnimateElementExtended]] = Seq.empty
 
   def start(x: A): Unit = {
     stop()
 
-    currentElements = generateElements(x)
+    // render SVG tags
+    val svgElems = generateElements(x).map { elem =>
+      val x = elem.render
+      val y = generateAnimateElems().map(_.render.asInstanceOf[AnimateElementExtended])
+      y.foreach(x.appendChild)
+      (x, y)
+    }
+
+    // update local variables
+    currentElements = svgElems.map(_._1)
     currentValue = Some(x)
 
     // materialize
     currentElements.foreach(materialize)
 
     // start animation
-    animateElems.foreach(_.beginElement())
+    svgElems.foreach(_._2.foreach(_.beginElement()))
 
     // set self-destruction
     autoDestruct.foreach(n => dom.window.setTimeout(() => stop(), n))
@@ -52,4 +66,18 @@ trait EffectorLike[A] {
     */
   def restart(): Unit = currentValue.foreach(start)
 
+  protected final def createAnimateElem(attribute: String, toValue: Any, duration: String = ""): TypedTag[SVGElement] = {
+    import scalatags.JsDom.all._
+    import scalatags.JsDom.svgAttrs._
+    import scalatags.JsDom.svgTags.animate
+
+    val fromAutoDestruct: Seq[Modifier] = autoDestruct.map { n =>
+      Seq(dur := f"${n / 1000.0}%.2fs", fill := "freeze", repeatCount := 1)
+    }.getOrElse(
+      Seq(dur := duration, repeatCount := "indefinite")
+    )
+
+    val props = Seq(attributeName := attribute, to := toValue.toString, begin := "indefinite") ++ fromAutoDestruct
+    animate(props: _*)
+  }
 }

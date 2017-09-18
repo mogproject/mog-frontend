@@ -12,13 +12,13 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
     newModel.activeCursor match {
       case x if x == model.activeCursor =>
       case Some(sq) =>
-        view.board.effect.cursorEffector.start(sq)
+        view.boardTest.board.effect.cursorEffector.start(sq)
       case None =>
-        view.board.effect.cursorEffector.stop()
+        view.boardTest.board.effect.cursorEffector.stop()
     }
 
     if (model.isFlipped != newModel.isFlipped) {
-      view.board.setFlip(newModel.isFlipped)
+      view.boardTest.board.setFlip(newModel.isFlipped)
     }
 
     (copy(model = newModel), None)

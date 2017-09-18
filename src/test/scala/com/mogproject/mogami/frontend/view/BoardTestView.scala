@@ -80,6 +80,11 @@ class BoardTestView extends WebComponent {
         div(cls := "col-md-3", label("Last Move")),
         div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.lastMoveEffector.start(getSquares) }, "Start")),
         div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.lastMoveEffector.stop() }, "Stop"))
+      ),
+      div(cls := "row",
+        div(cls := "col-md-3", label("Legal Moves")),
+        div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.legalMoveEffector.start(getSquares) }, "Start")),
+        div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.legalMoveEffector.stop() }, "Stop"))
       )
 
     )

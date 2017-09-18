@@ -57,10 +57,10 @@ class SVGBoard extends WebComponent with SVGBoardEffector with SVGBoardEventHand
   def setFlip(flip: Boolean): Unit = if (boardFlipped != flip) {
     boardFlipped = flip
 
-    // clear effects
-    effect.cursorEffector.stop()
-    effect.selectedEffector.stop()
-    effect.selectingEffector.stop()
+    // clear selection and its effects
+    unselect()
+
+    // re-draw last move
     effect.lastMoveEffector.restart()
 
     // re-draw pieces
@@ -72,6 +72,7 @@ class SVGBoard extends WebComponent with SVGBoardEffector with SVGBoardEventHand
   def resize(newWidth: Int): Unit = element.asInstanceOf[Div].style.width = newWidth.px
 
   def drawPieces(pieces: Map[Square, Piece], pieceFace: String = "jp1"): Unit = {
+    // todo: calculate diff
     clearPieces()
 
     currentPieces = pieces
@@ -80,6 +81,17 @@ class SVGBoard extends WebComponent with SVGBoardEffector with SVGBoardEventHand
     pieceMap.values.foreach(svgElement.appendChild)
   }
 
+  private[this] def clearPieces(): Unit = {
+    pieceMap.values.foreach(svgElement.removeChild)
+    pieceMap.clear()
+  }
+
+  def unselect(): Unit = {
+    effect.cursorEffector.stop()
+    effect.selectedEffector.stop()
+    effect.selectingEffector.stop()
+    effect.legalMoveEffector.stop()
+  }
 
   //
   // View
@@ -107,11 +119,6 @@ class SVGBoard extends WebComponent with SVGBoardEffector with SVGBoardEventHand
   override lazy val element: Element = div(
     svgElement
   ).render
-
-  private[this] def clearPieces(): Unit = {
-    pieceMap.values.foreach(svgElement.removeChild)
-    pieceMap.clear()
-  }
 
   element.addEventListener("mousemove", mouseMove)
 }

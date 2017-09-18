@@ -72,3 +72,9 @@
   stroke: #805819;
   stroke-width: 20px;
 }
+
+.board-legal {
+  fill: #2b5f91;
+  stroke: none;
+  opacity: 0.8;
+}

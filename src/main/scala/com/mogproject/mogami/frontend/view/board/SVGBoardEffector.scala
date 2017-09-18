@@ -16,6 +16,7 @@ trait SVGBoardEffector {
     lazy val flashEffector = FlashEffector(self)
     lazy val moveEffector = MoveEffector(self)
     lazy val selectingEffector = SelectingEffector(self)
+    lazy val legalMoveEffector = LegalMoveEffector(self)
 
   }
 
