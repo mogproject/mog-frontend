@@ -1,8 +1,8 @@
 package com.mogproject.mogami.frontend.view.board.effect
 
 import com.mogproject.mogami.frontend.api.AnimateElementExtended
+import com.mogproject.mogami.frontend.view.WebComponent
 import org.scalajs.dom
-import org.scalajs.dom.Element
 import org.scalajs.dom.raw.SVGElement
 
 import scalatags.JsDom.TypedTag
@@ -15,8 +15,6 @@ trait EffectorLike[A] {
   private[this] var currentValue: Option[A] = None
 
   private[this] var currentElements: Set[SVGElement] = Set.empty
-
-  private[this] def removeElement(elem: Element): Unit = elem.parentNode.removeChild(elem)
 
   def generateElements(x: A): Set[TypedTag[SVGElement]]
 
@@ -57,7 +55,7 @@ trait EffectorLike[A] {
   }
 
   def stop(): Unit = {
-    currentElements.foreach(removeElement)
+    currentElements.foreach(WebComponent.removeElement)
     currentElements = Set.empty
   }
 

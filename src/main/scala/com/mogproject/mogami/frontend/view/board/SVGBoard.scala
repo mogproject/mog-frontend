@@ -8,9 +8,8 @@ import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom.html.Div
 import org.scalajs.dom.raw.{SVGElement, SVGImageElement}
 import org.scalajs.dom.svg.{Circle, Line, RectElement}
-import org.scalajs.dom.{Element, Node}
+import org.scalajs.dom.Element
 
-import scala.collection.mutable
 import scalatags.JsDom.all._
 import scalatags.JsDom.svgTags.svg
 import scalatags.JsDom.{TypedTag, svgAttrs}
@@ -27,7 +26,7 @@ class SVGBoard extends WebComponent with SVGBoardEffector with SVGBoardEventHand
 
   private[this] var currentPieceFace: String = "jp1"
 
-  private[this] val pieceMap: mutable.Map[Square, Node] = mutable.Map.empty
+  private[this] var pieceMap: Map[Square, Element] = Map.empty
 
   protected var boardFlipped: Boolean = false
 
@@ -64,31 +63,49 @@ class SVGBoard extends WebComponent with SVGBoardEffector with SVGBoardEventHand
     effect.lastMoveEffector.restart()
 
     // re-draw pieces
-    drawPieces(currentPieces, currentPieceFace)
+    val cp = currentPieces
+    clearPieces()
+    drawPieces(cp, currentPieceFace)
 
-    // todo: indexes, de-select squares
+    // todo: indexes
   }
 
   def resize(newWidth: Int): Unit = element.asInstanceOf[Div].style.width = newWidth.px
 
   def drawPieces(pieces: Map[Square, Piece], pieceFace: String = "jp1"): Unit = {
-    // todo: calculate diff
-    clearPieces()
+    val (xs, ys) = (currentPieces.toSet, pieces.toSet)
 
+    val removedPieces = xs -- ys
+    val newPieces = ys -- xs
+
+    // clear old pieces
+    removedPieces.foreach(x => WebComponent.removeElement(pieceMap(x._1)))
+
+    // update local variables
     currentPieces = pieces
     currentPieceFace = pieceFace
-    pieceMap ++= pieces.map { case (sq, p) => sq -> getPieceFace(sq, p, pieceFace).render }
-    pieceMap.values.foreach(svgElement.appendChild)
+
+    // render and materialize
+    val newPieceMap = newPieces.map { case (sq, p) =>
+      val elem = getPieceFace(sq, p, pieceFace).render
+      svgElement.appendChild(elem)
+      sq -> elem
+    }
+
+    println(s"remove: ${removedPieces.size}, new: ${newPieces.size}")
+
+    pieceMap = pieceMap -- removedPieces.map(_._1) ++ newPieceMap
   }
 
   private[this] def clearPieces(): Unit = {
     pieceMap.values.foreach(svgElement.removeChild)
-    pieceMap.clear()
+    pieceMap = Map.empty
+    currentPieces = Map.empty
   }
 
   def unselect(): Unit = {
+    effect.selectedEffector.stop() // a selected square is released here
     effect.cursorEffector.stop()
-    effect.selectedEffector.stop()
     effect.selectingEffector.stop()
     effect.legalMoveEffector.stop()
   }

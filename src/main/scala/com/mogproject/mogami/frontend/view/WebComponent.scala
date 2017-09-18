@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view
 
-import org.scalajs.dom.Element
+import org.scalajs.dom.{Element, Node}
 
 /**
   *
@@ -11,4 +11,8 @@ trait WebComponent {
   def materialize(parent: Element): Unit = {
     parent.appendChild(element)
   }
+}
+
+object WebComponent {
+  def removeElement(elem: Node): Unit = elem.parentNode.removeChild(elem)
 }
