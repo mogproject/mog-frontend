@@ -39,14 +39,22 @@ class SVGBoard extends WebComponent with SVGBoardPieceManager with SVGBoardIndex
     getRect(9 - s.file, s.rank - 1)
   }
 
+  def materializeBackground[A <: Element](elem: A): A = {
+    svgElement.insertBefore(elem, borderElement)
+    elem
+  }
+
   def materializeBackground[A <: Element](elems: Seq[A]): Seq[A] = {
-    elems.foreach(svgElement.insertBefore(_, borderElement))
-    elems
+    elems.map(materializeBackground[A])
+  }
+
+  def materializeForeground[A <: Element](elem: A): A = {
+    svgElement.appendChild(elem)
+    elem
   }
 
   def materializeForeground[A <: Element](elems: Seq[A]): Seq[A] = {
-    elems.foreach(svgElement.appendChild(_))
-    elems
+    elems.map(materializeForeground[A])
   }
 
   //
@@ -81,9 +89,9 @@ class SVGBoard extends WebComponent with SVGBoardPieceManager with SVGBoardIndex
     getCoord(3 << (i & 1), 3 << ((i >> 1) & 1)).toSVGCircle(CIRCLE_SIZE, cls := "board-circle")
   }
 
-  val borderElement: RectElement = boardBoarder.render
+  protected val borderElement: RectElement = boardBoarder.render
 
-  val svgElement: SVGElement = svg(
+  private[this] val svgElement: SVGElement = svg(
     svgAttrs.width := 100.pct,
     svgAttrs.height := 100.pct,
     svgAttrs.viewBox := s"0 0 ${BOARD_WIDTH + MARGIN_SIZE * 2} ${BOARD_HEIGHT + MARGIN_SIZE * 2}",

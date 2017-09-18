@@ -6,6 +6,6 @@ import org.scalajs.dom.raw.SVGElement
 trait ForegroundEffectorLike[A] extends EffectorLike[A] {
   def svgBoard: SVGBoard
 
-  override def materialize(elem: SVGElement): Unit = svgBoard.svgElement.appendChild(elem)
+  override def materialize(elems: Seq[SVGElement]): Unit = svgBoard.materializeForeground(elems)
 
 }

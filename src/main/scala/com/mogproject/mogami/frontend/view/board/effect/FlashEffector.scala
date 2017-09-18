@@ -13,5 +13,5 @@ import scalatags.JsDom.all._
 case class FlashEffector(svgBoard: SVGBoard) extends BackgroundEffectorLike[Square] {
   override def autoDestruct: Option[Int] = Some(300)
 
-  override def generateElements(x: Square): Set[TypedTag[SVGElement]] = Set(svgBoard.getRect(x).shrink(12).toSVGRect(cls := "board-flash"))
+  override def generateElements(x: Square): Seq[TypedTag[SVGElement]] = Seq(svgBoard.getRect(x).shrink(12).toSVGRect(cls := "board-flash"))
 }

@@ -58,9 +58,7 @@ trait SVGBoardPieceManager {
 
     // render and materialize
     val newPieceMap = newPieces.map { case (sq, p) =>
-      val elem = getPieceFace(sq, p, pieceFace).render
-      svgElement.appendChild(elem)
-      sq -> elem
+      sq -> materializeForeground(getPieceFace(sq, p, pieceFace).render)
     }
 
     pieceMap = pieceMap -- removedPieces.map(_._1) ++ newPieceMap
@@ -73,7 +71,7 @@ trait SVGBoardPieceManager {
   }
 
   private[this] def clearPieces(): Unit = {
-    pieceMap.values.foreach(svgElement.removeChild)
+    WebComponent.removeElements(pieceMap.values)
     pieceMap = Map.empty
     currentPieces = Map.empty
   }

@@ -15,4 +15,6 @@ trait WebComponent {
 
 object WebComponent {
   def removeElement(elem: Node): Unit = elem.parentNode.removeChild(elem)
+
+  def removeElements(elems: Iterable[Node]): Unit = elems.foreach(removeElement)
 }

@@ -10,6 +10,6 @@ import scalatags.JsDom.all._
 /**
   * Last move effect
   */
-case class LastMoveEffector(svgBoard: SVGBoard) extends BackgroundEffectorLike[Set[Square]] {
-  override def generateElements(x: Set[Square]): Set[TypedTag[SVGElement]] = x.map(svgBoard.getRect(_).toSVGRect(cls := "board-last"))
+case class LastMoveEffector(svgBoard: SVGBoard) extends BackgroundEffectorLike[Seq[Square]] {
+  override def generateElements(x: Seq[Square]): Seq[TypedTag[SVGElement]] = x.map(svgBoard.getRect(_).toSVGRect(cls := "board-last"))
 }

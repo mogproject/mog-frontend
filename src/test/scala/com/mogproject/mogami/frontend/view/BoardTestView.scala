@@ -22,7 +22,7 @@ class BoardTestView extends WebComponent {
 
   private[this] def getSquare: Option[Square] = getSquares.headOption
 
-  private[this] def getSquares: Set[Square] = squareInput.value.grouped(2).flatMap(s => Try(Square.parseCsaString(s)).toOption).toSet
+  private[this] def getSquares: Seq[Square] = squareInput.value.grouped(2).flatMap(s => Try(Square.parseCsaString(s)).toOption).toSeq
 
   // Base element
   override def element: Element = div(

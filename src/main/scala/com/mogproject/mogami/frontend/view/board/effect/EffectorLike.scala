@@ -14,13 +14,13 @@ import scalatags.JsDom.TypedTag
 trait EffectorLike[A] {
   private[this] var currentValue: Option[A] = None
 
-  private[this] var currentElements: Set[SVGElement] = Set.empty
+  private[this] var currentElements: Seq[SVGElement] = Seq.empty
 
-  def generateElements(x: A): Set[TypedTag[SVGElement]]
+  def generateElements(x: A): Seq[TypedTag[SVGElement]]
 
   def generateAnimateElems(): Seq[TypedTag[SVGElement]] = Seq.empty
 
-  def materialize(elem: SVGElement): Unit
+  def materialize(elems: Seq[SVGElement]): Unit
 
   /**
     * Self-destruction after this time (ms)
@@ -38,14 +38,14 @@ trait EffectorLike[A] {
       val y = generateAnimateElems().map(_.render.asInstanceOf[AnimateElementExtended])
       y.foreach(x.appendChild) // add animate elements to the parent SVG tag
       (x, y)
-    }
+    }.toList // stabilize elements (to avoid being a stream)
 
     // update local variables
     currentElements = svgElems.map(_._1)
     currentValue = Some(x)
 
     // materialize
-    currentElements.foreach(materialize)
+    materialize(currentElements)
 
     // start animation
     svgElems.foreach(_._2.foreach(_.beginElement()))
@@ -56,7 +56,7 @@ trait EffectorLike[A] {
 
   def stop(): Unit = {
     currentElements.foreach(WebComponent.removeElement)
-    currentElements = Set.empty
+    currentElements = Seq.empty
     currentValue = None
   }
 

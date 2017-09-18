@@ -11,5 +11,5 @@ import scalatags.JsDom.all._
   * Cursor effect
   */
 case class CursorEffector(svgBoard: SVGBoard) extends BackgroundEffectorLike[Square] {
-  override def generateElements(x: Square): Set[TypedTag[SVGElement]] = Set(svgBoard.getRect(x).shrink(12).toSVGRect(cls := "board-cursor"))
+  override def generateElements(x: Square): Seq[TypedTag[SVGElement]] = Seq(svgBoard.getRect(x).shrink(12).toSVGRect(cls := "board-cursor"))
 }
