@@ -1,15 +1,21 @@
 package com.mogproject.mogami.frontend.view.board
 
 import com.mogproject.mogami.util.Implicits._
-import com.mogproject.mogami.{Piece, Square}
+import com.mogproject.mogami.{Piece, Ptype, Square}
 import com.mogproject.mogami.frontend.view.WebComponent
 import org.scalajs.dom.Element
+import org.scalajs.dom.raw.SVGImageElement
+
+import scalatags.JsDom.{TypedTag, svgAttrs}
+import scalatags.JsDom.all._
 
 /**
   *
   */
 trait SVGBoardPieceManager {
   self: SVGBoard =>
+
+  import SVGBoard._
 
   // Local variables
   private[this] var currentPieces: Map[Square, Piece] = Map.empty
@@ -18,7 +24,20 @@ trait SVGBoardPieceManager {
 
   private[this] var pieceMap: Map[Square, Element] = Map.empty
 
+  //
+  // Utility
+  //
+  private[this] def getImagePath(ptype: Ptype, pieceFace: String): String = s"assets/img/p/${pieceFace}/${ptype.toCsaString}.svg"
 
+  private[this] def getPieceFace(square: Square, piece: Piece, pieceFace: String, modifiers: Modifier*): TypedTag[SVGImageElement] = {
+    val rc = getRect(square).toInnerRect(PIECE_FACE_SIZE, PIECE_FACE_SIZE)
+    val as = modifiers :+ (svgAttrs.xLinkHref := getImagePath(piece.ptype, pieceFace))
+    (piece.owner.isBlack ^ boardFlipped).fold(rc.toSVGImage(as), (-rc).toSVGImage(as, cls := "flip"))
+  }
+
+  //
+  // Operation
+  //
   def drawPieces(pieces: Map[Square, Piece], pieceFace: String = "jp1", keepLastMove: Boolean = false): Unit = {
     // unselect and stop/restart effects
     unselect()

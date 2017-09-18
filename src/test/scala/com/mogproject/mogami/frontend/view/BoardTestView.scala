@@ -46,7 +46,8 @@ class BoardTestView extends WebComponent {
       div(cls := "row",
         div(cls := "col-md-3", label("Index")),
         div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.drawIndexes(true) }, "Japanese")),
-        div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.drawIndexes(false) }, "Western"))
+        div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.drawIndexes(false) }, "Western")),
+        div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.clearIndexes() }, "Clear"))
       ),
       div(cls := "row",
         div(cls := "col-md-3", label("Flip")),

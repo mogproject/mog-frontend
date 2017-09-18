@@ -39,14 +39,6 @@ class SVGBoard extends WebComponent with SVGBoardPieceManager with SVGBoardIndex
     getRect(9 - s.file, s.rank - 1)
   }
 
-  protected def getPieceFacePath(ptype: Ptype, pieceFace: String): String = s"assets/img/p/${pieceFace}/${ptype.toCsaString}.svg"
-
-  protected def getPieceFace(square: Square, piece: Piece, pieceFace: String, modifiers: Modifier*): TypedTag[SVGImageElement] = {
-    val rc = getRect(square).toInnerRect(PIECE_FACE_SIZE, PIECE_FACE_SIZE)
-    val as = modifiers :+ (svgAttrs.xLinkHref := getPieceFacePath(piece.ptype, pieceFace))
-    (piece.owner.isBlack ^ boardFlipped).fold(rc.toSVGImage(as), (-rc).toSVGImage(as, cls := "flip"))
-  }
-
   //
   // Operation
   //
@@ -121,4 +113,5 @@ object SVGBoard {
   val BOARD_HEIGHT: Int = PIECE_HEIGHT * 9
   val MARGIN_SIZE: Int = (VIEW_BOX_WIDTH - BOARD_WIDTH) / 2
   val CIRCLE_SIZE: Int = 14
+  val INDEX_SIZE: Int = 60 /** @note Corresponds to CSS board-index-text:font-size */
 }
