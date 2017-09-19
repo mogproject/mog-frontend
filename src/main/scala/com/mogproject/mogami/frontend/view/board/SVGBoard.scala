@@ -114,6 +114,7 @@ class SVGBoard extends WebComponent with SVGBoardPieceManager with SVGBoardIndex
     lazy val moveEffector = MoveEffector(self)
     lazy val selectingEffector = SelectingEffector(self)
     lazy val legalMoveEffector = LegalMoveEffector(self)
+    lazy val pieceFlipEffector = PieceFlipEffector(self)
   }
 
   //

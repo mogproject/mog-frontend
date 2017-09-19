@@ -29,10 +29,10 @@ trait SVGBoardPieceManager {
   //
   private[this] def getImagePath(ptype: Ptype, pieceFace: String): String = s"assets/img/p/${pieceFace}/${ptype.toCsaString}.svg"
 
-  private[this] def getPieceFace(square: Square, piece: Piece, pieceFace: String, modifiers: Modifier*): TypedTag[SVGImageElement] = {
+  def generatePieceElement(square: Square, piece: Piece, pieceFace: String, modifiers: Modifier*): TypedTag[SVGImageElement] = {
     val rc = getRect(square).toInnerRect(PIECE_FACE_SIZE, PIECE_FACE_SIZE)
     val as = modifiers :+ (svgAttrs.xLinkHref := getImagePath(piece.ptype, pieceFace))
-    (piece.owner.isBlack ^ boardFlipped).fold(rc.toSVGImage(as), (-rc).toSVGImage(as, cls := "flip"))
+    (piece.owner.isBlack ^ boardFlipped).fold(rc.toSVGImage(as), (-rc).toSVGImage(as, svgAttrs.transform := "rotate(180)"))
   }
 
   //
@@ -58,7 +58,7 @@ trait SVGBoardPieceManager {
 
     // render and materialize
     val newPieceMap = newPieces.map { case (sq, p) =>
-      sq -> materializeForeground(getPieceFace(sq, p, pieceFace).render)
+      sq -> materializeForeground(generatePieceElement(sq, p, pieceFace).render)
     }
 
     pieceMap = pieceMap -- removedPieces.map(_._1) ++ newPieceMap

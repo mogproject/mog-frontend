@@ -17,8 +17,9 @@ trait CircularEffectorLike extends ForegroundEffectorLike[Square] {
 
   private[this] def initialRadius: Int = SVGBoard.PIECE_WIDTH * 2 / 5
 
-  override def generateElements(x: Square): Seq[TypedTag[SVGElement]] = Seq(svgBoard.getRect(x).center.toSVGCircle(initialRadius, cls := "board-move board-selecting"))
-
-  override def generateAnimateElems(): Seq[TypedTag[SVGElement]] =
+  private[this] def generateAnimateElems: Seq[TypedTag[SVGElement]] =
     Seq("r" -> finalRadius, "opacity" -> opacityValues).map { case (n, v) => createAnimateElem(n, v, duration) }
+
+  override def generateElements(x: Square): Seq[TypedTag[SVGElement]] =
+    Seq(svgBoard.getRect(x).center.toSVGCircle(initialRadius, cls := "board-move board-selecting", generateAnimateElems))
 }
