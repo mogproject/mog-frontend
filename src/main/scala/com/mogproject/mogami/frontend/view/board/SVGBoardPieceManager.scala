@@ -1,5 +1,6 @@
 package com.mogproject.mogami.frontend.view.board
 
+import com.mogproject.mogami.frontend.Rect
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.{Piece, Ptype, Square}
 import com.mogproject.mogami.frontend.view.WebComponent
@@ -29,10 +30,15 @@ trait SVGBoardPieceManager {
   //
   private[this] def getImagePath(ptype: Ptype, pieceFace: String): String = s"assets/img/p/${pieceFace}/${ptype.toCsaString}.svg"
 
+  private[this] def isPieceFlipped(piece: Piece): Boolean = piece.owner.isWhite ^ boardFlipped
+
+  def getPieceRect(square: Square, piece: Piece): Rect =
+    isPieceFlipped(piece).when[Rect](-_)(getRect(square).toInnerRect(PIECE_FACE_SIZE, PIECE_FACE_SIZE))
+
   def generatePieceElement(square: Square, piece: Piece, pieceFace: String, modifiers: Modifier*): TypedTag[SVGImageElement] = {
-    val rc = getRect(square).toInnerRect(PIECE_FACE_SIZE, PIECE_FACE_SIZE)
-    val as = modifiers :+ (svgAttrs.xLinkHref := getImagePath(piece.ptype, pieceFace))
-    (piece.owner.isBlack ^ boardFlipped).fold(rc.toSVGImage(as), (-rc).toSVGImage(as, svgAttrs.transform := "rotate(180)"))
+    val rc = getPieceRect(square, piece)
+    val as = (modifiers :+ (svgAttrs.xLinkHref := getImagePath(piece.ptype, pieceFace))) ++ isPieceFlipped(piece).option(svgAttrs.transform := "rotate(180)")
+    rc.toSVGImage(as)
   }
 
   //

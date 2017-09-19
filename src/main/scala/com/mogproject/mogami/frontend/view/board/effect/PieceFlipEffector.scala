@@ -1,23 +1,22 @@
 package com.mogproject.mogami.frontend.view.board.effect
 
+import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.{Piece, Square}
 import com.mogproject.mogami.frontend.view.board.SVGBoard
 import org.scalajs.dom.raw.SVGElement
 
 import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
-import scalatags.JsDom.svgTags.{animateTransform, g}
+import scalatags.JsDom.svgTags.animateTransform
 import scalatags.JsDom.svgAttrs
 
 
 case class PieceFlipAttribute(square: Square, fromPiece: Piece, toPiece: Piece, pieceFace: String)
 
 /**
-  *
+  * Piece flip effect
   */
-case class PieceFlipEffector(svgBoard: SVGBoard) extends ForegroundEffectorLike[PieceFlipAttribute] {
-
-  override def autoDestruct: Option[Int] = Some(600)
+case class PieceFlipEffector(svgBoard: SVGBoard) extends BackgroundEffectorLike[PieceFlipAttribute] {
 
   private[this] def generateTransformElem(transformType: String, values: String) = {
     animateTransform(
@@ -55,13 +54,16 @@ case class PieceFlipEffector(svgBoard: SVGBoard) extends ForegroundEffectorLike[
   }
 
   override def generateElements(x: PieceFlipAttribute): Seq[TypedTag[SVGElement]] = {
-    val cx = svgBoard.getRect(x.square).center.x
-
-    val x1 = svgBoard.generatePieceElement(x.square, x.fromPiece, x.pieceFace, cls := "left-half", generateTransformElemSet(cx, ls))
-    val x2 = svgBoard.generatePieceElement(x.square, x.fromPiece, x.pieceFace, cls := "right-half", generateTransformElemSet(cx, rs))
-    val y1 = svgBoard.generatePieceElement(x.square, x.toPiece, x.pieceFace, cls := "left-half", generateTransformElemSet(cx, rs.reverse))
-    val y2 = svgBoard.generatePieceElement(x.square, x.toPiece, x.pieceFace, cls := "right-half", generateTransformElemSet(cx, ls.reverse))
-    Seq(x1, x2, y1, y2)
+    for {
+      isFrom <- Seq(true, false)
+      piece = isFrom.fold(x.fromPiece, x.toPiece)
+      centerX = svgBoard.getPieceRect(x.square, piece).center.x
+      isLeft <- Seq(true, false)
+      className = isLeft.fold("left-half", "right-half")
+      scales = isFrom.fold(isLeft.fold(ls, rs), isLeft.fold(rs.reverse, ls.reverse))
+    } yield {
+      svgBoard.generatePieceElement(x.square, piece, x.pieceFace, cls := className, generateTransformElemSet(centerX, scales))
+    }
   }
 
 }

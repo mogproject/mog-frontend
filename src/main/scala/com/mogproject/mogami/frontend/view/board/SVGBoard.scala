@@ -1,13 +1,12 @@
 package com.mogproject.mogami.frontend.view.board
 
-import com.mogproject.mogami.Ptype
-import com.mogproject.mogami.core.{Piece, Square}
+import com.mogproject.mogami.core.Square
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.board.effect._
 import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom.html.Div
-import org.scalajs.dom.raw.{SVGElement, SVGImageElement}
+import org.scalajs.dom.raw.SVGElement
 import org.scalajs.dom.svg.{Circle, Line, RectElement}
 import org.scalajs.dom.Element
 
@@ -73,6 +72,7 @@ class SVGBoard extends WebComponent with SVGBoardPieceManager with SVGBoardIndex
     effect.cursorEffector.stop()
     effect.selectingEffector.stop()
     effect.legalMoveEffector.stop()
+    effect.pieceFlipEffector.stop()
   }
 
   //
