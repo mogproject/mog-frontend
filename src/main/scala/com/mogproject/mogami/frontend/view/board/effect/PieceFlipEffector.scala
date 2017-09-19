@@ -45,7 +45,7 @@ case class PieceFlipEffector(svgBoard: SVGBoard) extends BackgroundEffectorLike[
     val d = 10
     val n = 5
 
-    def f(sign: Int) = (0 to n).map { i =>
+    def f(sign: Int) = Seq(1.0) ++ (0 to n).map { i =>
       val theta = math.Pi * i / 2 / n
       d * math.cos(theta) / (d + sign * math.sin(theta))
     } ++ Seq.fill(n)(0.0)
