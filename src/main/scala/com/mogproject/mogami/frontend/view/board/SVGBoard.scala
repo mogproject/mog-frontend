@@ -17,7 +17,7 @@ import scalatags.JsDom.{TypedTag, svgAttrs}
 /**
   *
   */
-class SVGBoard extends WebComponent with SVGBoardPieceManager with SVGBoardIndexManager with SVGBoardEventHandler {
+case class SVGBoard(offset: Coord) extends WebComponent with SVGBoardPieceManager with SVGBoardIndexManager with SVGBoardEventHandler {
 
   private[this] val self = this
 
@@ -29,7 +29,7 @@ class SVGBoard extends WebComponent with SVGBoardPieceManager with SVGBoardIndex
   //
   // Utility
   //
-  protected def getCoord(fileIndex: Int, rankIndex: Int): Coord = Coord(MARGIN_SIZE + fileIndex * PIECE_WIDTH, MARGIN_SIZE + rankIndex * PIECE_HEIGHT)
+  protected def getCoord(fileIndex: Int, rankIndex: Int): Coord = offset + Coord(MARGIN_SIZE + fileIndex * PIECE_WIDTH, MARGIN_SIZE + rankIndex * PIECE_HEIGHT)
 
   protected def getRect(fileIndex: Int, rankIndex: Int): Rect = Rect(getCoord(fileIndex, rankIndex), PIECE_WIDTH, PIECE_HEIGHT)
 
@@ -94,7 +94,7 @@ class SVGBoard extends WebComponent with SVGBoardPieceManager with SVGBoardIndex
   private[this] val svgElement: SVGElement = svg(
     svgAttrs.width := 100.pct,
     svgAttrs.height := 100.pct,
-    svgAttrs.viewBox := s"0 0 ${BOARD_WIDTH + MARGIN_SIZE * 2} ${BOARD_HEIGHT + MARGIN_SIZE * 2}",
+    svgAttrs.viewBox := s"0 0 ${offset.x + VIEW_BOX_WIDTH} ${offset.y + BOARD_HEIGHT + MARGIN_SIZE * 2}",
     borderElement
   )(boardLines ++ boardCircles: _*).render
 
@@ -115,6 +115,7 @@ class SVGBoard extends WebComponent with SVGBoardPieceManager with SVGBoardIndex
     lazy val selectingEffector = SelectingEffector(self)
     lazy val legalMoveEffector = LegalMoveEffector(self)
     lazy val pieceFlipEffector = PieceFlipEffector(self)
+    lazy val forwardEffector = ForwardEffector(self)
   }
 
   //

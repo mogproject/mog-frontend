@@ -5,6 +5,7 @@ import com.mogproject.mogami.frontend.sam.SAM
 import com.mogproject.mogami.{Square, State}
 import com.mogproject.mogami.frontend.view.board.SVGBoard
 import com.mogproject.mogami.frontend.view.board.effect.PieceFlipAttribute
+import com.mogproject.mogami.frontend.view.coordinate.Coord
 import org.scalajs.dom.Element
 import org.scalajs.dom.html.Input
 
@@ -15,7 +16,7 @@ import scalatags.JsDom.all.{div, _}
   *
   */
 class BoardTestView extends WebComponent {
-  val board = new SVGBoard
+  val board = new SVGBoard(Coord(200, 300))
 
   // HTML parts
   val resizeInput: Input = input(tpe := "text", cls := "form-control", value := "400").render
@@ -121,6 +122,11 @@ class BoardTestView extends WebComponent {
             div(cls := "col-md-3", label("Piece Flip")),
             div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getPieceFlipAttribute.foreach(board.effect.pieceFlipEffector.start) }, "Start")),
             div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.pieceFlipEffector.stop() }, "Stop"))
+          ),
+          div(cls := "row",
+            div(cls := "col-md-3", label("Forward")),
+            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.forwardEffector.start(true) }, "Forward")),
+            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.forwardEffector.start(false) }, "Backward"))
           )
 
         )

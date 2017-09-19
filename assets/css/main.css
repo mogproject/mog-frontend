@@ -72,3 +72,15 @@
   stroke: none;
   opacity: 0.8;
 }
+
+.board-forward-line {
+  fill: none;
+  stroke: #337ab7;
+  stroke-width: 100px;
+  opacity: 0.2;
+}
+
+.board-forward-triangle {
+  fill: #337ab7;
+  opacity: 0.2;
+}
