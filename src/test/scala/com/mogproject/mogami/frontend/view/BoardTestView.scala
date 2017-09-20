@@ -3,7 +3,7 @@ package com.mogproject.mogami.frontend.view
 import com.mogproject.mogami.core.Piece
 import com.mogproject.mogami.frontend.sam.SAM
 import com.mogproject.mogami.{Square, State}
-import com.mogproject.mogami.frontend.view.board.SVGBoard
+import com.mogproject.mogami.frontend.view.board.{SVGArea, SVGBoard, SVGStandardLayout}
 import com.mogproject.mogami.frontend.view.board.effect.PieceFlipAttribute
 import com.mogproject.mogami.frontend.view.coordinate.Coord
 import org.scalajs.dom.Element
@@ -16,7 +16,9 @@ import scalatags.JsDom.all.{div, _}
   *
   */
 class BoardTestView extends WebComponent {
-  val board = new SVGBoard(Coord(200, 300))
+  val area = SVGArea(SVGStandardLayout)
+
+  def board = area.svgBoard
 
   // HTML parts
   val resizeInput: Input = input(tpe := "text", cls := "form-control", value := "400").render
@@ -42,7 +44,7 @@ class BoardTestView extends WebComponent {
     cls := "container-fluid",
     div(cls := "row",
       div(cls := "col-md-6",
-        board.element
+        area.element
       ),
       div(cls := "col-md-6",
         div(
@@ -69,8 +71,8 @@ class BoardTestView extends WebComponent {
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Flip")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.setFlip(true) }, "Flip:true")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.setFlip(false) }, "Flip:false"))
+            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => area.setFlip(true) }, "Flip:true")),
+            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => area.setFlip(false) }, "Flip:false"))
           ),
           h3("Effect Test"),
           div(cls := "row",

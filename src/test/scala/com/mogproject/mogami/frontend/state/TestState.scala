@@ -18,7 +18,7 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
     }
 
     if (model.isFlipped != newModel.isFlipped) {
-      view.boardTest.board.setFlip(newModel.isFlipped)
+      view.boardTest.area.setFlip(newModel.isFlipped)
     }
 
     (copy(model = newModel), None)

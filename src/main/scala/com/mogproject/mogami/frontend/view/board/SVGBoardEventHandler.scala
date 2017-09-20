@@ -10,7 +10,7 @@ import org.scalajs.dom.MouseEvent
   * Mouse/mobile event handler
   */
 trait SVGBoardEventHandler {
-  self: SVGBoard =>
+  self: SVGArea =>
 
   //
   // Utility
@@ -22,7 +22,7 @@ trait SVGBoardEventHandler {
     * @return Square if the mouse position is inside the board
     */
   private[this] def getSquare(clientX: Double, clientY: Double): Option[Square] = {
-    val r = borderElement.getBoundingClientRect()
+    val r = svgBoard.getBorderClientRect
     val (x, y) = (clientX - r.left, clientY - r.top)
     val xi = math.floor(x / (r.width / 9)).toInt
     val yi = math.floor(y / (r.height / 9)).toInt

@@ -8,7 +8,7 @@ import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom.html.Div
 import org.scalajs.dom.raw.SVGElement
 import org.scalajs.dom.svg.{Circle, Line, RectElement}
-import org.scalajs.dom.Element
+import org.scalajs.dom.{ClientRect, Element}
 
 import scalatags.JsDom.all._
 import scalatags.JsDom.svgTags.svg
@@ -17,14 +17,15 @@ import scalatags.JsDom.{TypedTag, svgAttrs}
 /**
   *
   */
-case class SVGBoard(offset: Coord) extends WebComponent with SVGBoardPieceManager with SVGBoardIndexManager with SVGBoardEventHandler {
+case class SVGBoard(offset: Coord, getBoardFlipped: () => Boolean) extends WebComponent with SVGBoardPieceManager with SVGBoardIndexManager  {
 
   private[this] val self = this
 
   import SVGBoard._
 
   // Local variables
-  protected var boardFlipped: Boolean = false
+
+
 
   //
   // Utility
@@ -34,9 +35,11 @@ case class SVGBoard(offset: Coord) extends WebComponent with SVGBoardPieceManage
   protected def getRect(fileIndex: Int, rankIndex: Int): Rect = Rect(getCoord(fileIndex, rankIndex), PIECE_WIDTH, PIECE_HEIGHT)
 
   def getRect(square: Square): Rect = {
-    val s = boardFlipped.when[Square](!_)(square)
+    val s = getBoardFlipped().when[Square](!_)(square)
     getRect(9 - s.file, s.rank - 1)
   }
+
+  def getBorderClientRect: ClientRect = borderElement.getBoundingClientRect()
 
   def materializeBackground[A <: Element](elem: A): A = {
     svgElement.insertBefore(elem, borderElement)
@@ -59,8 +62,7 @@ case class SVGBoard(offset: Coord) extends WebComponent with SVGBoardPieceManage
   //
   // Operation
   //
-  def setFlip(flip: Boolean): Unit = if (boardFlipped != flip) {
-    boardFlipped = flip
+  def setFlip(flip: Boolean): Unit = {
     refreshPieces()
     refreshIndexes()
   }
@@ -118,10 +120,6 @@ case class SVGBoard(offset: Coord) extends WebComponent with SVGBoardPieceManage
     lazy val forwardEffector = ForwardEffector(self)
   }
 
-  //
-  // Event
-  //
-  element.addEventListener("mousemove", mouseMove)
 }
 
 object SVGBoard {

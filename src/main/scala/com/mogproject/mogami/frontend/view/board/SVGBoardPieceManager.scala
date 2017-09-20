@@ -30,7 +30,7 @@ trait SVGBoardPieceManager {
   //
   private[this] def getImagePath(ptype: Ptype, pieceFace: String): String = s"assets/img/p/${pieceFace}/${ptype.toCsaString}.svg"
 
-  private[this] def isPieceFlipped(piece: Piece): Boolean = piece.owner.isWhite ^ boardFlipped
+  private[this] def isPieceFlipped(piece: Piece): Boolean = piece.owner.isWhite ^ getBoardFlipped()
 
   def getPieceRect(square: Square, piece: Piece): Rect =
     isPieceFlipped(piece).when[Rect](-_)(getRect(square).toInnerRect(PIECE_FACE_SIZE, PIECE_FACE_SIZE))

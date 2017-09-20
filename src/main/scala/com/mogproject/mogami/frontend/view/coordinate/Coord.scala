@@ -9,7 +9,7 @@ import scalatags.JsDom.all._
 /**
   * 2-D coordinates
   */
-case class Coord(x: Int, y: Int) {
+case class Coord(x: Int = 0, y: Int = 0) {
   def unary_- : Coord = Coord(-x, -y)
 
   def +(coord: Coord): Coord = Coord(this.x + coord.x, this.y + coord.y)
