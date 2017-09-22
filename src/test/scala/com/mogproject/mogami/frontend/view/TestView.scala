@@ -12,8 +12,8 @@ case class TestView(rootElem: Element) extends SAMView {
 
   override def initialize(): Unit = {
 
-    boardTest.materialize(rootElem)
-    boardTest.board.resize(400)
+    rootElem.appendChild(boardTest.element)
+    boardTest.area.resize(400)
 
   }
 }

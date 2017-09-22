@@ -1,14 +1,14 @@
-package com.mogproject.mogami.frontend.view.board
+package com.mogproject.mogami.frontend.view.board.board
 
 import com.mogproject.mogami.frontend.Rect
+import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.{Piece, Ptype, Square}
-import com.mogproject.mogami.frontend.view.WebComponent
 import org.scalajs.dom.Element
 import org.scalajs.dom.raw.SVGImageElement
 
-import scalatags.JsDom.{TypedTag, svgAttrs}
 import scalatags.JsDom.all._
+import scalatags.JsDom.{TypedTag, svgAttrs}
 
 /**
   *
@@ -16,7 +16,7 @@ import scalatags.JsDom.all._
 trait SVGBoardPieceManager {
   self: SVGBoard =>
 
-  import SVGBoard._
+  import layout._
 
   // Local variables
   private[this] var currentPieces: Map[Square, Piece] = Map.empty
@@ -30,7 +30,7 @@ trait SVGBoardPieceManager {
   //
   private[this] def getImagePath(ptype: Ptype, pieceFace: String): String = s"assets/img/p/${pieceFace}/${ptype.toCsaString}.svg"
 
-  private[this] def isPieceFlipped(piece: Piece): Boolean = piece.owner.isWhite ^ getBoardFlipped()
+  private[this] def isPieceFlipped(piece: Piece): Boolean = piece.owner.isWhite ^ getIsFlipped
 
   def getPieceRect(square: Square, piece: Piece): Rect =
     isPieceFlipped(piece).when[Rect](-_)(getRect(square).toInnerRect(PIECE_FACE_SIZE, PIECE_FACE_SIZE))
@@ -44,6 +44,13 @@ trait SVGBoardPieceManager {
   //
   // Operation
   //
+  /**
+    * Draw pieces on board
+    *
+    * @param pieces
+    * @param pieceFace
+    * @param keepLastMove
+    */
   def drawPieces(pieces: Map[Square, Piece], pieceFace: String = "jp1", keepLastMove: Boolean = false): Unit = {
     // unselect and stop/restart effects
     unselect()
@@ -70,6 +77,9 @@ trait SVGBoardPieceManager {
     pieceMap = pieceMap -- removedPieces.map(_._1) ++ newPieceMap
   }
 
+  /**
+    * Refresh pieces on board
+    */
   def refreshPieces(): Unit = {
     val cp = currentPieces
     clearPieces()
@@ -81,5 +91,4 @@ trait SVGBoardPieceManager {
     pieceMap = Map.empty
     currentPieces = Map.empty
   }
-
 }

@@ -12,7 +12,7 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
     newModel.activeCursor match {
       case x if x == model.activeCursor =>
       case Some(sq) =>
-        view.boardTest.board.effect.cursorEffector.start(sq)
+        view.boardTest.board.effect.cursorEffector.start(view.boardTest.board.getRect(sq))
       case None =>
         view.boardTest.board.effect.cursorEffector.stop()
     }

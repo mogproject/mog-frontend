@@ -1,7 +1,6 @@
 package com.mogproject.mogami.frontend.view.board.effect
 
-import com.mogproject.mogami.core.Square
-import com.mogproject.mogami.frontend.view.board.SVGBoard
+import com.mogproject.mogami.frontend.Rect
 import org.scalajs.dom.raw.SVGElement
 
 import scalatags.JsDom.TypedTag
@@ -10,8 +9,8 @@ import scalatags.JsDom.all._
 /**
   * Flash effect
   */
-case class FlashEffector(svgBoard: SVGBoard) extends BackgroundEffectorLike[Square] {
+case class FlashEffector[T <: EffectorTarget](target: T) extends BackgroundEffectorLike[Rect, T] {
   override def autoDestruct: Option[Int] = Some(300)
 
-  override def generateElements(x: Square): Seq[TypedTag[SVGElement]] = Seq(svgBoard.getRect(x).shrink(12).toSVGRect(cls := "board-flash"))
+  override def generateElements(x: Rect): Seq[TypedTag[SVGElement]] = Seq(x.shrink(12).toSVGRect(cls := "board-flash"))
 }

@@ -1,11 +1,9 @@
 package com.mogproject.mogami.frontend.view.board.effect
 
-import com.mogproject.mogami.frontend.view.board.SVGBoard
 import org.scalajs.dom.raw.SVGElement
 
-trait BackgroundEffectorLike[A] extends EffectorLike[A] {
-  def svgBoard: SVGBoard
+trait BackgroundEffectorLike[A, T <: EffectorTarget] extends EffectorLike[A, T] {
 
-  override def materialize(elems: Seq[SVGElement]): Unit = svgBoard.materializeBackground(elems)
+  override def materialize(elems: Seq[SVGElement]): Unit = target.materializeBackground(elems)
 
 }

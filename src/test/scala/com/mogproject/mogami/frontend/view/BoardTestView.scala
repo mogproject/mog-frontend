@@ -1,9 +1,10 @@
 package com.mogproject.mogami.frontend.view
 
 import com.mogproject.mogami.core.Piece
+import com.mogproject.mogami.frontend.Rect
 import com.mogproject.mogami.frontend.sam.SAM
 import com.mogproject.mogami.{Square, State}
-import com.mogproject.mogami.frontend.view.board.{SVGArea, SVGBoard, SVGStandardLayout}
+import com.mogproject.mogami.frontend.view.board.{SVGArea, SVGStandardLayout}
 import com.mogproject.mogami.frontend.view.board.effect.PieceFlipAttribute
 import com.mogproject.mogami.frontend.view.coordinate.Coord
 import org.scalajs.dom.Element
@@ -18,7 +19,7 @@ import scalatags.JsDom.all.{div, _}
 class BoardTestView extends WebComponent {
   val area = SVGArea(SVGStandardLayout)
 
-  def board = area.svgBoard
+  def board = area.board
 
   // HTML parts
   val resizeInput: Input = input(tpe := "text", cls := "form-control", value := "400").render
@@ -31,7 +32,11 @@ class BoardTestView extends WebComponent {
 
   private[this] def getSquare: Option[Square] = getSquares.headOption
 
+  private[this] def getSquareRect: Option[Rect] = getSquare.map(sq => board.getRect(sq))
+
   private[this] def getSquares: Seq[Square] = squareInput.value.grouped(2).flatMap(s => Try(Square.parseCsaString(s)).toOption).toSeq
+
+  private[this] def getSquareRects: Seq[Rect] = getSquares.map(sq => board.getRect(sq))
 
   private[this] def getPieceFlipAttribute: Option[PieceFlipAttribute] = for {
     sq <- getSquare
@@ -54,7 +59,7 @@ class BoardTestView extends WebComponent {
           div(cls := "row",
             div(cls := "col-md-3", label("Resize")),
             div(cls := "col-md-3", resizeInput),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => Try(resizeInput.value.toInt).foreach(board.resize) }, "Resize"))
+            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => Try(resizeInput.value.toInt).foreach(area.resize) }, "Resize"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Draw pieces")),
@@ -89,30 +94,30 @@ class BoardTestView extends WebComponent {
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Cursor")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getSquare.foreach(board.effect.cursorEffector.start) }, "Start")),
+            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getSquareRect.foreach(board.effect.cursorEffector.start) }, "Start")),
             div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.cursorEffector.stop() }, "Stop"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Flash")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getSquare.foreach(board.effect.flashEffector.start) }, "Start"))
+            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getSquareRect.foreach(board.effect.flashEffector.start) }, "Start"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Selected")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getSquare.foreach(board.effect.selectedEffector.start) }, "Start")),
+            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getSquareRect.foreach(board.effect.selectedEffector.start) }, "Start")),
             div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.selectedEffector.stop() }, "Stop"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Selecting")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getSquare.foreach(board.effect.selectingEffector.start) }, "Start")),
+            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getSquareRect.foreach(board.effect.selectingEffector.start) }, "Start")),
             div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.selectingEffector.stop() }, "Stop"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Move")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getSquare.foreach(board.effect.moveEffector.start) }, "Start"))
+            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getSquareRect.foreach(board.effect.moveEffector.start) }, "Start"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Last Move")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.lastMoveEffector.start(getSquares) }, "Start")),
+            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.lastMoveEffector.start(getSquareRects) }, "Start")),
             div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.lastMoveEffector.stop() }, "Stop"))
           ),
           div(cls := "row",

@@ -1,22 +1,22 @@
-package com.mogproject.mogami.frontend.view.board
+package com.mogproject.mogami.frontend.view.board.board
 
-import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.Square
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
+import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom.raw.SVGElement
 
 import scalatags.JsDom.all._
-import scalatags.JsDom.{TypedTag, svgAttrs}
 import scalatags.JsDom.svgTags.text
+import scalatags.JsDom.{TypedTag, svgAttrs}
 
 /**
   *
   */
 trait SVGBoardIndexManager {
   self: SVGBoard =>
-
-  import SVGBoard._
+  
+  import layout._
 
   private[this] val textClass = "board-index-text"
 
@@ -32,8 +32,8 @@ trait SVGBoardIndexManager {
 
   private[this] def generateFileIndex(index: Int): TypedTag[SVGElement] = {
     val base = getRect(Square(index, 1))
-    val left = base.left + SVGBoard.PIECE_WIDTH / 2
-    val top = offset.y + SVGBoard.MARGIN_SIZE * 5 / 6
+    val left = base.left + PIECE_WIDTH / 2
+    val top = offset.y + MARGIN_SIZE * 5 / 6
     text(svgAttrs.x := left, svgAttrs.y := top, cls := textClass, index.toString)
   }
 
@@ -45,8 +45,8 @@ trait SVGBoardIndexManager {
 
   private[this] def generateWesternRankIndex(index: Int): TypedTag[SVGElement] = {
     val base = getRect(Square(1, index))
-    val left = offset.x + SVGBoard.MARGIN_SIZE * 3 / 2 + SVGBoard.BOARD_WIDTH
-    val top = base.top + (SVGBoard.PIECE_HEIGHT + SVGBoard.INDEX_SIZE) / 2
+    val left = offset.x + MARGIN_SIZE * 3 / 2 + BOARD_WIDTH
+    val top = base.top + (PIECE_HEIGHT + INDEX_SIZE) / 2
     text(svgAttrs.x := left, svgAttrs.y := top, cls := textClass, ('a' + (index - 1)).toChar.toString)
   }
 

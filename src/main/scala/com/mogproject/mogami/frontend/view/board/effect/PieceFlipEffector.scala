@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.view.board.effect
 
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.{Piece, Square}
-import com.mogproject.mogami.frontend.view.board.SVGBoard
+import com.mogproject.mogami.frontend.view.board.board.SVGBoard
 import org.scalajs.dom.raw.SVGElement
 
 import scalatags.JsDom.TypedTag
@@ -16,7 +16,7 @@ case class PieceFlipAttribute(square: Square, fromPiece: Piece, toPiece: Piece, 
 /**
   * Piece flip effect
   */
-case class PieceFlipEffector(svgBoard: SVGBoard) extends BackgroundEffectorLike[PieceFlipAttribute] {
+case class PieceFlipEffector(target: SVGBoard) extends BackgroundEffectorLike[PieceFlipAttribute, SVGBoard] {
 
   private[this] def generateTransformElem(transformType: String, values: String) = {
     animateTransform(
@@ -57,12 +57,12 @@ case class PieceFlipEffector(svgBoard: SVGBoard) extends BackgroundEffectorLike[
     for {
       isFrom <- Seq(true, false)
       piece = isFrom.fold(x.fromPiece, x.toPiece)
-      centerX = svgBoard.getPieceRect(x.square, piece).center.x
+      centerX = target.getPieceRect(x.square, piece).center.x
       isLeft <- Seq(true, false)
       className = isLeft.fold("left-half", "right-half")
       scales = isFrom.fold(isLeft.fold(ls, rs), isLeft.fold(rs.reverse, ls.reverse))
     } yield {
-      svgBoard.generatePieceElement(x.square, piece, x.pieceFace, cls := className, generateTransformElemSet(centerX, scales))
+      target.generatePieceElement(x.square, piece, x.pieceFace, cls := className, generateTransformElemSet(centerX, scales))
     }
   }
 

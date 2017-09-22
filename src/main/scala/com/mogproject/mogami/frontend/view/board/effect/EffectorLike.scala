@@ -11,10 +11,15 @@ import scalatags.JsDom.TypedTag
 /**
   * Generic effector trait
   */
-trait EffectorLike[A] {
+trait EffectorLike[A, T <: EffectorTarget] {
+
+  // local variables
   private[this] var currentValue: Option[A] = None
 
   private[this] var currentElements: Seq[SVGElement] = Seq.empty
+
+  // public methods
+  def target: T
 
   def generateElements(x: A): Seq[TypedTag[SVGElement]]
 

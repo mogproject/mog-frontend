@@ -7,10 +7,6 @@ import org.scalajs.dom.{Element, Node}
   */
 trait WebComponent {
   def element: Element
-
-  def materialize(parent: Element): Unit = {
-    parent.appendChild(element)
-  }
 }
 
 object WebComponent {
