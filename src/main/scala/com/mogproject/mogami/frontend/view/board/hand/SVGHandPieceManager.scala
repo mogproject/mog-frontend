@@ -45,7 +45,8 @@ trait SVGHandPieceManager {
 
   def generateNumberElement(piece: Piece, number: Int, modifiers: Modifier*): TypedTag[SVGTextElement] = {
     val rc = getPieceRect(piece)
-    val as = (modifiers :+ (svgAttrs.x := rc.right - 10) :+ (svgAttrs.y := rc.bottom + 20) :+ (cls := "hand-number-text")) ++ isPieceFlipped(piece).option(svgAttrs.transform := "rotate(180)")
+    val coord = rc.rightBottom + layout.numberAdjustment
+    val as = (modifiers :+ (svgAttrs.x := coord.x) :+ (svgAttrs.y := coord.y) :+ (cls := "hand-number-text")) ++ getRotateAttribute(piece)
     svgTags.text(as, number.toString)
   }
 

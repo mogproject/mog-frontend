@@ -13,21 +13,21 @@ import scalatags.JsDom.all._
 /**
   * Hand layout
   */
-case class SVGHandLayout(whiteOffset: Coord, blackOffset: Coord, pieceWidth: Int, pieceHeight: Int, pieceInterval: Int, numRows: Int, numColumns: Int) {
+case class SVGHandLayout(whiteOffset: Coord, blackOffset: Coord, pieceWidth: Int, pieceHeight: Int, numRows: Int, numColumns: Int) {
 
   final val PIECE_FACE_SIZE: Int = pieceWidth * 20 / 21
 
-  final val NUMBER_SIZE: Int = (pieceWidth + pieceInterval) * 2 / 3
+  final val numberAdjustment: Coord = Coord(-pieceWidth / 18, pieceWidth / 9)
 
   def getRect(piece: Piece, isFlipped: Boolean): Rect = {
     val isBlackArea = piece.owner.isBlack ^ isFlipped
     val index = piece.ptype.sortId - 1
     val (row, column) = (index / numColumns, index % numColumns)
     val (os, c, r) = isBlackArea.fold((blackOffset, column, row), (whiteOffset, numColumns - 1 - column, numRows - 1 - row))
-    Rect(os + Coord(c * (pieceWidth + pieceInterval), r * pieceHeight), pieceWidth + pieceInterval, pieceHeight)
+    Rect(os + Coord(c * pieceWidth, r * pieceHeight), pieceWidth, pieceHeight)
   }
 
-  private[this] def generateBorder(offset: Coord): TypedTag[RectElement] = Rect(offset, (pieceWidth + pieceInterval) * numColumns, pieceHeight * numRows).toSVGRect(cls := "board-border")
+  private[this] def generateBorder(offset: Coord): TypedTag[RectElement] = Rect(offset, pieceWidth * numColumns, pieceHeight * numRows).toSVGRect(cls := "board-border")
 
   // Elements
   def whiteBorder: TypedTag[RectElement] = generateBorder(whiteOffset)
