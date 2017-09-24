@@ -4,6 +4,10 @@ package com.mogproject.mogami.frontend.view.board.board
 import com.mogproject.mogami.Square
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.{Coord, Rect}
+import org.scalajs.dom.svg.{Circle, Line, RectElement}
+
+import scalatags.JsDom.TypedTag
+import scalatags.JsDom.all._
 
 /**
   *
@@ -31,4 +35,17 @@ case class SVGBoardLayout(offset: Coord, pieceWidth: Int, pieceHeight: Int) {
   final val INDEX_SIZE: Int = 60
 
   final val VIEW_BOX_HEIGHT: Int = BOARD_HEIGHT + MARGIN_SIZE * 2
+
+  // Elements
+  def boardBoarder: TypedTag[RectElement] = Rect(getCoord(0, 0), BOARD_WIDTH, BOARD_HEIGHT).toSVGRect(cls := "board-border")
+
+  def boardLines: Seq[TypedTag[Line]] = for {
+    i <- 1 to 8
+    r <- Seq(Rect(getCoord(0, i), BOARD_WIDTH, 0), Rect(getCoord(i, 0), 0, BOARD_HEIGHT))
+  } yield r.toSVGLine(cls := "board-line")
+
+  def boardCircles: Seq[TypedTag[Circle]] = (0 to 3).map { i =>
+    getCoord(3 << (i & 1), 3 << ((i >> 1) & 1)).toSVGCircle(CIRCLE_SIZE, cls := "board-circle")
+  }
+
 }

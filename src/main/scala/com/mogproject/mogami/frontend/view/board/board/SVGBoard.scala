@@ -4,11 +4,8 @@ import com.mogproject.mogami.Square
 import com.mogproject.mogami.frontend.view.board.effect._
 import com.mogproject.mogami.frontend.view.coordinate.Rect
 import org.scalajs.dom.raw.SVGElement
-import org.scalajs.dom.svg.{Circle, Line, RectElement}
+import org.scalajs.dom.svg.RectElement
 import org.scalajs.dom.{ClientRect, Element}
-
-import scalatags.JsDom.TypedTag
-import scalatags.JsDom.all._
 
 /**
   *
@@ -28,17 +25,6 @@ case class SVGBoard(layout: SVGBoardLayout) extends SVGBoardPieceManager with SV
   //
   // Elements
   //
-  private[this] val boardBoarder = Rect(getCoord(0, 0), BOARD_WIDTH, BOARD_HEIGHT).toSVGRect(cls := "board-border")
-
-  private[this] val boardLines: Seq[TypedTag[Line]] = for {
-    i <- 1 to 8
-    r <- Seq(Rect(getCoord(0, i), BOARD_WIDTH, 0), Rect(getCoord(i, 0), 0, BOARD_HEIGHT))
-  } yield r.toSVGLine(cls := "board-line")
-
-  private[this] val boardCircles: Seq[TypedTag[Circle]] = (0 to 3).map { i =>
-    getCoord(3 << (i & 1), 3 << ((i >> 1) & 1)).toSVGCircle(CIRCLE_SIZE, cls := "board-circle")
-  }
-
   private[this] val borderElement: RectElement = boardBoarder.render
 
   override protected def thresholdElement: Element = borderElement
