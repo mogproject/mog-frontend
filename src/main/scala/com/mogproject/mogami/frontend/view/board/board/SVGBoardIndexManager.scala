@@ -32,7 +32,7 @@ trait SVGBoardIndexManager {
 
   private[this] def generateFileIndex(index: Int): TypedTag[SVGElement] = {
     val base = getRect(Square(index, 1))
-    val left = base.left + PIECE_WIDTH / 2
+    val left = base.left + pieceWidth / 2
     val top = offset.y + MARGIN_SIZE * 5 / 6
     text(svgAttrs.x := left, svgAttrs.y := top, cls := textClass, index.toString)
   }
@@ -46,7 +46,7 @@ trait SVGBoardIndexManager {
   private[this] def generateWesternRankIndex(index: Int): TypedTag[SVGElement] = {
     val base = getRect(Square(1, index))
     val left = offset.x + MARGIN_SIZE * 3 / 2 + BOARD_WIDTH
-    val top = base.top + (PIECE_HEIGHT + INDEX_SIZE) / 2
+    val top = base.top + (pieceHeight + INDEX_SIZE) / 2
     text(svgAttrs.x := left, svgAttrs.y := top, cls := textClass, ('a' + (index - 1)).toChar.toString)
   }
 

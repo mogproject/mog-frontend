@@ -2,6 +2,7 @@ package com.mogproject.mogami.frontend.view.board
 
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.board.board.SVGBoard
+import com.mogproject.mogami.frontend.view.board.hand.SVGHand
 import org.scalajs.dom.Element
 import org.scalajs.dom.html.Div
 import org.scalajs.dom.raw.SVGElement
@@ -20,6 +21,8 @@ case class SVGArea(layout: SVGAreaLayout) extends WebComponent with SVGAreaEvent
 
   val board: SVGBoard = SVGBoard(layout.board)
 
+  val hand: SVGHand = SVGHand(layout.hand)
+
   def getControl: SVGAreaControl = control
 
   //
@@ -29,7 +32,8 @@ case class SVGArea(layout: SVGAreaLayout) extends WebComponent with SVGAreaEvent
     svgAttrs.width := 100.pct,
     svgAttrs.height := 100.pct,
     svgAttrs.viewBox := s"0 0 ${layout.viewBoxBottomRight.toString}",
-    board.elements
+    board.elements,
+    hand.elements
   ).render
 
   /**
@@ -49,6 +53,7 @@ case class SVGArea(layout: SVGAreaLayout) extends WebComponent with SVGAreaEvent
   def setFlip(flip: Boolean): Unit = if (control.isFlipped != flip) {
     control = control.copy(isFlipped = flip)
     board.setFlip(flip)
+    hand.setFlip(flip)
   }
 
   def resize(boardWidth: Int): Unit = svgDiv.style.width = boardWidth.px
@@ -56,6 +61,7 @@ case class SVGArea(layout: SVGAreaLayout) extends WebComponent with SVGAreaEvent
   def unselect(): Unit = {
     board.unselect()
   }
+
   //
   // Event
   //

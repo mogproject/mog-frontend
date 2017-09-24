@@ -45,7 +45,9 @@ case class SVGBoard(layout: SVGBoardLayout) extends SVGBoardPieceManager with SV
 
   val elements: Seq[SVGElement] = borderElement +: (boardLines ++ boardCircles).map(_.render)
 
+  //
   // Utility
+  //
   def getBorderClientRect: ClientRect = borderElement.getBoundingClientRect()
 
   def getRect(square: Square): Rect = layout.getRect(square, isFlipped)
@@ -60,7 +62,7 @@ case class SVGBoard(layout: SVGBoardLayout) extends SVGBoardPieceManager with SV
   }
 
   def unselect(): Unit = {
-    effect.selectedEffector.stop() // a selected square is released here
+    effect.selectedEffector.stop()
     effect.cursorEffector.stop()
     effect.selectingEffector.stop()
     effect.legalMoveEffector.stop()

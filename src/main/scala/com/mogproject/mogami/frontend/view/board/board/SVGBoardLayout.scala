@@ -8,11 +8,12 @@ import com.mogproject.mogami.frontend.{Coord, Rect}
 /**
   *
   */
-case class SVGBoardLayout(offset: Coord) {
+case class SVGBoardLayout(offset: Coord, pieceWidth: Int, pieceHeight: Int) {
 
-  def getCoord(fileIndex: Int, rankIndex: Int): Coord = offset + Coord(MARGIN_SIZE + fileIndex * PIECE_WIDTH, MARGIN_SIZE + rankIndex * PIECE_HEIGHT)
+  // todo: consistency refactoring
+  def getCoord(fileIndex: Int, rankIndex: Int): Coord = offset + Coord(MARGIN_SIZE + fileIndex * pieceWidth, MARGIN_SIZE + rankIndex * pieceHeight)
 
-  def getRect(fileIndex: Int, rankIndex: Int): Rect = Rect(getCoord(fileIndex, rankIndex), PIECE_WIDTH, PIECE_HEIGHT)
+  def getRect(fileIndex: Int, rankIndex: Int): Rect = Rect(getCoord(fileIndex, rankIndex), pieceWidth, pieceHeight)
 
   def getRect(square: Square, isFlipped: Boolean): Rect = {
     val s = isFlipped.when[Square](!_)(square)
@@ -20,11 +21,9 @@ case class SVGBoardLayout(offset: Coord) {
   }
 
   final val VIEW_BOX_WIDTH: Int = 2048
-  final val PIECE_WIDTH: Int = 210
-  final val PIECE_HEIGHT: Int = 230
-  final val PIECE_FACE_SIZE: Int = 200
-  final val BOARD_WIDTH: Int = PIECE_WIDTH * 9
-  final val BOARD_HEIGHT: Int = PIECE_HEIGHT * 9
+  final val PIECE_FACE_SIZE: Int = pieceWidth * 20 / 21
+  final val BOARD_WIDTH: Int = pieceWidth * 9
+  final val BOARD_HEIGHT: Int = pieceHeight * 9
   final val MARGIN_SIZE: Int = (VIEW_BOX_WIDTH - BOARD_WIDTH) / 2
   final val CIRCLE_SIZE: Int = 14
 

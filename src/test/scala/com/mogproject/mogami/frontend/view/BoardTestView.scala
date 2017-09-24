@@ -21,6 +21,8 @@ class BoardTestView extends WebComponent {
 
   def board = area.board
 
+  def hand = area.hand
+
   // HTML parts
   val resizeInput: Input = input(tpe := "text", cls := "form-control", value := "400").render
 
@@ -65,8 +67,8 @@ class BoardTestView extends WebComponent {
             div(cls := "col-md-3", label("Draw pieces")),
             div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.drawPieces(State.HIRATE.board) }, "HIRATE")),
             div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.drawPieces(State.HIRATE.board.mapValues(_.promoted)) }, "HIRATE Promoted")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.drawPieces(State.MATING_BLACK.board) }, "Mate")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.drawPieces(Map.empty) }, "Clear"))
+            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.drawPieces(State.MATING_BLACK.board); hand.drawPieces(State.MATING_BLACK.hand) }, "Mate")),
+            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.drawPieces(Map.empty); hand.drawPieces(Map.empty) }, "Clear"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Index")),

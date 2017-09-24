@@ -27,6 +27,15 @@
   font-size: 60px;
 }
 
+.hand-number-text {
+  font-weight: 900;
+  text-anchor: middle;
+  stroke: #333333;
+  stroke-width: 8px;
+  fill: #f3f372;
+  font-size: 120px;
+}
+
 .left-half {
   clip-path: inset(0% 50% 0% 0%);
 }

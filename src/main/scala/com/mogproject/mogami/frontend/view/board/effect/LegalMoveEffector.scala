@@ -11,7 +11,7 @@ import scalatags.JsDom.TypedTag
   * Indicates legal moves
   */
 case class LegalMoveEffector(target: SVGBoard) extends ForegroundEffectorLike[Seq[Square], SVGBoard] {
-  private[this] val effectWidth = target.layout.PIECE_WIDTH / 3
+  private[this] val effectWidth = target.layout.pieceWidth / 3
 
   private[this] def generateAnimateElems: Seq[TypedTag[SVGElement]] = Seq(createAnimateElem("opacity", Seq(0.8, 0, 0, 0), "2s"))
 
