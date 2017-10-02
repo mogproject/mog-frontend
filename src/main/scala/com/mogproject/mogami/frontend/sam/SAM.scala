@@ -62,6 +62,8 @@ object SAM {
     samImpl = new SAM(state)
     state.view.initialize()
   }
+
+  debug("SAM Debug mode enabled.")
 }
 
 

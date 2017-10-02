@@ -1,9 +1,7 @@
 package com.mogproject.mogami.frontend.view.board
 
-import com.mogproject.mogami.Square
 import com.mogproject.mogami.frontend.action.board.BoardCursorMoveAction
 import com.mogproject.mogami.frontend.sam.SAM
-import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom.MouseEvent
 
 /**
@@ -17,23 +15,28 @@ trait SVGAreaEventHandler {
   //
 
   /**
-    * Convert MouseEvent to Square
+    * Convert Mouse position to Cursor
     *
-    * @return Square if the mouse position is inside the board
+    * @param clientX x-coordinate
+    * @param clientY y-coordinate
+    * @return None if the position is out of interests
     */
-  private[this] def getSquare(clientX: Double, clientY: Double): Option[Square] = {
-    val r = board.getBorderClientRect
-    val (x, y) = (clientX - r.left, clientY - r.top)
-    val xi = math.floor(x / (r.width / 9)).toInt
-    val yi = math.floor(y / (r.height / 9)).toInt
-
-    if (0 <= xi && xi < 9 && 0 <= yi && yi < 9) {
-      Some(getControl.isFlipped.when[Square](!_)(Square(9 - xi, 1 + yi)))
+  private[this] def getCursor(clientX: Double, clientY: Double): Option[Cursor] = {
+    val sq = board.clientPos2Square(clientX, clientY)
+    if (sq.isDefined) {
+      Some(BoardCursor(sq.get))
     } else {
-      None
+      val h = hand.clientPos2Hand(clientX, clientY)
+      if (h.isDefined) {
+        Some(HandCursor(h.get))
+      } else {
+        None
+      }
     }
   }
 
-  protected def mouseMove(evt: MouseEvent): Unit = SAM.doAction(BoardCursorMoveAction(getSquare(evt.clientX, evt.clientY)))
+  protected def mouseMove(evt: MouseEvent): Unit = {
+    SAM.doAction(BoardCursorMoveAction(getCursor(evt.clientX, evt.clientY)))
+  }
 
 }
