@@ -22,17 +22,7 @@ trait SVGAreaEventHandler {
     * @return None if the position is out of interests
     */
   private[this] def getCursor(clientX: Double, clientY: Double): Option[Cursor] = {
-    val sq = board.clientPos2Square(clientX, clientY)
-    if (sq.isDefined) {
-      Some(BoardCursor(sq.get))
-    } else {
-      val h = hand.clientPos2Hand(clientX, clientY)
-      if (h.isDefined) {
-        Some(HandCursor(h.get))
-      } else {
-        None
-      }
-    }
+    Seq(board, hand).toStream.flatMap(t => t.clientPos2Cursor(clientX, clientY)).headOption
   }
 
   protected def mouseMove(evt: MouseEvent): Unit = {

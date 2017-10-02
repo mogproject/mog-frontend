@@ -2,6 +2,7 @@ package com.mogproject.mogami.frontend.view.board.board
 
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.Square
+import com.mogproject.mogami.frontend.view.board.{BoardCursor, Cursor}
 import com.mogproject.mogami.frontend.view.board.effect._
 import com.mogproject.mogami.frontend.view.coordinate.Rect
 import org.scalajs.dom.raw.SVGElement
@@ -35,13 +36,13 @@ case class SVGBoard(layout: SVGBoardLayout) extends SVGBoardPieceManager with SV
   //
   // Utility
   //
-  def clientPos2Square(clientX: Double, clientY: Double): Option[Square] = {
+  override def clientPos2Cursor(clientX: Double, clientY: Double): Option[Cursor] = {
     val r = borderElement.getBoundingClientRect()
     val (x, y) = (clientX - r.left, clientY - r.top)
     val xi = math.floor(x / (r.width / 9)).toInt
     val yi = math.floor(y / (r.height / 9)).toInt
 
-    (0 <= xi && xi < 9 && 0 <= yi && yi < 9).option(isFlipped.when[Square](!_)(Square(9 - xi, 1 + yi)))
+    (0 <= xi && xi < 9 && 0 <= yi && yi < 9).option(BoardCursor(isFlipped.when[Square](!_)(Square(9 - xi, 1 + yi))))
   }
 
   def getRect(square: Square): Rect = layout.getRect(square, isFlipped)

@@ -2,6 +2,7 @@ package com.mogproject.mogami.frontend.view.board.hand
 
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami._
+import com.mogproject.mogami.frontend.view.board.{Cursor, HandCursor}
 import com.mogproject.mogami.frontend.view.board.effect._
 import com.mogproject.mogami.frontend.view.coordinate.Rect
 import org.scalajs.dom.{ClientRect, Element}
@@ -35,18 +36,14 @@ case class SVGHand(layout: SVGHandLayout) extends SVGHandPieceManager with Effec
 
   def getRect(hand: Hand): Rect = getRect(hand.toPiece)
 
-  def clientPos2Hand(clientX: Double, clientY: Double): Option[Hand] = {
-    val wSortId = clientRect2Index(clientX, clientY, borderElements.head.getBoundingClientRect())
-    if (wSortId.isDefined) {
-      Some(Hand(isFlipped.fold(Player.BLACK, Player.WHITE), Ptype.inHand(6 - wSortId.get)))
-    } else {
-      val bSortId = clientRect2Index(clientX, clientY, borderElements(1).getBoundingClientRect())
-      if (bSortId.isDefined) {
-        Some(Hand(isFlipped.fold(Player.WHITE, Player.BLACK), Ptype.inHand(bSortId.get)))
-      } else {
-        None
-      }
-    }
+  override def clientPos2Cursor(clientX: Double, clientY: Double): Option[Cursor] = {
+    (borderElements.zipWithIndex.toStream.flatMap { case (r, i) =>
+      clientRect2Index(clientX, clientY, r.getBoundingClientRect()).map(i -> _)
+    }.headOption match {
+      case (Some((0, sortId))) => Some(Player.WHITE -> Ptype.inHand(6 - sortId))
+      case (Some((1, sortId))) => Some(Player.BLACK -> Ptype.inHand(sortId))
+      case _ => None
+    }).map { case (pl, pt) => HandCursor(Hand(isFlipped.when[Player](!_)(pl), pt)) }
   }
 
   private def clientRect2Index(clientX: Double, clientY: Double, r: ClientRect): Option[Int] = {

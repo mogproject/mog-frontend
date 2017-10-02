@@ -1,5 +1,6 @@
 package com.mogproject.mogami.frontend.view.board.effect
 
+import com.mogproject.mogami.frontend.view.board.Cursor
 import org.scalajs.dom.Element
 
 /**
@@ -27,4 +28,5 @@ trait EffectorTarget {
     elems.map(materializeForeground[A])
   }
 
+  def clientPos2Cursor(clientX: Double, clientY: Double): Option[Cursor]
 }
