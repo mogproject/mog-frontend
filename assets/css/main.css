@@ -25,6 +25,7 @@
 .board-index-text {
   text-anchor: middle;
   font-size: 60px;
+  pointer-events: none;
 }
 
 .hand-number-text {
@@ -34,6 +35,7 @@
   stroke-width: 7px;
   fill: #f3f372;
   font-size: 120px;
+  pointer-events: none;
 }
 
 .left-half {
