@@ -9,4 +9,6 @@ trait SAMState[M <: SAMModel] {
   def view: SAMView
 
   def render(newModel: M): (SAMState[M], Option[SAMAction[M]])
+
+  def initialize(): Unit
 }

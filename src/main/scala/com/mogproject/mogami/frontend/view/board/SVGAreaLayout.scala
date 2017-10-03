@@ -20,8 +20,8 @@ case object SVGStandardLayout extends SVGAreaLayout {
   private[this] val boardPieceWidth = 210
   private[this] val boardPieceHeight = 230
   private[this] val boardMargin = 79
-  private[this] val handPieceWidth = 168 + 12
-  private[this] val handPieceHeight = 184
+  private[this] val handPieceWidth = boardPieceWidth * 6 / 7
+  private[this] val handPieceHeight = handPieceWidth * boardPieceHeight / boardPieceWidth
   private[this] val topMargin = 30
 
   override val board: SVGBoardLayout = SVGBoardLayout(Coord(0, topMargin + handPieceHeight), boardPieceWidth, boardPieceHeight)
@@ -35,18 +35,40 @@ case object SVGStandardLayout extends SVGAreaLayout {
   override def viewBoxBottomRight: Coord = board.offset + Coord(board.VIEW_BOX_WIDTH, board.VIEW_BOX_HEIGHT + (handPieceHeight + topMargin) * 2)
 }
 
-case object CompactLayout extends SVGAreaLayout {
-  override val board: SVGBoardLayout = ??? //SVGBoardLayout(Coord(200, 0))
+case object SVGCompactLayout extends SVGAreaLayout {
+  private[this] val boardPieceWidth = 210
+  private[this] val boardPieceHeight = 230
+  private[this] val boardMargin = 79
+  private[this] val handPieceWidth = boardPieceWidth * 6 / 7
+  private[this] val handPieceHeight = handPieceWidth * boardPieceHeight / boardPieceWidth
+  private[this] val topMargin = 30
 
-  override val hand: SVGHandLayout = ???
+  override val board: SVGBoardLayout = SVGBoardLayout(Coord(boardMargin + handPieceWidth + topMargin, 0), boardPieceWidth, boardPieceHeight)
 
-  override def viewBoxBottomRight: Coord = ??? // Coord(2048, 2048)
+  override val hand: SVGHandLayout = SVGHandLayout(
+    Coord(boardMargin, boardMargin),
+    board.offset + Coord(board.VIEW_BOX_WIDTH + topMargin, boardMargin + 3 * boardPieceHeight),
+    handPieceWidth, handPieceHeight, 7, 1
+  )
+
+  override def viewBoxBottomRight: Coord = board.offset + Coord(board.VIEW_BOX_WIDTH + handPieceWidth + boardMargin + topMargin, board.VIEW_BOX_HEIGHT)
 }
 
-case object WideLayout extends SVGAreaLayout {
-  override val board: SVGBoardLayout = ??? //SVGBoardLayout(Coord(400, 0))
+case object SVGWideLayout extends SVGAreaLayout {
+  private[this] val boardPieceWidth = 210
+  private[this] val boardPieceHeight = 230
+  private[this] val boardMargin = 79
+  private[this] val handPieceWidth = boardPieceWidth
+  private[this] val handPieceHeight = boardPieceHeight
+  private[this] val topMargin = 30
 
-  override val hand: SVGHandLayout = ???
+  override val board: SVGBoardLayout = SVGBoardLayout(Coord(boardMargin + 2 * handPieceWidth + topMargin, 0), boardPieceWidth, boardPieceHeight)
 
-  override def viewBoxBottomRight: Coord = ??? // Coord(2048, 2048)
+  override val hand: SVGHandLayout = SVGHandLayout(
+    Coord(topMargin, boardMargin),
+    board.offset + Coord(board.VIEW_BOX_WIDTH + topMargin, boardMargin + 5 * boardPieceHeight),
+    handPieceWidth, handPieceHeight, 4, 2
+  )
+
+  override def viewBoxBottomRight: Coord = board.offset + Coord(board.VIEW_BOX_WIDTH + 2 * handPieceWidth + boardMargin + topMargin, board.VIEW_BOX_HEIGHT)
 }

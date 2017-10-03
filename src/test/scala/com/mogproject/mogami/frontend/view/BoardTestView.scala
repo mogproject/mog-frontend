@@ -2,22 +2,25 @@ package com.mogproject.mogami.frontend.view
 
 import com.mogproject.mogami.core.Piece
 import com.mogproject.mogami.frontend.Rect
+import com.mogproject.mogami.frontend.action.board.BoardChangeLayoutAction
+import com.mogproject.mogami.frontend.model.board.BoardModel
 import com.mogproject.mogami.frontend.sam.SAM
+import com.mogproject.mogami.frontend.view.board._
 import com.mogproject.mogami.{Square, State}
-import com.mogproject.mogami.frontend.view.board.{SVGArea, SVGStandardLayout}
 import com.mogproject.mogami.frontend.view.board.effect.PieceFlipAttribute
+import com.mogproject.mogami.frontend.view.button.DropdownMenu
 import com.mogproject.mogami.frontend.view.coordinate.Coord
 import org.scalajs.dom.Element
-import org.scalajs.dom.html.Input
+import org.scalajs.dom.html.{Div, Input}
 
 import scala.util.Try
-import scalatags.JsDom.all.{div, _}
+import scalatags.JsDom.all.{div, button => btn, _}
 
 /**
   *
   */
 class BoardTestView extends WebComponent {
-  val area = SVGArea(SVGStandardLayout)
+  var area: SVGArea = SVGArea(SVGStandardLayout)
 
   def board = area.board
 
@@ -46,12 +49,28 @@ class BoardTestView extends WebComponent {
     to <- Try(Piece.parseCsaString(toPieceInput.value)).toOption
   } yield PieceFlipAttribute(sq, from, to, "jp1")
 
+
+  val layoutChangeButton: DropdownMenu[SVGAreaLayout, BoardModel] = DropdownMenu(Vector(SVGStandardLayout, SVGCompactLayout, SVGWideLayout), Map(
+    SVGStandardLayout -> Map(English -> "Standard"),
+    SVGCompactLayout -> Map(English -> "Compact"),
+    SVGWideLayout -> Map(English -> "Wide")
+  ), BoardChangeLayoutAction
+  )
+
+  val boardArea: Div = div().render
+
+  def drawBoardArea(layout: SVGAreaLayout): Unit = {
+    area = SVGArea(layout)
+    WebComponent.removeAllChildElements(boardArea)
+    boardArea.appendChild(area.element)
+  }
+
   // Base element
   override def element: Element = div(
     cls := "container-fluid",
     div(cls := "row",
       div(cls := "col-md-6",
-        area.element
+        boardArea
       ),
       div(cls := "col-md-6",
         div(
@@ -59,27 +78,31 @@ class BoardTestView extends WebComponent {
 
           h3("Feature Test"),
           div(cls := "row",
+            div(cls := "col-md-3", label("Layout")),
+            div(cls := "col-md-3", layoutChangeButton.element)
+          ),
+          div(cls := "row",
             div(cls := "col-md-3", label("Resize")),
             div(cls := "col-md-3", resizeInput),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => Try(resizeInput.value.toInt).foreach(area.resize) }, "Resize"))
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => Try(resizeInput.value.toInt).foreach(area.resize) }, "Resize"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Draw pieces")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.drawPieces(State.HIRATE.board) }, "HIRATE")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.drawPieces(State.HIRATE.board.mapValues(_.promoted)) }, "HIRATE Promoted")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.drawPieces(State.MATING_BLACK.board); hand.drawPieces(State.MATING_BLACK.hand) }, "Mate")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.drawPieces(Map.empty); hand.drawPieces(Map.empty) }, "Clear"))
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.drawPieces(State.HIRATE.board) }, "HIRATE")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.drawPieces(State.HIRATE.board.mapValues(_.promoted)) }, "HIRATE Promoted")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.drawPieces(State.MATING_BLACK.board); hand.drawPieces(State.MATING_BLACK.hand) }, "Mate")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.drawPieces(Map.empty); hand.drawPieces(Map.empty) }, "Clear"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Index")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.drawIndexes(true) }, "Japanese")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.drawIndexes(false) }, "Western")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.clearIndexes() }, "Clear"))
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.drawIndexes(true) }, "Japanese")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.drawIndexes(false) }, "Western")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.clearIndexes() }, "Clear"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Flip")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => area.setFlip(true) }, "Flip:true")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => area.setFlip(false) }, "Flip:false"))
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => area.setFlip(true) }, "Flip:true")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => area.setFlip(false) }, "Flip:false"))
           ),
           h3("Effect Test"),
           div(cls := "row",
@@ -96,46 +119,46 @@ class BoardTestView extends WebComponent {
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Cursor")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getSquareRect.foreach(board.effect.cursorEffector.start) }, "Start")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.cursorEffector.stop() }, "Stop"))
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => getSquareRect.foreach(board.effect.cursorEffector.start) }, "Start")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.effect.cursorEffector.stop() }, "Stop"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Flash")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getSquareRect.foreach(board.effect.flashEffector.start) }, "Start"))
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => getSquareRect.foreach(board.effect.flashEffector.start) }, "Start"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Selected")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getSquareRect.foreach(board.effect.selectedEffector.start) }, "Start")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.selectedEffector.stop() }, "Stop"))
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => getSquareRect.foreach(board.effect.selectedEffector.start) }, "Start")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.effect.selectedEffector.stop() }, "Stop"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Selecting")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getSquareRect.foreach(board.effect.selectingEffector.start) }, "Start")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.selectingEffector.stop() }, "Stop"))
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => getSquareRect.foreach(board.effect.selectingEffector.start) }, "Start")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.effect.selectingEffector.stop() }, "Stop"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Move")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getSquareRect.foreach(board.effect.moveEffector.start) }, "Start"))
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => getSquareRect.foreach(board.effect.moveEffector.start) }, "Start"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Last Move")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.lastMoveEffector.start(getSquareRects) }, "Start")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.lastMoveEffector.stop() }, "Stop"))
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.effect.lastMoveEffector.start(getSquareRects) }, "Start")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.effect.lastMoveEffector.stop() }, "Stop"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Legal Moves")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.legalMoveEffector.start(getSquares) }, "Start")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.legalMoveEffector.stop() }, "Stop"))
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.effect.legalMoveEffector.start(getSquares) }, "Start")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.effect.legalMoveEffector.stop() }, "Stop"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Piece Flip")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => getPieceFlipAttribute.foreach(board.effect.pieceFlipEffector.start) }, "Start")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.pieceFlipEffector.stop() }, "Stop"))
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => getPieceFlipAttribute.foreach(board.effect.pieceFlipEffector.start) }, "Start")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.effect.pieceFlipEffector.stop() }, "Stop"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Forward")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.forwardEffector.start(true) }, "Forward")),
-            div(cls := "col-md-3", button(cls := "btn btn-default", onclick := { () => board.effect.forwardEffector.start(false) }, "Backward"))
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.effect.forwardEffector.start(true) }, "Forward")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.effect.forwardEffector.start(false) }, "Backward"))
           )
 
         )

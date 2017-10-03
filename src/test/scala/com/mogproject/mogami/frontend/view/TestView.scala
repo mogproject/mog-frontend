@@ -1,6 +1,7 @@
 package com.mogproject.mogami.frontend.view
 
 import com.mogproject.mogami.frontend.sam.SAMView
+import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGStandardLayout}
 import org.scalajs.dom.Element
 
 /**
@@ -8,12 +9,14 @@ import org.scalajs.dom.Element
   */
 case class TestView(rootElem: Element) extends SAMView {
 
-  lazy val boardTest = new BoardTestView
+  val boardTest: BoardTestView = new BoardTestView
 
   override def initialize(): Unit = {
-
     rootElem.appendChild(boardTest.element)
-    boardTest.area.resize(400)
-
   }
+
+  def setAreaLayout(layout: SVGAreaLayout): Unit = {
+    boardTest.drawBoardArea(layout)
+  }
+
 }

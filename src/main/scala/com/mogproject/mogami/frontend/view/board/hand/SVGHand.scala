@@ -37,20 +37,22 @@ case class SVGHand(layout: SVGHandLayout) extends SVGHandPieceManager with Effec
   def getRect(hand: Hand): Rect = getRect(hand.toPiece)
 
   override def clientPos2Cursor(clientX: Double, clientY: Double): Option[Cursor] = {
+    val numRooms = layout.numRows * layout.numColumns
+
     (borderElements.zipWithIndex.toStream.flatMap { case (r, i) =>
       clientRect2Index(clientX, clientY, r.getBoundingClientRect()).map(i -> _)
     }.headOption match {
-      case (Some((0, sortId))) => Some(Player.WHITE -> Ptype.inHand(6 - sortId))
-      case (Some((1, sortId))) => Some(Player.BLACK -> Ptype.inHand(sortId))
+      case (Some((0, sortId))) if sortId >= numRooms - 7 => Some(Player.WHITE -> Ptype.inHand(numRooms - sortId - 1))
+      case (Some((1, sortId))) if sortId <= 6 => Some(Player.BLACK -> Ptype.inHand(sortId))
       case _ => None
     }).map { case (pl, pt) => HandCursor(Hand(isFlipped.when[Player](!_)(pl), pt)) }
   }
 
-  private def clientRect2Index(clientX: Double, clientY: Double, r: ClientRect): Option[Int] = {
+  private[this] def clientRect2Index(clientX: Double, clientY: Double, r: ClientRect): Option[Int] = {
     (r.left <= clientX && clientX <= r.right && r.top <= clientY && clientY <= r.bottom).option {
       val xi = math.floor((clientX - r.left) / (r.width / layout.numColumns)).toInt
       val yi = math.floor((clientY - r.top) / (r.height / layout.numRows)).toInt
-      yi * layout.numRows + xi
+      xi + layout.numColumns * yi
     }
   }
 

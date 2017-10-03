@@ -10,6 +10,12 @@ import com.mogproject.mogami.frontend.view.board.{BoardCursor, HandCursor}
   */
 case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardModel] {
   override def render(newModel: BoardModel): (SAMState[BoardModel], Option[SAMAction[BoardModel]]) = {
+
+    // change the layout
+    if (model.config.layout != newModel.config.layout) {
+      renderBoard(newModel)
+    }
+
     if (model.activeCursor != newModel.activeCursor) {
       // clear current cursor
       model.activeCursor match {
@@ -31,5 +37,14 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
     }
 
     (copy(model = newModel), None)
+  }
+
+  override def initialize(): Unit = {
+    renderBoard(model)
+  }
+
+  def renderBoard(m: BoardModel): Unit = {
+    view.setAreaLayout(m.config.layout)
+    view.boardTest.area.resize(m.config.boardWidth)
   }
 }

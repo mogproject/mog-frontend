@@ -13,4 +13,6 @@ object WebComponent {
   def removeElement(elem: Node): Unit = elem.parentNode.removeChild(elem)
 
   def removeElements(elems: Iterable[Node]): Unit = elems.foreach(removeElement)
+
+  def removeAllChildElements(elem: Node): Unit = while (elem.hasChildNodes()) elem.removeChild(elem.firstChild)
 }

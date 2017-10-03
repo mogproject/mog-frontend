@@ -65,8 +65,10 @@ trait SVGHandPieceManager {
     unselect()
     keepLastMove.fold(effect.lastMoveEffector.restart(), effect.lastMoveEffector.stop())
 
+    val nextPieces = pieces.toSet.filter(_._2 > 0)
+
     // get diffs
-    val (xs, ys) = (currentPieces.toSet, pieces.toSet.filter(_._2 > 0))
+    val (xs, ys) = (currentPieces.toSet, nextPieces)
 
     val removedPieces = xs -- ys
     val newPieces = ys -- xs
@@ -78,7 +80,7 @@ trait SVGHandPieceManager {
     }
 
     // update local variables
-    currentPieces = pieces
+    currentPieces = nextPieces.toMap
     currentPieceFace = pieceFace
 
     // render and materialize

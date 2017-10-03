@@ -45,7 +45,7 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
 
 object SAM {
 
-  private[this] final val VERBOSE_LOG_ENABLED: Boolean = false
+  private[this] final val VERBOSE_LOG_ENABLED: Boolean = true
 
   protected def debug(message: String): Unit = if (VERBOSE_LOG_ENABLED) println(message)
 
@@ -60,10 +60,11 @@ object SAM {
 
   def initialize[M <: SAMModel](state: SAMState[M]): Unit = {
     samImpl = new SAM(state)
+    state.initialize()
     state.view.initialize()
+    debug("SAM Debug mode enabled.")
   }
 
-  debug("SAM Debug mode enabled.")
 }
 
 
