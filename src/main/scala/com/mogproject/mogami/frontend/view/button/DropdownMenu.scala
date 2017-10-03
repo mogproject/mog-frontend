@@ -23,9 +23,7 @@ case class DropdownMenu[A, M <: SAMModel](items: Vector[A], labels: Map[A, Map[L
   private[this] lazy val labelButton = button(
     cls := "btn btn-default dropdown-toggle",
     tpe := "button",
-    data("toggle") := "dropdown",
-    aria.haspopup := true,
-    aria.expanded := false
+    data("toggle") := "dropdown"
   ).render
 
   private[this] lazy val menuItems = ul(cls := "dropdown-menu").render
@@ -44,7 +42,7 @@ case class DropdownMenu[A, M <: SAMModel](items: Vector[A], labels: Map[A, Map[L
   def renderItems(language: Language): Unit = {
     WebComponent.removeAllChildElements(menuItems)
     items.map { item =>
-      val elem = li(a(onclick := { () => select(item); SAM.doAction(actionBuilder(item)) }, lookupLabel(item, language))).render
+      val elem = li(a(href := "#", onclick := { () => select(item); SAM.doAction(actionBuilder(item)) }, lookupLabel(item, language))).render
       menuItems.appendChild(elem)
     }
     currentLanguage = language
