@@ -8,6 +8,7 @@ import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGStandardLayo
   */
 case class BoardConfiguration(layout: SVGAreaLayout = SVGStandardLayout,
                               boardWidth: Int = 400,
+                              flipType: FlipType = FlipDisabled,
                               pieceFace: String = "jp1",
                               recordLang: Language = English
                              ) {

@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.state
 
-import com.mogproject.mogami.frontend.model.board.BoardModel
+import com.mogproject.mogami.frontend.model.board.{BoardModel, DoubleBoard, FlipDisabled, FlipEnabled}
 import com.mogproject.mogami.frontend.model.board.cursor.{CursorEvent, MouseMoveEvent}
 import com.mogproject.mogami.frontend.sam.{SAMAction, SAMState}
 import com.mogproject.mogami.frontend.view.{Japanese, TestView}
@@ -18,7 +18,7 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
       (renderAll || isUpdated(newModel, _.config.layout), renderLayout),
       (renderAll || isUpdated(newModel, _.config.layout, _.config.boardWidth), renderSize),
       (renderAll || isUpdated(newModel, _.config.layout, _.config.recordLang), renderIndex),
-      (renderAll || isUpdated(newModel, _.config.layout, _.isFlipped), renderFlip),
+      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType), renderFlip),
       (renderAll || isUpdated(newModel, _.config.layout, _.config.pieceFace, _.activeBoard), renderBoard),
       (renderAll || isUpdated(newModel, _.config.layout, _.config.pieceFace, _.activeHand), renderHand),
       (renderAll || isUpdated(newModel, _.cursorEvent), renderMouseEvent)
@@ -44,7 +44,12 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
   }
 
   private[this] def renderFlip(newModel: BoardModel): BoardModel = {
-    view.boardTest.area.setFlip(newModel.isFlipped) // todo: fix
+    newModel.config.flipType match {
+      case FlipEnabled => view.boardTest.area.setFlip(true)
+      case FlipDisabled => view.boardTest.area.setFlip(false)
+      case DoubleBoard => // todo
+    }
+
     newModel
   }
 

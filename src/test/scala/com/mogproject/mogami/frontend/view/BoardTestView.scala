@@ -2,8 +2,8 @@ package com.mogproject.mogami.frontend.view
 
 import com.mogproject.mogami.core.Piece
 import com.mogproject.mogami.frontend.Rect
-import com.mogproject.mogami.frontend.action.board.{BoardChangeLayoutAction, BoardFlipAction, BoardSetConfigAction, BoardSetStateAction}
-import com.mogproject.mogami.frontend.model.board.BoardModel
+import com.mogproject.mogami.frontend.action.board.{BoardSetConfigAction, BoardSetStateAction}
+import com.mogproject.mogami.frontend.model.board.{BoardModel, FlipDisabled, FlipEnabled}
 import com.mogproject.mogami.frontend.sam.SAM
 import com.mogproject.mogami.frontend.view.board._
 import com.mogproject.mogami.{Square, State}
@@ -54,7 +54,7 @@ class BoardTestView extends WebComponent {
     SVGStandardLayout -> Map(English -> "Standard"),
     SVGCompactLayout -> Map(English -> "Compact"),
     SVGWideLayout -> Map(English -> "Wide")
-  ), BoardChangeLayoutAction
+  ), layout => BoardSetConfigAction(_.copy(layout = layout))
   )
 
   val boardArea: Div = div().render
@@ -101,8 +101,8 @@ class BoardTestView extends WebComponent {
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Flip")),
-            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardFlipAction(true)) }, "Flip:true")),
-            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardFlipAction(false)) }, "Flip:false"))
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardSetConfigAction(_.copy(flipType = FlipEnabled))) }, "Flip:true")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardSetConfigAction(_.copy(flipType = FlipDisabled))) }, "Flip:false"))
           ),
           h3("Effect Test"),
           div(cls := "row",
