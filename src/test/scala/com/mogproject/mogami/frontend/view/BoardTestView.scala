@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.view
 
 import com.mogproject.mogami.core.Piece
 import com.mogproject.mogami.frontend.Rect
-import com.mogproject.mogami.frontend.action.board.BoardChangeLayoutAction
+import com.mogproject.mogami.frontend.action.board.{BoardChangeLayoutAction, BoardFlipAction, BoardSetConfigAction, BoardSetStateAction}
 import com.mogproject.mogami.frontend.model.board.BoardModel
 import com.mogproject.mogami.frontend.sam.SAM
 import com.mogproject.mogami.frontend.view.board._
@@ -84,25 +84,25 @@ class BoardTestView extends WebComponent {
           div(cls := "row",
             div(cls := "col-md-3", label("Resize")),
             div(cls := "col-md-3", resizeInput),
-            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => Try(resizeInput.value.toInt).foreach(area.resize) }, "Resize"))
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => Try(resizeInput.value.toInt).foreach(sz => SAM.doAction(BoardSetConfigAction(_.copy(boardWidth = sz)))) }, "Resize"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Draw pieces")),
-            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.drawPieces(State.HIRATE.board) }, "HIRATE")),
-            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.drawPieces(State.HIRATE.board.mapValues(_.promoted)) }, "HIRATE Promoted")),
-            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.drawPieces(State.MATING_BLACK.board); hand.drawPieces(State.MATING_BLACK.hand) }, "Mate")),
-            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.drawPieces(Map.empty); hand.drawPieces(Map.empty) }, "Clear"))
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardSetStateAction(State.HIRATE)) }, "HIRATE")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardSetStateAction(State.HIRATE.copy(board = State.HIRATE.board.mapValues(_.promoted)))) }, "HIRATE Promoted")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardSetStateAction(State.MATING_BLACK)) }, "Mate")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardSetStateAction()) }, "Clear"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Index")),
-            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.drawIndexes(true) }, "Japanese")),
-            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.drawIndexes(false) }, "Western")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardSetConfigAction(_.copy(recordLang = Japanese))) }, "Japanese")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardSetConfigAction(_.copy(recordLang = English))) }, "Western")),
             div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => board.clearIndexes() }, "Clear"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Flip")),
-            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => area.setFlip(true) }, "Flip:true")),
-            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => area.setFlip(false) }, "Flip:false"))
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardFlipAction(true)) }, "Flip:true")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardFlipAction(false)) }, "Flip:false"))
           ),
           h3("Effect Test"),
           div(cls := "row",

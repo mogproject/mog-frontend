@@ -65,5 +65,5 @@ case class SVGArea(layout: SVGAreaLayout) extends WebComponent with SVGAreaEvent
   //
   // Event
   //
-  svgDiv.addEventListener("mousemove", mouseMove)
+  registerEvents(svgDiv)
 }
