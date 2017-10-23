@@ -37,7 +37,7 @@ case class Rect(leftTop: Coord, width: Int, height: Int) {
     line(Seq(svgAttrs.x1 := left, svgAttrs.y1 := top, svgAttrs.x2 := right, svgAttrs.y2 := bottom) ++ modifier: _*)
 
   def toSVGImage(url: String, rotated: Boolean, modifier: Modifier*): TypedTag[SVGImageElement] = {
-    val as = Seq(svgAttrs.xLinkHref := url) ++ rotated.option(svgAttrs.transform := "rotate(180)")
+    val as = Seq(svgAttrs.xLinkHref := url) ++ rotated.option(Coord.rotateAttribution)
     image(Seq(svgAttrs.x := left, svgAttrs.y := top, svgAttrs.width := width, svgAttrs.height := height) ++ as ++ modifier: _*)
   }
 

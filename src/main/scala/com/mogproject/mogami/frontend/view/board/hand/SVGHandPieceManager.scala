@@ -8,8 +8,7 @@ import org.scalajs.dom.Element
 import org.scalajs.dom.raw.{SVGImageElement, SVGTextElement}
 
 import scalatags.JsDom.all._
-import scalatags.JsDom.{TypedTag, svgAttrs, svgTags}
-import scalatags.generic.AttrPair
+import scalatags.JsDom.TypedTag
 
 /**
   *
@@ -32,8 +31,6 @@ trait SVGHandPieceManager {
 
   private[this] def isPieceFlipped(piece: Piece): Boolean = piece.owner.isWhite ^ isFlipped
 
-  private[this] def getRotateAttribute(piece: Piece): Option[AttrPair[Element, String]] = isPieceFlipped(piece).option(svgAttrs.transform := "rotate(180)")
-
   def getPieceRect(piece: Piece): Rect =
     isPieceFlipped(piece).when[Rect](-_)(getRect(piece).toInnerRect(layout.PIECE_FACE_SIZE, layout.PIECE_FACE_SIZE))
 
@@ -44,8 +41,7 @@ trait SVGHandPieceManager {
   def generateNumberElement(piece: Piece, number: Int, modifiers: Modifier*): TypedTag[SVGTextElement] = {
     val rc = getPieceRect(piece)
     val coord = rc.rightBottom + layout.numberAdjustment
-    val as = (modifiers :+ (svgAttrs.x := coord.x) :+ (svgAttrs.y := coord.y) :+ (cls := "hand-number-text")) ++ getRotateAttribute(piece)
-    svgTags.text(as, number.toString)
+    coord.toSVGText(number.toString, isPieceFlipped(piece), cls := "hand-number-text")
   }
 
   //

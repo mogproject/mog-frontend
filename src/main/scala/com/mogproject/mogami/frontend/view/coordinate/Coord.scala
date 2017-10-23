@@ -1,8 +1,10 @@
 package com.mogproject.mogami.frontend.view.coordinate
 
+import com.mogproject.mogami.util.Implicits._
+import org.scalajs.dom.svg
 import org.scalajs.dom.raw.{SVGCircleElement, SVGPolygonElement}
 
-import scalatags.JsDom.{Modifier, TypedTag, svgAttrs}
+import scalatags.JsDom.{Modifier, TypedTag, svgAttrs, svgTags}
 import scalatags.JsDom.svgTags.{circle, polygon}
 import scalatags.JsDom.all._
 
@@ -23,4 +25,14 @@ case class Coord(x: Int = 0, y: Int = 0) {
 
   def toSVGPolygon(nodes: Seq[Coord], modifier: Modifier*): TypedTag[SVGPolygonElement] =
     polygon(Seq(svgAttrs.points := (this +: nodes).mkString(" ")) ++ modifier: _*)
+
+  def toSVGText(text: String, rotated: Boolean, modifier: Modifier*): TypedTag[svg.Text] = {
+    val as = Seq(svgAttrs.x := x, svgAttrs.y := y) ++ rotated.option(Coord.rotateAttribution) ++ modifier
+    svgTags.text(text, as)
+  }
+
+}
+
+object Coord {
+  val rotateAttribution: Modifier = svgAttrs.transform := "rotate(180)"
 }
