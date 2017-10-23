@@ -30,7 +30,7 @@ trait SVGHandPieceManager {
   //
   private[this] def getImagePath(ptype: Ptype, pieceFace: String): String = s"assets/img/p/${pieceFace}/${ptype.toCsaString}.svg"
 
-  private[this] def isPieceFlipped(piece: Piece): Boolean = piece.owner.isWhite ^ getIsFlipped
+  private[this] def isPieceFlipped(piece: Piece): Boolean = piece.owner.isWhite ^ isFlipped
 
   private[this] def getRotateAttribute(piece: Piece): Option[AttrPair[Element, String]] = isPieceFlipped(piece).option(svgAttrs.transform := "rotate(180)")
 

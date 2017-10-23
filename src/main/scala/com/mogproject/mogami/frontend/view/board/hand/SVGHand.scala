@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.view.board.hand
 
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami._
-import com.mogproject.mogami.frontend.view.board.{Cursor, HandCursor}
+import com.mogproject.mogami.frontend.view.board.{Cursor, Flippable, HandCursor}
 import com.mogproject.mogami.frontend.view.board.effect._
 import com.mogproject.mogami.frontend.view.coordinate.Rect
 import org.scalajs.dom.{ClientRect, Element}
@@ -12,15 +12,9 @@ import org.scalajs.dom.svg.RectElement
 /**
   * Hand
   */
-case class SVGHand(layout: SVGHandLayout) extends SVGHandPieceManager with EffectorTarget {
+case class SVGHand(layout: SVGHandLayout) extends SVGHandPieceManager with EffectorTarget with Flippable {
 
   protected def self: SVGHand = this
-
-  private[this] var isFlipped: Boolean = false
-
-  def setIsFlipped(isFlipped: Boolean): Unit = this.isFlipped = isFlipped
-
-  def getIsFlipped: Boolean = isFlipped
 
   //
   // Elements
@@ -59,8 +53,8 @@ case class SVGHand(layout: SVGHandLayout) extends SVGHandPieceManager with Effec
   //
   // Operation
   //
-  def setFlip(flip: Boolean): Unit = {
-    isFlipped = flip
+  override def setFlip(flip: Boolean): Unit = {
+    super.setFlip(flip)
     refreshPieces()
   }
 

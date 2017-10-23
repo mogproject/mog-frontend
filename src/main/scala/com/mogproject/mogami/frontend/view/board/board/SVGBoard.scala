@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.view.board.board
 
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.Square
-import com.mogproject.mogami.frontend.view.board.{BoardCursor, Cursor}
+import com.mogproject.mogami.frontend.view.board.{BoardCursor, Cursor, Flippable}
 import com.mogproject.mogami.frontend.view.board.effect._
 import com.mogproject.mogami.frontend.view.coordinate.Rect
 import org.scalajs.dom.raw.SVGElement
@@ -12,17 +12,11 @@ import org.scalajs.dom.Element
 /**
   *
   */
-case class SVGBoard(layout: SVGBoardLayout) extends SVGBoardPieceManager with SVGBoardIndexManager with EffectorTarget {
+case class SVGBoard(layout: SVGBoardLayout) extends SVGBoardPieceManager with SVGBoardIndexManager with EffectorTarget with Flippable {
 
   import layout._
 
   protected def self: SVGBoard = this
-
-  private[this] var isFlipped: Boolean = false
-
-  def setIsFlipped(isFlipped: Boolean): Unit = this.isFlipped = isFlipped
-
-  def getIsFlipped: Boolean = isFlipped
 
   //
   // Elements
@@ -50,8 +44,8 @@ case class SVGBoard(layout: SVGBoardLayout) extends SVGBoardPieceManager with SV
   //
   // Operation
   //
-  def setFlip(flip: Boolean): Unit = {
-    isFlipped = flip
+  override def setFlip(flip: Boolean): Unit = {
+    super.setFlip(flip)
     refreshPieces()
     refreshIndexes()
   }
