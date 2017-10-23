@@ -3,6 +3,7 @@ package com.mogproject.mogami.frontend.view.board
 import com.mogproject.mogami.frontend.Coord
 import com.mogproject.mogami.frontend.view.board.board.SVGBoardLayout
 import com.mogproject.mogami.frontend.view.board.hand.SVGHandLayout
+import com.mogproject.mogami.frontend.view.board.player.SVGPlayerLayout
 
 /**
   *
@@ -11,6 +12,8 @@ sealed trait SVGAreaLayout {
   def board: SVGBoardLayout
 
   def hand: SVGHandLayout
+
+  def player: SVGPlayerLayout
 
   def viewBoxBottomRight: Coord
 }
@@ -32,6 +35,8 @@ case object SVGStandardLayout extends SVGAreaLayout {
     handPieceWidth, handPieceHeight, 1, 7
   )
 
+  override def player: SVGPlayerLayout = ???
+
   override def viewBoxBottomRight: Coord = board.offset + Coord(board.VIEW_BOX_WIDTH, board.VIEW_BOX_HEIGHT + (handPieceHeight + topMargin) * 2)
 }
 
@@ -51,6 +56,8 @@ case object SVGCompactLayout extends SVGAreaLayout {
     handPieceWidth, handPieceHeight, 7, 1
   )
 
+  override def player: SVGPlayerLayout = ???
+
   override def viewBoxBottomRight: Coord = board.offset + Coord(board.VIEW_BOX_WIDTH + handPieceWidth + boardMargin + topMargin, board.VIEW_BOX_HEIGHT)
 }
 
@@ -69,6 +76,8 @@ case object SVGWideLayout extends SVGAreaLayout {
     board.offset + Coord(board.VIEW_BOX_WIDTH + topMargin, boardMargin + 5 * boardPieceHeight),
     handPieceWidth, handPieceHeight, 4, 2
   )
+
+  override def player: SVGPlayerLayout = ???
 
   override def viewBoxBottomRight: Coord = board.offset + Coord(board.VIEW_BOX_WIDTH + 2 * handPieceWidth + boardMargin + topMargin, board.VIEW_BOX_HEIGHT)
 }

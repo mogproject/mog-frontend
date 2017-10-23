@@ -40,7 +40,7 @@ trait SVGBoardIndexManager {
   private[this] def generateJapaneseRankIndex(index: Int): TypedTag[SVGElement] = {
     val base = getRect(Square(1, index))
     val r = Rect(Coord(offset.x + MARGIN_SIZE + BOARD_WIDTH, base.top), MARGIN_SIZE, base.height)
-    r.toInnerRect(INDEX_SIZE, INDEX_SIZE).toSVGImage(svgAttrs.xLinkHref := getImagePath(index))
+    r.toInnerRect(INDEX_SIZE, INDEX_SIZE).toSVGImage(getImagePath(index), rotated = false)
   }
 
   private[this] def generateWesternRankIndex(index: Int): TypedTag[SVGElement] = {
@@ -72,8 +72,8 @@ trait SVGBoardIndexManager {
   }
 
   def clearIndexes(): Unit = {
-    currentFileElements.foreach(WebComponent.removeElement)
-    currentRankElements.foreach(WebComponent.removeElement)
+    WebComponent.removeElements(currentFileElements)
+    WebComponent.removeElements(currentRankElements)
     currentStatus = None
     currentFileElements = Seq.empty
     currentRankElements = Seq.empty

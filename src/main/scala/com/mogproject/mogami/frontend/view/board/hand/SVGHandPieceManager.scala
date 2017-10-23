@@ -38,9 +38,7 @@ trait SVGHandPieceManager {
     isPieceFlipped(piece).when[Rect](-_)(getRect(piece).toInnerRect(layout.PIECE_FACE_SIZE, layout.PIECE_FACE_SIZE))
 
   def generatePieceElement(piece: Piece, pieceFace: String, modifiers: Modifier*): TypedTag[SVGImageElement] = {
-    val rc = getPieceRect(piece)
-    val as = (modifiers :+ (svgAttrs.xLinkHref := getImagePath(piece.ptype, pieceFace))) ++ getRotateAttribute(piece)
-    rc.toSVGImage(as)
+    getPieceRect(piece).toSVGImage(getImagePath(piece.ptype, pieceFace), isPieceFlipped(piece), modifiers)
   }
 
   def generateNumberElement(piece: Piece, number: Int, modifiers: Modifier*): TypedTag[SVGTextElement] = {

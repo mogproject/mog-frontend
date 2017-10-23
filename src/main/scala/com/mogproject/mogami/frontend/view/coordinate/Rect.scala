@@ -1,5 +1,6 @@
 package com.mogproject.mogami.frontend.view.coordinate
 
+import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom.raw.{SVGImageElement, SVGLineElement}
 import org.scalajs.dom.svg.RectElement
 
@@ -35,8 +36,10 @@ case class Rect(leftTop: Coord, width: Int, height: Int) {
   def toSVGLine(modifier: Modifier*): TypedTag[SVGLineElement] =
     line(Seq(svgAttrs.x1 := left, svgAttrs.y1 := top, svgAttrs.x2 := right, svgAttrs.y2 := bottom) ++ modifier: _*)
 
-  def toSVGImage(modifier: Modifier*): TypedTag[SVGImageElement] =
-    image(Seq(svgAttrs.x := left, svgAttrs.y := top, svgAttrs.width := width, svgAttrs.height := height) ++ modifier: _*)
+  def toSVGImage(url: String, rotated: Boolean, modifier: Modifier*): TypedTag[SVGImageElement] = {
+    val as = Seq(svgAttrs.xLinkHref := url) ++ rotated.option(svgAttrs.transform := "rotate(180)")
+    image(Seq(svgAttrs.x := left, svgAttrs.y := top, svgAttrs.width := width, svgAttrs.height := height) ++ as ++ modifier: _*)
+  }
 
   def toInnerRect(width: Int, height: Int) = Rect(Coord(left + (this.width - width) / 2, top + (this.height - height) / 2), width, height)
 

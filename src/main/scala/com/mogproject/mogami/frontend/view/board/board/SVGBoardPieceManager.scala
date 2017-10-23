@@ -36,9 +36,7 @@ trait SVGBoardPieceManager {
     isPieceFlipped(piece).when[Rect](-_)(getRect(square).toInnerRect(PIECE_FACE_SIZE, PIECE_FACE_SIZE))
 
   def generatePieceElement(square: Square, piece: Piece, pieceFace: String, modifiers: Modifier*): TypedTag[SVGImageElement] = {
-    val rc = getPieceRect(square, piece)
-    val as = (modifiers :+ (svgAttrs.xLinkHref := getImagePath(piece.ptype, pieceFace))) ++ isPieceFlipped(piece).option(svgAttrs.transform := "rotate(180)")
-    rc.toSVGImage(as)
+    getPieceRect(square, piece).toSVGImage(getImagePath(piece.ptype, pieceFace), isPieceFlipped(piece), modifiers)
   }
 
   //

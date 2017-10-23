@@ -3,6 +3,7 @@ package com.mogproject.mogami.frontend.view.board
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.board.board.SVGBoard
 import com.mogproject.mogami.frontend.view.board.hand.SVGHand
+import com.mogproject.mogami.frontend.view.board.player.SVGPlayer
 import org.scalajs.dom.Element
 import org.scalajs.dom.html.Div
 import org.scalajs.dom.raw.SVGElement
@@ -23,6 +24,8 @@ case class SVGArea(layout: SVGAreaLayout) extends WebComponent with SVGAreaEvent
 
   val hand: SVGHand = SVGHand(layout.hand)
 
+  val player: SVGPlayer = SVGPlayer(layout.player)
+
   def getControl: SVGAreaControl = control
 
   //
@@ -33,7 +36,8 @@ case class SVGArea(layout: SVGAreaLayout) extends WebComponent with SVGAreaEvent
     svgAttrs.height := 100.pct,
     svgAttrs.viewBox := s"0 0 ${layout.viewBoxBottomRight.toString}",
     board.elements,
-    hand.elements
+    hand.elements,
+    player.elements
   ).render
 
   /**
