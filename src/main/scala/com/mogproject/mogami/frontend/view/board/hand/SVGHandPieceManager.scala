@@ -31,16 +31,14 @@ trait SVGHandPieceManager {
 
   private[this] def isPieceFlipped(piece: Piece): Boolean = piece.owner.isWhite ^ isFlipped
 
-  def getPieceRect(piece: Piece): Rect =
-    isPieceFlipped(piece).when[Rect](-_)(getRect(piece).toInnerRect(layout.PIECE_FACE_SIZE, layout.PIECE_FACE_SIZE))
+  def getPieceRect(piece: Piece): Rect = getRect(piece).toInnerRect(layout.PIECE_FACE_SIZE, layout.PIECE_FACE_SIZE)
 
   def generatePieceElement(piece: Piece, pieceFace: String, modifiers: Modifier*): TypedTag[SVGImageElement] = {
     getPieceRect(piece).toSVGImage(getImagePath(piece.ptype, pieceFace), isPieceFlipped(piece), modifiers)
   }
 
   def generateNumberElement(piece: Piece, number: Int, modifiers: Modifier*): TypedTag[SVGTextElement] = {
-    val coord = getPieceRect(piece).rightBottom + layout.numberAdjustment
-    coord.toSVGText(number.toString, isPieceFlipped(piece), cls := "hand-number-text")
+    getNumberRect(piece).toSVGText(number.toString, isPieceFlipped(piece), cls := "hand-number-text")
   }
 
   //

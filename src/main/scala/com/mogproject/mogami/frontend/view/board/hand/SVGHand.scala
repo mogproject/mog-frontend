@@ -4,7 +4,7 @@ import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami._
 import com.mogproject.mogami.frontend.view.board.{Cursor, Flippable, HandCursor}
 import com.mogproject.mogami.frontend.view.board.effect._
-import com.mogproject.mogami.frontend.view.coordinate.Rect
+import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
 import org.scalajs.dom.{ClientRect, Element}
 import org.scalajs.dom.raw.SVGElement
 import org.scalajs.dom.svg.RectElement
@@ -29,6 +29,16 @@ case class SVGHand(layout: SVGHandLayout) extends SVGHandPieceManager with Effec
   def getRect(piece: Piece): Rect = layout.getRect(piece, isFlipped)
 
   def getRect(hand: Hand): Rect = getRect(hand.toPiece)
+
+  def getNumberRect(piece: Piece): Rect = {
+    val r = getRect(piece)
+    val c = if (piece.owner.isWhite ^ isFlipped) {
+      r.rightBottom - layout.numberAdjustment - layout.numberSize
+    } else {
+      r.leftTop + layout.numberAdjustment
+    }
+    Rect(c, layout.numberSize.x, layout.numberSize.y)
+  }
 
   override def clientPos2Cursor(clientX: Double, clientY: Double): Option[Cursor] = {
     val numRooms = layout.numRows * layout.numColumns

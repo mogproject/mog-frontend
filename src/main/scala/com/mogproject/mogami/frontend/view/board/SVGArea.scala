@@ -58,6 +58,7 @@ case class SVGArea(layout: SVGAreaLayout) extends WebComponent with SVGAreaEvent
     control = control.copy(isFlipped = flip)
     board.setFlip(flip)
     hand.setFlip(flip)
+    player.setFlip(flip)
   }
 
   def resize(boardWidth: Int): Unit = svgDiv.style.width = boardWidth.px

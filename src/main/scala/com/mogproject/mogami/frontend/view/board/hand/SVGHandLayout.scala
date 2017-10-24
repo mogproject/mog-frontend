@@ -15,9 +15,11 @@ import scalatags.JsDom.all._
   */
 case class SVGHandLayout(whiteOffset: Coord, blackOffset: Coord, pieceWidth: Int, pieceHeight: Int, numRows: Int, numColumns: Int) {
 
+  final val numberSize: Coord = Coord(120, 120)
+
   final val PIECE_FACE_SIZE: Int = pieceWidth * 20 / 21
 
-  final val numberAdjustment: Coord = Coord(-pieceWidth / 18, pieceWidth / 9)
+  final val numberAdjustment: Coord = Coord(pieceWidth * 7 / 8, pieceWidth * 8 / 7 - numberSize.y)
 
   def getRect(piece: Piece, isFlipped: Boolean): Rect = {
     val isBlackArea = piece.owner.isBlack ^ isFlipped

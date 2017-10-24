@@ -26,6 +26,8 @@ class BoardTestView extends WebComponent {
 
   def hand = area.hand
 
+  def player = area.player
+
   // HTML parts
   val resizeInput: Input = input(tpe := "text", cls := "form-control", value := "400").render
 
@@ -103,6 +105,10 @@ class BoardTestView extends WebComponent {
             div(cls := "col-md-3", label("Flip")),
             div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardSetConfigAction(_.copy(flipType = FlipEnabled))) }, "Flip:true")),
             div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardSetConfigAction(_.copy(flipType = FlipDisabled))) }, "Flip:false"))
+          ),
+          div(cls := "row",
+            div(cls := "col-md-3", label("Draw symbbols")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => player.drawSymbols() }, "Draw"))
           ),
           h3("Effect Test"),
           div(cls := "row",

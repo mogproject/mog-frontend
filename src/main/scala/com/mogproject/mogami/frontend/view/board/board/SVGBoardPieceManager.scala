@@ -32,8 +32,7 @@ trait SVGBoardPieceManager {
 
   private[this] def isPieceFlipped(piece: Piece): Boolean = piece.owner.isWhite ^ isFlipped
 
-  def getPieceRect(square: Square, piece: Piece): Rect =
-    isPieceFlipped(piece).when[Rect](-_)(getRect(square).toInnerRect(PIECE_FACE_SIZE, PIECE_FACE_SIZE))
+  def getPieceRect(square: Square, piece: Piece): Rect = getRect(square).toInnerRect(PIECE_FACE_SIZE, PIECE_FACE_SIZE)
 
   def generatePieceElement(square: Square, piece: Piece, pieceFace: String, modifiers: Modifier*): TypedTag[SVGImageElement] = {
     getPieceRect(square, piece).toSVGImage(getImagePath(piece.ptype, pieceFace), isPieceFlipped(piece), modifiers)

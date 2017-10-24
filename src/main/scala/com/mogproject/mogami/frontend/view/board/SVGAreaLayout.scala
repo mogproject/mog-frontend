@@ -4,6 +4,7 @@ import com.mogproject.mogami.frontend.Coord
 import com.mogproject.mogami.frontend.view.board.board.SVGBoardLayout
 import com.mogproject.mogami.frontend.view.board.hand.SVGHandLayout
 import com.mogproject.mogami.frontend.view.board.player.SVGPlayerLayout
+import com.mogproject.mogami.frontend.view.coordinate.Rect
 
 /**
   *
@@ -26,16 +27,32 @@ case object SVGStandardLayout extends SVGAreaLayout {
   private[this] val handPieceWidth = boardPieceWidth * 6 / 7
   private[this] val handPieceHeight = handPieceWidth * boardPieceHeight / boardPieceWidth
   private[this] val topMargin = 30
+  private[this] val boardWidth = 9 * boardPieceWidth
+  private[this] val handWidth = 7 * handPieceWidth
+  private[this] val playerWidth = boardWidth - handWidth
+  private[this] val symbolSize = 140
+  private[this] val playerNameHeight = 120
 
   override val board: SVGBoardLayout = SVGBoardLayout(Coord(0, topMargin + handPieceHeight), boardPieceWidth, boardPieceHeight)
 
-  override val hand: SVGHandLayout = SVGHandLayout(
-    Coord(boardMargin, topMargin),
-    Coord(boardMargin + 9 * boardPieceWidth - 7 * handPieceWidth, board.offset.y + board.VIEW_BOX_HEIGHT),
-    handPieceWidth, handPieceHeight, 1, 7
-  )
+  private[this] val whiteHandTopLeft = Coord(boardMargin, topMargin)
+  private[this] val blackHandTopLeft = Coord(boardMargin + playerWidth, board.offset.y + board.VIEW_BOX_HEIGHT)
 
-  override def player: SVGPlayerLayout = ???
+  override val hand: SVGHandLayout = SVGHandLayout(whiteHandTopLeft, blackHandTopLeft, handPieceWidth, handPieceHeight, 1, 7)
+
+  // todo: refactor
+  override def player: SVGPlayerLayout = SVGPlayerLayout(
+    Rect(Coord(boardMargin + handWidth, whiteHandTopLeft.y), playerWidth, handPieceHeight),
+    Rect(Coord(boardMargin + boardWidth - symbolSize, whiteHandTopLeft.y + handPieceHeight - playerNameHeight), symbolSize, symbolSize),
+    Rect(Coord(boardMargin + boardWidth + handWidth, whiteHandTopLeft.y + handPieceHeight - playerNameHeight), playerWidth - symbolSize, playerNameHeight),
+    Rect(Coord(boardMargin + boardWidth + handWidth, whiteHandTopLeft.y), playerWidth, handPieceHeight - playerNameHeight),
+    Seq(Rect(Coord(boardMargin, whiteHandTopLeft.y - 5), boardWidth + 5, 5), Rect(Coord(boardMargin + boardWidth, whiteHandTopLeft.y), 5, handPieceHeight)),
+    Rect(Coord(boardMargin, blackHandTopLeft.y), playerWidth, handPieceHeight),
+    Rect(Coord(boardMargin, blackHandTopLeft.y), symbolSize, symbolSize),
+    Rect(Coord(boardMargin + symbolSize, blackHandTopLeft.y), playerWidth - symbolSize, playerNameHeight),
+    Rect(Coord(boardMargin, blackHandTopLeft.y + playerNameHeight), playerWidth, handPieceHeight - playerNameHeight),
+    Seq(Rect(Coord(boardMargin, blackHandTopLeft.y - 5), boardWidth + 5, 5), Rect(Coord(boardMargin + boardWidth, blackHandTopLeft.y), 5, handPieceHeight))
+  )
 
   override def viewBoxBottomRight: Coord = board.offset + Coord(board.VIEW_BOX_WIDTH, board.VIEW_BOX_HEIGHT + (handPieceHeight + topMargin) * 2)
 }

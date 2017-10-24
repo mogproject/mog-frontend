@@ -11,7 +11,7 @@ import org.scalajs.dom.svg.RectElement
 /**
   *
   */
-case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippable {
+case class SVGPlayer(layout: SVGPlayerLayout) extends SVGPlayerSymbolManager with EffectorTarget with Flippable {
 
   protected def self: SVGPlayer = this
 
@@ -29,4 +29,11 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
   }
 
 
+  //
+  // Operation
+  //
+  override def setFlip(flip: Boolean): Unit = {
+    super.setFlip(flip)
+    drawSymbols()
+}
 }
