@@ -54,7 +54,7 @@ case class SVGArea(layout: SVGAreaLayout) extends WebComponent with SVGAreaEvent
   //
   // Operation
   //
-  def setFlip(flip: Boolean): Unit = if (control.isFlipped != flip) {
+  def setFlip(flip: Boolean): Unit = {
     control = control.copy(isFlipped = flip)
     board.setFlip(flip)
     hand.setFlip(flip)
