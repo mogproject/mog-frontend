@@ -44,12 +44,12 @@ case object SVGStandardLayout extends SVGAreaLayout {
   override def player: SVGPlayerLayout = SVGPlayerLayout(
     Rect(Coord(boardMargin + handWidth, whiteHandTopLeft.y), playerWidth, handPieceHeight),
     Rect(Coord(boardMargin + boardWidth - symbolSize, whiteHandTopLeft.y + handPieceHeight - playerNameHeight), symbolSize, symbolSize),
-    Rect(Coord(boardMargin + boardWidth + handWidth, whiteHandTopLeft.y + handPieceHeight - playerNameHeight), playerWidth - symbolSize, playerNameHeight),
+    Rect(Coord(boardMargin + handWidth, whiteHandTopLeft.y + handPieceHeight - playerNameHeight + 40), playerWidth - symbolSize, playerNameHeight - 36),
     Rect(Coord(boardMargin + boardWidth + handWidth, whiteHandTopLeft.y), playerWidth, handPieceHeight - playerNameHeight),
     Seq(Rect(Coord(boardMargin, whiteHandTopLeft.y - 5), boardWidth + 5, 5), Rect(Coord(boardMargin + boardWidth, whiteHandTopLeft.y), 5, handPieceHeight)),
     Rect(Coord(boardMargin, blackHandTopLeft.y), playerWidth, handPieceHeight),
     Rect(Coord(boardMargin, blackHandTopLeft.y + playerNameHeight - symbolSize), symbolSize, symbolSize),
-    Rect(Coord(boardMargin + symbolSize, blackHandTopLeft.y), playerWidth - symbolSize, playerNameHeight),
+    Rect(Coord(boardMargin + symbolSize, blackHandTopLeft.y), playerWidth - symbolSize, playerNameHeight - 36),
     Rect(Coord(boardMargin, blackHandTopLeft.y + playerNameHeight), playerWidth, handPieceHeight - playerNameHeight),
     Seq(Rect(Coord(boardMargin, blackHandTopLeft.y - 5), boardWidth + 5, 5), Rect(Coord(boardMargin + boardWidth, blackHandTopLeft.y), 5, handPieceHeight))
   )

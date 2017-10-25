@@ -107,7 +107,7 @@ class BoardTestView extends WebComponent {
             div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardSetConfigAction(_.copy(flipType = FlipDisabled))) }, "Flip:false"))
           ),
           div(cls := "row",
-            div(cls := "col-md-3", label("Draw symbbols")),
+            div(cls := "col-md-3", label("Draw symbols")),
             div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => player.drawSymbols() }, "Draw"))
           ),
           h3("Effect Test"),

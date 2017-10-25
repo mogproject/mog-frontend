@@ -5,9 +5,12 @@ import com.mogproject.mogami.core.Player.{BLACK, WHITE}
 import com.mogproject.mogami.frontend.view.board.{Cursor, Flippable}
 import com.mogproject.mogami.frontend.view.board.effect.EffectorTarget
 import com.mogproject.mogami.util.Implicits._
-import org.scalajs.dom.Element
+import org.scalajs.dom.{Element, svg}
 import org.scalajs.dom.raw.{SVGElement, SVGImageElement}
 import org.scalajs.dom.svg.RectElement
+
+import scala.collection.mutable
+import scalatags.JsDom.all._
 
 /**
   *
@@ -15,6 +18,11 @@ import org.scalajs.dom.svg.RectElement
 case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippable {
 
   protected def self: SVGPlayer = this
+
+  //
+  // Variables
+  //
+  private[this] val playerNames: mutable.Map[Player, Option[String]] = mutable.Map(Player.constructor.map(_ -> None): _*)
 
   //
   // Utility
@@ -26,11 +34,15 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
   //
   private[this] val borderElements: Seq[RectElement] = Seq(layout.whiteBorder, layout.blackBorder).map(_.render)
 
-  private[this] val symbolElements: Map[Player, SVGImageElement] = Seq(BLACK, WHITE).map { pl =>
+  private[this] val symbolElements: Map[Player, SVGImageElement] = Player.constructor.map { pl =>
     pl -> layout.getSymbolArea(pl).toSVGImage(getSymbolImagePath(isFlipped.when[Player](!_)(pl)), rotated = pl.isWhite).render
   }.toMap
 
-  val elements: Seq[SVGElement] = borderElements ++ symbolElements.values
+  private[this] val nameElements: Map[Player, svg.Text] = Player.constructor.map { pl =>
+    pl -> layout.getNameArea(pl).toSVGText("", pl.isWhite, cls := "player-name-text").render
+  }.toMap
+
+  val elements: Seq[SVGElement] = borderElements ++ symbolElements.values ++ nameElements.values
 
   override protected def thresholdElement: Element = borderElements.head
 
@@ -45,6 +57,7 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
   override def setFlip(flip: Boolean): Unit = {
     super.setFlip(flip)
     drawSymbols()
+    refreshNames()
   }
 
   def drawSymbols(): Unit = {
@@ -53,4 +66,13 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
     }
   }
 
+  def drawNames(blackName: Option[String], whiteName: Option[String]): Unit = {
+    playerNames(BLACK) = blackName
+    playerNames(WHITE) = whiteName
+    refreshNames()
+  }
+
+  def refreshNames(): Unit = {
+    playerNames.foreach { case (pl, s) => nameElements(pl).textContent = s.getOrElse("")}
+  }
 }

@@ -38,6 +38,11 @@
   pointer-events: none;
 }
 
+.player-name-text {
+  font-size: 80px;
+  pointer-events: none;
+}
+
 .left-half {
   clip-path: inset(0% 50% 0% 0%);
 }
