@@ -1,5 +1,7 @@
 package com.mogproject.mogami.frontend.view.board.player
 
+import com.mogproject.mogami.util.Implicits._
+import com.mogproject.mogami.Player
 import com.mogproject.mogami.frontend.view.coordinate.Rect
 import org.scalajs.dom.svg.RectElement
 
@@ -21,6 +23,9 @@ case class SVGPlayerLayout(whiteNameRect: Rect,
                            blackIndicatorBackground: Seq[Rect]) {
 
   private[this] def generateBorder(rect: Rect): TypedTag[RectElement] = rect.toSVGRect(cls := "board-border")
+
+  // Utility
+  def getSymbolArea(player: Player): Rect = player.isBlack.fold(blackSymbolArea, whiteSymbolArea)
 
   // Elements
   def whiteBorder: TypedTag[RectElement] = generateBorder(whiteNameRect)

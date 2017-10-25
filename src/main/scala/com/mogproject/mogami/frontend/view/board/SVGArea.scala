@@ -75,5 +75,5 @@ case class SVGArea(layout: SVGAreaLayout) extends WebComponent with SVGAreaEvent
   //
   // Initialization
   //
-  player.drawSymbols()
+
 }
