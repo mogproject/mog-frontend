@@ -30,7 +30,7 @@ case object SVGStandardLayout extends SVGAreaLayout {
   private[this] val boardWidth = 9 * boardPieceWidth
   private[this] val handWidth = 7 * handPieceWidth
   private[this] val playerWidth = boardWidth - handWidth
-  private[this] val symbolSize = 140
+  private[this] val symbolSize = 150
   private[this] val playerNameHeight = 120
 
   override val board: SVGBoardLayout = SVGBoardLayout(Coord(0, topMargin + handPieceHeight), boardPieceWidth, boardPieceHeight)
@@ -48,7 +48,7 @@ case object SVGStandardLayout extends SVGAreaLayout {
     Rect(Coord(boardMargin + boardWidth + handWidth, whiteHandTopLeft.y), playerWidth, handPieceHeight - playerNameHeight),
     Seq(Rect(Coord(boardMargin, whiteHandTopLeft.y - 5), boardWidth + 5, 5), Rect(Coord(boardMargin + boardWidth, whiteHandTopLeft.y), 5, handPieceHeight)),
     Rect(Coord(boardMargin, blackHandTopLeft.y), playerWidth, handPieceHeight),
-    Rect(Coord(boardMargin, blackHandTopLeft.y), symbolSize, symbolSize),
+    Rect(Coord(boardMargin, blackHandTopLeft.y + playerNameHeight - symbolSize), symbolSize, symbolSize),
     Rect(Coord(boardMargin + symbolSize, blackHandTopLeft.y), playerWidth - symbolSize, playerNameHeight),
     Rect(Coord(boardMargin, blackHandTopLeft.y + playerNameHeight), playerWidth, handPieceHeight - playerNameHeight),
     Seq(Rect(Coord(boardMargin, blackHandTopLeft.y - 5), boardWidth + 5, 5), Rect(Coord(boardMargin + boardWidth, blackHandTopLeft.y), 5, handPieceHeight))

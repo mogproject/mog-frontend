@@ -35,5 +35,6 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends SVGPlayerSymbolManager wit
   override def setFlip(flip: Boolean): Unit = {
     super.setFlip(flip)
     drawSymbols()
-}
+  }
+
 }
