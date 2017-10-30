@@ -51,6 +51,23 @@
   clip-path: inset(0% 0% 0% 50%);
 }
 
+/* Indicators */
+.indicator-turn {
+  fill: #2b5f91;
+}
+
+.indicator-win {
+  fill: #5cb85c;
+}
+
+.indicator-lose {
+  fill: #d9534f;
+}
+
+.indicator-draw {
+  fill: #99877a;
+}
+
 /*
  * SVG Effects
  */

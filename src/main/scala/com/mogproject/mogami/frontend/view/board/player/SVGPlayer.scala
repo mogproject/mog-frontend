@@ -73,6 +73,6 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
   }
 
   def refreshNames(): Unit = {
-    playerNames.foreach { case (pl, s) => nameElements(pl).textContent = s.getOrElse("")}
+    playerNames.foreach { case (pl, s) => nameElements(isFlipped.when[Player](!_)(pl)).textContent = s.getOrElse("")}
   }
 }

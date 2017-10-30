@@ -1,8 +1,8 @@
 package com.mogproject.mogami.frontend.view
 
-import com.mogproject.mogami.core.Piece
+import com.mogproject.mogami.core.{Piece, Player}
 import com.mogproject.mogami.frontend.Rect
-import com.mogproject.mogami.frontend.action.board.{BoardSetConfigAction, BoardSetStateAction}
+import com.mogproject.mogami.frontend.action.board.{BoardSetConfigAction, BoardSetPlayerNameAction, BoardSetStateAction}
 import com.mogproject.mogami.frontend.model.board.{BoardModel, FlipDisabled, FlipEnabled}
 import com.mogproject.mogami.frontend.sam.SAM
 import com.mogproject.mogami.frontend.view.board._
@@ -36,6 +36,10 @@ class BoardTestView extends WebComponent {
   val fromPieceInput: Input = input(tpe := "text", cls := "form-control", value := "+FU").render
 
   val toPieceInput: Input = input(tpe := "text", cls := "form-control", value := "+TO").render
+
+  val blackNameInput: Input = input(tpe := "text", cls := "form-control", value := "Black").render
+
+  val whiteNameInput: Input = input(tpe := "text", cls := "form-control", value := "White").render
 
   private[this] def getSquare: Option[Square] = getSquares.headOption
 
@@ -109,6 +113,16 @@ class BoardTestView extends WebComponent {
           div(cls := "row",
             div(cls := "col-md-3", label("Draw symbols")),
             div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => player.drawSymbols() }, "Draw"))
+          ),
+          div(cls := "row",
+            div(cls := "col-md-3", label("Player names")),
+            div(cls := "col-md-6", blackNameInput),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardSetPlayerNameAction(Map(Player.BLACK -> Some(blackNameInput.value)))) }, "Update"))
+          ),
+          div(cls := "row",
+            div(cls := "col-md-3", ""),
+            div(cls := "col-md-6", whiteNameInput),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardSetPlayerNameAction(Map(Player.WHITE -> Some(whiteNameInput.value)))) }, "Update"))
           ),
           h3("Effect Test"),
           div(cls := "row",

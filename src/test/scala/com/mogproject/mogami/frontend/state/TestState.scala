@@ -1,5 +1,6 @@
 package com.mogproject.mogami.frontend.state
 
+import com.mogproject.mogami.core.Player.{BLACK, WHITE}
 import com.mogproject.mogami.frontend.model.board.{BoardModel, DoubleBoard, FlipDisabled, FlipEnabled}
 import com.mogproject.mogami.frontend.model.board.cursor.{CursorEvent, MouseMoveEvent}
 import com.mogproject.mogami.frontend.sam.{SAMAction, SAMState}
@@ -21,6 +22,7 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
       (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType), renderFlip),
       (renderAll || isUpdated(newModel, _.config.layout, _.config.pieceFace, _.activeBoard), renderBoard),
       (renderAll || isUpdated(newModel, _.config.layout, _.config.pieceFace, _.activeHand), renderHand),
+      (renderAll || isUpdated(newModel, _.playerNames), renderPlayerNames),
       (renderAll || isUpdated(newModel, _.cursorEvent), renderMouseEvent)
     )
 
@@ -60,6 +62,14 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
 
   private[this] def renderHand(newModel: BoardModel): BoardModel = {
     view.boardTest.hand.drawPieces(newModel.activeHand, newModel.config.pieceFace, keepLastMove = false)
+    newModel
+  }
+
+  private[this] def renderPlayerNames(newModel: BoardModel): BoardModel = {
+    view.boardTest.player.drawNames(
+      newModel.playerNames.getOrElse(BLACK, model.playerNames.getOrElse(BLACK, None)),
+      newModel.playerNames.getOrElse(WHITE, model.playerNames.getOrElse(WHITE, None))
+    )
     newModel
   }
 
