@@ -29,6 +29,10 @@ case class SVGPlayerLayout(whiteNameRect: Rect,
 
   def getNameArea(player: Player): Rect = player.isBlack.fold(blackNameArea, whiteNameArea)
 
+  def getIndicatorArea(player: Player): Rect = player.isBlack.fold(blackIndicatorArea, whiteIndicatorArea)
+
+  def getIndicatorBackground(player: Player): Seq[Rect] = player.isBlack.fold(blackIndicatorBackground, whiteIndicatorBackground)
+
   // Elements
   def whiteBorder: TypedTag[RectElement] = generateBorder(whiteNameRect)
 

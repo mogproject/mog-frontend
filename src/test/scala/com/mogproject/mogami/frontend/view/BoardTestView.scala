@@ -2,8 +2,8 @@ package com.mogproject.mogami.frontend.view
 
 import com.mogproject.mogami.core.{Piece, Player}
 import com.mogproject.mogami.frontend.Rect
-import com.mogproject.mogami.frontend.action.board.{BoardSetConfigAction, BoardSetPlayerNameAction, BoardSetStateAction}
-import com.mogproject.mogami.frontend.model.board.{BoardModel, FlipDisabled, FlipEnabled}
+import com.mogproject.mogami.frontend.action.board.{BoardSetConfigAction, BoardSetIndicatorAction, BoardSetPlayerNameAction, BoardSetStateAction}
+import com.mogproject.mogami.frontend.model.board._
 import com.mogproject.mogami.frontend.sam.SAM
 import com.mogproject.mogami.frontend.view.board._
 import com.mogproject.mogami.{Square, State}
@@ -62,6 +62,17 @@ class BoardTestView extends WebComponent {
     SVGWideLayout -> Map(English -> "Wide")
   ), layout => BoardSetConfigAction(_.copy(layout = layout))
   )
+
+  val indicatorChangeButton: DropdownMenu[Option[BoardIndicator], BoardModel] = {
+    DropdownMenu(Vector(None, Some(IndicatorTurn), Some(IndicatorWin), Some(IndicatorLose), Some(IndicatorDraw)), Map(
+      Some(IndicatorTurn) -> Map(English -> "Turn"),
+      Some(IndicatorWin) -> Map(English -> "Win"),
+      Some(IndicatorLose) -> Map(English -> "Lose"),
+      Some(IndicatorDraw) -> Map(English -> "Draw"),
+      None -> Map(English -> "Clear")
+    ), BoardSetIndicatorAction(Player.BLACK, _))
+  }
+
 
   val boardArea: Div = div().render
 
@@ -123,6 +134,10 @@ class BoardTestView extends WebComponent {
             div(cls := "col-md-3", ""),
             div(cls := "col-md-6", whiteNameInput),
             div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardSetPlayerNameAction(Map(Player.WHITE -> Some(whiteNameInput.value)))) }, "Update"))
+          ),
+          div(cls := "row",
+            div(cls := "col-md-3", label("Player Indicators")),
+            div(cls := "col-md-6", indicatorChangeButton.element)
           ),
           h3("Effect Test"),
           div(cls := "row",

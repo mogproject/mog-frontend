@@ -2,6 +2,8 @@ package com.mogproject.mogami.frontend.view.board.player
 
 import com.mogproject.mogami.Player
 import com.mogproject.mogami.core.Player.{BLACK, WHITE}
+import com.mogproject.mogami.frontend.model.board.BoardIndicator
+import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.board.{Cursor, Flippable}
 import com.mogproject.mogami.frontend.view.board.effect.EffectorTarget
 import com.mogproject.mogami.util.Implicits._
@@ -24,6 +26,8 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
   //
   private[this] val playerNames: mutable.Map[Player, Option[String]] = mutable.Map(Player.constructor.map(_ -> None): _*)
 
+  private[this] val indicators:  mutable.Map[Player, Option[BoardIndicator]] = mutable.Map(Player.constructor.map(_ -> None): _*)
+
   //
   // Utility
   //
@@ -42,7 +46,15 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
     pl -> layout.getNameArea(pl).toSVGText("", pl.isWhite, cls := "player-name-text").render
   }.toMap
 
-  val elements: Seq[SVGElement] = borderElements ++ symbolElements.values ++ nameElements.values
+  private[this] val indicatorBackgrounds: Map[Player, Seq[RectElement]] = Player.constructor.map { pl =>
+    pl -> layout.getIndicatorBackground(pl).map(_.toSVGRect().render)
+  }.toMap
+
+  private[this] val indicatorTextElements: Map[Player, svg.Text] = Player.constructor.map { pl =>
+    pl -> layout.getIndicatorArea(pl).toSVGText("", pl.isWhite, cls := "indicator-text").render
+  }.toMap
+
+  val elements: Seq[SVGElement] = indicatorBackgrounds.values.flatten.toSeq ++ borderElements ++ symbolElements.values ++ nameElements.values ++ indicatorTextElements.values
 
   override protected def thresholdElement: Element = borderElements.head
 
@@ -58,6 +70,7 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
     super.setFlip(flip)
     drawSymbols()
     refreshNames()
+    refreshIndicators()
   }
 
   def drawSymbols(): Unit = {
@@ -74,5 +87,20 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
 
   def refreshNames(): Unit = {
     playerNames.foreach { case (pl, s) => nameElements(isFlipped.when[Player](!_)(pl)).textContent = s.getOrElse("")}
+  }
+
+  def drawIndicators(blackIndicator: Option[BoardIndicator], whiteIndicator: Option[BoardIndicator]): Unit = {
+    indicators(BLACK) = blackIndicator
+    indicators(WHITE) = whiteIndicator
+    refreshIndicators()
+  }
+
+  def refreshIndicators(): Unit = {
+    indicators.foreach {
+      case (pl, ind) =>
+        indicatorTextElements(isFlipped.when[Player](!_)(pl)).textContent = ind.map(_.text).getOrElse("")
+        indicatorBackgrounds(isFlipped.when[Player](!_)(pl)).foreach(WebComponent.setClass(_, ind.map(_.className).getOrElse("indicator-none")))
+    }
+
   }
 }

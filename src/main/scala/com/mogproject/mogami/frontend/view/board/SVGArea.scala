@@ -35,9 +35,9 @@ case class SVGArea(layout: SVGAreaLayout) extends WebComponent with SVGAreaEvent
     svgAttrs.width := 100.pct,
     svgAttrs.height := 100.pct,
     svgAttrs.viewBox := s"0 0 ${layout.viewBoxBottomRight.toString}",
+    player.elements,
     board.elements,
-    hand.elements,
-    player.elements
+    hand.elements
   ).render
 
   /**
