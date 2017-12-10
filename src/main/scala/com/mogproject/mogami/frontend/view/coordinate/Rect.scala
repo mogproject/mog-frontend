@@ -50,6 +50,11 @@ case class Rect(leftTop: Coord, width: Int, height: Int) {
     svgTags.text(text, as)
   }
 
+  /**
+    * for limiting the text length
+    * @param modifier modifier
+    * @return svg typed tag
+    */
   def toSVGWrapper(modifier: Modifier*): TypedTag[svg.SVG] = {
     svgTags.svg(svgAttrs.x := left, svgAttrs.y := top, svgAttrs.width := width, svgAttrs.height := height, modifier)
   }
@@ -64,4 +69,8 @@ case class Rect(leftTop: Coord, width: Int, height: Int) {
     * @return
     */
   def shrink(d: Int): Rect = Rect(Coord(left + d, top + d), width - 2 * d + 1, height - 2 * d + 1)
+
+  def resize(widthChange: Int, heightChange: Int, isOriginLeftTop: Boolean): Rect = {
+    Rect(isOriginLeftTop.fold(leftTop, Coord(left - widthChange, top - heightChange)), width + widthChange, height + heightChange)
+  }
 }

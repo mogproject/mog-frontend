@@ -47,14 +47,12 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
 
   private[this] val nameElements: SymmetricElement[svg.Text] = SymmetricElement { pl =>
     val area = layout.getNameArea(pl)
-    val r = Rect(pl.isBlack.fold(Coord(0, 0), Coord(-10, 30)), area.width, area.height)
+    val r = area.copy(leftTop = pl.isBlack.fold(Coord(0, 0), Coord(-10, 30)))
     r.toSVGText("", pl.isWhite, cls := "player-name-text").render
   }
 
   private[this] val nameElementsWrapper: SymmetricElement[svg.SVG] = SymmetricElement { pl =>
-    val area = layout.getNameArea(pl)
-    val r = Rect(pl.isBlack.fold(area.leftTop, area.leftTop.copy(area.left + 10, area.top - 30)), area.width - 10, area.height + 30)
-    r.toSVGWrapper(nameElements.get(pl)).render
+    layout.getNameArea(pl).resize(-10, 30, pl.isBlack).toSVGWrapper(nameElements.get(pl)).render
   }
 
   private[this] val indicatorBackgrounds: SymmetricElement[RectElement] = SymmetricElement(
