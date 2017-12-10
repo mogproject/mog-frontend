@@ -1,14 +1,20 @@
 package com.mogproject.mogami.frontend.view.board
 
+import com.mogproject.mogami.Player
+import com.mogproject.mogami.util.Implicits._
+
 /**
   * Flip
   */
 trait Flippable {
 
-  protected var isFlipped: Boolean = false
+  private[this] var isFlippedVal: Boolean = false
 
   def setFlip(flip: Boolean): Unit = {
-    isFlipped = flip
+    isFlippedVal = flip
   }
 
+  def isFlipped: Boolean = isFlippedVal
+
+  def getFlippedPlayer(player: Player): Player = isFlippedVal.when[Player](!_)(player)
 }
