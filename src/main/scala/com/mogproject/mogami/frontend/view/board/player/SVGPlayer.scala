@@ -2,10 +2,12 @@ package com.mogproject.mogami.frontend.view.board.player
 
 import com.mogproject.mogami.Player
 import com.mogproject.mogami.core.Player.{BLACK, WHITE}
+import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.board.BoardIndicator
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.board.{Cursor, Flippable, SymmetricElement}
 import com.mogproject.mogami.frontend.view.board.effect.EffectorTarget
+import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
 import org.scalajs.dom.{Element, svg}
 import org.scalajs.dom.raw.{SVGElement, SVGImageElement}
 import org.scalajs.dom.svg.RectElement
@@ -44,7 +46,15 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
   }
 
   private[this] val nameElements: SymmetricElement[svg.Text] = SymmetricElement { pl =>
-    layout.getNameArea(pl).toSVGText("", pl.isWhite, cls := "player-name-text").render
+    val area = layout.getNameArea(pl)
+    val r = Rect(pl.isBlack.fold(Coord(0, 0), Coord(-10, 30)), area.width, area.height)
+    r.toSVGText("", pl.isWhite, cls := "player-name-text").render
+  }
+
+  private[this] val nameElementsWrapper: SymmetricElement[svg.SVG] = SymmetricElement { pl =>
+    val area = layout.getNameArea(pl)
+    val r = Rect(pl.isBlack.fold(area.leftTop, area.leftTop.copy(area.left + 10, area.top - 30)), area.width - 10, area.height + 30)
+    r.toSVGWrapper(nameElements.get(pl)).render
   }
 
   private[this] val indicatorBackgrounds: SymmetricElement[RectElement] = SymmetricElement(
@@ -56,7 +66,7 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
     layout.getIndicatorArea(pl).toSVGText("", pl.isWhite, cls := "indicator-text").render
   }
 
-  val elements: Seq[SVGElement] = indicatorBackgrounds.values ++ borderElements ++ symbolElements.values ++ nameElements.values ++ indicatorTextElements.values
+  val elements: Seq[SVGElement] = indicatorBackgrounds.values ++ borderElements ++ symbolElements.values ++ nameElementsWrapper.values ++ indicatorTextElements.values
 
   override protected def thresholdElement: Element = borderElements.head
 

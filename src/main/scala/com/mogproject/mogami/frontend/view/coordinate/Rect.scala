@@ -50,6 +50,10 @@ case class Rect(leftTop: Coord, width: Int, height: Int) {
     svgTags.text(text, as)
   }
 
+  def toSVGWrapper(modifier: Modifier*): TypedTag[svg.SVG] = {
+    svgTags.svg(svgAttrs.x := left, svgAttrs.y := top, svgAttrs.width := width, svgAttrs.height := height, modifier)
+  }
+
   def toInnerRect(width: Int, height: Int) = Rect(Coord(left + (this.width - width) / 2, top + (this.height - height) / 2), width, height)
 
   def unary_- : Rect = copy(leftTop = -rightBottom)
