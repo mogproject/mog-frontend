@@ -63,7 +63,7 @@ class BoardTestView extends WebComponent {
   ), layout => BoardSetConfigAction(_.copy(layout = layout))
   )
 
-  val indicatorChangeButton: DropdownMenu[Option[BoardIndicator], BoardModel] = {
+  val indicatorChangeButtonBlack: DropdownMenu[Option[BoardIndicator], BoardModel] = {
     DropdownMenu(Vector(None, Some(IndicatorTurn), Some(IndicatorWin), Some(IndicatorLose), Some(IndicatorDraw)), Map(
       Some(IndicatorTurn) -> Map(English -> "Turn"),
       Some(IndicatorWin) -> Map(English -> "Win"),
@@ -73,6 +73,15 @@ class BoardTestView extends WebComponent {
     ), BoardSetIndicatorAction(Player.BLACK, _))
   }
 
+  val indicatorChangeButtonWhite: DropdownMenu[Option[BoardIndicator], BoardModel] = {
+    DropdownMenu(Vector(None, Some(IndicatorTurn), Some(IndicatorWin), Some(IndicatorLose), Some(IndicatorDraw)), Map(
+      Some(IndicatorTurn) -> Map(English -> "Turn"),
+      Some(IndicatorWin) -> Map(English -> "Win"),
+      Some(IndicatorLose) -> Map(English -> "Lose"),
+      Some(IndicatorDraw) -> Map(English -> "Draw"),
+      None -> Map(English -> "Clear")
+    ), BoardSetIndicatorAction(Player.WHITE, _))
+  }
 
   val boardArea: Div = div().render
 
@@ -137,7 +146,8 @@ class BoardTestView extends WebComponent {
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Player Indicators")),
-            div(cls := "col-md-6", indicatorChangeButton.element)
+            div(cls := "col-md-3", indicatorChangeButtonBlack.element),
+            div(cls := "col-md-3", indicatorChangeButtonWhite.element)
           ),
           h3("Effect Test"),
           div(cls := "row",
