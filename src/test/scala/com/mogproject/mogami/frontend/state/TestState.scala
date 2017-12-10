@@ -22,8 +22,8 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
       (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType), renderFlip),
       (renderAll || isUpdated(newModel, _.config.layout, _.config.pieceFace, _.activeBoard), renderBoard),
       (renderAll || isUpdated(newModel, _.config.layout, _.config.pieceFace, _.activeHand), renderHand),
-      (renderAll || isUpdated(newModel, _.playerNames), renderPlayerNames),
-      (renderAll || isUpdated(newModel, _.indicators), renderIndicators),
+      (renderAll || isUpdated(newModel, _.config.layout, _.playerNames), renderPlayerNames),
+      (renderAll || isUpdated(newModel, _.config.layout, _.indicators), renderIndicators),
       (renderAll || isUpdated(newModel, _.cursorEvent), renderMouseEvent)
     )
 

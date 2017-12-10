@@ -90,7 +90,7 @@ case object SVGCompactLayout extends SVGAreaLayout {
   )
 
   private[this] val blackSymbolArea = Rect(Coord(hand.blackOffset.x + (handPieceWidth - symbolSize) / 2, 0), symbolSize, symbolSize)
-  private[this] val blackIndicatorArea = Rect(Coord(hand.blackOffset.x - playerBorderStroke, blackSymbolArea.bottom - symbolOffset), handPieceWidth + playerBorderStroke * 2 + 1, indicatorHeight)
+  private[this] val blackIndicatorArea = Rect(Coord(hand.blackOffset.x - playerBorderStroke, blackSymbolArea.bottom - symbolOffset), handPieceWidth + playerBorderStroke * 2 + 2, indicatorHeight)
   private[this] val blackPlayerNameArea = Rect(blackIndicatorArea.leftBottom + Coord(playerBorderStroke, 0), handPieceWidth, playerNameHeight)
   private[this] val blackIndicatorBackground = Seq(
     Rect(blackIndicatorArea.rightTop, indicatorBackgroundStroke, indicatorBackgroundHeight)
