@@ -24,6 +24,8 @@ case class SVGBoardLayout(offset: Coord, pieceWidth: Int, pieceHeight: Int) {
     getRect(9 - s.file, s.rank - 1)
   }
 
+  def center: Coord = offset + Coord(MARGIN_SIZE + pieceWidth * 9 / 2, MARGIN_SIZE + pieceHeight * 9 / 2)
+
   final val VIEW_BOX_WIDTH: Int = 2048
   final val PIECE_FACE_SIZE: Int = pieceWidth * 20 / 21
   final val BOARD_WIDTH: Int = pieceWidth * 9

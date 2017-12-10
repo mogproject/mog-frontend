@@ -32,6 +32,10 @@ case class Rect(leftTop: Coord, width: Int, height: Int) {
 
   def center: Coord = Coord(left + width / 2, top + height / 2)
 
+  def +(coord: Coord): Rect = copy(leftTop = leftTop + coord)
+
+  def -(coord: Coord): Rect = this.+(-coord)
+
   def toSVGRect(modifier: Modifier*): TypedTag[RectElement] =
     svgTags.rect(Seq(svgAttrs.x := left, svgAttrs.y := top, svgAttrs.width := width, svgAttrs.height := height) ++ modifier: _*)
 
