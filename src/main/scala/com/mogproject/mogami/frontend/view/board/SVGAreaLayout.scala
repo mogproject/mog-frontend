@@ -39,8 +39,6 @@ case object SVGStandardLayout extends SVGAreaLayout {
 
   override val board: SVGBoardLayout = SVGBoardLayout(Coord(0, topMargin + handPieceHeight), boardPieceWidth, boardPieceHeight)
 
-  private[this] val pivot: Coord = board.center
-
   private[this] val whiteHandTopLeft = Coord(boardMargin, topMargin)
   private[this] val blackHandTopLeft = Coord(boardMargin + playerWidth, board.offset.y + board.VIEW_BOX_HEIGHT)
 
@@ -62,11 +60,7 @@ case object SVGStandardLayout extends SVGAreaLayout {
   )
 
   override def player: SVGPlayerLayout = SVGPlayerLayout(
-    blackPlayerArea.rotate(pivot),
-    blackSymbolArea.rotate(pivot),
-    blackPlayerNameArea.rotate(pivot),
-    blackIndicatorArea.rotate(pivot),
-    blackIndicatorBackground.map(_.rotate(pivot)),
+    board.center,
     blackPlayerArea,
     blackSymbolArea,
     blackPlayerNameArea,

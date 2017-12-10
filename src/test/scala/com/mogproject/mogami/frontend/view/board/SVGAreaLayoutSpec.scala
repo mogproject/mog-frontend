@@ -14,19 +14,15 @@ class SVGAreaLayoutSpec extends FlatSpec with MustMatchers with GeneratorDrivenP
 
   "SVGStandardLayout#player" must "have intended coordinates" in {
     SVGStandardLayout.player mustBe SVGPlayerLayout(
-      Rect(Coord(1339, 30), 630, 197),
-      Rect(Coord(1819, 107), 150, 150),
-      Rect(Coord(1339, 122), 480, 105),
-      Rect(Coord(1339, 30), 630, 92),
-      List(Rect(Coord(44, 232), 1930, 30), Rect(Coord(44, 25), 30, 208)),
+      Coord(1024, 1341),
       Rect(Coord(79, 2455), 630, 197),
       Rect(Coord(79, 2425), 150, 150),
       Rect(Coord(229, 2455), 480, 105),
       Rect(Coord(79, 2560), 630, 92),
       List(Rect(Coord(74, 2420), 1930, 30), Rect(Coord(1974, 2449), 30, 208))
     )
-    SVGStandardLayout.player.getIndicatorArea(BLACK) mustBe Rect(Coord(394, 2540), 630, 92)
-    SVGStandardLayout.player.getIndicatorArea(WHITE) mustBe Rect(Coord(1024, 50), 630, 92)
+    SVGStandardLayout.player.getIndicatorTextArea(BLACK) mustBe Rect(Coord(394, 2540), 0, 92)
+    SVGStandardLayout.player.getIndicatorTextArea(WHITE) mustBe Rect(Coord(1654, 50), 0, 92)
   }
 
 

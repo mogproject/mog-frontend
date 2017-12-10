@@ -39,7 +39,7 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
   //
   // Elements
   //
-  private[this] val borderElements: Seq[RectElement] = Seq(layout.whiteBorder, layout.blackBorder).map(_.render)
+  private[this] val borderElements: Seq[RectElement] = layout.borders.map(_.render)
 
   private[this] val symbolElements: SymmetricElement[SVGImageElement] = SymmetricElement { pl =>
     layout.getSymbolArea(pl).toSVGImage(getSymbolImagePath(getFlippedPlayer(pl)), rotated = pl.isWhite).render
@@ -61,7 +61,7 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
   )
 
   private[this] val indicatorTextElements: SymmetricElement[svg.Text] = SymmetricElement { pl =>
-    layout.getIndicatorArea(pl).toSVGText("", pl.isWhite, cls := "indicator-text").render
+    layout.getIndicatorTextArea(pl).toSVGText("", pl.isWhite, cls := "indicator-text").render
   }
 
   val elements: Seq[SVGElement] = indicatorBackgrounds.values ++ borderElements ++ symbolElements.values ++ nameElementsWrapper.values ++ indicatorTextElements.values
