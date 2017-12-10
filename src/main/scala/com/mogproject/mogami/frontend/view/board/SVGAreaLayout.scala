@@ -45,7 +45,7 @@ case object SVGStandardLayout extends SVGAreaLayout {
     Rect(Coord(boardMargin + handWidth, whiteHandTopLeft.y), playerWidth, handPieceHeight),
     Rect(Coord(boardMargin + boardWidth - symbolSize, whiteHandTopLeft.y + handPieceHeight - playerNameHeight), symbolSize, symbolSize),
     Rect(Coord(boardMargin + handWidth, whiteHandTopLeft.y + handPieceHeight - playerNameHeight + 40), playerWidth - symbolSize, playerNameHeight - 36),
-    Rect(Coord(boardMargin + handWidth, whiteHandTopLeft.y), playerWidth, handPieceHeight - playerNameHeight),
+    Rect(Coord(boardMargin + handWidth - playerWidth / 2, whiteHandTopLeft.y + 25), playerWidth, handPieceHeight - playerNameHeight),
     Seq(
       Rect(Coord(boardMargin - 35, whiteHandTopLeft.y + handPieceHeight + 5), boardWidth + 40, 30),
       Rect(Coord(boardMargin - 35, whiteHandTopLeft.y - 5), 30, handPieceHeight + 11)
@@ -53,7 +53,7 @@ case object SVGStandardLayout extends SVGAreaLayout {
     Rect(Coord(boardMargin, blackHandTopLeft.y), playerWidth, handPieceHeight),
     Rect(Coord(boardMargin, blackHandTopLeft.y + playerNameHeight - symbolSize), symbolSize, symbolSize),
     Rect(Coord(boardMargin + symbolSize, blackHandTopLeft.y), playerWidth - symbolSize, playerNameHeight - 36),
-    Rect(Coord(boardMargin, blackHandTopLeft.y + playerNameHeight), playerWidth, handPieceHeight - playerNameHeight),
+    Rect(Coord(boardMargin + playerWidth / 2, blackHandTopLeft.y + playerNameHeight - 25), playerWidth, handPieceHeight - playerNameHeight),
     Seq(
       Rect(Coord(boardMargin - 5, blackHandTopLeft.y - 35), boardWidth + 40, 30),
       Rect(Coord(boardMargin + boardWidth + 5, blackHandTopLeft.y - 5), 30, handPieceHeight + 11)

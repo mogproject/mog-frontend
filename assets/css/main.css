@@ -54,6 +54,9 @@
 /* Indicators */
 .indicator-text {
   font-size: 80px;
+  font-weight: 900;
+  text-anchor: middle;
+  fill: #cccccc;
   pointer-events: none;
 }
 
@@ -62,7 +65,8 @@
 }
 
 .indicator-turn {
-  fill: #2b5f91;
+  fill: #8db6dd;
+  /*fill: #4286c7;*/
 }
 
 .indicator-win {
