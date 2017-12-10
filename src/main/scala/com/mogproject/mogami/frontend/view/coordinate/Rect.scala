@@ -73,4 +73,6 @@ case class Rect(leftTop: Coord, width: Int, height: Int) {
   def resize(widthChange: Int, heightChange: Int, isOriginLeftTop: Boolean): Rect = {
     Rect(isOriginLeftTop.fold(leftTop, Coord(left - widthChange, top - heightChange)), width + widthChange, height + heightChange)
   }
+
+  def rotate(pivot: Coord): Rect = copy(leftTop = rightBottom.rotate(pivot))
 }

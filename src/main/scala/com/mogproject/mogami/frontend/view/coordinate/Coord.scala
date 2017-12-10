@@ -26,6 +26,7 @@ case class Coord(x: Int = 0, y: Int = 0) {
   def toSVGPolygon(nodes: Seq[Coord], modifier: Modifier*): TypedTag[SVGPolygonElement] =
     polygon(Seq(svgAttrs.points := (this +: nodes).mkString(" ")) ++ modifier: _*)
 
+  def rotate(pivot: Coord): Coord = Coord(pivot.x * 2 - x, pivot.y * 2 - y)
 }
 
 object Coord {
