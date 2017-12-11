@@ -119,11 +119,12 @@ case object SVGWideLayout extends SVGAreaLayout {
   private[this] val handPieceHeight = boardPieceHeight
   private[this] val topMargin = 30
   private[this] val symbolSize = 150
-  private[this] val symbolOffset = 40
+  private[this] val symbolOffset = 30
   private[this] val indicatorHeight = 87
   private[this] val playerBorderStroke = 5
   private[this] val indicatorBackgroundStroke = 30
   private[this] val textOffset = 20
+  private[this] val playerHeight = boardPieceWidth * 6 / 7 * boardPieceHeight / boardPieceWidth
 
   override val board: SVGBoardLayout = SVGBoardLayout(Coord(boardMargin + handPieceWidth * 2, 0), boardPieceWidth, boardPieceHeight)
 
@@ -131,7 +132,7 @@ case object SVGWideLayout extends SVGAreaLayout {
 
   override val hand: SVGHandLayout = SVGHandLayout(board.center, blackHandTopLeft, handPieceWidth, handPieceHeight, 4, 2)
 
-  private[this] val blackPlayerArea = Rect(blackHandTopLeft - Coord(0, handPieceHeight), 2 * handPieceWidth, handPieceHeight)
+  private[this] val blackPlayerArea = Rect(blackHandTopLeft - Coord(0, playerHeight), 2 * handPieceWidth, playerHeight)
   private[this] val blackSymbolArea = Rect(blackPlayerArea.leftTop + Coord(textOffset, symbolOffset - symbolSize), symbolSize, symbolSize)
   private[this] val blackPlayerNameArea = Rect(blackPlayerArea.leftTop + Coord(playerBorderStroke + textOffset, playerBorderStroke), blackPlayerArea.width - 2 * playerBorderStroke - textOffset, blackPlayerArea.height - 2 * playerBorderStroke - indicatorHeight)
   private[this] val blackIndicatorArea = Rect(blackPlayerNameArea.leftBottom - Coord(textOffset, 0), blackPlayerNameArea.width + textOffset, indicatorHeight)
@@ -143,7 +144,7 @@ case object SVGWideLayout extends SVGAreaLayout {
     ),
     Rect(
       blackPlayerArea.rightTop + Coord(playerBorderStroke, -playerBorderStroke - 1),
-      indicatorBackgroundStroke, 5 * handPieceHeight + playerBorderStroke * 2 + 1
+      indicatorBackgroundStroke, 4 * handPieceHeight + playerHeight + playerBorderStroke * 2 + 1
     )
   )
 
