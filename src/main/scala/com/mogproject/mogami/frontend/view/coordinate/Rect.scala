@@ -48,10 +48,20 @@ case class Rect(leftTop: Coord, width: Int, height: Int) {
     svgTags.image(Seq(svgAttrs.x := r.left, svgAttrs.y := r.top, svgAttrs.width := width, svgAttrs.height := height) ++ as ++ modifier: _*)
   }
 
-  def toSVGText(text: String, rotated: Boolean, fontSetting: Option[(Int, Int)], modifier: Modifier*): TypedTag[svg.Text] = {
-    val bottomMargin = fontSetting.map { case (fs, fc) => height / 2 + fc - fs }.getOrElse(0)
-    val c = rotated.fold(-rightTop - Coord(1, 1), leftBottom) - Coord(0, bottomMargin)
-    val as = Seq(svgAttrs.x := c.x, svgAttrs.y := c.y) ++ rotated.option(Coord.rotateAttribution) ++ fontSetting.map(fontSize := _._1.px) ++ modifier
+  def toSVGText(text: String, rotated: Boolean, fontSetting: Option[(Int, Int, Boolean)], modifier: Modifier*): TypedTag[svg.Text] = {
+    val c = rotated.fold(-rightTop - Coord(1, 1), leftBottom)
+
+    val d = (for {
+      (fs, fc, isTb) <- fontSetting
+    } yield {
+      if (isTb) {
+        rotated.fold(Coord(-center.x - 1, -height - 1), Coord(center.x, 0)) // todo: refactor
+      } else {
+        c - Coord(0, height / 2 + fc - fs)
+      }
+    }).getOrElse(c)
+
+    val as = Seq(svgAttrs.x := d.x, svgAttrs.y := d.y) ++ rotated.option(Coord.rotateAttribution) ++ fontSetting.map(fontSize := _._1.px) ++ modifier
     svgTags.text(text, as)
   }
 

@@ -18,7 +18,8 @@ case class SVGPlayerLayout(center: Coord,
                            blackIndicatorArea: Rect,
                            blackIndicatorBackground: Seq[Rect],
                            playerNameFontSize: Int = 80,
-                           indicatorFontSize: Int = 80
+                           indicatorFontSize: Int = 80,
+                           playerNameTopToBottom: Boolean = false
                           ) {
 
   private[this] def generateBorder(rect: Rect): TypedTag[RectElement] = rect.toSVGRect(cls := "player-border")

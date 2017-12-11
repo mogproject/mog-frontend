@@ -133,3 +133,7 @@
   fill: #337ab7;
   opacity: 0.2;
 }
+
+.text-tb {
+  writing-mode: tb;
+}
