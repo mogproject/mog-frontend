@@ -48,14 +48,16 @@ case class Rect(leftTop: Coord, width: Int, height: Int) {
     svgTags.image(Seq(svgAttrs.x := r.left, svgAttrs.y := r.top, svgAttrs.width := width, svgAttrs.height := height) ++ as ++ modifier: _*)
   }
 
-  def toSVGText(text: String, rotated: Boolean, modifier: Modifier*): TypedTag[svg.Text] = {
-    val c = rotated.fold(-rightTop, leftBottom)
-    val as = Seq(svgAttrs.x := c.x, svgAttrs.y := c.y) ++ rotated.option(Coord.rotateAttribution) ++ modifier
+  def toSVGText(text: String, rotated: Boolean, fontSetting: Option[(Int, Int)], modifier: Modifier*): TypedTag[svg.Text] = {
+    val bottomMargin = fontSetting.map { case (fs, fc) => height / 2 + fc - fs }.getOrElse(0)
+    val c = rotated.fold(-rightTop - Coord(1, 1), leftBottom) - Coord(0, bottomMargin)
+    val as = Seq(svgAttrs.x := c.x, svgAttrs.y := c.y) ++ rotated.option(Coord.rotateAttribution) ++ fontSetting.map(fontSize := _._1.px) ++ modifier
     svgTags.text(text, as)
   }
 
   /**
     * for limiting the text length
+    *
     * @param modifier modifier
     * @return svg typed tag
     */
@@ -69,6 +71,7 @@ case class Rect(leftTop: Coord, width: Int, height: Int) {
 
   /**
     * Create a smaller rect.
+    *
     * @param d px
     * @return
     */

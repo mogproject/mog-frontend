@@ -38,7 +38,7 @@ trait SVGHandPieceManager {
   }
 
   def generateNumberElement(piece: Piece, number: Int, modifiers: Modifier*): TypedTag[SVGTextElement] = {
-    getNumberRect(piece).toSVGText(number.toString, isPieceFlipped(piece), cls := "hand-number-text")
+    getNumberRect(piece).toSVGText(number.toString, isPieceFlipped(piece), None, cls := "hand-number-text")
   }
 
   //

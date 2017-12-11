@@ -46,13 +46,15 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
   }
 
   private[this] val nameElements: SymmetricElement[svg.Text] = SymmetricElement { pl =>
-    val area = layout.getNameArea(pl)
-    val r = area.copy(leftTop = pl.isBlack.fold(Coord(0, 0), Coord(-10, 30)))
-    r.toSVGText("", pl.isWhite, cls := "player-name-text").render
+    val fs = layout.playerNameFontSize
+    val fc = fs * 7 / 10 // center of the font
+
+    layout.getNameArea(pl).copy(leftTop = Coord(0, 0))
+      .toSVGText("", pl.isWhite, Some((fs, fc)), cls := "player-name-text").render
   }
 
   private[this] val nameElementsWrapper: SymmetricElement[svg.SVG] = SymmetricElement { pl =>
-    layout.getNameArea(pl).resize(-10, 30, pl.isBlack).toSVGWrapper(nameElements.get(pl)).render
+    layout.getNameArea(pl).toSVGWrapper(nameElements.get(pl)).render
   }
 
   private[this] val indicatorBackgrounds: SymmetricElement[RectElement] = SymmetricElement(
@@ -61,10 +63,13 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
   )
 
   private[this] val indicatorTextElements: SymmetricElement[svg.Text] = SymmetricElement { pl =>
-    layout.getIndicatorTextArea(pl).toSVGText("", pl.isWhite, cls := "indicator-text").render
+    val fs = layout.indicatorFontSize
+    val fc = fs * 65 / 100 // center of the font
+
+    layout.getIndicatorTextArea(pl).toSVGText("", pl.isWhite, Some((fs, fc)), cls := "indicator-text").render
   }
 
-  val elements: Seq[SVGElement] = indicatorBackgrounds.values ++ borderElements ++ symbolElements.values ++ nameElementsWrapper.values ++ indicatorTextElements.values
+  val elements: Seq[SVGElement] = borderElements ++ indicatorBackgrounds.values ++ symbolElements.values ++ nameElementsWrapper.values ++ indicatorTextElements.values
 
   override protected def thresholdElement: Element = borderElements.head
 

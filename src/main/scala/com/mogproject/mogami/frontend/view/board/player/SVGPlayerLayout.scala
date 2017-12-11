@@ -2,7 +2,6 @@ package com.mogproject.mogami.frontend.view.board.player
 
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.Player
-import com.mogproject.mogami.core.Player.{BLACK, WHITE}
 import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
 import org.scalajs.dom.svg.RectElement
 
@@ -17,24 +16,23 @@ case class SVGPlayerLayout(center: Coord,
                            blackSymbolArea: Rect,
                            blackNameArea: Rect,
                            blackIndicatorArea: Rect,
-                           blackIndicatorBackground: Seq[Rect]) {
+                           blackIndicatorBackground: Seq[Rect],
+                           playerNameFontSize: Int = 80,
+                           indicatorFontSize: Int = 80
+                          ) {
 
-  private[this] val indicatorTextPadding: Map[Player, Int] = Map(BLACK -> -20, WHITE -> 20)
-
-  private[this] val playerNameTextPadding: Map[Player, Int] = Map(BLACK -> -20, WHITE -> 24)
-
-  private[this] def generateBorder(rect: Rect): TypedTag[RectElement] = rect.toSVGRect(cls := "board-border")
+  private[this] def generateBorder(rect: Rect): TypedTag[RectElement] = rect.toSVGRect(cls := "player-border")
 
   private[this] def getRectByPlayer(player: Player, rect: Rect): Rect = player.isWhite.when[Rect](_.rotate(center))(rect)
 
   // Utility
   def getSymbolArea(player: Player): Rect = getRectByPlayer(player, blackSymbolArea)
 
-  def getNameArea(player: Player): Rect = getRectByPlayer(player, blackNameArea) + Coord(0, playerNameTextPadding(player))
+  def getNameArea(player: Player): Rect = getRectByPlayer(player, blackNameArea)
 
   def getIndicatorTextArea(player: Player): Rect = {
-    val r = blackIndicatorArea.copy(leftTop = Coord(blackIndicatorArea.center.x, blackIndicatorArea.top), width = 0)
-    getRectByPlayer(player, r) + Coord(0, indicatorTextPadding(player))
+    val r = blackIndicatorArea.copy(leftTop = Coord(blackIndicatorArea.center.x, blackIndicatorArea.top), width = 0, height = blackIndicatorArea.height)
+    getRectByPlayer(player, r)
   }
 
   def getIndicatorBackground(player: Player): Seq[Rect] = (blackIndicatorBackground :+ blackIndicatorArea).map(getRectByPlayer(player, _))
