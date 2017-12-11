@@ -75,16 +75,18 @@ case object SVGCompactLayout extends SVGAreaLayout {
   private[this] val handPieceHeight = handPieceWidth * boardPieceHeight / boardPieceWidth
   private[this] val topMargin = 30
   private[this] val symbolSize = 150
-  private[this] val symbolOffset = 15
-  private[this] val indicatorHeight = 92
+  private[this] val symbolOffset = 20
+  private[this] val indicatorHeight = 76
+  private[this] val indicatorFontSize = 66
 
   private[this] val playerBorderStroke = 5
   private[this] val indicatorBackgroundStroke = 30
 
   override val board: SVGBoardLayout = SVGBoardLayout(Coord(boardMargin + handPieceWidth + topMargin, 0), boardPieceWidth, boardPieceHeight)
 
-  private[this] val playerNameHeight = board.offset.y + board.MARGIN_SIZE + boardPieceHeight * 3 - symbolSize - indicatorHeight + symbolOffset - playerBorderStroke
-  private[this] val indicatorBackgroundHeight = boardPieceHeight * 6 + playerNameHeight + playerBorderStroke + 1
+  private[this] val symbolTopMargin = 5
+  private[this] val playerNameHeight = board.offset.y + board.MARGIN_SIZE + boardPieceHeight * 3 - symbolSize - indicatorHeight + symbolOffset - playerBorderStroke - symbolTopMargin
+  private[this] val indicatorBackgroundHeight = boardPieceHeight * 6 + playerNameHeight + 2 * playerBorderStroke + 1
 
   override val hand: SVGHandLayout = SVGHandLayout(
     Coord(boardMargin, boardMargin),
@@ -92,14 +94,14 @@ case object SVGCompactLayout extends SVGAreaLayout {
     handPieceWidth, handPieceHeight, 7, 1
   )
 
-  private[this] val blackSymbolArea = Rect(Coord(hand.blackOffset.x + (handPieceWidth - symbolSize) / 2, -playerBorderStroke), symbolSize, symbolSize)
+  private[this] val blackSymbolArea = Rect(Coord(hand.blackOffset.x + (handPieceWidth - symbolSize) / 2, symbolTopMargin), symbolSize, symbolSize)
   private[this] val blackIndicatorArea = Rect(Coord(hand.blackOffset.x - playerBorderStroke, blackSymbolArea.bottom - symbolOffset), handPieceWidth + indicatorBackgroundStroke + playerBorderStroke * 2, indicatorHeight)
-  private[this] val blackPlayerNameArea = Rect(blackIndicatorArea.leftBottom + Coord(playerBorderStroke, 0), handPieceWidth, playerNameHeight)
+  private[this] val blackPlayerNameArea = Rect(blackIndicatorArea.leftBottom + Coord(playerBorderStroke, playerBorderStroke), handPieceWidth, playerNameHeight)
   private[this] val blackIndicatorBackground = Seq(
     Rect(blackIndicatorArea.rightBottom - Coord(indicatorBackgroundStroke, 1), indicatorBackgroundStroke, indicatorBackgroundHeight)
   )
 
-  override def player: SVGPlayerLayout = SVGPlayerLayout(board.center, blackPlayerNameArea, blackSymbolArea, blackPlayerNameArea, blackIndicatorArea, blackIndicatorBackground, indicatorFontSize = 70)
+  override def player: SVGPlayerLayout = SVGPlayerLayout(board.center, blackPlayerNameArea, blackSymbolArea, blackPlayerNameArea, blackIndicatorArea, blackIndicatorBackground, indicatorFontSize = indicatorFontSize)
 
   override def viewBoxBottomRight: Coord = board.offset + Coord(board.VIEW_BOX_WIDTH + handPieceWidth + boardMargin + topMargin, board.VIEW_BOX_HEIGHT)
 }
