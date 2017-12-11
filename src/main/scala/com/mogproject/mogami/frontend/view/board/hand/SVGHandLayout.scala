@@ -13,7 +13,13 @@ import scalatags.JsDom.all._
 /**
   * Hand layout
   */
-case class SVGHandLayout(whiteOffset: Coord, blackOffset: Coord, pieceWidth: Int, pieceHeight: Int, numRows: Int, numColumns: Int) {
+case class SVGHandLayout(center: Coord, blackOffset: Coord, pieceWidth: Int, pieceHeight: Int, numRows: Int, numColumns: Int) {
+
+  val blackRect: Rect = Rect(blackOffset, pieceWidth * numColumns, pieceHeight * numRows)
+
+  val whiteRect: Rect = blackRect.rotate(center)
+
+  val whiteOffset: Coord = whiteRect.leftTop
 
   final val numberSize: Coord = Coord(120, 120)
 
@@ -29,12 +35,12 @@ case class SVGHandLayout(whiteOffset: Coord, blackOffset: Coord, pieceWidth: Int
     Rect(os + Coord(c * pieceWidth, r * pieceHeight), pieceWidth, pieceHeight)
   }
 
-  private[this] def generateBorder(offset: Coord): TypedTag[RectElement] = Rect(offset, pieceWidth * numColumns, pieceHeight * numRows).toSVGRect(cls := "board-border")
+  private[this] def generateBorder(rect: Rect): TypedTag[RectElement] = rect.toSVGRect(cls := "board-border")
 
   // Elements
-  def whiteBorder: TypedTag[RectElement] = generateBorder(whiteOffset)
+  def whiteBorder: TypedTag[RectElement] = generateBorder(whiteRect)
 
-  def blackBorder: TypedTag[RectElement] = generateBorder(blackOffset)
+  def blackBorder: TypedTag[RectElement] = generateBorder(blackRect)
 
 }
 
