@@ -5,7 +5,6 @@ import com.mogproject.mogami.frontend.view.board.board.SVGBoard
 import com.mogproject.mogami.frontend.view.board.box.SVGBox
 import com.mogproject.mogami.frontend.view.board.hand.SVGHand
 import com.mogproject.mogami.frontend.view.board.player.SVGPlayer
-import com.mogproject.mogami.frontend.view.coordinate.Coord
 import org.scalajs.dom.Element
 import org.scalajs.dom.html.Div
 import org.scalajs.dom.raw.SVGElement
@@ -38,11 +37,21 @@ case class SVGArea(layout: SVGAreaLayout) extends WebComponent with SVGAreaEvent
   protected val svgElement: SVGElement = svg(
     svgAttrs.width := 100.pct,
     svgAttrs.height := 100.pct,
-    svgAttrs.viewBox := s"0 0 ${layout.viewBoxBottomRight.toString}",
+    svgAttrs.viewBox := s"0 0 ${layout.viewBoxBottomRight}",
     player.elements,
     board.elements,
-    hand.elements,
-    box.elements
+    hand.elements
+  ).render
+
+  private[this] val svgBox: Div = div(
+    display := display.none.v,
+    marginTop := (-5).px,
+    svg(
+      svgAttrs.width := 100.pct,
+      svgAttrs.height := 100.pct,
+      svgAttrs.viewBox := s"0 0 ${layout.viewBoxBottomRight.copy(y = box.layout.extendedHeight)}",
+      box.elements
+    )
   ).render
 
   /**
@@ -51,7 +60,8 @@ case class SVGArea(layout: SVGAreaLayout) extends WebComponent with SVGAreaEvent
     * Event listeners belong here.
     */
   private[this] lazy val svgDiv: Div = div(
-    svgElement
+    svgElement,
+    svgBox
   ).render
 
   override def element: Element = svgDiv
@@ -72,13 +82,9 @@ case class SVGArea(layout: SVGAreaLayout) extends WebComponent with SVGAreaEvent
     board.unselect()
   }
 
-  def showBox(): Unit = {
-    svgElement.setAttribute("viewBox", s"0 0 ${(layout.viewBoxBottomRight + Coord(0, layout.box.extendedHeight)).toString}")
-  }
+  def showBox(): Unit = showElement(svgBox)
 
-  def hideBox(): Unit = {
-    svgElement.setAttribute("viewBox", s"0 0 ${layout.viewBoxBottomRight.toString}")
-  }
+  def hideBox(): Unit = hideElement(svgBox)
 
   //
   // Event

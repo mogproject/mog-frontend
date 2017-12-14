@@ -17,7 +17,7 @@ sealed trait SVGAreaLayout {
 
   def player: SVGPlayerLayout
 
-  def box: SVGBoxLayout = SVGBoxLayout(board.center.x, viewBoxBottomRight.y, smallPiece)
+  def box: SVGBoxLayout = SVGBoxLayout(board.center.x, smallPiece)
 
   def viewBoxBottomRight: Coord
 

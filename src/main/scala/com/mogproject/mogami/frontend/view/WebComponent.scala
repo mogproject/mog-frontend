@@ -1,12 +1,18 @@
 package com.mogproject.mogami.frontend.view
 
+import org.scalajs.dom.raw.HTMLElement
 import org.scalajs.dom.{Element, Node}
+import scalatags.JsDom.all._
 
 /**
   *
   */
 trait WebComponent {
   def element: Element
+
+  def showElement(elem: HTMLElement): Unit = elem.style.display = display.block.v
+
+  def hideElement(elem: HTMLElement): Unit = elem.style.display = display.none.v
 }
 
 object WebComponent {
