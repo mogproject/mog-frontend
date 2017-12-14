@@ -80,7 +80,7 @@ trait SVGBoxPieceManager {
 
     // render and materialize
     val newPieceMap = newPieces.map { case (pt, n) =>
-      val elem1 = materializeBackground(generatePieceElement(pt, pieceFace).render)
+      val elem1 = if (removedPieces.exists(_._1 == pt)) pieceMap(pt)._1 else materializeBackground(generatePieceElement(pt, pieceFace).render)
       val elem2 = (n > 1).option(materializeForeground(generateNumberElement(pt, n).render))
       pt -> (elem1, elem2)
     }

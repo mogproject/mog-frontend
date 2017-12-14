@@ -1,11 +1,13 @@
 package com.mogproject.mogami.frontend.state
 
 import com.mogproject.mogami.core.Player.{BLACK, WHITE}
+import com.mogproject.mogami.core.state.State
 import com.mogproject.mogami.frontend.model.board.{BoardModel, DoubleBoard, FlipDisabled, FlipEnabled}
 import com.mogproject.mogami.frontend.model.board.cursor.{CursorEvent, MouseMoveEvent}
 import com.mogproject.mogami.frontend.sam.{SAMAction, SAMState}
 import com.mogproject.mogami.frontend.view.{Japanese, TestView}
 import com.mogproject.mogami.frontend.view.board.{BoardCursor, HandCursor}
+import com.mogproject.mogami.util.MapUtil
 
 /**
   *
@@ -25,6 +27,7 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
       (renderAll || isUpdated(newModel, _.config.layout, _.playerNames), renderPlayerNames),
       (renderAll || isUpdated(newModel, _.config.layout, _.indicators), renderIndicators),
       (renderAll || isUpdated(newModel, _.config.layout, _.mode.boxAvailable), renderBox),
+      (newModel.mode.boxAvailable && (renderAll || isUpdated(newModel, _.config.layout, _.mode.boxAvailable, _.config.pieceFace, _.activeBoard, _.activeHand)), renderBoxPieces),
       (renderAll || isUpdated(newModel, _.cursorEvent), renderMouseEvent)
     )
 
@@ -89,6 +92,16 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
     } else {
       view.boardTest.area.hideBox()
     }
+    newModel
+  }
+
+  private[this] def renderBoxPieces(newModel: BoardModel): BoardModel = {
+    val b = newModel.activeBoard.values.groupBy(_.demoted.ptype).mapValues(_.size)
+    val h = newModel.activeHand.filter(_._2 > 0).map { case (hd, n) => hd.ptype -> n }
+    val used = MapUtil.mergeMaps(b, h)(_ + _, 0)
+    val unused = MapUtil.mergeMaps(State.capacity, used)(_ - _, 0)
+
+    view.boardTest.box.drawPieces(unused)
     newModel
   }
 

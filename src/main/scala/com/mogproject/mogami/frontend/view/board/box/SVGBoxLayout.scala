@@ -25,7 +25,7 @@ case class SVGBoxLayout(centerX: Int,
 
   final val numberAdjustment: Coord = Coord(pieceSize.x * 7 / 8, pieceSize.x * 8 / 7 - numberSize.y)
 
-  val boxWidth: Int = 7 * pieceSize.x
+  val boxWidth: Int = 8 * pieceSize.x
 
   val labelRect: Rect = Rect(Coord(centerX - boxWidth / 2 - strokeWidth, 0), boxWidth + 2 * strokeWidth, labelHeight)
 
@@ -45,6 +45,6 @@ case class SVGBoxLayout(centerX: Int,
   val extendedHeight: Int = labelHeight + boxRect.height + 2 * strokeWidth + bottomMargin
 
   def getRect(ptype: Ptype): Rect = {
-    Rect(boxRect.leftTop + Coord(ptype.sortId * pieceSize.y), pieceSize.x, pieceSize.y)
+    Rect(boxRect.leftTop + Coord(ptype.sortId * pieceSize.x, 0), pieceSize.x, pieceSize.y)
   }
 }

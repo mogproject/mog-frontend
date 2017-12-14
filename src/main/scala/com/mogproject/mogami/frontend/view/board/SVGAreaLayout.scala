@@ -11,6 +11,10 @@ import com.mogproject.mogami.frontend.view.coordinate.Rect
   *
   */
 sealed trait SVGAreaLayout {
+
+  val mediumPiece: Coord = Coord(210, 230)
+  val smallPiece: Coord = mediumPiece.map(_ * 6 / 7)
+
   def board: SVGBoardLayout
 
   def hand: SVGHandLayout
@@ -21,8 +25,6 @@ sealed trait SVGAreaLayout {
 
   def viewBoxBottomRight: Coord
 
-  val mediumPiece: Coord = Coord(210, 230)
-  val smallPiece: Coord = mediumPiece.map(_ * 6 / 7)
 }
 
 // fixme: offsets

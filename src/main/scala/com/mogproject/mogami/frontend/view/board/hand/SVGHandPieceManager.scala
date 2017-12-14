@@ -76,7 +76,7 @@ trait SVGHandPieceManager {
 
     // render and materialize
     val newPieceMap = newPieces.map { case (p, n) =>
-      val elem1 = materializeBackground(generatePieceElement(p.toPiece, pieceFace).render)
+      val elem1 = if (removedPieces.exists(_._1 == p)) pieceMap(p)._1 else materializeBackground(generatePieceElement(p.toPiece, pieceFace).render)
       val elem2 = (n > 1).option(materializeForeground(generateNumberElement(p.toPiece, n).render))
       p -> (elem1, elem2)
     }
