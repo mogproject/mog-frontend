@@ -2,101 +2,31 @@ package com.mogproject.mogami.frontend.view.board.hand
 
 import com.mogproject.mogami._
 import com.mogproject.mogami.frontend.Rect
-import com.mogproject.mogami.frontend.view.WebComponent
+import com.mogproject.mogami.frontend.view.board.SVGPieceManager
 import com.mogproject.mogami.util.Implicits._
-import org.scalajs.dom.Element
-import org.scalajs.dom.raw.{SVGImageElement, SVGTextElement}
-
-import scalatags.JsDom.all._
-import scalatags.JsDom.TypedTag
 
 /**
   *
   */
-// todo: refactor w/ SVGBoardPieceManager
-trait SVGHandPieceManager {
+trait SVGHandPieceManager extends SVGPieceManager[Hand, Int] {
   self: SVGHand =>
 
-  // Local variables
-  private[this] var currentPieces: HandType = Map.empty
+  override def getPieceRect(key: Hand): Rect = getRect(key).toInnerRect(layout.PIECE_FACE_SIZE, layout.PIECE_FACE_SIZE)
 
-  private[this] var currentPieceFace: String = "jp1"
+  override protected def getNumberRect(key: Hand): Rect = getNumberRect(key.toPiece)
 
-  private[this] var pieceMap: Map[Hand, (Element, Option[Element])] = Map.empty
+  override protected def isFlipped(key: Hand, value: Int): Boolean = key.owner.isWhite ^ isFlipped
 
-  //
-  // Utility
-  //
-  private[this] def getImagePath(ptype: Ptype, pieceFace: String): String = s"assets/img/p/${pieceFace}/${ptype.toCsaString}.svg"
+  override protected def getPtype(key: Hand, value: Int): Ptype = key.ptype
 
-  private[this] def isPieceFlipped(piece: Piece): Boolean = piece.owner.isWhite ^ isFlipped
+  override protected def shouldDrawNumber(value: Int): Boolean = value > 1
 
-  def getPieceRect(piece: Piece): Rect = getRect(piece).toInnerRect(layout.PIECE_FACE_SIZE, layout.PIECE_FACE_SIZE)
+  override protected def shouldDrawPiece(value: Int): Boolean = value > 0
 
-  def generatePieceElement(piece: Piece, pieceFace: String, modifiers: Modifier*): TypedTag[SVGImageElement] = {
-    getPieceRect(piece).toSVGImage(getImagePath(piece.ptype, pieceFace), isPieceFlipped(piece), modifiers)
-  }
+  override protected def shouldRemoveSameKey: Boolean = false
 
-  def generateNumberElement(piece: Piece, number: Int, modifiers: Modifier*): TypedTag[SVGTextElement] = {
-    getNumberRect(piece).toSVGText(number.toString, isPieceFlipped(piece), None, cls := "hand-number-text")
-  }
-
-  //
-  // Operation
-  //
-  /**
-    * Draw pieces in hand
-    *
-    * @param pieces
-    * @param pieceFace
-    * @param keepLastMove
-    */
-  def drawPieces(pieces: HandType, pieceFace: String = "jp1", keepLastMove: Boolean = false): Unit = {
-    // unselect and stop/restart effects
+  override protected def resetPieceEffect(keepLastMove: Boolean = false): Unit = {
     unselect()
     keepLastMove.fold(effect.lastMoveEffector.restart(), effect.lastMoveEffector.stop())
-
-    val nextPieces = pieces.toSet.filter(_._2 > 0)
-
-    // get diffs
-    val (xs, ys) = (currentPieces.toSet, nextPieces)
-
-    val removedPieces = xs -- ys
-    val newPieces = ys -- xs
-
-    // clear old pieces
-    removedPieces.foreach { case (h, _) =>
-      if (!newPieces.exists(_._1 == h)) WebComponent.removeElement(pieceMap(h)._1)
-      pieceMap(h)._2.foreach(WebComponent.removeElement)
-    }
-
-    // update local variables
-    currentPieces = nextPieces.toMap
-    currentPieceFace = pieceFace
-
-    // render and materialize
-    val newPieceMap = newPieces.map { case (p, n) =>
-      val elem1 = if (removedPieces.exists(_._1 == p)) pieceMap(p)._1 else materializeBackground(generatePieceElement(p.toPiece, pieceFace).render)
-      val elem2 = (n > 1).option(materializeForeground(generateNumberElement(p.toPiece, n).render))
-      p -> (elem1, elem2)
-    }
-
-    pieceMap = pieceMap -- removedPieces.map(_._1) ++ newPieceMap
-  }
-
-  /**
-    * Refresh pieces on board
-    */
-  def refreshPieces(): Unit = {
-    val cp = currentPieces
-    clearPieces()
-    drawPieces(cp, currentPieceFace, keepLastMove = true)
-  }
-
-  private[this] def clearPieces(): Unit = {
-    for {(x1, x2) <- pieceMap.values} WebComponent.removeElements(Seq(x1) ++ x2)
-
-    pieceMap = Map.empty
-    currentPieces = Map.empty
   }
 }
