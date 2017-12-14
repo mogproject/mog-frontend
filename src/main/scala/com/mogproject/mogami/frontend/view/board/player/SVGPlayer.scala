@@ -36,7 +36,7 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
   //
   private[this] def getSymbolImagePath(player: Player): String = s"assets/img/p/common/${player.toString.take(2)}.svg"
 
-  def getRect(player: Player): Rect = layout.getRectByPlayer(player, layout.blackNameRect)
+  def getRect(player: Player): Rect = layout.getRectByPlayer(getFlippedPlayer(player), layout.blackNameRect)
 
   //
   // Elements
