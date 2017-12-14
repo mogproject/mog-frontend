@@ -66,7 +66,7 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
 
   private[this] val indicatorTextElements: SymmetricElement[svg.Text] = SymmetricElement { pl =>
     val fs = layout.indicatorFontSize
-    val fc = fs * 65 / 100 // center of the font
+    val fc = fs * 60 / 100 // center of the font
 
     layout.getIndicatorTextArea(pl).toSVGText("", pl.isWhite, Some((fs, fc, false)), cls := "indicator-text").render
   }

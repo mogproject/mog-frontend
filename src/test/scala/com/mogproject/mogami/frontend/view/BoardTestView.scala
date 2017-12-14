@@ -1,15 +1,15 @@
 package com.mogproject.mogami.frontend.view
 
-import com.mogproject.mogami.core.{Piece, Player}
+import com.mogproject.mogami._
 import com.mogproject.mogami.frontend.Rect
-import com.mogproject.mogami.frontend.action.board.{BoardSetConfigAction, BoardSetIndicatorAction, BoardSetPlayerNameAction, BoardSetStateAction}
+import com.mogproject.mogami.frontend.action.board._
+import com.mogproject.mogami.frontend.model.{EditMode, LiveMode, PlayMode, ViewMode}
 import com.mogproject.mogami.frontend.model.board._
 import com.mogproject.mogami.frontend.sam.SAM
 import com.mogproject.mogami.frontend.view.board._
 import com.mogproject.mogami.{Square, State}
 import com.mogproject.mogami.frontend.view.board.effect.PieceFlipAttribute
 import com.mogproject.mogami.frontend.view.button.DropdownMenu
-import com.mogproject.mogami.frontend.view.coordinate.Coord
 import org.scalajs.dom.Element
 import org.scalajs.dom.html.{Div, Input}
 
@@ -27,6 +27,8 @@ class BoardTestView extends WebComponent {
   def hand = area.hand
 
   def player = area.player
+
+  def box = area.box
 
   // HTML parts
   val resizeInput: Input = input(tpe := "text", cls := "form-control", value := "400").render
@@ -148,6 +150,15 @@ class BoardTestView extends WebComponent {
             div(cls := "col-md-3", label("Player Indicators")),
             div(cls := "col-md-3", indicatorChangeButtonBlack.element),
             div(cls := "col-md-3", indicatorChangeButtonWhite.element)
+          ),
+          div(cls := "row",
+            div(cls := "col-md-3", label("Mode")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardSetModeAction(PlayMode)) }, "Play")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardSetModeAction(ViewMode)) }, "View")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardSetModeAction(EditMode)) }, "Edit")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardSetModeAction(LiveMode(None))) }, "Wait")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardSetModeAction(LiveMode(Some(BLACK)))) }, "Live(Black)")),
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => SAM.doAction(BoardSetModeAction(LiveMode(Some(WHITE)))) }, "Live(White)"))
           ),
           h3("Effect Test"),
           div(cls := "row",

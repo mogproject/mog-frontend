@@ -18,7 +18,9 @@ case class Coord(x: Int = 0, y: Int = 0) {
 
   def mkString(separator: String): String = x.toString + separator + y.toString
 
-  override def toString: String = mkString(",")
+  def map(f: Int => Int): Coord = Coord(f(x), f(y))
+
+  override def toString: String = mkString(" ")
 
   def toSVGCircle(radius: Int, modifier: Modifier*): TypedTag[SVGCircleElement] =
     circle(Seq(svgAttrs.cx := x, svgAttrs.cy := y, svgAttrs.r := radius) ++ modifier: _*)

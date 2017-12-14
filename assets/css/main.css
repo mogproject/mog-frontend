@@ -48,6 +48,10 @@
   pointer-events: none;
 }
 
+.box-label {
+  fill: #909090;
+}
+
 .left-half {
   clip-path: inset(0% 50% 0% 0%);
 }

@@ -24,6 +24,7 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
       (renderAll || isUpdated(newModel, _.config.layout, _.config.pieceFace, _.activeHand), renderHand),
       (renderAll || isUpdated(newModel, _.config.layout, _.playerNames), renderPlayerNames),
       (renderAll || isUpdated(newModel, _.config.layout, _.indicators), renderIndicators),
+      (renderAll || isUpdated(newModel, _.config.layout, _.mode.boxAvailable), renderBox),
       (renderAll || isUpdated(newModel, _.cursorEvent), renderMouseEvent)
     )
 
@@ -79,6 +80,15 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
       newModel.indicators.getOrElse(BLACK, None),
       newModel.indicators.getOrElse(WHITE, None)
     )
+    newModel
+  }
+
+  private[this] def renderBox(newModel: BoardModel): BoardModel = {
+    if (newModel.mode.boxAvailable) {
+      view.boardTest.area.showBox()
+    } else {
+      view.boardTest.area.hideBox()
+    }
     newModel
   }
 

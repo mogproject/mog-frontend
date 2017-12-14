@@ -48,6 +48,14 @@ case class Rect(leftTop: Coord, width: Int, height: Int) {
     svgTags.image(Seq(svgAttrs.x := r.left, svgAttrs.y := r.top, svgAttrs.width := width, svgAttrs.height := height) ++ as ++ modifier: _*)
   }
 
+  /**
+    *
+    * @param text
+    * @param rotated
+    * @param fontSetting (font_size, vertical_center, is_top_to_bottom)
+    * @param modifier
+    * @return
+    */
   def toSVGText(text: String, rotated: Boolean, fontSetting: Option[(Int, Int, Boolean)], modifier: Modifier*): TypedTag[svg.Text] = {
     val c = rotated.fold(-rightTop - Coord(1, 1), leftBottom)
 
