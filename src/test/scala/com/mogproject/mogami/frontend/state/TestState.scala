@@ -1,13 +1,12 @@
 package com.mogproject.mogami.frontend.state
 
-import com.mogproject.mogami.core.Player.{BLACK, WHITE}
-import com.mogproject.mogami.core.state.State
+import com.mogproject.mogami._
+import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.board.{BoardModel, DoubleBoard, FlipDisabled, FlipEnabled}
-import com.mogproject.mogami.frontend.model.board.cursor.{CursorEvent, MouseMoveEvent}
+import com.mogproject.mogami.frontend.model.board.cursor.{CursorEvent, MouseDownEvent, MouseMoveEvent}
 import com.mogproject.mogami.frontend.sam.{SAMAction, SAMState}
 import com.mogproject.mogami.frontend.view.{Japanese, TestView}
 import com.mogproject.mogami.frontend.view.board.{BoardCursor, BoxCursor, HandCursor, PlayerCursor}
-import com.mogproject.mogami.util.MapUtil
 
 /**
   *
@@ -96,17 +95,15 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
   }
 
   private[this] def renderBoxPieces(newModel: BoardModel): BoardModel = {
-    val b = newModel.activeBoard.values.groupBy(_.demoted.ptype).mapValues(_.size)
-    val h = newModel.activeHand.filter(_._2 > 0).map { case (hd, n) => hd.ptype -> n }
-    val used = MapUtil.mergeMaps(b, h)(_ + _, 0)
-    val unused = MapUtil.mergeMaps(State.capacity, used)(_ - _, 0)
-
-    view.boardTest.box.drawPieces(unused)
+    view.boardTest.box.drawPieces(newModel.boxPieces)
     newModel
   }
 
   private[this] def renderMouseEvent(newModel: BoardModel): BoardModel = {
     val m = newModel.cursorEvent match {
+      //
+      // Mouse Move
+      //
       case Some(MouseMoveEvent(c)) =>
         // clear current cursor
         model.activeCursor match {
@@ -118,16 +115,52 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
         }
 
         // draw new cursor
-        c match {
-          case Some(BoardCursor(sq)) => view.boardTest.board.effect.cursorEffector.start(view.boardTest.board.getRect(sq))
-          case Some(HandCursor(h)) => view.boardTest.hand.effect.cursorEffector.start(view.boardTest.hand.getRect(h))
-          case Some(PlayerCursor(pl)) => view.boardTest.player.effect.cursorEffector.start(view.boardTest.player.getRect(pl))
-          case Some(BoxCursor(pt)) => view.boardTest.box.effect.cursorEffector.start(view.boardTest.box.layout.getRect(pt))
-          case _ => // do nothing
+        val isValid = c match {
+          case Some(BoardCursor(sq)) if model.mode.boardCursorAvailable =>
+            view.boardTest.board.effect.cursorEffector.start(view.boardTest.board.getRect(sq))
+            true
+          case Some(HandCursor(h)) if model.mode.boardCursorAvailable =>
+            view.boardTest.hand.effect.cursorEffector.start(view.boardTest.hand.getRect(h))
+            true
+          case Some(PlayerCursor(pl)) if model.mode.playerSelectable =>
+            view.boardTest.player.effect.cursorEffector.start(view.boardTest.player.getRect(pl))
+            true
+          case Some(BoxCursor(pt)) if model.mode.boxAvailable =>
+            view.boardTest.box.effect.cursorEffector.start(view.boardTest.box.layout.getRect(pt))
+            true
+          case _ =>
+            false
         }
-        newModel.copy(activeCursor = c)
+        newModel.copy(activeCursor = if (isValid) c else None)
+
+      //
+      // Mouse Down (Select)
+      //
+      case Some(MouseDownEvent(c)) if newModel.selectedCursor.isEmpty =>
+        val isValid = c match {
+          case Some(BoardCursor(sq)) if model.activeBoard.get(sq).exists(p => model.mode.playable(p.owner)) =>
+            view.boardTest.board.effect.selectedEffector.start(view.boardTest.board.getRect(sq))
+            view.boardTest.board.effect.selectingEffector.start(view.boardTest.board.getRect(sq))
+            true
+          case Some(HandCursor(h)) if model.mode.playable(h.owner) && model.activeHand.get(h).exists(_ > 0) =>
+            view.boardTest.hand.effect.selectedEffector.start(view.boardTest.hand.getRect(h))
+            view.boardTest.hand.effect.selectingEffector.start(view.boardTest.hand.getRect(h))
+            true
+          case Some(BoxCursor(pt)) if model.mode.boxAvailable && model.boxPieces.get(pt).exists(_ > 0) =>
+            view.boardTest.box.effect.selectedEffector.start(view.boardTest.box.getPieceRect(pt))
+            view.boardTest.box.effect.selectingEffector.start(view.boardTest.box.getPieceRect(pt))
+            true
+          case Some(PlayerCursor(_)) if model.mode.playerSelectable =>
+            // todo: invoke player select
+            false
+          case _ =>
+            false
+        }
+        newModel.copy(selectedCursor = isValid.fold(c, None))
+
       // todo: impl more mouse events
-      case _ => newModel // todo
+      case _ =>
+        newModel
     }
     m.copy(cursorEvent = None)
   }
