@@ -17,6 +17,7 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
   private[this] def renderImpl(newModel: BoardModel, renderAll: Boolean = false): (SAMState[BoardModel], Option[SAMAction[BoardModel]]) = {
 
     val fs: Seq[(Boolean, BoardModel => BoardModel)] = Seq(
+      (isUpdated(newModel, _.mode, _.config.layout, _.config.flipType, _.activeBoard, _.activeHand), unselect),
       (renderAll || isUpdated(newModel, _.config.layout), renderLayout),
       (renderAll || isUpdated(newModel, _.config.layout, _.config.pieceWidth), renderSize),
       (renderAll || isUpdated(newModel, _.config.layout, _.config.recordLang), renderIndex),
@@ -32,6 +33,11 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
 
     val nextModel = fs.foldLeft(newModel) { case (m, (cond, f)) => if (cond) f(m) else m }
     (this.copy(model = nextModel), None)
+  }
+
+  private[this] def unselect(newModel: BoardModel): BoardModel = {
+    view.boardTest.area.unselect()
+    newModel.copy(activeCursor = None, selectedCursor = None)
   }
 
   private[this] def renderLayout(newModel: BoardModel): BoardModel = {
@@ -106,13 +112,7 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
       //
       case Some(MouseMoveEvent(c)) =>
         // clear current cursor
-        model.activeCursor match {
-          case Some(BoardCursor(_)) => view.boardTest.board.effect.cursorEffector.stop()
-          case Some(HandCursor(_)) => view.boardTest.hand.effect.cursorEffector.stop()
-          case Some(PlayerCursor(_)) => view.boardTest.player.effect.cursorEffector.stop()
-          case Some(BoxCursor(_)) => view.boardTest.box.effect.cursorEffector.stop()
-          case _ => // do nothing
-        }
+        view.boardTest.area.clearActiveCursor()
 
         // draw new cursor
         val isValid = c match {
@@ -134,6 +134,13 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
         newModel.copy(activeCursor = if (isValid) c else None)
 
       //
+      // Mouse Down (Player)
+      //
+      case Some(MouseDownEvent(Some(PlayerCursor(_)))) if model.mode.playerSelectable =>
+        // todo: invoke player select
+        newModel
+
+      //
       // Mouse Down (Select)
       //
       case Some(MouseDownEvent(c)) if newModel.selectedCursor.isEmpty =>
@@ -150,13 +157,19 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
             view.boardTest.box.effect.selectedEffector.start(view.boardTest.box.getPieceRect(pt))
             view.boardTest.box.effect.selectingEffector.start(view.boardTest.box.getPieceRect(pt))
             true
-          case Some(PlayerCursor(_)) if model.mode.playerSelectable =>
-            // todo: invoke player select
-            false
           case _ =>
             false
         }
         newModel.copy(selectedCursor = isValid.fold(c, None))
+
+      //
+      // Move Down (Invoke)
+      //
+      case Some(MouseDownEvent(c)) =>
+        // todo: invoke move
+        view.boardTest.area.unselect()
+        newModel.copy(selectedCursor = None)
+
 
       // todo: impl more mouse events
       case _ =>
@@ -172,4 +185,5 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
   private[this] def isUpdated[A](newModel: BoardModel, fs: (BoardModel => A)*): Boolean = {
     fs.exists(f => f(model) != f(newModel))
   }
+
 }

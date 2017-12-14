@@ -78,8 +78,17 @@ case class SVGArea(layout: SVGAreaLayout) extends WebComponent with SVGAreaEvent
 
   def resize(pieceWidth: Int): Unit = svgDiv.style.width = (pieceWidth * layout.viewBoxBottomRight.x / layout.mediumPiece.x).px
 
+  def clearActiveCursor(): Unit = {
+    board.effect.cursorEffector.stop()
+    hand.effect.cursorEffector.stop()
+    player.effect.cursorEffector.stop()
+    box.effect.cursorEffector.stop()
+  }
+
   def unselect(): Unit = {
     board.unselect()
+    hand.unselect()
+    box.unselect()
   }
 
   def showBox(): Unit = showElement(svgBox)
