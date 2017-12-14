@@ -138,7 +138,7 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
       //
       case Some(MouseDownEvent(Some(PlayerCursor(_)))) if model.mode.playerSelectable =>
         // todo: invoke player select
-        newModel
+        unselect(newModel)
 
       //
       // Mouse Down (Forward/Backward)
@@ -180,7 +180,7 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
       //
       // Mouse Up
       //
-      case Some(MouseUpEvent(c)) if newModel.selectedCursor.exists(!c.contains(_)) =>
+      case Some(MouseUpEvent(Some(c))) if newModel.selectedCursor.exists(_ != c && !c.isPlayer) =>
         // todo: adjust movement
         // todo: invoke move
 

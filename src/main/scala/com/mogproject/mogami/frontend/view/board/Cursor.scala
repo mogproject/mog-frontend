@@ -8,6 +8,8 @@ import com.mogproject.mogami._
 sealed abstract class Cursor(private val regionId: Int) {
   def isSameRegion(cursor: Cursor): Boolean = this.regionId == cursor.regionId
 
+  def isPlayer: Boolean = regionId == 3
+
   def unary_! : Cursor
 }
 
