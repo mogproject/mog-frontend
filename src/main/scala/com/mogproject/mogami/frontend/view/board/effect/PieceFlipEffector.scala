@@ -57,7 +57,8 @@ case class PieceFlipEffector(target: SVGBoard) extends BackgroundEffectorLike[Pi
     for {
       isFrom <- Seq(true, false)
       piece = isFrom.fold(x.fromPiece, x.toPiece)
-      centerX = target.getPieceRect(x.square).center.x
+      isFlipped = target.isFlipped ^ piece.owner.isWhite
+      centerX = target.getPieceRect(x.square).center.x * isFlipped.fold(-1, 1) + isFlipped.fold(1, 0)
       isLeft <- Seq(true, false)
       className = isLeft.fold("left-half", "right-half")
       scales = isFrom.fold(isLeft.fold(ls, rs), isLeft.fold(rs.reverse, ls.reverse))
