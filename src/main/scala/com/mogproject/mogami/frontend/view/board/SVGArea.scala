@@ -76,7 +76,7 @@ case class SVGArea(layout: SVGAreaLayout) extends WebComponent with SVGAreaEvent
     player.setFlip(flip)
   }
 
-  def resize(boardWidth: Int): Unit = svgDiv.style.width = boardWidth.px
+  def resize(pieceWidth: Int): Unit = svgDiv.style.width = (pieceWidth * layout.viewBoxBottomRight.x / layout.mediumPiece.x).px
 
   def unselect(): Unit = {
     board.unselect()

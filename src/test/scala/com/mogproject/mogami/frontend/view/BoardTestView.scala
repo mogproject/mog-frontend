@@ -31,7 +31,7 @@ class BoardTestView extends WebComponent {
   def box = area.box
 
   // HTML parts
-  val resizeInput: Input = input(tpe := "text", cls := "form-control", value := "400").render
+  val resizeInput: Input = input(tpe := "text", cls := "form-control", value := "50").render
 
   val squareInput: Input = input(tpe := "text", cls := "form-control", value := "7776").render
 
@@ -112,7 +112,7 @@ class BoardTestView extends WebComponent {
           div(cls := "row",
             div(cls := "col-md-3", label("Resize")),
             div(cls := "col-md-3", resizeInput),
-            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => Try(resizeInput.value.toInt).foreach(sz => SAM.doAction(BoardSetConfigAction(_.copy(boardWidth = sz)))) }, "Resize"))
+            div(cls := "col-md-3", btn(cls := "btn btn-default", onclick := { () => Try(resizeInput.value.toInt).foreach(sz => SAM.doAction(BoardSetConfigAction(_.copy(pieceWidth = sz)))) }, "Resize"))
           ),
           div(cls := "row",
             div(cls := "col-md-3", label("Draw pieces")),

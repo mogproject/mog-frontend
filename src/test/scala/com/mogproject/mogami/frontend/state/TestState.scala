@@ -19,7 +19,7 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
 
     val fs: Seq[(Boolean, BoardModel => BoardModel)] = Seq(
       (renderAll || isUpdated(newModel, _.config.layout), renderLayout),
-      (renderAll || isUpdated(newModel, _.config.layout, _.config.boardWidth), renderSize),
+      (renderAll || isUpdated(newModel, _.config.layout, _.config.pieceWidth), renderSize),
       (renderAll || isUpdated(newModel, _.config.layout, _.config.recordLang), renderIndex),
       (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType), renderFlip),
       (renderAll || isUpdated(newModel, _.config.layout, _.config.pieceFace, _.activeBoard), renderBoard),
@@ -41,7 +41,7 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
   }
 
   private[this] def renderSize(newModel: BoardModel): BoardModel = {
-    view.boardTest.area.resize(newModel.config.boardWidth)
+    view.boardTest.area.resize(newModel.config.pieceWidth)
     newModel
   }
 
