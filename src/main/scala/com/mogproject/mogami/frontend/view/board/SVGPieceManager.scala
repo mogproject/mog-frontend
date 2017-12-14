@@ -89,7 +89,7 @@ trait SVGPieceManager[Key, Value] {
 
     // render and materialize
     val newPieceMap = newPieces.map { case (k, v) =>
-      val elem1 = if (!shouldRemoveSameKey && removedPieces.exists(_._1 == k)) pieceMap(k)._1 else materializeBackground(generatePieceElement(k, v, pieceFace).render)
+      val elem1 = if (!shouldRemoveSameKey && removedPieces.exists(_._1 == k)) pieceMap(k)._1 else materializeForeground(generatePieceElement(k, v, pieceFace).render)
       val elem2 = shouldDrawNumber(v).option(materializeForeground(generateNumberElement(k, v).render))
       k -> (elem1, elem2)
     }

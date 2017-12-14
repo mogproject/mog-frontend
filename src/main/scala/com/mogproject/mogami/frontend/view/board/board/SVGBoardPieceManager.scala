@@ -15,7 +15,7 @@ trait SVGBoardPieceManager extends SVGPieceManager[Square, Piece] {
 
   override protected def getNumberRect(key: Square): Rect = ???
 
-  override protected def isFlipped(key: Square, value: Piece) = value.owner.isWhite ^ isFlipped
+  override protected def isFlipped(key: Square, value: Piece): Boolean = value.owner.isWhite ^ isFlipped
 
   override protected def getPtype(key: Square, value: Piece): Ptype = value.ptype
 
