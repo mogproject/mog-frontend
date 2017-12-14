@@ -16,7 +16,8 @@ case class SVGBoxLayout(centerX: Int,
                         bottomMargin: Int = 30,
                         labelHeight: Int = 87,
                         strokeWidth: Int = 5,
-                        labelFontSize: Int = 80
+                        labelFontSize: Int = 80,
+                        shadowWidth: Int = 30
                        ) {
 
   final val numberSize: Coord = Coord(120, 120)
@@ -27,13 +28,15 @@ case class SVGBoxLayout(centerX: Int,
 
   val boxWidth: Int = 8 * pieceSize.x
 
-  val labelRect: Rect = Rect(Coord(centerX - boxWidth / 2 - strokeWidth, 0), boxWidth + 2 * strokeWidth, labelHeight)
+  val labelRect: Rect = Rect(Coord(centerX - boxWidth / 2 - strokeWidth, 0), boxWidth + 2 * strokeWidth + 1, labelHeight)
 
-  val boxRect: Rect = Rect(Coord(centerX - boxWidth / 2, labelHeight + strokeWidth), boxWidth, pieceSize.y)
+  val boxRect: Rect = Rect(labelRect.leftBottom + Coord(strokeWidth, strokeWidth), boxWidth, pieceSize.y)
+
+  val shadowRect: Rect = Rect(labelRect.rightTop - Coord(1, 0), shadowWidth, labelHeight + pieceSize.y + 2 * strokeWidth)
 
   val boxBorder: TypedTag[RectElement] = boxRect.toSVGRect(cls := "board-border")
 
-  val boxLabel: TypedTag[RectElement] = labelRect.toSVGRect(cls := "box-label")
+  val boxShadow: Seq[TypedTag[RectElement]] = Seq(labelRect, shadowRect).map(_.toSVGRect(cls := "box-label"))
 
   val boxLabelText: TypedTag[SVGTextElement] = {
     val r = labelRect.copy(leftTop = Coord(labelRect.center.x, labelRect.top), width = 0)

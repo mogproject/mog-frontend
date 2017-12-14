@@ -17,7 +17,7 @@ case class SVGBox(layout: SVGBoxLayout) extends SVGBoxPieceManager with Effector
   //
   // Elements
   //
-  private[this] val borderElements: Seq[SVGElement] = Seq(layout.boxBorder, layout.boxLabel, layout.boxLabelText).map(_.render)
+  private[this] val borderElements: Seq[SVGElement] = (layout.boxShadow ++ Seq(layout.boxBorder, layout.boxLabelText)).map(_.render)
 
   override def clientPos2Cursor(clientX: Double, clientY: Double): Option[Cursor] = ???
 
