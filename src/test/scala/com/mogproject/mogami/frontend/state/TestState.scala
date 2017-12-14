@@ -3,7 +3,7 @@ package com.mogproject.mogami.frontend.state
 import com.mogproject.mogami._
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.board.{BoardModel, DoubleBoard, FlipDisabled, FlipEnabled}
-import com.mogproject.mogami.frontend.model.board.cursor.{CursorEvent, MouseDownEvent, MouseMoveEvent}
+import com.mogproject.mogami.frontend.model.board.cursor._
 import com.mogproject.mogami.frontend.sam.{SAMAction, SAMState}
 import com.mogproject.mogami.frontend.view.{Japanese, TestView}
 import com.mogproject.mogami.frontend.view.board.{BoardCursor, BoxCursor, HandCursor, PlayerCursor}
@@ -106,7 +106,7 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
   }
 
   private[this] def renderMouseEvent(newModel: BoardModel): BoardModel = {
-    val m = newModel.cursorEvent match {
+    val m: BoardModel = newModel.cursorEvent match {
       //
       // Mouse Move
       //
@@ -141,6 +141,13 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
         newModel
 
       //
+      // Mouse Down (Forward/Backward)
+      //
+      case Some(MouseDownEvent(Some(BoardCursor(c)))) if newModel.mode.forwardAvailable =>
+        invokeViewForward(c)
+        newModel
+
+      //
       // Mouse Down (Select)
       //
       case Some(MouseDownEvent(c)) if newModel.selectedCursor.isEmpty =>
@@ -170,8 +177,26 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
         view.boardTest.area.unselect()
         newModel.copy(selectedCursor = None)
 
+      //
+      // Mouse Up
+      //
+      case Some(MouseUpEvent(c)) if newModel.selectedCursor.exists(!c.contains(_)) =>
+        // todo: adjust movement
+        // todo: invoke move
 
-      // todo: impl more mouse events
+        view.boardTest.area.unselect()
+        newModel.copy(selectedCursor = None)
+
+      //
+      // Mouse Hold
+      //
+      case Some(MouseHoldEvent) if newModel.mode.forwardAvailable => {
+        newModel.selectedCursor match {
+          case Some(BoardCursor(sq)) => invokeViewForward(sq)
+          case _ =>
+        }
+        newModel
+      }
       case _ =>
         newModel
     }
@@ -186,4 +211,9 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
     fs.exists(f => f(model) != f(newModel))
   }
 
+  private[this] def invokeViewForward(square: Square): Unit = {
+    if (square.file != 5) {
+      view.boardTest.board.effect.forwardEffector.start(view.boardTest.board.isFlipped ^ square.file < 5)
+    }
+  }
 }
