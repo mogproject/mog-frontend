@@ -9,10 +9,10 @@ import com.mogproject.mogami.frontend.view.board.{BoardCursor, HandCursor, Playe
   *
   */
 case class BoardCursorEventAction(cursorEvent: CursorEvent) extends BoardAction {
-  override def execute(model: BoardModel): Option[BoardModel] = Some(model.copy(cursorEvent = Some(validate(model.mode))))
+  override def execute(model: BoardModel): Option[BoardModel] = Some(model.copy(cursorEvent = Some(cursorEvent.validate(isValid(model.mode)))))
 
-  private[this] def validate(mode: Mode): CursorEvent = {
-    val check = cursorEvent match {
+  private[this] def isValid(mode: Mode): Boolean = {
+    cursorEvent match {
       case MouseMoveEvent(c) =>
         c match {
           case Some(PlayerCursor(_)) => mode.playerSelectable
@@ -20,7 +20,6 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends BoardAction 
         }
       case _ => false
     }
-    cursorEvent.validate(check)
   }
 
 }
