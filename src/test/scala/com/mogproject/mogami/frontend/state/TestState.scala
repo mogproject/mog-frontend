@@ -6,7 +6,7 @@ import com.mogproject.mogami.frontend.model.board.{BoardModel, DoubleBoard, Flip
 import com.mogproject.mogami.frontend.model.board.cursor.{CursorEvent, MouseMoveEvent}
 import com.mogproject.mogami.frontend.sam.{SAMAction, SAMState}
 import com.mogproject.mogami.frontend.view.{Japanese, TestView}
-import com.mogproject.mogami.frontend.view.board.{BoardCursor, HandCursor}
+import com.mogproject.mogami.frontend.view.board.{BoardCursor, HandCursor, PlayerCursor}
 import com.mogproject.mogami.util.MapUtil
 
 /**
@@ -112,6 +112,7 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
         model.activeCursor match {
           case Some(BoardCursor(_)) => view.boardTest.board.effect.cursorEffector.stop()
           case Some(HandCursor(_)) => view.boardTest.hand.effect.cursorEffector.stop()
+          case Some(PlayerCursor(_)) => view.boardTest.player.effect.cursorEffector.stop()
           case _ => // todo
         }
 
@@ -119,6 +120,7 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
         c match {
           case Some(BoardCursor(sq)) => view.boardTest.board.effect.cursorEffector.start(view.boardTest.board.getRect(sq))
           case Some(HandCursor(h)) => view.boardTest.hand.effect.cursorEffector.start(view.boardTest.hand.getRect(h))
+          case Some(PlayerCursor(pl)) => view.boardTest.player.effect.cursorEffector.start(view.boardTest.player.getRect(pl))
           case _ => // todo
         }
         newModel.copy(activeCursor = c)

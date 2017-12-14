@@ -42,7 +42,7 @@ trait SVGAreaEventHandler {
     * @return None if the position is out of interests
     */
   private[this] def getCursor(clientX: Double, clientY: Double): Option[Cursor] = {
-    Seq(board, hand).toStream.flatMap(t => t.clientPos2Cursor(clientX, clientY)).headOption
+    Seq(board, hand, player, box).toStream.flatMap(t => t.clientPos2Cursor(clientX, clientY)).headOption
   }
 
   private[this] def isValidMouseEvent(evt: MouseEvent): Boolean = evt.button == 0

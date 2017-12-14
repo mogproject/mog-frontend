@@ -24,7 +24,7 @@ case class SVGPlayerLayout(center: Coord,
 
   private[this] def generateBorder(rect: Rect): TypedTag[RectElement] = rect.toSVGRect(cls := "player-border")
 
-  private[this] def getRectByPlayer(player: Player, rect: Rect): Rect = player.isWhite.when[Rect](_.rotate(center))(rect)
+  def getRectByPlayer(player: Player, rect: Rect): Rect = player.isWhite.when[Rect](_.rotate(center))(rect)
 
   // Utility
   def getSymbolArea(player: Player): Rect = getRectByPlayer(player, blackSymbolArea)

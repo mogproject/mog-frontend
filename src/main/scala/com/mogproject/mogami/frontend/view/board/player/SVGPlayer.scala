@@ -5,8 +5,8 @@ import com.mogproject.mogami.core.Player.{BLACK, WHITE}
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.board.BoardIndicator
 import com.mogproject.mogami.frontend.view.WebComponent
-import com.mogproject.mogami.frontend.view.board.{Cursor, Flippable, SymmetricElement}
-import com.mogproject.mogami.frontend.view.board.effect.EffectorTarget
+import com.mogproject.mogami.frontend.view.board.{Cursor, Flippable, PlayerCursor, SymmetricElement}
+import com.mogproject.mogami.frontend.view.board.effect.{CursorEffector, EffectorTarget}
 import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
 import org.scalajs.dom.{Element, svg}
 import org.scalajs.dom.raw.{SVGElement, SVGImageElement}
@@ -35,6 +35,8 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
   // Utility
   //
   private[this] def getSymbolImagePath(player: Player): String = s"assets/img/p/common/${player.toString.take(2)}.svg"
+
+  def getRect(player: Player): Rect = layout.getRectByPlayer(player, layout.blackNameRect)
 
   //
   // Elements
@@ -73,12 +75,15 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
 
   val elements: Seq[SVGElement] = borderElements ++ indicatorBackgrounds.values ++ symbolElements.values ++ nameElementsWrapper.values ++ indicatorTextElements.values
 
-  override protected def thresholdElement: Element = borderElements.head
+  override protected def thresholdElement: Element = symbolElements.values.head
 
   override def clientPos2Cursor(clientX: Double, clientY: Double): Option[Cursor] = {
-    ???
+    (for {
+      (pl, elem) <- Player.constructor.zip(borderElements)
+      r = elem.getBoundingClientRect()
+      if r.left <= clientX && clientX <= r.right && r.top <= clientY && clientY <= r.bottom
+    } yield PlayerCursor(getFlippedPlayer(pl))).headOption
   }
-
 
   //
   // Operation
@@ -120,4 +125,12 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
     }
 
   }
+
+  //
+  // Effects
+  //
+  object effect {
+    lazy val cursorEffector = CursorEffector(self)
+  }
+
 }

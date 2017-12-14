@@ -12,7 +12,7 @@ sealed abstract class Mode(val playable: Set[Player],
   def boardCursorAvailable: Boolean = playable.nonEmpty
 }
 
-case object ViewMode extends Mode(Set.empty, false, true, false)
+case object ViewMode extends Mode(Set.empty, true, true, false)
 
 case object EditMode extends Mode(Player.constructor.toSet, true, false, true)
 
