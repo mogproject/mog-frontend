@@ -6,7 +6,7 @@ import com.mogproject.mogami.frontend.model.board.{BoardModel, DoubleBoard, Flip
 import com.mogproject.mogami.frontend.model.board.cursor._
 import com.mogproject.mogami.frontend.sam.{SAMAction, SAMState}
 import com.mogproject.mogami.frontend.view.{Japanese, TestView}
-import com.mogproject.mogami.frontend.view.board.{BoardCursor, BoxCursor, HandCursor, PlayerCursor}
+import com.mogproject.mogami.frontend.view.board._
 
 /**
   *
@@ -37,7 +37,7 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
 
   private[this] def unselect(newModel: BoardModel): BoardModel = {
     view.boardTest.area.unselect()
-    newModel.copy(activeCursor = None, selectedCursor = None)
+    newModel.copy(selectedCursor = None)
   }
 
   private[this] def renderLayout(newModel: BoardModel): BoardModel = {
@@ -110,72 +110,22 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
       //
       // Mouse Move
       //
-      case Some(MouseMoveEvent(c)) =>
+      case Some(MouseMoveEvent(c)) if c != newModel.activeCursor =>
         // clear current cursor
         view.boardTest.area.clearActiveCursor()
 
         // draw new cursor
-        val isValid = c match {
-          case Some(BoardCursor(sq)) if model.mode.boardCursorAvailable =>
-            view.boardTest.board.effect.cursorEffector.start(view.boardTest.board.getRect(sq))
-            true
-          case Some(HandCursor(h)) if model.mode.boardCursorAvailable =>
-            view.boardTest.hand.effect.cursorEffector.start(view.boardTest.hand.getRect(h))
-            true
-          case Some(PlayerCursor(pl)) if model.mode.playerSelectable =>
-            view.boardTest.player.effect.cursorEffector.start(view.boardTest.player.getRect(pl))
-            true
-          case Some(BoxCursor(pt)) if model.mode.boxAvailable =>
-            view.boardTest.box.effect.cursorEffector.start(view.boardTest.box.layout.getRect(pt))
-            true
-          case _ =>
-            false
+        if (cursorActivatable(newModel, c)) {
+          c.foreach(view.boardTest.area.drawCursor)
+          newModel.copy(activeCursor = c)
+        } else {
+          newModel.copy(activeCursor = None)
         }
-        newModel.copy(activeCursor = if (isValid) c else None)
 
       //
-      // Mouse Down (Player)
+      // Mouse Down
       //
-      case Some(MouseDownEvent(Some(PlayerCursor(_)))) if model.mode.playerSelectable =>
-        // todo: invoke player select
-        unselect(newModel)
-
-      //
-      // Mouse Down (Forward/Backward)
-      //
-      case Some(MouseDownEvent(Some(BoardCursor(c)))) if newModel.mode.forwardAvailable =>
-        invokeViewForward(c)
-        newModel
-
-      //
-      // Mouse Down (Select)
-      //
-      case Some(MouseDownEvent(c)) if newModel.selectedCursor.isEmpty =>
-        val isValid = c match {
-          case Some(BoardCursor(sq)) if model.activeBoard.get(sq).exists(p => model.mode.playable(p.owner)) =>
-            view.boardTest.board.effect.selectedEffector.start(view.boardTest.board.getRect(sq))
-            view.boardTest.board.effect.selectingEffector.start(view.boardTest.board.getRect(sq))
-            true
-          case Some(HandCursor(h)) if model.mode.playable(h.owner) && model.activeHand.get(h).exists(_ > 0) =>
-            view.boardTest.hand.effect.selectedEffector.start(view.boardTest.hand.getRect(h))
-            view.boardTest.hand.effect.selectingEffector.start(view.boardTest.hand.getRect(h))
-            true
-          case Some(BoxCursor(pt)) if model.mode.boxAvailable && model.boxPieces.get(pt).exists(_ > 0) =>
-            view.boardTest.box.effect.selectedEffector.start(view.boardTest.box.getPieceRect(pt))
-            view.boardTest.box.effect.selectingEffector.start(view.boardTest.box.getPieceRect(pt))
-            true
-          case _ =>
-            false
-        }
-        newModel.copy(selectedCursor = isValid.fold(c, None))
-
-      //
-      // Move Down (Invoke)
-      //
-      case Some(MouseDownEvent(c)) =>
-        // todo: invoke move
-        view.boardTest.area.unselect()
-        newModel.copy(selectedCursor = None)
+      case Some(MouseDownEvent(c)) => renderMouseDown(newModel, c)
 
       //
       // Mouse Up
@@ -214,6 +164,69 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
   private[this] def invokeViewForward(square: Square): Unit = {
     if (square.file != 5) {
       view.boardTest.board.effect.forwardEffector.start(view.boardTest.board.isFlipped ^ square.file < 5)
+    }
+  }
+
+
+  private[this] def renderMouseDown(newModel: BoardModel, cursor: Option[Cursor]): BoardModel = {
+    cursor.foreach(view.boardTest.area.flashCursor)
+
+    cursor match {
+      //
+      // Player
+      //
+      case Some(PlayerCursor(pl)) if model.mode.playerSelectable =>
+        unselect(newModel)
+      // todo: invoke player select
+
+      //
+      // Forward/Backward
+      //
+      case Some(BoardCursor(c)) if newModel.mode.forwardAvailable =>
+        invokeViewForward(c)
+        newModel
+
+      //
+      // Select
+      //
+      case Some(c) if newModel.selectedCursor.isEmpty && cursorSelectable(newModel, c) =>
+        view.boardTest.area.select(c)
+        newModel.copy(selectedCursor = cursor)
+
+      //
+      // Invoke
+      //
+      case Some(c) if newModel.selectedCursor.isDefined =>
+        // todo: invoke move
+        unselect(newModel)
+
+      //
+      // Reset selection
+      //
+      case None if newModel.selectedCursor.isDefined =>
+        unselect(newModel)
+
+      case _ =>
+        newModel
+    }
+  }
+
+  private[this] def cursorSelectable(newModel: BoardModel, cursor: Cursor): Boolean = {
+    cursor match {
+      case BoardCursor(sq) => newModel.activeBoard.get(sq).exists(p => newModel.mode.playable(p.owner))
+      case HandCursor(h) => newModel.mode.playable(h.owner) && newModel.activeHand.get(h).exists(_ > 0)
+      case BoxCursor(pt) => newModel.mode.boxAvailable && newModel.boxPieces.get(pt).exists(_ > 0)
+      case _ => false
+    }
+  }
+
+  private[this] def cursorActivatable(newModel: BoardModel, cursor: Option[Cursor]): Boolean = {
+    cursor match {
+      case Some(BoardCursor(_)) => newModel.mode.boardCursorAvailable
+      case Some(HandCursor(_)) => model.mode.boardCursorAvailable
+      case Some(PlayerCursor(_)) => model.mode.playerSelectable
+      case Some(BoxCursor(_)) => model.mode.boxAvailable
+      case _ => false
     }
   }
 }

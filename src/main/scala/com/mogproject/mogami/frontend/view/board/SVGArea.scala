@@ -85,10 +85,46 @@ case class SVGArea(layout: SVGAreaLayout) extends WebComponent with SVGAreaEvent
     box.effect.cursorEffector.stop()
   }
 
+  def select(cursor: Cursor): Unit = {
+    cursor match {
+      case BoardCursor(sq) =>
+        val r = board.getRect(sq)
+        board.effect.selectedEffector.start(r)
+        board.effect.selectingEffector.start(r) // todo: see config
+      case HandCursor(h) =>
+        val r = hand.getRect(h)
+        hand.effect.selectedEffector.start(r)
+        hand.effect.selectingEffector.start(r)
+      case BoxCursor(pt) =>
+        val r = box.getPieceRect(pt)
+        box.effect.selectedEffector.start(r)
+        box.effect.selectingEffector.start(r)
+      case _ =>
+    }
+  }
+
   def unselect(): Unit = {
     board.unselect()
     hand.unselect()
     box.unselect()
+  }
+
+  def drawCursor(cursor: Cursor): Unit = {
+    cursor match {
+      case BoardCursor(sq) => board.effect.cursorEffector.start(board.getRect(sq))
+      case HandCursor(h) => hand.effect.cursorEffector.start(hand.getRect(h))
+      case BoxCursor(pt) => box.effect.cursorEffector.start(box.layout.getRect(pt))
+      case PlayerCursor(pl) => player.effect.cursorEffector.start(player.getRect(pl))
+    }
+  }
+
+  def flashCursor(cursor: Cursor): Unit = {
+    cursor match {
+      case BoardCursor(sq) => board.effect.flashEffector.start(board.getRect(sq))
+      case HandCursor(h) => hand.effect.flashEffector.start(hand.getRect(h))
+      case BoxCursor(pt) => box.effect.flashEffector.start(box.getPieceRect(pt))
+      case PlayerCursor(pl) => player.effect.flashEffector.start(player.getRect(pl))
+    }
   }
 
   def showBox(): Unit = showElement(svgBox)

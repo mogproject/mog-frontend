@@ -6,7 +6,7 @@ import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.board.BoardIndicator
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.board.{Cursor, Flippable, PlayerCursor, SymmetricElement}
-import com.mogproject.mogami.frontend.view.board.effect.{CursorEffector, EffectorTarget}
+import com.mogproject.mogami.frontend.view.board.effect.{CursorEffector, EffectorTarget, FlashEffector}
 import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
 import org.scalajs.dom.{Element, svg}
 import org.scalajs.dom.raw.{SVGElement, SVGImageElement}
@@ -131,6 +131,7 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
   //
   object effect {
     lazy val cursorEffector = CursorEffector(self)
+    lazy val flashEffector = FlashEffector(self)
   }
 
 }
