@@ -169,7 +169,7 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
 
 
   private[this] def renderMouseDown(newModel: BoardModel, cursor: Option[Cursor]): BoardModel = {
-    cursor.foreach(view.boardTest.area.flashCursor)
+    if (cursorActivatable(newModel, cursor)) cursor.foreach(view.boardTest.area.flashCursor)
 
     cursor match {
       //
