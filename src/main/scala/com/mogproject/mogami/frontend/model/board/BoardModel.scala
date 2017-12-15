@@ -24,6 +24,10 @@ case class BoardModel(config: BoardConfiguration = BoardConfiguration(),
                       cursorEvent: Option[CursorEvent] = None
                      ) extends SAMModel {
 
+  /**
+    * Calculate unused pieces
+    * @return map of (piece type, number of unused pieces)
+    */
   def boxPieces: Map[Ptype, Int] = {
     val b = activeBoard.values.groupBy(_.demoted.ptype).mapValues(_.size)
     val h = activeHand.filter(_._2 > 0).map { case (hd, n) => hd.ptype -> n }
