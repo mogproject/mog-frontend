@@ -132,10 +132,8 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
       //
       case Some(MouseUpEvent(Some(c))) if newModel.selectedCursor.exists(_ != c && !c.isPlayer) =>
         // todo: adjust movement
-        // todo: invoke move
-
-        view.boardTest.area.unselect()
-        newModel.copy(selectedCursor = None)
+        val adjusted = Some(c) // todo
+        renderMouseDown(newModel, adjusted)
 
       //
       // Mouse Hold
