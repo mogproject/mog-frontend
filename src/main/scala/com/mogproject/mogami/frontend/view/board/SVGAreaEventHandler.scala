@@ -76,7 +76,9 @@ trait SVGAreaEventHandler {
 
   private[this] def mouseOut(evt: MouseEvent): Unit = {
     evt.preventDefault()
-    clearHoldEvent()
+
+    // check if the cursor is inside the board
+    if (!getCursor(evt.clientX, evt.clientY).exists(_.isBoard)) clearHoldEvent()
   }
 
   private[this] def touchStart(evt: TouchEvent): Unit = if (isValidTouchEvent(evt)) {

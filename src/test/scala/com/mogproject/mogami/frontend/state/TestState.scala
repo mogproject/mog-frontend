@@ -182,7 +182,7 @@ case class TestState(model: BoardModel, view: TestView) extends SAMState[BoardMo
       //
       case Some(BoardCursor(c)) if newModel.mode.forwardAvailable =>
         invokeViewForward(c)
-        newModel
+        newModel.copy(selectedCursor = cursor)
 
       //
       // Select
