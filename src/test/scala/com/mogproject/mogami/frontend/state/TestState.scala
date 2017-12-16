@@ -69,7 +69,7 @@ case class TestState(model: TestModel, view: TestView) extends SAMState[TestMode
   }
 
   private[this] def renderPlayerNames(newModel: Model): Model = {
-    view.renderPlayerNames(newModel.mode.getPlayerNames)
+    view.renderPlayerNames(newModel.mode.getPlayerNames, newModel.config.messageLang)
     newModel
   }
 

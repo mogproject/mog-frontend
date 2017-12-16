@@ -6,6 +6,6 @@ import com.mogproject.mogami.frontend.sam.SAMAction
 /**
   *
   */
-trait BasePlaygroundAction[+Model <: BasePlaygroundModel] extends SAMAction[Model] {
+trait PlaygroundAction[Model <: BasePlaygroundModel] extends SAMAction[Model] {
 
 }

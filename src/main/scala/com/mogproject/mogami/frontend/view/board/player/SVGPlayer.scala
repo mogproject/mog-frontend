@@ -27,7 +27,7 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
   //
   // Variables
   //
-  private[this] val playerNames: mutable.Map[Player, Option[String]] = mutable.Map(Player.constructor.map(_ -> None): _*)
+  private[this] val playerNames: mutable.Map[Player, String] = mutable.Map(Player.constructor.map(_ -> ""): _*)
 
   private[this] val indicators: mutable.Map[Player, Option[BoardIndicator]] = mutable.Map(Player.constructor.map(_ -> None): _*)
 
@@ -101,14 +101,14 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
     }
   }
 
-  def drawNames(blackName: Option[String], whiteName: Option[String]): Unit = {
+  def drawNames(blackName: String, whiteName: String): Unit = {
     playerNames(BLACK) = blackName
     playerNames(WHITE) = whiteName
     refreshNames()
   }
 
   def refreshNames(): Unit = {
-    playerNames.foreach { case (pl, s) => nameElements.getFirst(pl).textContent = s.getOrElse("") }
+    playerNames.foreach { case (pl, s) => nameElements.getFirst(pl).textContent = s }
   }
 
   def drawIndicators(blackIndicator: Option[BoardIndicator], whiteIndicator: Option[BoardIndicator]): Unit = {

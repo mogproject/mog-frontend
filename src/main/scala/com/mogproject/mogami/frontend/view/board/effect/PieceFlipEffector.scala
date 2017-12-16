@@ -3,6 +3,7 @@ package com.mogproject.mogami.frontend.view.board.effect
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.{Piece, Square}
 import com.mogproject.mogami.frontend.view.board.board.SVGBoard
+import com.mogproject.mogami.frontend.view.piece.PieceFace
 import org.scalajs.dom.raw.SVGElement
 
 import scalatags.JsDom.TypedTag
@@ -11,7 +12,7 @@ import scalatags.JsDom.svgTags.animateTransform
 import scalatags.JsDom.svgAttrs
 
 
-case class PieceFlipAttribute(square: Square, fromPiece: Piece, toPiece: Piece, pieceFace: String)
+case class PieceFlipAttribute(square: Square, fromPiece: Piece, toPiece: Piece, pieceFace: PieceFace)
 
 /**
   * Piece flip effect

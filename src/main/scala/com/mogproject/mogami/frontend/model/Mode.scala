@@ -29,13 +29,13 @@ sealed abstract class Mode(val playable: Set[Player],
   }
 
   def getIndicators: Map[Player, BoardIndicator] = {
-    val (turn, gs) = {
+    val (turn, gs) = this match {
       case PlayMode(gc) => (gc.getDisplayingState.turn, gc.getDisplayingGameStatus)
       case ViewMode(gc) => (gc.getDisplayingState.turn, gc.getDisplayingGameStatus)
       case LiveMode(_, gc) => (gc.getDisplayingState.turn, gc.getDisplayingGameStatus)
-      case EditMode(_, t, b, _) => (t, GameStatus.Playing)
+      case EditMode(_, t, _, _) => (t, GameStatus.Playing)
     }
-
+    BoardIndicator.fromGameStatus(turn, gs)
   }
 
   def getBoardPieces: BoardType = this match {

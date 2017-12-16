@@ -1,11 +1,14 @@
 package com.mogproject.mogami.frontend.action.board
 
 import com.mogproject.mogami.Player
-import com.mogproject.mogami.frontend.model.board.BoardModel
+import com.mogproject.mogami.frontend.action.PlaygroundAction
+import com.mogproject.mogami.frontend.model.BasePlaygroundModel
 
 /**
   *
   */
-case class BoardSetPlayerNameAction(playerNames: Map[Player, Option[String]]) extends BoardAction {
-  override def execute(model: BoardModel): Option[BoardModel] = Some(model.copy(playerNames = model.playerNames ++ playerNames))
+case class BoardSetPlayerNameAction[Model <: BasePlaygroundModel](playerNames: Map[Player, Option[String]]) extends PlaygroundAction[Model] {
+  override def execute(model: Model): Option[Model] = {
+    ???
+  }
 }
