@@ -16,10 +16,10 @@ import scalatags.JsDom.svgTags.svg
 /**
   *
   */
-case class SVGArea(layout: SVGAreaLayout) extends WebComponent with SVGAreaEventHandler {
+case class SVGArea(areaId: Int, layout: SVGAreaLayout) extends WebComponent with SVGAreaEventHandler {
 
   // Local variables
-  private[this] var control: SVGAreaControl = SVGAreaControl(isFlipped = false, Set.empty, playerNameSelectable = true, isViewMode = false)
+//  private[this] var control: SVGAreaControl = SVGAreaControl(isFlipped = false, Set.empty, playerNameSelectable = true, isViewMode = false)
 
   val board: SVGBoard = SVGBoard(layout.board)
 
@@ -29,7 +29,7 @@ case class SVGArea(layout: SVGAreaLayout) extends WebComponent with SVGAreaEvent
 
   val box: SVGBox = SVGBox(layout.box)
 
-  def getControl: SVGAreaControl = control
+//  def getControl: SVGAreaControl = control
 
   //
   // components
@@ -69,8 +69,8 @@ case class SVGArea(layout: SVGAreaLayout) extends WebComponent with SVGAreaEvent
   //
   // Operation
   //
-  def setFlip(flip: Boolean): Unit = if (control.isFlipped != flip) {
-    control = control.copy(isFlipped = flip)
+  def setFlip(flip: Boolean): Unit = {//if (control.isFlipped != flip) {
+//    control = control.copy(isFlipped = flip)
     board.setFlip(flip)
     hand.setFlip(flip)
     player.setFlip(flip)
@@ -85,20 +85,20 @@ case class SVGArea(layout: SVGAreaLayout) extends WebComponent with SVGAreaEvent
     box.effect.cursorEffector.stop()
   }
 
-  def select(cursor: Cursor): Unit = {
+  def select(cursor: Cursor, effectEnabled: Boolean): Unit = {
     cursor match {
       case BoardCursor(sq) =>
         val r = board.getRect(sq)
         board.effect.selectedEffector.start(r)
-        board.effect.selectingEffector.start(r) // todo: see config
+        if (effectEnabled) board.effect.selectingEffector.start(r)
       case HandCursor(h) =>
         val r = hand.getRect(h)
         hand.effect.selectedEffector.start(r)
-        hand.effect.selectingEffector.start(r)
+        if (effectEnabled) hand.effect.selectingEffector.start(r)
       case BoxCursor(pt) =>
         val r = box.getPieceRect(pt)
         box.effect.selectedEffector.start(r)
-        box.effect.selectingEffector.start(r)
+        if (effectEnabled) box.effect.selectingEffector.start(r)
       case _ =>
     }
   }

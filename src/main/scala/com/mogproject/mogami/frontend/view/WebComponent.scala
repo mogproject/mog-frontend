@@ -13,6 +13,11 @@ trait WebComponent {
   def showElement(elem: HTMLElement): Unit = elem.style.display = display.block.v
 
   def hideElement(elem: HTMLElement): Unit = elem.style.display = display.none.v
+
+  def terminate(): Unit = {
+    WebComponent.removeAllChildElements(element)
+    WebComponent.removeElement(element)
+  }
 }
 
 object WebComponent {

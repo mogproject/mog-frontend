@@ -6,7 +6,7 @@ sealed trait CursorEvent {
   def validate(checked: Boolean): CursorEvent = this
 }
 
-case class MouseMoveEvent(cursor: Option[Cursor]) extends CursorEvent {
+case class MouseMoveEvent(areaId: Int, cursor: Option[Cursor]) extends CursorEvent {
   override def validate(checked: Boolean): CursorEvent = if (checked) this else copy(cursor = None)
 }
 

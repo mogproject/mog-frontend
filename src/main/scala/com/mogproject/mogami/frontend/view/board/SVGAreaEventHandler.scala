@@ -59,7 +59,7 @@ trait SVGAreaEventHandler {
   //
   private[this] def mouseMove(evt: MouseEvent): Unit = {
     evt.preventDefault()
-    SAM.doAction(BoardCursorEventAction(MouseMoveEvent(getCursor(evt.clientX, evt.clientY))))
+    SAM.doAction(BoardCursorEventAction(MouseMoveEvent(areaId, getCursor(evt.clientX, evt.clientY))))
   }
 
   private[this] def mouseDown(evt: MouseEvent): Unit = if (isValidMouseEvent(evt)) {

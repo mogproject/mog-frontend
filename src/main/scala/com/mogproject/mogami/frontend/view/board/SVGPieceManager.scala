@@ -5,6 +5,7 @@ import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.Rect
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.board.effect.EffectorTarget
+import com.mogproject.mogami.frontend.view.piece.{JapaneseOneCharFace, PieceFace}
 import org.scalajs.dom.Element
 import org.scalajs.dom.raw.{SVGImageElement, SVGTextElement}
 
@@ -22,7 +23,7 @@ trait SVGPieceManager[Key, Value] {
   //
   private[this] var currentPieces: Map[Key, Value] = Map.empty
 
-  private[this] var currentPieceFace: String = "jp1"
+  private[this] var currentPieceFace: PieceFace = JapaneseOneCharFace
 
   private[this] var pieceMap: Map[Key, (Element, Option[Element])] = Map.empty
 
@@ -45,10 +46,8 @@ trait SVGPieceManager[Key, Value] {
 
   protected def resetPieceEffect(keepLastMove: Boolean = false): Unit
 
-  private[this] def getImagePath(ptype: Ptype, pieceFace: String): String = s"assets/img/p/${pieceFace}/${ptype.toCsaString}.svg"
-
-  def generatePieceElement(key: Key, value: Value, pieceFace: String, modifiers: Modifier*): TypedTag[SVGImageElement] = {
-    getPieceRect(key).toSVGImage(getImagePath(getPtype(key, value), pieceFace), isFlipped(key, value), modifiers)
+  def generatePieceElement(key: Key, value: Value, pieceFace: PieceFace, modifiers: Modifier*): TypedTag[SVGImageElement] = {
+    getPieceRect(key).toSVGImage(pieceFace.getImagePath(getPtype(key, value)), isFlipped(key, value), modifiers)
   }
 
   def generateNumberElement(key: Key, value: Value, modifiers: Modifier*): TypedTag[SVGTextElement] = {
@@ -66,7 +65,7 @@ trait SVGPieceManager[Key, Value] {
     * @param pieceFace
     * @param keepLastMove
     */
-  def drawPieces(pieces: Map[Key, Value], pieceFace: String = "jp1", keepLastMove: Boolean = false): Unit = {
+  def drawPieces(pieces: Map[Key, Value], pieceFace: PieceFace = JapaneseOneCharFace, keepLastMove: Boolean = false): Unit = {
     resetPieceEffect(keepLastMove)
 
     // get diffs

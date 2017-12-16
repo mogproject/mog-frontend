@@ -3,7 +3,7 @@ package com.mogproject.mogami.frontend.model.board
 /**
   * Flip
   */
-sealed trait FlipType {
+sealed abstract class FlipType(val numAreas: Int) {
   def unary_! : FlipType = this match {
     case FlipDisabled => FlipEnabled
     case FlipEnabled => FlipDisabled
@@ -11,8 +11,8 @@ sealed trait FlipType {
   }
 }
 
-case object FlipDisabled extends FlipType
+case object FlipDisabled extends FlipType(1)
 
-case object FlipEnabled extends FlipType
+case object FlipEnabled extends FlipType(1)
 
-case object DoubleBoard extends FlipType
+case object DoubleBoard extends FlipType(2)

@@ -1,6 +1,8 @@
 package com.mogproject.mogami.frontend
 
-import com.mogproject.mogami.frontend.model.board.BoardModel
+import com.mogproject.mogami._
+import com.mogproject.mogami.core.state.StateCache.Implicits._
+import com.mogproject.mogami.frontend.model.{GameControl, PlayMode, TestModel}
 import com.mogproject.mogami.frontend.state.TestState
 import com.mogproject.mogami.frontend.view.TestView
 import org.scalajs.dom
@@ -12,7 +14,7 @@ import scala.scalajs.js.JSApp
   */
 object App extends JSApp {
   override def main(): Unit = {
-    SAM.initialize(TestState(BoardModel(), TestView(dom.document.getElementById("app"))))
+    SAM.initialize(TestState(TestModel(PlayMode(GameControl(Game()))), TestView(dom.document.getElementById("app"))))
   }
 }
 
