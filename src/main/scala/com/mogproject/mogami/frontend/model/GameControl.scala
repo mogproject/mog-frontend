@@ -1,6 +1,7 @@
 package com.mogproject.mogami.frontend.model
 
 import com.mogproject.mogami.core.move.IllegalMove
+import com.mogproject.mogami.core.state.State.PromotionFlag
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.{GamePosition, _}
 
@@ -68,6 +69,8 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
     }
   }
 
+  def getDisplayingLastMoveTo: Option[Square] = getDisplayingLastMove.map(_.to)
+
   def getPlayerName(player: Player): String = game.gameInfo.tags.getOrElse(player.isBlack.fold('blackName, 'whiteName), "")
 
   //
@@ -80,4 +83,54 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
   def withNextDisplayPosition: GameControl = copy(displayPosition = math.min(lastDisplayPosition, displayPosition + 1))
 
   def withLastDisplayPosition: GameControl = copy(displayPosition = lastDisplayPosition)
+
+  //
+  // move operations
+  //
+  def getMoveCandidates(moveFrom: MoveFrom, moveTo: Square): Seq[Move] = {
+    val st = getDisplayingState
+    val promotes = if (st.canAttack(moveFrom, moveTo)) {
+      st.getPromotionFlag(moveFrom, moveTo) match {
+        case Some(PromotionFlag.CannotPromote) => Seq(false)
+        case Some(PromotionFlag.CanPromote) => Seq(false, true)
+        case Some(PromotionFlag.MustPromote) => Seq(true)
+        case None => Seq.empty
+      }
+    } else {
+      Seq.empty
+    }
+    promotes.flatMap(p => MoveBuilderSfen(moveFrom, moveTo, promote = p).toMove(st, getDisplayingLastMoveTo).toSeq)
+  }
+
+  def makeMove(move: Move, newBranchMode: Boolean, moveForward: Boolean): Option[GameControl] = {
+    val offset = moveForward.fold(1, 0)
+    if (newBranchMode) {
+      // New Branch Mode
+      /** @note compare moves regardless of elapsed time */
+      game.getMove(gamePosition).map(_.copy(elapsedTime = None)) match {
+        case Some(m) if m == move => Some(this.copy(displayPosition = displayPosition + offset)) // move next
+        case Some(_) => game.getForks(gamePosition).find(_._1 == move) match {
+          case Some((_, br)) => moveToBranch(br, offset)
+          case None => createNewBranch(move, offset)
+        }
+        case None => makeMoveOnCurrentBranch(move, offset)
+      }
+    } else {
+      makeMoveOnCurrentBranch(move, offset) // Normal Mode
+    }
+  }
+
+  private[this] def moveToBranch(branchNo: BranchNo, offset: Int): Option[GameControl] = {
+    Some(this.copy(displayBranchNo = branchNo, displayPosition = displayPosition + offset))
+  }
+
+  private[this] def createNewBranch(move: Move, offset: Int): Option[GameControl] = {
+    game.createBranch(gamePosition, move).map(g => this.copy(game = g, displayBranchNo = game.branches.length + 1, displayPosition = displayPosition + offset))
+  }
+
+  private[this] def makeMoveOnCurrentBranch(move: Move, offset: Int): Option[GameControl] = {
+    game.truncated(gamePosition).updateBranch(displayBranchNo)(_.makeMove(move)).map(g => this.copy(game = g, displayPosition = displayPosition + offset))
+  }
+
+
 }

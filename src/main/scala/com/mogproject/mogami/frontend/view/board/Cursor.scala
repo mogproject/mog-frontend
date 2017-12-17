@@ -13,18 +13,20 @@ sealed abstract class Cursor(private val regionId: Int) {
   def isPlayer: Boolean = regionId == 3
 
   def unary_! : Cursor
+
+  def moveFrom: MoveFrom = throw new IllegalArgumentException(s"cannot create MoveFrom instance: ${this}")
 }
 
 case class BoardCursor(square: Square) extends Cursor(0) {
   override def unary_! : Cursor = BoardCursor(!square)
 
-  def moveFrom: MoveFrom = Left(square)
+  override def moveFrom: MoveFrom = Left(square)
 }
 
 case class HandCursor(hand: Hand) extends Cursor(1) {
   override def unary_! : Cursor = HandCursor(!hand)
 
-  def moveFrom: MoveFrom = Right(hand)
+  override def moveFrom: MoveFrom = Right(hand)
 }
 
 case class BoxCursor(ptype: Ptype) extends Cursor(2) {

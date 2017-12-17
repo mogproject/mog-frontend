@@ -18,9 +18,11 @@ sealed abstract class Mode(val playable: Set[Player],
   //
   // Getters
   //
+  def isEditMode: Boolean = boxAvailable
+
   def getPlayerNames: Map[Player, String] = {
     val tags = (this match {
-      case PlayMode(gc) => gc.game.gameInfo
+      case PlayMode(gc, _) => gc.game.gameInfo
       case ViewMode(gc) => gc.game.gameInfo
       case LiveMode(_, gc) => gc.game.gameInfo
       case EditMode(gi, _, _, _) => gi
@@ -30,7 +32,7 @@ sealed abstract class Mode(val playable: Set[Player],
 
   def getIndicators: Map[Player, BoardIndicator] = {
     val (turn, gs) = this match {
-      case PlayMode(gc) => (gc.getDisplayingState.turn, gc.getDisplayingGameStatus)
+      case PlayMode(gc, _) => (gc.getDisplayingState.turn, gc.getDisplayingGameStatus)
       case ViewMode(gc) => (gc.getDisplayingState.turn, gc.getDisplayingGameStatus)
       case LiveMode(_, gc) => (gc.getDisplayingState.turn, gc.getDisplayingGameStatus)
       case EditMode(_, t, _, _) => (t, GameStatus.Playing)
@@ -39,14 +41,14 @@ sealed abstract class Mode(val playable: Set[Player],
   }
 
   def getBoardPieces: BoardType = this match {
-    case PlayMode(gc) => gc.getDisplayingState.board
+    case PlayMode(gc, _) => gc.getDisplayingState.board
     case ViewMode(gc) => gc.getDisplayingState.board
     case LiveMode(_, gc) => gc.getDisplayingState.board
     case EditMode(_, _, b, _) => b
   }
 
   def getHandPieces: HandType = this match {
-    case PlayMode(gc) => gc.getDisplayingState.hand
+    case PlayMode(gc, _) => gc.getDisplayingState.hand
     case ViewMode(gc) => gc.getDisplayingState.hand
     case LiveMode(_, gc) => gc.getDisplayingState.hand
     case EditMode(_, _, _, h) => h
@@ -61,9 +63,18 @@ sealed abstract class Mode(val playable: Set[Player],
     case _ => Map.empty
   }
 
+  //
+  // Setters
+  //
+  def setGameControl(gameControl: GameControl): Mode = this match {
+    case x@PlayMode(gc, _) => x.copy(gameControl = gameControl)
+    case x@ViewMode(gc) => x.copy(gameControl = gameControl)
+    case x@LiveMode(_, gc) => x.copy(gameControl = gameControl)
+    case EditMode(_, _, _, _) => this
+  }
 }
 
-case class PlayMode(gameControl: GameControl) extends Mode(Player.constructor.toSet, true, false, false) {
+case class PlayMode(gameControl: GameControl, newBranchMode: Boolean = false) extends Mode(Player.constructor.toSet, true, false, false) {
 
 }
 

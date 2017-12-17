@@ -10,7 +10,7 @@ case class MouseMoveEvent(areaId: Int, cursor: Option[Cursor]) extends CursorEve
   override def validate(checked: Boolean): CursorEvent = if (checked) this else copy(cursor = None)
 }
 
-case class MouseDownEvent(cursor: Option[Cursor]) extends CursorEvent {
+case class MouseDownEvent(areaId: Int, cursor: Option[Cursor]) extends CursorEvent {
   override def validate(checked: Boolean): CursorEvent = if (checked) this else copy(cursor = None)
 }
 

@@ -64,7 +64,7 @@ trait SVGAreaEventHandler {
 
   private[this] def mouseDown(evt: MouseEvent): Unit = if (isValidMouseEvent(evt)) {
     evt.preventDefault()
-    PlaygroundSAM.doAction(BoardCursorEventAction(MouseDownEvent(getCursor(evt.clientX, evt.clientY))))
+    PlaygroundSAM.doAction(BoardCursorEventAction(MouseDownEvent(areaId, getCursor(evt.clientX, evt.clientY))))
     registerHoldEvent()
   }
 
@@ -83,7 +83,7 @@ trait SVGAreaEventHandler {
 
   private[this] def touchStart(evt: TouchEvent): Unit = if (isValidTouchEvent(evt)) {
     evt.preventDefault()
-    PlaygroundSAM.doAction(BoardCursorEventAction(MouseDownEvent(getCursor(evt.changedTouches(0).clientX, evt.changedTouches(0).clientY))))
+    PlaygroundSAM.doAction(BoardCursorEventAction(MouseDownEvent(areaId, getCursor(evt.changedTouches(0).clientX, evt.changedTouches(0).clientY))))
     registerHoldEvent()
   }
 
