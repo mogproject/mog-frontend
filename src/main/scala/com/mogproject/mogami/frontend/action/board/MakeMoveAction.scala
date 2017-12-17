@@ -8,6 +8,8 @@ import com.mogproject.mogami.frontend.model.BasePlaygroundModel
   *
   */
 case class MakeMoveAction(move: Move) extends PlaygroundAction {
-  override def execute(model: BasePlaygroundModel): Option[BasePlaygroundModel] = ???
+  override def execute(model: BasePlaygroundModel): Option[BasePlaygroundModel] = {
+    Some(model)
+  }
 
 }

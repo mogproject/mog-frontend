@@ -3,11 +3,13 @@ package com.mogproject.mogami.frontend.view
 import com.mogproject.mogami.{Move, Player, Ptype, Square}
 import com.mogproject.mogami.core.Player.{BLACK, WHITE}
 import com.mogproject.mogami.core.state.State.{BoardType, HandType}
+import com.mogproject.mogami.frontend.Coord
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.board._
 import com.mogproject.mogami.frontend.model.board.cursor.Cursor
 import com.mogproject.mogami.frontend.sam.SAMView
 import com.mogproject.mogami.frontend.view.board.SVGAreaLayout
+import com.mogproject.mogami.frontend.view.modal.PromotionDialog
 import com.mogproject.mogami.frontend.view.piece.PieceFace
 import org.scalajs.dom.Element
 
@@ -106,8 +108,13 @@ trait BasePlaygroundView extends SAMView {
   def renderMoveEffect(move: Move, pieceFace: PieceFace, visualEffectEnabled: Boolean, soundEffectEnabled: Boolean): Unit = {
     if (soundEffectEnabled) mainPane.playClickSound()
     if (visualEffectEnabled) {
-      mainPane.updateSVGArea( a => a.board.effect.moveEffector.start(a.board.getRect(move.to)))
+      mainPane.updateSVGArea(a => a.board.effect.moveEffector.start(a.board.getRect(move.to)))
       if (move.promote) mainPane.updateSVGArea(_.board.startPromotionEffect(move.to, move.oldPiece, pieceFace))
     }
   }
+
+  def askPromote(messageLang: Language, pieceFace: PieceFace, pieceSize: Coord, rawMove: Move, rotate: Boolean): Unit = {
+    PromotionDialog(messageLang, pieceFace, pieceSize, rawMove, rotate).show()
+  }
+
 }

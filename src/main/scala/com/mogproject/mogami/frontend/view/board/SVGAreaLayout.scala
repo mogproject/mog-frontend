@@ -13,6 +13,7 @@ import com.mogproject.mogami.frontend.view.coordinate.Rect
 sealed trait SVGAreaLayout {
 
   val mediumPiece: Coord = Coord(210, 230)
+  val largePiece: Coord = mediumPiece.map(_ * 3 / 2)
   val smallPiece: Coord = mediumPiece.map(_ * 6 / 7)
 
   def board: SVGBoardLayout
