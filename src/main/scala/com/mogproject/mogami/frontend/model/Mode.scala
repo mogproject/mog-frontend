@@ -106,16 +106,13 @@ sealed abstract class Mode(val playable: Set[Player],
   }
 
   def getLegalMoves(moveFrom: MoveFrom): Set[Square] = {
-    val bb = for {
+    (for {
       gc <- getGameControl
       st = gc.getDisplayingState
+      bb <- st.legalMovesBB.get(moveFrom)
     } yield {
-      moveFrom match {
-        case Left(sq) => st.attackBBOnBoard(st.turn).get(sq).map(_ & ~st.occupancy(st.turn)).getOrElse(BitBoard.empty)
-        case Right(h) => st.attackBBInHand(h)
-      }
-    }
-    bb.map(_.toSet).getOrElse(Set.empty)
+      bb.toSet
+    }).getOrElse(Set.empty)
   }
 
   def getLastMove: Option[Move] = getGameControl.flatMap(_.getDisplayingLastMove)
