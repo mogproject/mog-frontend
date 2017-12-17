@@ -36,6 +36,15 @@ sealed abstract class Mode(val playable: Set[Player],
     case _ => false
   }
 
+  def isJustMoved(mode: Mode): Boolean = this match {
+    case EditMode(_, _, b, h) => b != mode.getBoardPieces || h != mode.getHandPieces
+    case _ =>
+      (getGameControl, mode.getGameControl) match {
+        case (Some(a), Some(b)) => a.displayPosition == b.displayPosition + 1
+        case _ => false
+      }
+  }
+
   def getPlayerNames: Map[Player, String] = {
     val tags = (this match {
       case PlayMode(gc, _) => gc.game.gameInfo
@@ -93,7 +102,7 @@ sealed abstract class Mode(val playable: Set[Player],
     case EditMode(_, _, _, _) => None
   }
 
-  def getAttackSquares(moveFrom: MoveFrom): Set[Square] = {
+  def getLegalMoves(moveFrom: MoveFrom): Set[Square] = {
     val bb = for {
       gc <- getGameControl
       st = gc.getDisplayingState
@@ -103,8 +112,11 @@ sealed abstract class Mode(val playable: Set[Player],
         case Right(h) => st.attackBBInHand(h)
       }
     }
-    bb.map(_.toSet) getOrElse (Set.empty)
+    bb.map(_.toSet).getOrElse(Set.empty)
   }
+
+  def getLastMove: Option[Move] = getGameControl.flatMap(_.getDisplayingLastMove)
+
 
   //
   // Setters

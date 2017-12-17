@@ -111,6 +111,9 @@ trait MainPaneLike extends WebComponent {
 
   def updateSVGArea(areaId: Int, f: SVGArea => Unit): Unit = f(svgAreas(areaId))
 
-  def updateDoubleBoardFlip(): Unit = {
+  def playClickSound(): Unit = {
+    clickSound.pause()
+    clickSound.currentTime = 0
+    clickSound.play()
   }
 }

@@ -96,6 +96,18 @@ trait SVGPieceManager[Key, Value] {
     pieceMap = pieceMap -- removedPieces.map(_._1) ++ newPieceMap
   }
 
+  private[this] def getElements(key: Key): Seq[Element] = {
+    pieceMap.get(key) match {
+      case Some((elem, Some(optElem))) => Seq(elem, optElem)
+      case Some((elem, None)) => Seq(elem)
+      case _ => Seq.empty
+    }
+  }
+
+  def showPiece(key: Key): Unit = getElements(key).foreach(WebComponent.showElement)
+
+  def hidePiece(key: Key): Unit = getElements(key).foreach(WebComponent.hideElement)
+
   /**
     * Refresh pieces
     */

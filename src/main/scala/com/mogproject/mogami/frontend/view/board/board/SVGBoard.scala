@@ -5,9 +5,11 @@ import com.mogproject.mogami.{Piece, Square}
 import com.mogproject.mogami.frontend.view.board.{BoardCursor, Cursor, Flippable}
 import com.mogproject.mogami.frontend.view.board.effect._
 import com.mogproject.mogami.frontend.view.coordinate.Rect
+import com.mogproject.mogami.frontend.view.piece.PieceFace
 import org.scalajs.dom.raw.SVGElement
 import org.scalajs.dom.svg.RectElement
 import org.scalajs.dom.Element
+import org.scalajs.dom
 
 /**
   *
@@ -57,6 +59,15 @@ case class SVGBoard(layout: SVGBoardLayout) extends SVGBoardPieceManager with SV
     effect.legalMoveEffector.stop()
     effect.pieceFlipEffector.stop()
   }
+
+  def startPromotionEffect(square: Square, oldPiece: Piece, pieceFace: PieceFace): Unit = {
+    hidePiece(square)
+    effect.pieceFlipEffector.start(PieceFlipAttribute(square, oldPiece, oldPiece.promoted, pieceFace))
+    dom.window.setTimeout(() => {
+      effect.pieceFlipEffector.stop(); showPiece(square)
+    }, 600)
+  }
+
 
   //
   // Effect

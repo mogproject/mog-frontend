@@ -34,6 +34,7 @@ case class TestState(model: TestModel, view: TestView) extends SAMState[TestMode
     )
 
     val nextModel = fs.foldLeft(newModel) { case (m, (cond, f)) => if (cond) f(m) else m }
+    if (newModel.mode.isJustMoved(model.mode)) renderMove(newModel)
     (this.copy(model = nextModel), None)
   }
 
@@ -98,7 +99,7 @@ case class TestState(model: TestModel, view: TestView) extends SAMState[TestMode
   }
 
   private[this] def renderLastMove(newModel: Model): Model = {
-    view.renderLastMove(newModel.mode.getGameControl.flatMap(_.getDisplayingLastMove))
+    view.renderLastMove(newModel.mode.getLastMove)
     newModel
   }
 
@@ -116,7 +117,7 @@ case class TestState(model: TestModel, view: TestView) extends SAMState[TestMode
     val attack = for {
       c <- newModel.selectedCursor.toSet if newModel.config.visualEffectEnabled
       from = c.moveFrom
-      atk <- newModel.mode.getAttackSquares(from)
+      atk <- newModel.mode.getLegalMoves(from)
     } yield atk
     view.renderSelectedCursor(newModel.selectedCursor, newModel.config.visualEffectEnabled, attack)
     newModel
@@ -131,5 +132,8 @@ case class TestState(model: TestModel, view: TestView) extends SAMState[TestMode
     TestModel.adapter(newModel, newModel.copy(newRenderRequests = Seq.empty))
   }
 
+  private[this] def renderMove(newModel: Model): Unit = {
+    newModel.mode.getLastMove.foreach(view.renderMoveEffect(_, newModel.config.pieceFace, newModel.config.visualEffectEnabled, newModel.config.soundEffectEnabled))
+  }
 
 }

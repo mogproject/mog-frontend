@@ -102,4 +102,11 @@ trait BasePlaygroundView extends SAMView {
     selectedCursor.foreach { c => mainPane.updateSVGArea(_.select(c, effectEnabled, legalMoves)) }
   }
 
+  def renderMoveEffect(move: Move, pieceFace: PieceFace, visualEffectEnabled: Boolean, soundEffectEnabled: Boolean): Unit = {
+    if (soundEffectEnabled) mainPane.playClickSound()
+    if (visualEffectEnabled) {
+      mainPane.updateSVGArea( a => a.board.effect.moveEffector.start(a.board.getRect(move.to)))
+      if (move.promote) mainPane.updateSVGArea(_.board.startPromotionEffect(move.to, move.oldPiece, pieceFace))
+    }
+  }
 }

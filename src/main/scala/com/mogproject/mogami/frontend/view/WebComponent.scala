@@ -1,7 +1,8 @@
 package com.mogproject.mogami.frontend.view
 
-import org.scalajs.dom.raw.HTMLElement
+import org.scalajs.dom.raw.{HTMLElement, SVGElement}
 import org.scalajs.dom.{Element, Node}
+
 import scalatags.JsDom.all._
 
 /**
@@ -9,10 +10,6 @@ import scalatags.JsDom.all._
   */
 trait WebComponent {
   def element: Element
-
-  def showElement(elem: HTMLElement): Unit = elem.style.display = display.block.v
-
-  def hideElement(elem: HTMLElement): Unit = elem.style.display = display.none.v
 
   def terminate(): Unit = {
     WebComponent.removeAllChildElements(element)
@@ -26,6 +23,18 @@ object WebComponent {
   def removeElements(elems: Iterable[Node]): Unit = elems.foreach(removeElement)
 
   def removeAllChildElements(elem: Node): Unit = while (elem.hasChildNodes()) elem.removeChild(elem.firstChild)
+
+  def showElement(elem: Element): Unit = elem match {
+    case e: HTMLElement => e.style.display = display.block.v
+    case e: SVGElement => e.setAttribute("visibility", "visible")
+    case _ =>
+  }
+
+  def hideElement(elem: Element): Unit = elem match {
+    case e: HTMLElement => e.style.display = display.none.v
+    case e: SVGElement => e.setAttribute("visibility", "hidden")
+    case _ =>
+  }
 
   def clearClass(elem: Element): Unit = {
     while (elem.classList.length > 0) elem.classList.remove(elem.classList(0))

@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view.board
 
-import com.mogproject.mogami.{Move, Square}
+import com.mogproject.mogami.{Move, Piece, Square}
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.board.board.SVGBoard
 import com.mogproject.mogami.frontend.view.board.box.SVGBox
@@ -146,9 +146,9 @@ case class SVGArea(areaId: Int, layout: SVGAreaLayout) extends WebComponent with
     }
   }
 
-  def showBox(): Unit = showElement(svgBox)
+  def showBox(): Unit = WebComponent.showElement(svgBox)
 
-  def hideBox(): Unit = hideElement(svgBox)
+  def hideBox(): Unit = WebComponent.hideElement(svgBox)
 
   //
   // Event
