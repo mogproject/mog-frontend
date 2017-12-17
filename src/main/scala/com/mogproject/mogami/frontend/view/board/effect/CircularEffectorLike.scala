@@ -31,11 +31,11 @@ trait CircularEffectorLike[T <: EffectorTarget] extends ForegroundEffectorLike[R
   * Circular move effect
   */
 case class MoveEffector[T <: EffectorTarget](target: T) extends CircularEffectorLike[T] {
-  override val finalRadiusRatio: Double = 1.0
+  override val finalRadiusRatio: Double = 1.5
 
   override val opacityValues: Seq[Double] = Seq(0.0)
 
-  override def autoDestruct: Option[Int] = Some(400)
+  override def autoDestruct: Option[Int] = Some(250)
 }
 
 /**
