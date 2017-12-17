@@ -42,7 +42,7 @@ case class MoveEffector[T <: EffectorTarget](target: T) extends CircularEffector
   * Circular selecting effect
   */
 case class SelectingEffector[T <: EffectorTarget](target: T) extends CircularEffectorLike[T] {
-  override val duration = "3s"
+  override val duration = "4s"
 
   override val finalRadiusRatio: Double = 4.0
 

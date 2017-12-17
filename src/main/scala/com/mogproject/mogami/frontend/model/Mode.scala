@@ -63,6 +63,26 @@ sealed abstract class Mode(val playable: Set[Player],
     case _ => Map.empty
   }
 
+  def getGameControl: Option[GameControl] = this match {
+    case PlayMode(gc, _) => Some(gc)
+    case ViewMode(gc) => Some(gc)
+    case LiveMode(_, gc) => Some(gc)
+    case EditMode(_, _, _, _) => None
+  }
+
+  def getAttackSquares(moveFrom: MoveFrom): Set[Square] = {
+    val bb = for {
+      gc <- getGameControl
+      st = gc.getDisplayingState
+    } yield {
+      moveFrom match {
+        case Left(sq) => st.attackBBOnBoard(st.turn).get(sq).map(_ & ~st.occupancy(st.turn)).getOrElse(BitBoard.empty)
+        case Right(h) => st.attackBBInHand(h)
+      }
+    }
+    bb.map(_.toSet) getOrElse (Set.empty)
+  }
+
   //
   // Setters
   //

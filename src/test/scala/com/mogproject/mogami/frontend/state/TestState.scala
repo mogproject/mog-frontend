@@ -1,8 +1,9 @@
 package com.mogproject.mogami.frontend.state
 
 import com.mogproject.mogami._
-import com.mogproject.mogami.frontend.model.TestModel
+import com.mogproject.mogami.frontend.model.{CursorFlashRequest, GameInfoDialogRequest, PromotionDialogRequest, TestModel}
 import com.mogproject.mogami.frontend.sam.{SAMAction, SAMState}
+import com.mogproject.mogami.frontend.view.board.Cursor
 import com.mogproject.mogami.frontend.view.{Japanese, TestView}
 
 /**
@@ -27,7 +28,8 @@ case class TestState(model: TestModel, view: TestView) extends SAMState[TestMode
       (renderAll || isUpdated(newModel, _.config.layout, _.config.pieceFace, _.mode.getHandPieces), renderHandPieces),
       (newModel.mode.boxAvailable && (renderAll || isUpdated(newModel, _.config.layout, _.mode.boxAvailable, _.config.pieceFace, _.mode.getBoardPieces, _.mode.getHandPieces)), renderBoxPieces),
       (renderAll || isUpdated(newModel, _.activeCursor), renderActiveCursor),
-      (renderAll || isUpdated(newModel, _.selectedCursor), renderSelectedCursor)
+      (renderAll || isUpdated(newModel, _.selectedCursor), renderSelectedCursor),
+      (newModel.renderRequests.nonEmpty, processRenderRequests)
     )
 
     val nextModel = fs.foldLeft(newModel) { case (m, (cond, f)) => if (cond) f(m) else m }
@@ -105,8 +107,22 @@ case class TestState(model: TestModel, view: TestView) extends SAMState[TestMode
   }
 
   private[this] def renderSelectedCursor(newModel: Model): Model = {
-    view.renderSelectedCursor(newModel.selectedCursor, newModel.config.visualEffectEnabled)
+    val attack = for {
+      c <- newModel.selectedCursor.toSet if newModel.config.visualEffectEnabled
+      from = c.moveFrom
+      atk <- newModel.mode.getAttackSquares(from)
+    } yield atk
+    view.renderSelectedCursor(newModel.selectedCursor, newModel.config.visualEffectEnabled, attack)
     newModel
+  }
+
+  private[this] def processRenderRequests(newModel: Model): Model = {
+    newModel.renderRequests.foreach {
+      case PromotionDialogRequest(rawMove: Move) => ???
+      case CursorFlashRequest(cursor: Cursor) => view.mainPane.updateSVGArea(_.flashCursor(cursor))
+      case GameInfoDialogRequest => ???
+    }
+    TestModel.adapter(newModel, newModel.copy(newRenderRequests = Seq.empty))
   }
 
 

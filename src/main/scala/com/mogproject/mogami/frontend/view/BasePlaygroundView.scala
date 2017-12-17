@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view
 
-import com.mogproject.mogami.{Player, Ptype}
+import com.mogproject.mogami.{Player, Ptype, Square}
 import com.mogproject.mogami.core.Player.{BLACK, WHITE}
 import com.mogproject.mogami.core.state.State.{BoardType, HandType}
 import com.mogproject.mogami.util.Implicits._
@@ -90,12 +90,12 @@ trait BasePlaygroundView extends SAMView {
     }
   }
 
-  def renderSelectedCursor(selectedCursor: Option[Cursor], effectEnabled: Boolean): Unit = {
+  def renderSelectedCursor(selectedCursor: Option[Cursor], effectEnabled: Boolean, attackSquares: Set[Square]): Unit = {
     // clear current selected cursor
     mainPane.updateSVGArea(_.unselect())
 
     // draw new cursor
-    selectedCursor.foreach { c => mainPane.updateSVGArea(_.select(c, effectEnabled)) }
+    selectedCursor.foreach { c => mainPane.updateSVGArea(_.select(c, effectEnabled, attackSquares)) }
   }
 
 }

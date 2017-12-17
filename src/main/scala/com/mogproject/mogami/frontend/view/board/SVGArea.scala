@@ -1,5 +1,6 @@
 package com.mogproject.mogami.frontend.view.board
 
+import com.mogproject.mogami.Square
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.board.board.SVGBoard
 import com.mogproject.mogami.frontend.view.board.box.SVGBox
@@ -19,7 +20,7 @@ import scalatags.JsDom.svgTags.svg
 case class SVGArea(areaId: Int, layout: SVGAreaLayout) extends WebComponent with SVGAreaEventHandler {
 
   // Local variables
-//  private[this] var control: SVGAreaControl = SVGAreaControl(isFlipped = false, Set.empty, playerNameSelectable = true, isViewMode = false)
+  //  private[this] var control: SVGAreaControl = SVGAreaControl(isFlipped = false, Set.empty, playerNameSelectable = true, isViewMode = false)
 
   val board: SVGBoard = SVGBoard(layout.board)
 
@@ -29,7 +30,7 @@ case class SVGArea(areaId: Int, layout: SVGAreaLayout) extends WebComponent with
 
   val box: SVGBox = SVGBox(layout.box)
 
-//  def getControl: SVGAreaControl = control
+  //  def getControl: SVGAreaControl = control
 
   //
   // components
@@ -69,8 +70,9 @@ case class SVGArea(areaId: Int, layout: SVGAreaLayout) extends WebComponent with
   //
   // Operation
   //
-  def setFlip(flip: Boolean): Unit = {//if (control.isFlipped != flip) {
-//    control = control.copy(isFlipped = flip)
+  def setFlip(flip: Boolean): Unit = {
+    //if (control.isFlipped != flip) {
+    //    control = control.copy(isFlipped = flip)
     board.setFlip(flip)
     hand.setFlip(flip)
     player.setFlip(flip)
@@ -85,16 +87,22 @@ case class SVGArea(areaId: Int, layout: SVGAreaLayout) extends WebComponent with
     box.effect.cursorEffector.stop()
   }
 
-  def select(cursor: Cursor, effectEnabled: Boolean): Unit = {
+  def select(cursor: Cursor, effectEnabled: Boolean, attackSquares: Set[Square]): Unit = {
     cursor match {
       case BoardCursor(sq) =>
         val r = board.getRect(sq)
         board.effect.selectedEffector.start(r)
-        if (effectEnabled) board.effect.selectingEffector.start(r)
+        if (effectEnabled) {
+          board.effect.selectingEffector.start(r)
+          board.effect.legalMoveEffector.start(attackSquares.toSeq)
+        }
       case HandCursor(h) =>
         val r = hand.getRect(h)
         hand.effect.selectedEffector.start(r)
-        if (effectEnabled) hand.effect.selectingEffector.start(r)
+        if (effectEnabled) {
+          hand.effect.selectingEffector.start(r)
+          board.effect.legalMoveEffector.start(attackSquares.toSeq)
+        }
       case BoxCursor(pt) =>
         val r = box.getPieceRect(pt)
         box.effect.selectedEffector.start(r)
