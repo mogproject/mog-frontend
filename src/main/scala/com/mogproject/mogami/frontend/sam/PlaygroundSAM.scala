@@ -14,7 +14,10 @@ class PlaygroundSAM[M <: BasePlaygroundModel](adapter: (M, BasePlaygroundModel) 
 
   override def doAction(action: PlaygroundAction): Unit = {
     SAM.doAction(new SAMAction[M] {
-      override def execute(model: M): Option[M] = action.execute(model).map(adapter(model, _))
+      override def execute(model: M): Option[M] = {
+        val result = action.execute(model)
+        result.map(adapter(model, _))
+      }
     })
   }
 }

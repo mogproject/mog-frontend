@@ -14,7 +14,7 @@ import scalatags.JsDom.all._
   * Piece face button
   */
 case class PieceFaceButton(pieceFace: PieceFace, pieceSize: Coord, ptype: Ptype, rotated: Boolean, modifier: Modifier*) extends WebComponent {
-  override def element: Element = button(
+  override lazy val element: Element = button(
     tpe := "button",
     cls := "btn btn-default btn-block",
     modifier,

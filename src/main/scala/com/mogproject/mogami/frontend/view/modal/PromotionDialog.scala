@@ -1,10 +1,8 @@
 package com.mogproject.mogami.frontend.view.modal
 
-
-import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami._
 import com.mogproject.mogami.frontend.action.board.MakeMoveAction
-import com.mogproject.mogami.frontend.{Coord}
+import com.mogproject.mogami.frontend.Coord
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 import com.mogproject.mogami.frontend.view.button.PieceFaceButton
 import com.mogproject.mogami.frontend.view.{English, Japanese, Language}
@@ -26,20 +24,9 @@ case class PromotionDialog(messageLang: Language,
   //
   // promotion specific
   //
-  private[this] val buttonUnpromote: PieceFaceButton = PieceFaceButton(pieceFace, pieceSize, rawMove.oldPtype, rotate)
-  private[this] val buttonPromote = PieceFaceButton(pieceFace, pieceSize, rawMove.oldPtype.promoted, rotate)
-
-//    button(tpe := "button", cls := "btn btn-default btn-block",
-//    style := s"height: ${pieceRenderer.layout.PIECE_HEIGHT * textScale}px !important",
-//    data("dismiss") := "modal",
-//    canvasUnpromote
-//  ).render
-
-//  private[this] val buttonPromote = button(tpe := "button", cls := "btn btn-default btn-block",
-//    style := s"height: ${pieceRenderer.layout.PIECE_HEIGHT * textScale}px !important",
-//    data("dismiss") := "modal",
-//    canvasPromote
-//  ).render
+  private[this] val BUTTON_HEIGHT: Int = 80
+  private[this] val buttonUnpromote = PieceFaceButton(pieceFace, pieceSize, rawMove.oldPtype, rotate, height := BUTTON_HEIGHT.px)
+  private[this] val buttonPromote = PieceFaceButton(pieceFace, pieceSize, rawMove.oldPtype.promoted, rotate, height := BUTTON_HEIGHT.px)
 
   //
   // modal traits
@@ -64,7 +51,6 @@ case class PromotionDialog(messageLang: Language,
 
   override def initialize(dialog: JQuery): Unit = {
     setModalClickEvent(buttonUnpromote.element, dialog, () => PlaygroundSAM.doAction(MakeMoveAction(rawMove)))
-    setModalClickEvent(buttonPromote.element, dialog, () => PlaygroundSAM.doAction(MakeMoveAction(rawMove.copy(promote = true))))
+    setModalClickEvent(buttonPromote.element, dialog, () => PlaygroundSAM.doAction(MakeMoveAction(rawMove.copy(newPtype = rawMove.newPtype.promoted, promote = true))))
   }
-
 }

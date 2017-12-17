@@ -19,6 +19,8 @@ trait ModalLike {
 
   type ElemType = TypedTag[Div]
 
+  def dismiss: Modifier = data("dismiss") := "modal"
+
   protected val bodyDefinition: scalatags.generic.AttrPair[Element, String] = cls := "modal-body"
 
   protected val footerDefinition: scalatags.generic.AttrPair[Element, String] = cls := "modal-footer"
@@ -31,7 +33,7 @@ trait ModalLike {
 
   def isStatic: Boolean = false
 
-  def initialize(dialog: JQuery): Unit = {}
+  def initialize(dialog: JQuery): Unit
 
   private[this] lazy val closeButton = button(tpe := "button", cls := "close", data("dismiss") := "modal", aria.label := "Close",
     span(aria.hidden := true, raw("&times;"))
