@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.action.board
 
-import com.mogproject.mogami.{MoveBuilderSfen, MoveFrom, Square}
+import com.mogproject.mogami.{MoveFrom, Square}
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.action.PlaygroundAction
 import com.mogproject.mogami.frontend.model._
@@ -34,7 +34,7 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
   private[this] def executeMouseMove(model: BasePlaygroundModel, areaId: Int, cursor: Option[Cursor]): Option[BasePlaygroundModel] = {
     cursor.map(areaId -> _) match {
       case ac if ac == model.activeCursor => None
-      case ac@Some((_, cc)) if cursorActivatable(model, cc) => Some(model.copy(newActiveCursor = ac))
+      case ac@Some((_, cc)) if model.mode.canActivate(cc) => Some(model.copy(newActiveCursor = ac))
       case _ => Some(model.copy(newActiveCursor = None))
     }
   }
@@ -48,7 +48,7 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
     * @return
     */
   private[this] def executeMouseDown(model: BasePlaygroundModel, areaId: Int, cursor: Option[Cursor]): Option[BasePlaygroundModel] = {
-    val renderRequest = cursor.flatMap(c => cursorActivatable(model, c).option(CursorFlashRequest(c)))
+    val renderRequest = cursor.flatMap(c => model.mode.canActivate(c).option(CursorFlashRequest(c)))
     val newModel = model.addRenderRequests(renderRequest.toSeq)
 
     (cursor, newModel.mode) match {
@@ -72,7 +72,7 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
       //
       // Select
       //
-      case (Some(c), _) if newModel.selectedCursor.isEmpty && cursorSelectable(newModel, c) =>
+      case (Some(c), _) if newModel.selectedCursor.isEmpty && newModel.mode.canSelect(c) =>
         Some(newModel.copy(newSelectedCursor = cursor))
       //
       // Invalid Selection
@@ -107,19 +107,6 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
     }
 
 
-  }
-
-
-  private[this] def cursorSelectable(model: BasePlaygroundModel, cursor: Cursor): Boolean = model.mode.isSelectable(cursor)
-
-  private[this] def cursorActivatable(model: BasePlaygroundModel, cursor: Cursor): Boolean = {
-    cursor match {
-      case BoardCursor(_) => model.mode.boardCursorAvailable
-      case HandCursor(_) => model.mode.boardCursorAvailable
-      case PlayerCursor(_) => model.mode.playerSelectable
-      case BoxCursor(_) => model.mode.boxAvailable
-      case _ => false
-    }
   }
 
   private[this] def makeMove(gc: GameControl, newModel: BasePlaygroundModel, moveFrom: MoveFrom, moveTo: Square, newBranchMode: Boolean): Option[BasePlaygroundModel] = {

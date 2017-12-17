@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.model
 
 import com.mogproject.mogami._
 import com.mogproject.mogami.frontend.model.board.BoardIndicator
-import com.mogproject.mogami.frontend.view.board.{BoardCursor, BoxCursor, Cursor, HandCursor}
+import com.mogproject.mogami.frontend.view.board._
 import com.mogproject.mogami.util.MapUtil
 
 import scala.util.Try
@@ -21,7 +21,15 @@ sealed abstract class Mode(val playable: Set[Player],
   //
   def isEditMode: Boolean = boxAvailable
 
-  def isSelectable(cursor: Cursor): Boolean = cursor match {
+  def canActivate(cursor: Cursor): Boolean = cursor match {
+    case BoardCursor(_) => boardCursorAvailable
+    case HandCursor(_) => boardCursorAvailable
+    case PlayerCursor(_) => playerSelectable
+    case BoxCursor(_) => boxAvailable
+    case _ => false
+  }
+
+  def canSelect(cursor: Cursor): Boolean = cursor match {
     case BoardCursor(sq) => getBoardPieces.get(sq).exists(p => (isEditMode || p.owner == getTurn) && playable(p.owner))
     case HandCursor(h) => (isEditMode || h.owner == getTurn) && playable(h.owner) && getHandPieces.get(h).exists(_ > 0)
     case BoxCursor(pt) => boxAvailable && getBoxPieces.get(pt).exists(_ > 0)
