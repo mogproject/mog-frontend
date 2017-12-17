@@ -5,8 +5,9 @@ import com.mogproject.mogami.core.Player.{BLACK, WHITE}
 import com.mogproject.mogami.core.state.State.{BoardType, HandType}
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.board._
+import com.mogproject.mogami.frontend.model.board.cursor.Cursor
 import com.mogproject.mogami.frontend.sam.SAMView
-import com.mogproject.mogami.frontend.view.board.{Cursor, SVGAreaLayout}
+import com.mogproject.mogami.frontend.view.board.SVGAreaLayout
 import com.mogproject.mogami.frontend.view.piece.PieceFace
 import org.scalajs.dom.Element
 

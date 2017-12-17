@@ -1,8 +1,9 @@
 package com.mogproject.mogami.frontend.view.board.board
 
+import com.mogproject.mogami.frontend.model.board.cursor.{BoardCursor, Cursor}
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.{Piece, Square}
-import com.mogproject.mogami.frontend.view.board.{BoardCursor, Cursor, Flippable}
+import com.mogproject.mogami.frontend.view.board.Flippable
 import com.mogproject.mogami.frontend.view.board.effect._
 import com.mogproject.mogami.frontend.view.coordinate.Rect
 import com.mogproject.mogami.frontend.view.piece.PieceFace

@@ -2,7 +2,8 @@ package com.mogproject.mogami.frontend.view.board.hand
 
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami._
-import com.mogproject.mogami.frontend.view.board.{Cursor, Flippable, HandCursor}
+import com.mogproject.mogami.frontend.model.board.cursor.{Cursor, HandCursor}
+import com.mogproject.mogami.frontend.view.board.Flippable
 import com.mogproject.mogami.frontend.view.board.effect._
 import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
 import org.scalajs.dom.{ClientRect, Element}

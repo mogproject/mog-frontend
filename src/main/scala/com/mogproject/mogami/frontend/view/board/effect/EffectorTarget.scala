@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view.board.effect
 
-import com.mogproject.mogami.frontend.view.board.Cursor
+import com.mogproject.mogami.frontend.model.board.cursor.Cursor
 import org.scalajs.dom.Element
 
 /**

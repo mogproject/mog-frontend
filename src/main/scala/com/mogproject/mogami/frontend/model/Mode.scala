@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.model
 
 import com.mogproject.mogami._
 import com.mogproject.mogami.frontend.model.board.BoardIndicator
-import com.mogproject.mogami.frontend.view.board._
+import com.mogproject.mogami.frontend.model.board.cursor._
 import com.mogproject.mogami.util.MapUtil
 
 import scala.util.Try

@@ -1,7 +1,7 @@
 package com.mogproject.mogami.frontend.model
 
+import com.mogproject.mogami.frontend.model.board.cursor.Cursor
 import com.mogproject.mogami.frontend.sam.SAMModel
-import com.mogproject.mogami.frontend.view.board.Cursor
 
 /**
   *

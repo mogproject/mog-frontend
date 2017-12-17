@@ -1,4 +1,4 @@
-package com.mogproject.mogami.frontend.view.board
+package com.mogproject.mogami.frontend.model.board.cursor
 
 import com.mogproject.mogami._
 

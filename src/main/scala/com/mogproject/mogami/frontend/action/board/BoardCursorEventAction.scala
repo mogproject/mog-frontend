@@ -153,10 +153,10 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
 
   private[this] def invokeForward(model: BasePlaygroundModel, areaId: Int, square: Square): Option[BasePlaygroundModel] = {
     model.mode match {
-      case ViewMode(gc) =>
+      case m@ViewMode(gc) =>
         val isForward = model.config.isAreaFlipped(areaId) ^ square.file < 5
         val nextGC = isForward.fold(gc.withNextDisplayPosition, gc.withPreviousDisplayPosition)
-        Some(model.copy(newMode = ViewMode(nextGC)))
+        Some(model.copy(newMode = m.setGameControl(nextGC)))
       case _ => None
     }
   }

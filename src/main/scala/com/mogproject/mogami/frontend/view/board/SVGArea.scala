@@ -1,5 +1,6 @@
 package com.mogproject.mogami.frontend.view.board
 
+import com.mogproject.mogami.frontend.model.board.cursor._
 import com.mogproject.mogami.{Move, Piece, Square}
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.board.board.SVGBoard

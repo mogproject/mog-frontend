@@ -1,8 +1,8 @@
 package com.mogproject.mogami.frontend.view.board.box
 
 import com.mogproject.mogami.core.Ptype
+import com.mogproject.mogami.frontend.model.board.cursor.{BoxCursor, Cursor}
 import com.mogproject.mogami.util.Implicits._
-import com.mogproject.mogami.frontend.view.board.{BoxCursor, Cursor}
 import com.mogproject.mogami.frontend.view.board.effect._
 import org.scalajs.dom.Element
 import org.scalajs.dom.raw.SVGElement

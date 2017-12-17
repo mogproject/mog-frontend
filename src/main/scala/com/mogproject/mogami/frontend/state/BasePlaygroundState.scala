@@ -1,10 +1,10 @@
 package com.mogproject.mogami.frontend.state
 
 import com.mogproject.mogami._
+import com.mogproject.mogami.frontend.model.board.cursor.Cursor
 import com.mogproject.mogami.frontend.model.{BasePlaygroundModel, CursorFlashRequest, GameInfoDialogRequest, PromotionDialogRequest}
 import com.mogproject.mogami.frontend.sam.{SAMAction, SAMState}
 import com.mogproject.mogami.frontend.view.{BasePlaygroundView, Japanese}
-import com.mogproject.mogami.frontend.view.board.Cursor
 
 /**
   *
