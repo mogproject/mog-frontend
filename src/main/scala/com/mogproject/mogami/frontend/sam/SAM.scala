@@ -23,7 +23,7 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
   private[this] def doActionImpl(action: SAMAction[M]): Unit = {
     SAM.debug(s"doAction: ${action}")
 
-    val result = action.execute(state.model)
+    val result: Option[M] = action.execute(state.model)
     SAM.debug(s"result: ${result}")
 
     result match {
@@ -45,7 +45,7 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
 
 object SAM {
 
-  private[this] final val VERBOSE_LOG_ENABLED: Boolean = false
+  private[this] final val VERBOSE_LOG_ENABLED: Boolean = true
 
   protected def debug(message: String): Unit = if (VERBOSE_LOG_ENABLED) println(message)
 

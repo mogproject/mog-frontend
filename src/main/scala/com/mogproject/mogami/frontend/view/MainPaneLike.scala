@@ -27,7 +27,7 @@ trait MainPaneLike extends WebComponent {
     mainArea
   ).render
 
-  private[this] lazy val clickSound = audio(source(src := "assets/mp3/click.wav", tpe := "audio/wav")).render
+  private[this] lazy val clickSound = audio(source(src := "assets/mp3/click.mp3", tpe := "audio/wav")).render
 
   override def element: Element = div(
     if (isMobile) {
