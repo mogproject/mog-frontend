@@ -45,7 +45,7 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
 
 object SAM {
 
-  private[this] final val VERBOSE_LOG_ENABLED: Boolean = true
+  private[this] final val VERBOSE_LOG_ENABLED: Boolean = false
 
   protected def debug(message: String): Unit = if (VERBOSE_LOG_ENABLED) println(message)
 

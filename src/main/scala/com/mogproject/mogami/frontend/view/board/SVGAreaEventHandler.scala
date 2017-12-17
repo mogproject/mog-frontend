@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.view.board
 
 import com.mogproject.mogami.frontend.action.board.BoardCursorEventAction
 import com.mogproject.mogami.frontend.model.board.cursor._
-import com.mogproject.mogami.frontend.sam.SAM
+import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 import org.scalajs.dom
 import org.scalajs.dom.{MouseEvent, TouchEvent}
 import org.scalajs.dom.raw.HTMLElement
@@ -51,7 +51,7 @@ trait SVGAreaEventHandler {
 
   private[this] def registerHoldEvent(): Unit = {
     clearHoldEvent() // prevent double registrations
-    activeHoldEvent = Some(dom.window.setInterval(() => SAM.doAction(BoardCursorEventAction(MouseHoldEvent)), holdInterval))
+    activeHoldEvent = Some(dom.window.setInterval(() => PlaygroundSAM.doAction(BoardCursorEventAction(MouseHoldEvent)), holdInterval))
   }
 
   //
@@ -59,18 +59,18 @@ trait SVGAreaEventHandler {
   //
   private[this] def mouseMove(evt: MouseEvent): Unit = {
     evt.preventDefault()
-    SAM.doAction(BoardCursorEventAction(MouseMoveEvent(areaId, getCursor(evt.clientX, evt.clientY))))
+    PlaygroundSAM.doAction(BoardCursorEventAction(MouseMoveEvent(areaId, getCursor(evt.clientX, evt.clientY))))
   }
 
   private[this] def mouseDown(evt: MouseEvent): Unit = if (isValidMouseEvent(evt)) {
     evt.preventDefault()
-    SAM.doAction(BoardCursorEventAction(MouseDownEvent(getCursor(evt.clientX, evt.clientY))))
+    PlaygroundSAM.doAction(BoardCursorEventAction(MouseDownEvent(getCursor(evt.clientX, evt.clientY))))
     registerHoldEvent()
   }
 
   private[this] def mouseUp(evt: MouseEvent): Unit = if (isValidMouseEvent(evt)) {
     evt.preventDefault()
-    SAM.doAction(BoardCursorEventAction(MouseUpEvent(getCursor(evt.clientX, evt.clientY))))
+    PlaygroundSAM.doAction(BoardCursorEventAction(MouseUpEvent(getCursor(evt.clientX, evt.clientY))))
     clearHoldEvent()
   }
 
@@ -83,14 +83,14 @@ trait SVGAreaEventHandler {
 
   private[this] def touchStart(evt: TouchEvent): Unit = if (isValidTouchEvent(evt)) {
     evt.preventDefault()
-    SAM.doAction(BoardCursorEventAction(MouseDownEvent(getCursor(evt.changedTouches(0).clientX, evt.changedTouches(0).clientY))))
+    PlaygroundSAM.doAction(BoardCursorEventAction(MouseDownEvent(getCursor(evt.changedTouches(0).clientX, evt.changedTouches(0).clientY))))
     registerHoldEvent()
   }
 
   private[this] def touchEnd(evt: TouchEvent): Unit = {
     evt.preventDefault()
     lastTouchEnd = evt.timeStamp
-    SAM.doAction(BoardCursorEventAction(MouseUpEvent(getCursor(evt.changedTouches(0).clientX, evt.changedTouches(0).clientY))))
+    PlaygroundSAM.doAction(BoardCursorEventAction(MouseUpEvent(getCursor(evt.changedTouches(0).clientX, evt.changedTouches(0).clientY))))
     clearHoldEvent()
   }
 
