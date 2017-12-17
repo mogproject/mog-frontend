@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view
 
-import com.mogproject.mogami.{Player, Ptype, Square}
+import com.mogproject.mogami.{Move, Player, Ptype, Square}
 import com.mogproject.mogami.core.Player.{BLACK, WHITE}
 import com.mogproject.mogami.core.state.State.{BoardType, HandType}
 import com.mogproject.mogami.util.Implicits._
@@ -75,6 +75,10 @@ trait BasePlaygroundView extends SAMView {
     mainPane.updateSVGArea(_.hand.drawPieces(hand, pieceFace, keepLastMove = false))
   }
 
+  def renderLastMove(lastMove: Option[Move]): Unit = {
+    mainPane.updateSVGArea(_.drawLastMove(lastMove))
+  }
+
   def renderBoxPieces(pieces: Map[Ptype, Int], pieceFace: PieceFace): Unit = {
     mainPane.updateSVGArea(_.box.drawPieces(pieces, pieceFace, keepLastMove = false))
   }
@@ -90,12 +94,12 @@ trait BasePlaygroundView extends SAMView {
     }
   }
 
-  def renderSelectedCursor(selectedCursor: Option[Cursor], effectEnabled: Boolean, attackSquares: Set[Square]): Unit = {
+  def renderSelectedCursor(selectedCursor: Option[Cursor], effectEnabled: Boolean, legalMoves: Set[Square]): Unit = {
     // clear current selected cursor
     mainPane.updateSVGArea(_.unselect())
 
     // draw new cursor
-    selectedCursor.foreach { c => mainPane.updateSVGArea(_.select(c, effectEnabled, attackSquares)) }
+    selectedCursor.foreach { c => mainPane.updateSVGArea(_.select(c, effectEnabled, legalMoves)) }
   }
 
 }

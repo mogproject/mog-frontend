@@ -26,6 +26,7 @@ case class TestState(model: TestModel, view: TestView) extends SAMState[TestMode
       (renderAll || isUpdated(newModel, _.config.layout, _.mode.boxAvailable), renderBox),
       (renderAll || isUpdated(newModel, _.config.layout, _.config.pieceFace, _.mode.getBoardPieces), renderBoardPieces),
       (renderAll || isUpdated(newModel, _.config.layout, _.config.pieceFace, _.mode.getHandPieces), renderHandPieces),
+      (renderAll || isUpdated(newModel, _.config.layout, _.mode.getGameControl.map(_.getDisplayingLastMove)), renderLastMove),
       (newModel.mode.boxAvailable && (renderAll || isUpdated(newModel, _.config.layout, _.mode.boxAvailable, _.config.pieceFace, _.mode.getBoardPieces, _.mode.getHandPieces)), renderBoxPieces),
       (renderAll || isUpdated(newModel, _.activeCursor), renderActiveCursor),
       (renderAll || isUpdated(newModel, _.selectedCursor), renderSelectedCursor),
@@ -93,6 +94,11 @@ case class TestState(model: TestModel, view: TestView) extends SAMState[TestMode
 
   private[this] def renderHandPieces(newModel: Model): Model = {
     view.renderHandPieces(newModel.mode.getHandPieces, newModel.config.pieceFace)
+    newModel
+  }
+
+  private[this] def renderLastMove(newModel: Model): Model = {
+    view.renderLastMove(newModel.mode.getGameControl.flatMap(_.getDisplayingLastMove))
     newModel
   }
 
