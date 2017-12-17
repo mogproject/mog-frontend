@@ -2,6 +2,7 @@ package com.mogproject.mogami.frontend.model
 
 import com.mogproject.mogami._
 import com.mogproject.mogami.frontend.model.board.BoardIndicator
+import com.mogproject.mogami.frontend.view.board.{BoardCursor, BoxCursor, Cursor, HandCursor}
 import com.mogproject.mogami.util.MapUtil
 
 import scala.util.Try
@@ -19,6 +20,13 @@ sealed abstract class Mode(val playable: Set[Player],
   // Getters
   //
   def isEditMode: Boolean = boxAvailable
+
+  def isSelectable(cursor: Cursor): Boolean = cursor match {
+    case BoardCursor(sq) => getBoardPieces.get(sq).exists(p => (isEditMode || p.owner == getTurn) && playable(p.owner))
+    case HandCursor(h) => (isEditMode || h.owner == getTurn) && playable(h.owner) && getHandPieces.get(h).exists(_ > 0)
+    case BoxCursor(pt) => boxAvailable && getBoxPieces.get(pt).exists(_ > 0)
+    case _ => false
+  }
 
   def getPlayerNames: Map[Player, String] = {
     val tags = (this match {
@@ -38,6 +46,13 @@ sealed abstract class Mode(val playable: Set[Player],
       case EditMode(_, t, _, _) => (t, GameStatus.Playing)
     }
     BoardIndicator.fromGameStatus(turn, gs)
+  }
+
+  def getTurn: Player = this match {
+    case PlayMode(gc, _) => gc.getDisplayingState.turn
+    case ViewMode(gc) => gc.getDisplayingState.turn
+    case LiveMode(_, gc) => gc.getDisplayingState.turn
+    case EditMode(_, t, _, _) => t
   }
 
   def getBoardPieces: BoardType = this match {
@@ -87,9 +102,9 @@ sealed abstract class Mode(val playable: Set[Player],
   // Setters
   //
   def setGameControl(gameControl: GameControl): Mode = this match {
-    case x@PlayMode(gc, _) => x.copy(gameControl = gameControl)
-    case x@ViewMode(gc) => x.copy(gameControl = gameControl)
-    case x@LiveMode(_, gc) => x.copy(gameControl = gameControl)
+    case x@PlayMode(_, _) => x.copy(gameControl = gameControl)
+    case x@ViewMode(_) => x.copy(gameControl = gameControl)
+    case x@LiveMode(_, _) => x.copy(gameControl = gameControl)
     case EditMode(_, _, _, _) => this
   }
 }

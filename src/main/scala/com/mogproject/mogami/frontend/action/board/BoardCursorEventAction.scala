@@ -39,6 +39,14 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
     }
   }
 
+  /**
+    * Mouse Down
+    *
+    * @param model
+    * @param areaId
+    * @param cursor
+    * @return
+    */
   private[this] def executeMouseDown(model: BasePlaygroundModel, areaId: Int, cursor: Option[Cursor]): Option[BasePlaygroundModel] = {
     val renderRequest = cursor.flatMap(c => cursorActivatable(model, c).option(CursorFlashRequest(c)))
     val newModel = model.addRenderRequests(renderRequest.toSeq)
@@ -60,12 +68,17 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
       case (Some(BoardCursor(sq)), ViewMode(gc)) if sq.file != 5 =>
         val isForward = newModel.config.isAreaFlipped(areaId) ^ sq.file < 5
         val nextGC = isForward.fold(gc.withNextDisplayPosition, gc.withPreviousDisplayPosition)
-        Some(newModel.copy(newMode = ViewMode(nextGC)))
+        Some(newModel.copy(newMode = ViewMode(nextGC), newSelectedCursor = cursor))
       //
       // Select
       //
       case (Some(c), _) if newModel.selectedCursor.isEmpty && cursorSelectable(newModel, c) =>
         Some(newModel.copy(newSelectedCursor = cursor))
+      //
+      // Invalid Selection
+      //
+      case (Some(c), _) if newModel.selectedCursor.isEmpty =>
+        Some(newModel)
       //
       // Invoke (Editing)
       //
@@ -97,14 +110,7 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
   }
 
 
-  private[this] def cursorSelectable(model: BasePlaygroundModel, cursor: Cursor): Boolean = {
-    cursor match {
-      case BoardCursor(sq) => model.mode.getBoardPieces.get(sq).exists(p => model.mode.playable(p.owner))
-      case HandCursor(h) => model.mode.playable(h.owner) && model.mode.getHandPieces.get(h).exists(_ > 0)
-      case BoxCursor(pt) => model.mode.boxAvailable && model.mode.getBoxPieces.get(pt).exists(_ > 0)
-      case _ => false
-    }
-  }
+  private[this] def cursorSelectable(model: BasePlaygroundModel, cursor: Cursor): Boolean = model.mode.isSelectable(cursor)
 
   private[this] def cursorActivatable(model: BasePlaygroundModel, cursor: Cursor): Boolean = {
     cursor match {

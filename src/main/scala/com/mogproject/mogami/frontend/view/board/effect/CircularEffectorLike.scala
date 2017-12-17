@@ -44,7 +44,7 @@ case class MoveEffector[T <: EffectorTarget](target: T) extends CircularEffector
 case class SelectingEffector[T <: EffectorTarget](target: T) extends CircularEffectorLike[T] {
   override val duration = "4s"
 
-  override val finalRadiusRatio: Double = 4.0
+  override val finalRadiusRatio: Double = 8.0
 
-  override val opacityValues: Seq[Double] = Seq(1, 0, 0, 0)
+  override val opacityValues: Seq[Double] = Seq(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 }
