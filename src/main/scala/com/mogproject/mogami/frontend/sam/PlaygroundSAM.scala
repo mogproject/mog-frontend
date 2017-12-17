@@ -31,6 +31,9 @@ object PlaygroundSAM {
     *
     * @param action action
     */
-  def doAction(action: PlaygroundAction): Unit = samImpl.doAction(action)
+  def doAction[M <: SAMModel](action: SAMAction[M]): Unit = action match {
+    case a: PlaygroundAction => samImpl.doAction(a)
+    case a => SAM.doAction(a)
+  }
 
 }
