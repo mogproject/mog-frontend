@@ -10,15 +10,21 @@ sealed abstract class Cursor(private val regionId: Int) {
 
   def isBoard: Boolean = regionId == 0
 
+  def isHand: Boolean = regionId == 1
+
   def isPlayer: Boolean = regionId == 3
 
   def unary_! : Cursor
+
+  def board: Option[Square] = None
 
   def moveFrom: MoveFrom = throw new IllegalArgumentException(s"cannot create MoveFrom instance: ${this}")
 }
 
 case class BoardCursor(square: Square) extends Cursor(0) {
   override def unary_! : Cursor = BoardCursor(!square)
+
+  override def board: Option[Square] = Some(square)
 
   override def moveFrom: MoveFrom = Left(square)
 }

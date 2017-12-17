@@ -13,11 +13,11 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
   def model: M
 
   def view: V
-  
+
   def adapter(m: M, b: BasePlaygroundModel): M
 
   def copy(model: M = model, view: V = view): BasePlaygroundState[M, V]
-  
+
   override def render(newModel: M): (SAMState[M], Option[SAMAction[M]]) = renderImpl(newModel)
 
   private[this] def renderImpl(newModel: M, renderAll: Boolean = false): (BasePlaygroundState[M, V], Option[SAMAction[M]]) = {
@@ -120,12 +120,12 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
   }
 
   private[this] def renderSelectedCursor(newModel: M): M = {
-    val attack = for {
-      c <- newModel.selectedCursor.toSet if newModel.config.visualEffectEnabled
+    val legalMoves = for {
+      (_, c) <- newModel.selectedCursor.toSet if newModel.config.visualEffectEnabled
       from = c.moveFrom
-      atk <- newModel.mode.getLegalMoves(from)
-    } yield atk
-    view.renderSelectedCursor(newModel.selectedCursor, newModel.config.visualEffectEnabled, attack)
+      lm <- newModel.mode.getLegalMoves(from)
+    } yield lm
+    view.renderSelectedCursor(newModel.selectedCursor.map(_._2), newModel.config.visualEffectEnabled, legalMoves)
     newModel
   }
 
