@@ -132,8 +132,8 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
 
   private[this] def processRenderRequests(newModel: M): M = {
     newModel.renderRequests.foreach {
-      case PromotionDialogRequest(rawMove: Move) =>
-        view.askPromote(newModel.config.messageLang, newModel.config.pieceFace, newModel.config.layout.mediumPiece, rawMove, false)
+      case PromotionDialogRequest(rawMove, rotate) =>
+        view.askPromote(newModel.config.messageLang, newModel.config.pieceFace, newModel.config.layout.mediumPiece, rawMove, rotate)
       case CursorFlashRequest(cursor: Cursor) =>
         view.mainPane.updateSVGArea(_.flashCursor(cursor))
       case GameInfoDialogRequest =>

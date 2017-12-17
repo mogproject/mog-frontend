@@ -5,7 +5,6 @@ import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.action.PlaygroundAction
 import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.frontend.model.board.cursor.{MouseHoldEvent, _}
-import com.mogproject.mogami.frontend.view.board._
 
 /**
   *
@@ -84,12 +83,12 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
       // Invoke (Playing)
       //
       case (Some(BoardCursor(sq)), PlayMode(gc, newBranchMode)) if newModel.selectedCursor.isDefined =>
-        makeMove(gc, newModel.copy(newSelectedCursor = None), newModel.selectedCursor.get._2.moveFrom, sq, newBranchMode)
+        makeMove(gc, newModel.copy(newSelectedCursor = None), areaId, newModel.selectedCursor.get._2.moveFrom, sq, newBranchMode)
       //
       // Invoke (Live)
       //
       case (Some(BoardCursor(sq)), LiveMode(pl, gc)) if newModel.selectedCursor.isDefined =>
-        makeMove(gc, newModel.copy(newSelectedCursor = None), newModel.selectedCursor.get._2.moveFrom, sq, newBranchMode = false)
+        makeMove(gc, newModel.copy(newSelectedCursor = None), areaId, newModel.selectedCursor.get._2.moveFrom, sq, newBranchMode = false)
       //
       // Deselect
       //
@@ -141,12 +140,14 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
     }
   }
 
-  private[this] def makeMove(gc: GameControl, newModel: BasePlaygroundModel, moveFrom: MoveFrom, moveTo: Square, newBranchMode: Boolean): Option[BasePlaygroundModel] = {
+  private[this] def makeMove(gc: GameControl, newModel: BasePlaygroundModel, areaId: Int, moveFrom: MoveFrom, moveTo: Square, newBranchMode: Boolean): Option[BasePlaygroundModel] = {
     val candidates = gc.getMoveCandidates(moveFrom, moveTo)
     candidates.length match {
       case 0 => Some(newModel)
       case 1 => Some(newModel.copy(newModel.mode.setGameControl(gc.makeMove(candidates.head, newBranchMode, moveForward = true).get)))
-      case 2 => Some(newModel.addRenderRequest(PromotionDialogRequest(candidates.head)))
+      case 2 =>
+        val isFlipped = newModel.config.isAreaFlipped(areaId) ^ candidates.head.player.isWhite
+        Some(newModel.addRenderRequest(PromotionDialogRequest(candidates.head, isFlipped)))
       case _ => None // never happens
     }
   }

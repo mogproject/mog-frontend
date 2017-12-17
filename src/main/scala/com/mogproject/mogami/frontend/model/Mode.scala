@@ -5,8 +5,6 @@ import com.mogproject.mogami.frontend.model.board.BoardIndicator
 import com.mogproject.mogami.frontend.model.board.cursor._
 import com.mogproject.mogami.util.MapUtil
 
-import scala.util.Try
-
 /**
   *
   */
@@ -43,6 +41,11 @@ sealed abstract class Mode(val playable: Set[Player],
         case (Some(a), Some(b)) => a.displayPosition == b.displayPosition + 1
         case _ => false
       }
+  }
+
+  def isNewBranchMode: Boolean = this match {
+    case PlayMode(_, b) => b
+    case _ => false
   }
 
   def getPlayerNames: Map[Player, String] = {
