@@ -43,6 +43,8 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
   //
   def isAdditionalPosition: Boolean = displayPosition > lastStatusPosition
 
+  def isLastStatusPosition: Boolean = displayPosition >= lastStatusPosition
+
   def isFirstDisplayPosition: Boolean = displayPosition == 0
 
   def isFirstStatusPosition: Boolean = statusPosition == 0
@@ -54,7 +56,7 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
   //
   def getDisplayingState: State = game.getState(gamePosition).get
 
-  def getDisplayingGameStatus: GameStatus = isAdditionalPosition.fold(displayBranch.status, GameStatus.Playing)
+  def getDisplayingGameStatus: GameStatus = isLastStatusPosition.fold(displayBranch.status, GameStatus.Playing)
 
   def getDisplayingIllegalMove: Option[IllegalMove] = (isAdditionalPosition, displayBranch.finalAction) match {
     case (true, Some(x@IllegalMove(_))) => Some(x)

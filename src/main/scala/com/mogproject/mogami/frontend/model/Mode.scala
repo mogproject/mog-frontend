@@ -27,11 +27,17 @@ sealed abstract class Mode(val playable: Set[Player],
     case _ => false
   }
 
-  def canSelect(cursor: Cursor): Boolean = cursor match {
-    case BoardCursor(sq) => getBoardPieces.get(sq).exists(p => (isEditMode || p.owner == getTurn) && playable(p.owner))
-    case HandCursor(h) => (isEditMode || h.owner == getTurn) && playable(h.owner) && getHandPieces.get(h).exists(_ > 0)
-    case BoxCursor(pt) => boxAvailable && getBoxPieces.get(pt).exists(_ > 0)
-    case _ => false
+  def canSelect(cursor: Cursor): Boolean = {
+    if (getGameControl.exists(_.getDisplayingGameStatus != GameStatus.Playing)) {
+      false
+    } else {
+      cursor match {
+        case BoardCursor(sq) => getBoardPieces.get(sq).exists(p => (isEditMode || p.owner == getTurn) && playable(p.owner))
+        case HandCursor(h) => (isEditMode || h.owner == getTurn) && playable(h.owner) && getHandPieces.get(h).exists(_ > 0)
+        case BoxCursor(pt) => boxAvailable && getBoxPieces.get(pt).exists(_ > 0)
+        case _ => false
+      }
+    }
   }
 
   def isJustMoved(mode: Mode): Boolean = this match {
