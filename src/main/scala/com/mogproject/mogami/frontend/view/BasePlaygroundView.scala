@@ -20,10 +20,12 @@ trait BasePlaygroundView extends SAMView {
 
   def rootElem: Element
 
-  def mainPane: MainPaneLike
+  def website: PlaygroundSite
+
+  def mainPane: MainPaneLike = website.mainPane
 
   override def initialize(): Unit = {
-    rootElem.appendChild(mainPane.element)
+    rootElem.appendChild(website.element)
   }
 
   def renderLayout(numAreas: Int, layout: SVGAreaLayout): Unit = {
