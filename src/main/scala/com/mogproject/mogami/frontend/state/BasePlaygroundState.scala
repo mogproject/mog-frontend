@@ -35,7 +35,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
       (renderAll || isUpdated(newModel, _.config.layout, _.mode.getGameControl.map(_.getDisplayingLastMove)), renderLastMove),
       (newModel.mode.isEditMode && (renderAll || isUpdated(newModel, _.config.layout, _.mode.boxAvailable, _.config.pieceFace, _.mode.getBoardPieces, _.mode.getHandPieces)), renderBoxPieces),
       (renderAll || isUpdated(newModel, _.activeCursor), renderActiveCursor),
-      (!newModel.mode.isViewMode && (renderAll || isUpdated(newModel, _.selectedCursor)), renderSelectedCursor),
+      ((!newModel.mode.isViewMode || newModel.selectedCursor.isEmpty) && (renderAll || isUpdated(newModel, _.selectedCursor)), renderSelectedCursor),
       (newModel.renderRequests.nonEmpty, processRenderRequests)
     )
 
