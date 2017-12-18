@@ -1,6 +1,9 @@
 package com.mogproject.mogami.frontend.sam
 
+import com.mogproject.mogami.frontend.view.{Observable, Observer}
+
 import scala.annotation.tailrec
+import scala.collection.mutable
 
 /**
   * Implementation of the SAM (State-Action-Model) pattern
@@ -28,7 +31,7 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
 
     result match {
       case Some(nextModel) =>
-        val (nextState, nextAction) = state.render(nextModel)
+        val (nextState, nextAction) = state.render(nextModel, observables.toMap)
         SAM.debug(s"nextState: ${nextState}")
         SAM.debug(s"nextAction: ${nextAction}")
 
@@ -39,6 +42,23 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
           case None =>
         }
       case None =>
+    }
+  }
+
+  private[this] val observables: mutable.Map[M => Any, Observable[Any]] = mutable.Map.empty
+
+  override def addModelObserver[N <: SAMModel, A](extractor: N => A, observer: Observer[Any]): Unit = extractor match {
+    case f: (M => A) => addModelObserverImpl(f, observer)
+    case _ => //do nothing
+  }
+
+  def addModelObserverImpl[A](extractor: M => A, observer: Observer[Any]): Unit = {
+    observables.get(extractor) match {
+      case Some(obs) => obs.addObserver(observer)
+      case None =>
+        val obs = new Observable[Any]{}
+        obs.addObserver(observer)
+        observables += (extractor -> obs)
     }
   }
 }
@@ -63,6 +83,10 @@ object SAM {
     state.initialize()
     state.view.initialize()
     debug("SAM Debug mode enabled.")
+  }
+
+  def addModelObserver[M <: SAMModel, A](extractor: M => A, observer: Observer[Any]): Unit = {
+    samImpl.addModelObserver(extractor, observer)
   }
 
 }

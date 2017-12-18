@@ -5,7 +5,8 @@ import com.mogproject.mogami.frontend.model.{EditModeType, ModeType, PlayModeTyp
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 import com.mogproject.mogami.frontend.view.button.RadioButton
 import com.mogproject.mogami.frontend.view.footer.FooterLike
-import com.mogproject.mogami.frontend.view.nav.NavBar
+import com.mogproject.mogami.frontend.view.nav.NavBarLike
+import com.mogproject.mogami.frontend.view.observer.ModeTypeObserver
 import org.scalajs.dom.Element
 
 /**
@@ -15,13 +16,9 @@ case class TestMainPane(isMobile: Boolean = false, isLandscape: Boolean = false)
 
 }
 
+case class NavBar(isMobile: Boolean = false) extends NavBarLike with ModeTypeObserver {
 
-case class Footer(isDevMode: Boolean = true) extends FooterLike {
-
-}
-
-case class TestSite(isMobile: Boolean, isLandscape: Boolean) extends PlaygroundSite {
-  val modeButton = RadioButton(
+  lazy val modeButton = RadioButton(
     Seq(PlayModeType, ViewModeType, EditModeType),
     Map(English -> Seq("Play", "View", "Edit")),
     (mt: ModeType) => PlaygroundSAM.doAction(ChangeModeAction(mt, confirmed = false)),
@@ -29,9 +26,22 @@ case class TestSite(isMobile: Boolean, isLandscape: Boolean) extends PlaygroundS
     Seq.empty
   )
 
+  lazy val buttons = Seq(modeButton)
+
+  override def handleUpdate(subject: ModeType): Unit = {
+    println("Handle Update! " + subject)
+  }
+}
+
+case class Footer(isDevMode: Boolean = true) extends FooterLike {
+
+}
+
+case class TestSite(isMobile: Boolean, isLandscape: Boolean) extends PlaygroundSite {
+
   override lazy val mainPane: MainPaneLike = TestMainPane(isMobile, isLandscape)
 
-  override lazy val navBar: NavBar = NavBar(Seq(modeButton), isMobile)
+  override lazy val navBar: NavBar = NavBar(isMobile)
 
   override lazy val footer: FooterLike = Footer()
 }

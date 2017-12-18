@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.view
 
 import com.mogproject.mogami.frontend.view.footer.FooterLike
 import com.mogproject.mogami.util.Implicits._
-import com.mogproject.mogami.frontend.view.nav.NavBar
+import com.mogproject.mogami.frontend.view.nav.NavBarLike
 import org.scalajs.dom.Element
 
 import scalatags.JsDom.all._
@@ -13,7 +13,7 @@ import scalatags.JsDom.all._
 trait PlaygroundSite extends WebComponent {
   def isMobile: Boolean
 
-  def navBar: NavBar
+  def navBar: NavBarLike
 
   def mainPane: MainPaneLike
 

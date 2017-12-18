@@ -2,6 +2,7 @@ package com.mogproject.mogami.frontend.view.nav
 
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.view.WebComponent
+import org.scalajs.dom.Element
 import org.scalajs.dom.html.Div
 
 import scalatags.JsDom.all._
@@ -9,18 +10,29 @@ import scalatags.JsDom.all._
 /**
   *
   */
-case class NavBar(buttons: Seq[WebComponent],
-                  isMobile: Boolean = false,
-                  brandName: String = "Shogi Playground",
-                  brandUrl: Option[String] = None,
-                  classNames: String = "navbar navbar-default navbar-fixed-top"
-                 ) extends WebComponent {
+trait NavBarLike extends WebComponent {
+
+  def buttons: Seq[WebComponent]
+
+  def isMobile: Boolean
+
+  def brandName: String = "Shogi Playground"
+
+  def brandUrl: Option[String] = None
+
+  def classNames: String = "navbar navbar-default navbar-fixed-top"
+
+  def brandElem: Element = brandUrl.map { u =>
+    li(cls := "hidden-xs", a(cls := "navbar-brand", href := u, target := "_blank", brandName))
+  }.getOrElse {
+    li(cls := "hidden-xs navbar-brand", brandName)
+  }.render
 
   override lazy val element: Div = div(
     div(cls := "container", padding := 0,
       div(cls := "navbar-header",
         ul(cls := "nav navbar-nav",
-          li(cls := "hidden-xs", a(cls := "navbar-brand", brandUrl.toSeq.flatMap(u => Seq(href := u, target := "_blank")), brandName)),
+          brandElem,
           buttons.map(b => li(b.element))
 
           //          li(modeLabel),

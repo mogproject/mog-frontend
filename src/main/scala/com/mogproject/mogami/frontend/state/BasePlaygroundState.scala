@@ -2,9 +2,9 @@ package com.mogproject.mogami.frontend.state
 
 import com.mogproject.mogami._
 import com.mogproject.mogami.frontend.model.board.cursor.Cursor
-import com.mogproject.mogami.frontend.model.{BasePlaygroundModel, CursorFlashRequest, GameInfoDialogRequest, PromotionDialogRequest}
+import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.frontend.sam.{SAMAction, SAMState}
-import com.mogproject.mogami.frontend.view.{BasePlaygroundView, Japanese}
+import com.mogproject.mogami.frontend.view.{BasePlaygroundView, Japanese, Observable}
 
 /**
   *
@@ -18,9 +18,9 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
 
   def copy(model: M = model, view: V = view): BasePlaygroundState[M, V]
 
-  override def render(newModel: M): (SAMState[M], Option[SAMAction[M]]) = renderImpl(newModel)
+  override def render(newModel: M, observables: Map[M => Any, Observable[Any]]): (SAMState[M], Option[SAMAction[M]]) = renderImpl(newModel, observables = observables)
 
-  private[this] def renderImpl(newModel: M, renderAll: Boolean = false): (BasePlaygroundState[M, V], Option[SAMAction[M]]) = {
+  private[this] def renderImpl(newModel: M, renderAll: Boolean = false, observables: Map[M => Any, Observable[Any]]): (BasePlaygroundState[M, V], Option[SAMAction[M]]) = {
 
     val fs: Seq[(Boolean, M => M)] = Seq(
       (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas), renderLayout),
@@ -40,12 +40,20 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
     )
 
     val nextModel = fs.foldLeft(newModel) { case (m, (cond, f)) => if (cond) f(m) else m }
+
+    // Notify observers
+    observables.foreach { case (f, obs) =>
+        if (renderAll || isUpdated(newModel, f)) obs.notifyObservers(f(newModel))
+    }
+
+    // Just moved
     if (newModel.mode.isJustMoved(model.mode)) renderMove(newModel)
+
     (this.copy(model = nextModel), None)
   }
 
   override def initialize(): Unit = {
-    renderImpl(model, renderAll = true)
+    renderImpl(model, renderAll = true, Map.empty)
   }
 
   //

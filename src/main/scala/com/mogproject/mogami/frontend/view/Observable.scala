@@ -6,15 +6,16 @@ import scala.collection.mutable.ListBuffer
   *
   */
 trait Observable[T] {
-  this: T =>
+  //  this: T =>
 
   private[this] val observers = ListBuffer[Observer[T]]()
 
-  def addObserver(observer: Observer[T]): Unit = {
-    observers.+=:(observer)
+  def addObserver(observer: Observer[T]): Unit = observer match {
+    case obs: Observer[T] => observers.+=:(obs)
+    case _ =>
   }
 
-  def notifyObservers(): Unit = {
-    observers.foreach(_.handleUpdate(this))
+  def notifyObservers(value: T): Unit = {
+    observers.foreach(_.handleUpdate(value))
   }
 }
