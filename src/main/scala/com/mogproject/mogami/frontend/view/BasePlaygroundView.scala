@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view
 
-import com.mogproject.mogami.{Move, Player, Ptype, Square}
+import com.mogproject.mogami._
 import com.mogproject.mogami.core.Player.{BLACK, WHITE}
 import com.mogproject.mogami.core.state.State.{BoardType, HandType}
 import com.mogproject.mogami.frontend.Coord
@@ -9,7 +9,7 @@ import com.mogproject.mogami.frontend.model.board._
 import com.mogproject.mogami.frontend.model.board.cursor.Cursor
 import com.mogproject.mogami.frontend.sam.SAMView
 import com.mogproject.mogami.frontend.view.board.SVGAreaLayout
-import com.mogproject.mogami.frontend.view.modal.PromotionDialog
+import com.mogproject.mogami.frontend.view.modal.{GameInfoDialog, PromotionDialog}
 import com.mogproject.mogami.frontend.view.piece.PieceFace
 import org.scalajs.dom.Element
 
@@ -117,4 +117,7 @@ trait BasePlaygroundView extends SAMView {
     PromotionDialog(messageLang, pieceFace, pieceSize, rawMove, rotate).show()
   }
 
+  def showGameInfoDialog(messageLang: Language, gameInfo: GameInfo): Unit = {
+    GameInfoDialog(messageLang, gameInfo).show()
+  }
 }

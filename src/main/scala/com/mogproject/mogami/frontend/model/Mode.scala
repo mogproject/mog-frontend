@@ -133,6 +133,8 @@ sealed abstract class Mode(val playable: Set[Player],
     case x@LiveMode(_, _) => x.copy(gameControl = gameControl)
     case EditMode(_, _, _, _) => this
   }
+
+  def updateGameControl(f: GameControl => GameControl): Option[Mode] = getGameControl.map(gc => setGameControl(f(gc)))
 }
 
 case class PlayMode(gameControl: GameControl, newBranchMode: Boolean = false) extends Mode(Player.constructor.toSet, true, false, false) {

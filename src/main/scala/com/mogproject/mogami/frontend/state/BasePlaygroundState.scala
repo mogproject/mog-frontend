@@ -4,7 +4,6 @@ import com.mogproject.mogami._
 import com.mogproject.mogami.frontend.model.board.cursor.Cursor
 import com.mogproject.mogami.frontend.model.{BasePlaygroundModel, CursorFlashRequest, GameInfoDialogRequest, PromotionDialogRequest}
 import com.mogproject.mogami.frontend.sam.{SAMAction, SAMState}
-import com.mogproject.mogami.frontend.view.modal.PromotionDialog
 import com.mogproject.mogami.frontend.view.{BasePlaygroundView, Japanese}
 
 /**
@@ -137,6 +136,9 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
       case CursorFlashRequest(cursor: Cursor) =>
         view.mainPane.updateSVGArea(_.flashCursor(cursor))
       case GameInfoDialogRequest =>
+        newModel.mode.getGameControl.foreach { gc =>
+          view.showGameInfoDialog(newModel.config.messageLang, gc.game.gameInfo)
+        }
     }
     adapter(newModel, newModel.copy(newRenderRequests = Seq.empty))
   }
