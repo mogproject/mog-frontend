@@ -149,6 +149,8 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
         }
       case EditWarningDialogRequest =>
         view.showEditWarningDialog(newModel.config.messageLang)
+      case EditAlertDialogRequest(msg) =>
+        view.showEditAlertDialog(msg, newModel.config.messageLang)
     }
     adapter(newModel, newModel.copy(newRenderRequests = Seq.empty))
   }

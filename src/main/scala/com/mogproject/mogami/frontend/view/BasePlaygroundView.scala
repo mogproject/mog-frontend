@@ -11,9 +11,10 @@ import com.mogproject.mogami.frontend.model.board._
 import com.mogproject.mogami.frontend.model.board.cursor.Cursor
 import com.mogproject.mogami.frontend.sam.{PlaygroundSAM, SAMView}
 import com.mogproject.mogami.frontend.view.board.SVGAreaLayout
-import com.mogproject.mogami.frontend.view.modal.{GameInfoDialog, PromotionDialog, YesNoDialog}
+import com.mogproject.mogami.frontend.view.modal.{AlertDialog, GameInfoDialog, PromotionDialog, YesNoDialog}
 import com.mogproject.mogami.frontend.view.piece.PieceFace
 import org.scalajs.dom.Element
+
 import scalatags.JsDom.all._
 
 /**
@@ -144,6 +145,14 @@ trait BasePlaygroundView extends SAMView {
       case English => p(s"Branch#${branchNo} will be deleted. Comments on this branch will also be removed. Are you sure?")
     }
     YesNoDialog(messageLang, s, callback).show()
+  }
+
+  def showEditAlertDialog(msg: String, messageLang: Language): Unit = {
+    val s = messageLang match {
+      case Japanese => p("不正な局面です。", br, s"(${msg})")
+      case English => p("Invalid state.", br, s"(${msg})")
+    }
+    AlertDialog(messageLang, s).show()
   }
 
 }

@@ -61,7 +61,6 @@ trait PieceEditable {
 
       // box -> hand
       case (BoxCursor(pt), HandCursor(h)) if pt != KING =>
-        println(mode.copy(hand = MapUtil.incrementMap(mode.hand, Hand(h.owner, pt))))
         mode.copy(hand = MapUtil.incrementMap(mode.hand, Hand(h.owner, pt)))
 
       case _ =>

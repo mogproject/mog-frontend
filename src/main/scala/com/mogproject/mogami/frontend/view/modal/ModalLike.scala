@@ -33,7 +33,7 @@ trait ModalLike {
 
   def isStatic: Boolean = false
 
-  def initialize(dialog: JQuery): Unit
+  def initialize(dialog: JQuery): Unit = {}
 
   private[this] lazy val closeButton = button(tpe := "button", cls := "close", data("dismiss") := "modal", aria.label := "Close",
     span(aria.hidden := true, raw("&times;"))

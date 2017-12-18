@@ -19,7 +19,7 @@ case class ChangeModeAction(newModeType: ModeType, confirmed: Boolean) extends P
       // (Play|View) -> Edit (ok)
       case (_, Some(gc), EditModeType) if gc.isInitialState || confirmed =>
         val st = gc.getDisplayingState
-        Some(model.copy(newMode = EditMode(gc.game.gameInfo, st.turn, st.board, st.hand), newActiveCursor = None, newSelectedCursor = None))
+        Some(model.copy(newMode = EditMode(gc.game.gameInfo, st.turn, st.board, st.hand)))
 
       // (Play|View) -> Edit (warning)
       case (_, _, EditModeType) =>
@@ -29,20 +29,23 @@ case class ChangeModeAction(newModeType: ModeType, confirmed: Boolean) extends P
       case (EditMode(gi, t, b, h), None, _) =>
         Try(GameControl(Game(Branch(State(t, b, h)), gi))) match {
           case Success(gc) =>
-            val m = (newModeType == PlayModeType).fold(PlayMode(gc, newBranchMode = false), ViewMode(gc))
-            Some(model.copy(newMode = m, newActiveCursor = None, newSelectedCursor = None))
-          case Failure(e) => ???
+            Some(model.copy(newMode = createMode(newModeType, gc)))
+          case Failure(e) =>
+            Some(model.addRenderRequest(EditAlertDialogRequest(e.getMessage)))
         }
 
       // Play -> View | View -> Play
       case (_, Some(gc), _) =>
-        val m = (newModeType == PlayModeType).fold(PlayMode(gc, newBranchMode = false), ViewMode(gc))
-        Some(model.copy(newMode = m, newActiveCursor = None, newSelectedCursor = None))
+        Some(model.copy(newMode = createMode(newModeType, gc)))
 
       // (unexpected)
       case _ =>
         None
 
     }
+  }.map(_.copy(newActiveCursor = None, newSelectedCursor = None))
+
+  private[this] def createMode(modeType: ModeType, gameControl: GameControl): Mode = {
+    (modeType == PlayModeType).fold(PlayMode(gameControl, newBranchMode = false), ViewMode(gameControl))
   }
 }

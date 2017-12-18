@@ -15,3 +15,5 @@ case class CursorFlashRequest(cursor: Cursor) extends RenderRequest
 case object GameInfoDialogRequest extends RenderRequest
 
 case object EditWarningDialogRequest extends RenderRequest
+
+case class EditAlertDialogRequest(message: String) extends RenderRequest
