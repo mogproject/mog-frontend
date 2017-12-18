@@ -42,9 +42,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
     val nextModel = fs.foldLeft(newModel) { case (m, (cond, f)) => if (cond) f(m) else m }
 
     // Notify observers
-    observables.foreach { case (f, obs) =>
-        if (renderAll || isUpdated(newModel, f)) obs.notifyObservers(f(newModel))
-    }
+    observables.foreach { case (f, obs) => if (renderAll || isUpdated(newModel, f)) obs.notifyObservers(f(newModel)) }
 
     // Just moved
     if (newModel.mode.isJustMoved(model.mode)) renderMove(newModel)
@@ -52,8 +50,8 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
     (this.copy(model = nextModel), None)
   }
 
-  override def initialize(): Unit = {
-    renderImpl(model, renderAll = true, Map.empty)
+  override def initialize(observables: Map[M => Any, Observable[Any]]): Unit = {
+    renderImpl(model, renderAll = true, observables)
   }
 
   //

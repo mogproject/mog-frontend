@@ -18,7 +18,7 @@ case class TestMainPane(isMobile: Boolean = false, isLandscape: Boolean = false)
 
 case class NavBar(isMobile: Boolean = false) extends NavBarLike with ModeTypeObserver {
 
-  lazy val modeButton = RadioButton(
+  lazy val modeButton: RadioButton[ModeType] = RadioButton(
     Seq(PlayModeType, ViewModeType, EditModeType),
     Map(English -> Seq("Play", "View", "Edit")),
     (mt: ModeType) => PlaygroundSAM.doAction(ChangeModeAction(mt, confirmed = false)),
@@ -28,8 +28,9 @@ case class NavBar(isMobile: Boolean = false) extends NavBarLike with ModeTypeObs
 
   lazy val buttons = Seq(modeButton)
 
-  override def handleUpdate(subject: ModeType): Unit = {
-    println("Handle Update! " + subject)
+  override def handleUpdate(modeType: ModeType): Unit = {
+    modeButton.updateValue(modeType)
+    println("Handle Update! " + modeType)
   }
 }
 

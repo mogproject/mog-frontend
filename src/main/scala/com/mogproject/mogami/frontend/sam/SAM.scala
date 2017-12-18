@@ -4,17 +4,27 @@ import com.mogproject.mogami.frontend.view.{Observable, Observer}
 
 import scala.annotation.tailrec
 import scala.collection.mutable
+import scala.reflect.ClassTag
 
 /**
   * Implementation of the SAM (State-Action-Model) pattern
   *
-  *    ______Action_______
-  *   |        :         |
+  * .  ______Action_______
+  * . |        :         |
   * Model      :       View
-  *   |______State______|
+  * . |______State______|
   *
   * @see http://sam.js.org/
   */
+trait SAMLike {
+  def initialize(): Unit = {}
+
+  def doAction[M <: SAMModel](action: SAMAction[M]): Unit = {}
+
+  def addModelObserver[A](extractor: Any => A, observer: Observer[Any]): Unit = {}
+}
+
+
 class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
 
   override def doAction[N <: SAMModel](action: SAMAction[N]): Unit = action match {
@@ -47,7 +57,8 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
 
   private[this] val observables: mutable.Map[M => Any, Observable[Any]] = mutable.Map.empty
 
-  override def addModelObserver[N <: SAMModel, A](extractor: N => A, observer: Observer[Any]): Unit = extractor match {
+  override def addModelObserver[A](extractor: Any => A, observer: Observer[Any]): Unit = extractor match {
+    // todo: fix type erasure
     case f: (M => A) => addModelObserverImpl(f, observer)
     case _ => //do nothing
   }
@@ -56,10 +67,15 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
     observables.get(extractor) match {
       case Some(obs) => obs.addObserver(observer)
       case None =>
-        val obs = new Observable[Any]{}
+        val obs = new Observable[Any] {}
         obs.addObserver(observer)
         observables += (extractor -> obs)
     }
+  }
+
+  override def initialize(): Unit = {
+    state.view.initialize()
+    state.initialize(observables.toMap)
   }
 }
 
@@ -73,6 +89,7 @@ object SAM {
 
   /**
     * Do action
+    *
     * @param action action
     * @tparam M model
     */
@@ -80,12 +97,11 @@ object SAM {
 
   def initialize[M <: SAMModel](state: SAMState[M]): Unit = {
     samImpl = new SAM(state)
-    state.initialize()
-    state.view.initialize()
+    samImpl.initialize()
     debug("SAM Debug mode enabled.")
   }
 
-  def addModelObserver[M <: SAMModel, A](extractor: M => A, observer: Observer[Any]): Unit = {
+  def addModelObserver[A](extractor: Any => A, observer: Observer[Any]): Unit = {
     samImpl.addModelObserver(extractor, observer)
   }
 

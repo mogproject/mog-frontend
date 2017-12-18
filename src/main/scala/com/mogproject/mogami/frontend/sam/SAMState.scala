@@ -12,5 +12,5 @@ trait SAMState[M <: SAMModel] {
 
   def render(newModel: M, observables: Map[M => Any, Observable[Any]]): (SAMState[M], Option[SAMAction[M]])
 
-  def initialize(): Unit
+  def initialize(observables: Map[M => Any, Observable[Any]]): Unit
 }
