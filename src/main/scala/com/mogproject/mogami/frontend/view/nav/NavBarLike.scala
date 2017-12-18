@@ -28,19 +28,24 @@ trait NavBarLike extends WebComponent {
     li(cls := "hidden-xs navbar-brand", brandName)
   }.render
 
-  override lazy val element: Div = div(
+  lazy val navElem: Element = tag("nav")(
+    cls := classNames,
     div(cls := "container", padding := 0,
       div(cls := "navbar-header",
         ul(cls := "nav navbar-nav",
           brandElem,
           buttons.map(b => li(b.element))
 
-          //          li(modeLabel),
           //          li(flipButton.dom),
           //          li(resignButton.dom),
           //          isMobile.fold(li(paddingLeft := "10px", div(menuButton.dom)), "")
         )
       )
     )
+  ).render
+
+  override lazy val element: Div = div(
+    cls := "navbar",
+    navElem
   ).render
 }
