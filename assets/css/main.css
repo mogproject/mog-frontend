@@ -161,12 +161,13 @@ row {
 }
 
 .hand-number-text {
+  font-family: Tahoma, Geneva, sans-serif;
   font-weight: 900;
   text-anchor: middle;
   stroke: #333333;
   stroke-width: 7px;
   fill: #f3f372;
-  font-size: 120px;
+  font-size: 110px;
   pointer-events: none;
 }
 
