@@ -18,7 +18,9 @@ sealed abstract class Mode(val modeType: ModeType,
   //
   // Getters
   //
-  def isEditMode: Boolean = boxAvailable
+  def isViewMode: Boolean = modeType == ViewModeType
+
+  def isEditMode: Boolean = modeType == EditModeType
 
   def canActivate(cursor: Cursor): Boolean = cursor match {
     case BoardCursor(_) => boardCursorAvailable
@@ -39,6 +41,11 @@ sealed abstract class Mode(val modeType: ModeType,
         case _ => false
       }
     }
+  }
+
+  def isPrevious(mode: Mode): Boolean = (this, mode) match {
+    case (ViewMode(a), ViewMode(b)) => a.displayPosition == b.displayPosition - 1
+    case _ => false
   }
 
   def isJustMoved(mode: Mode): Boolean = this match {

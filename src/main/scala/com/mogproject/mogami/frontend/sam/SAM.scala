@@ -58,7 +58,6 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
   private[this] val observables: mutable.Map[M => Any, Observable[Any]] = mutable.Map.empty
 
   override def addModelObserver[A](extractor: Any => A, observer: Observer[Any]): Unit = extractor match {
-    // todo: fix type erasure
     case f: (M => A) => addModelObserverImpl(f, observer)
     case _ => //do nothing
   }

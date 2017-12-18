@@ -33,9 +33,9 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
       (renderAll || isUpdated(newModel, _.config.layout, _.config.pieceFace, _.mode.getBoardPieces), renderBoardPieces),
       (renderAll || isUpdated(newModel, _.config.layout, _.config.pieceFace, _.mode.getHandPieces), renderHandPieces),
       (renderAll || isUpdated(newModel, _.config.layout, _.mode.getGameControl.map(_.getDisplayingLastMove)), renderLastMove),
-      (newModel.mode.boxAvailable && (renderAll || isUpdated(newModel, _.config.layout, _.mode.boxAvailable, _.config.pieceFace, _.mode.getBoardPieces, _.mode.getHandPieces)), renderBoxPieces),
+      (newModel.mode.isEditMode && (renderAll || isUpdated(newModel, _.config.layout, _.mode.boxAvailable, _.config.pieceFace, _.mode.getBoardPieces, _.mode.getHandPieces)), renderBoxPieces),
       (renderAll || isUpdated(newModel, _.activeCursor), renderActiveCursor),
-      (renderAll || isUpdated(newModel, _.selectedCursor), renderSelectedCursor),
+      (!newModel.mode.isViewMode && (renderAll || isUpdated(newModel, _.selectedCursor)), renderSelectedCursor),
       (newModel.renderRequests.nonEmpty, processRenderRequests)
     )
 
@@ -46,6 +46,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
 
     // Just moved
     if (newModel.mode.isJustMoved(model.mode)) renderMove(newModel)
+    if (newModel.mode.isPrevious(model.mode)) view.renderForward(false)
 
     (this.copy(model = nextModel), None)
   }
@@ -150,6 +151,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
   }
 
   private[this] def renderMove(newModel: M): Unit = {
+    if (newModel.mode.isViewMode) view.renderForward(true)
     newModel.mode.getLastMove.foreach(view.renderMoveEffect(_, newModel.config.pieceFace, newModel.config.visualEffectEnabled, newModel.config.soundEffectEnabled))
   }
 

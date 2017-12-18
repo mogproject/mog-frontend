@@ -115,6 +115,10 @@ trait BasePlaygroundView extends SAMView {
     }
   }
 
+  def renderForward(isForward: Boolean): Unit = {
+    mainPane.updateSVGArea(_.board.effect.forwardEffector.start(isForward))
+  }
+
   def askPromote(messageLang: Language, pieceFace: PieceFace, pieceSize: Coord, rawMove: Move, rotate: Boolean): Unit = {
     PromotionDialog(messageLang, pieceFace, pieceSize, rawMove, rotate).show()
   }
