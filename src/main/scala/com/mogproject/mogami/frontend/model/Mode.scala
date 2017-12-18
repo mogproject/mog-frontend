@@ -48,11 +48,16 @@ sealed abstract class Mode(val modeType: ModeType,
     case _ => false
   }
 
+  def isNext(mode: Mode): Boolean = (this, mode) match {
+    case (ViewMode(a), ViewMode(b)) => a.displayPosition == b.displayPosition + 1
+    case _ => false
+  }
+
   def isJustMoved(mode: Mode): Boolean = this match {
     case EditMode(_, _, b, h) => b != mode.getBoardPieces || h != mode.getHandPieces
     case _ =>
       (getGameControl, mode.getGameControl) match {
-        case (Some(a), Some(b)) => a.displayPosition == b.displayPosition + 1
+        case (Some(a), Some(b)) => a.statusPosition == b.statusPosition + 1
         case _ => false
       }
   }

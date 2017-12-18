@@ -204,11 +204,11 @@ row {
 }
 
 .indicator-win {
-  fill: #5cb85c;
+  fill: #6cbf6c;
 }
 
 .indicator-lose {
-  fill: #d9534f;
+  fill: #dc6460;
 }
 
 .indicator-draw {

@@ -47,6 +47,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
     // Just moved
     if (newModel.mode.isJustMoved(model.mode)) renderMove(newModel)
     if (newModel.mode.isPrevious(model.mode)) view.renderForward(false)
+    if (newModel.mode.isNext(model.mode)) view.renderForward(true)
 
     (this.copy(model = nextModel), None)
   }
