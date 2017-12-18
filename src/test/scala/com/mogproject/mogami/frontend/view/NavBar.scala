@@ -26,5 +26,5 @@ case class NavBar(isMobile: Boolean = false) extends NavBarLike with ModeTypeObs
     modeButton.updateValue(modeType)
     replaceClass(navElem, "nav-bg-", s"nav-bg-${modeType.toString.take(4).toLowerCase()}")
   }
-  
+
 }

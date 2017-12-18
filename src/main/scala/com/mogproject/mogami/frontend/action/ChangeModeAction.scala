@@ -1,37 +1,48 @@
 package com.mogproject.mogami.frontend.action
 
 import com.mogproject.mogami._
+import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.core.state.StateCache.Implicits._
 
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 /**
   *
   */
 case class ChangeModeAction(newModeType: ModeType, confirmed: Boolean) extends PlaygroundAction {
-  override def execute(model: BasePlaygroundModel): Option[BasePlaygroundModel] = (model.mode, newModeType) match {
-    case (PlayMode(gc, _), ViewModeType) =>
-      Some(model.copy(newMode = ViewMode(gc), newActiveCursor = None, newSelectedCursor = None))
-    case (PlayMode(gc, _), EditModeType) =>
-      ??? // warn
-    val st = gc.getDisplayingState
-      Some(model.copy(newMode = EditMode(gc.game.gameInfo, st.turn, st.board, st.hand), newActiveCursor = None, newSelectedCursor = None))
-    case (ViewMode(gc), PlayModeType) =>
-      Some(model.copy(newMode = PlayMode(gc, newBranchMode = false), newActiveCursor = None, newSelectedCursor = None))
-    case (ViewMode(gc), EditModeType) =>
-      val st = gc.getDisplayingState
-      Some(model.copy(newMode = EditMode(gc.game.gameInfo, st.turn, st.board, st.hand), newActiveCursor = None, newSelectedCursor = None))
-    case (EditMode(gi, t, b, h), ViewModeType) =>
-      Try(GameControl(Game(Branch(State(t, b, h)), gi))).toOption match {
-        case Some(gc) => Some(model.copy(newMode = ViewMode(gc), newActiveCursor = None, newSelectedCursor = None))
-        case None => ???
-      }
-    case (EditMode(gi, t, b, h), PlayModeType) =>
-      Try(GameControl(Game(Branch(State(t, b, h)), gi))).toOption match {
-        case Some(gc) => Some(model.copy(newMode = PlayMode(gc, newBranchMode = false), newActiveCursor = None, newSelectedCursor = None))
-        case None => ???
-      }
-    case _ => None
+  override def execute(model: BasePlaygroundModel): Option[BasePlaygroundModel] = if (model.mode.modeType == newModeType) {
+    None
+  } else {
+    (model.mode, model.mode.getGameControl, newModeType) match {
+
+      // (Play|View) -> Edit (ok)
+      case (_, Some(gc), EditModeType) if gc.isInitialState || confirmed =>
+        val st = gc.getDisplayingState
+        Some(model.copy(newMode = EditMode(gc.game.gameInfo, st.turn, st.board, st.hand), newActiveCursor = None, newSelectedCursor = None))
+
+      // (Play|View) -> Edit (warning)
+      case (_, _, EditModeType) =>
+        Some(model.addRenderRequest(EditWarningDialogRequest))
+
+      // Edit -> (Play|View)
+      case (EditMode(gi, t, b, h), None, _) =>
+        Try(GameControl(Game(Branch(State(t, b, h)), gi))) match {
+          case Success(gc) =>
+            val m = (newModeType == PlayModeType).fold(PlayMode(gc, newBranchMode = false), ViewMode(gc))
+            Some(model.copy(newMode = m, newActiveCursor = None, newSelectedCursor = None))
+          case Failure(e) => ???
+        }
+
+      // Play -> View | View -> Play
+      case (_, Some(gc), _) =>
+        val m = (newModeType == PlayModeType).fold(PlayMode(gc, newBranchMode = false), ViewMode(gc))
+        Some(model.copy(newMode = m, newActiveCursor = None, newSelectedCursor = None))
+
+      // (unexpected)
+      case _ =>
+        None
+
+    }
   }
 }

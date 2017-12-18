@@ -34,7 +34,8 @@ trait ButtonLike[Key, Input <: HTMLElement, Output <: Element] extends WebCompon
   }
 
   def initialize(): Unit = {
-    inputMap.foreach { case (k, e) => setClickEvent(e, { () => updateValue(k); invoke(k) }) }
+    /** @note do not update the value when clicking */
+    inputMap.foreach { case (k, e) => setClickEvent(e, { () => invoke(k) }) }
     updateLabel(defaultLanguage)
     updateValue(defaultValue)
   }

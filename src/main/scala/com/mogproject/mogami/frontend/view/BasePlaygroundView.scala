@@ -4,14 +4,17 @@ import com.mogproject.mogami._
 import com.mogproject.mogami.core.Player.{BLACK, WHITE}
 import com.mogproject.mogami.core.state.State.{BoardType, HandType}
 import com.mogproject.mogami.frontend.Coord
+import com.mogproject.mogami.frontend.action.ChangeModeAction
+import com.mogproject.mogami.frontend.model.EditModeType
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.board._
 import com.mogproject.mogami.frontend.model.board.cursor.Cursor
-import com.mogproject.mogami.frontend.sam.SAMView
+import com.mogproject.mogami.frontend.sam.{PlaygroundSAM, SAMView}
 import com.mogproject.mogami.frontend.view.board.SVGAreaLayout
-import com.mogproject.mogami.frontend.view.modal.{GameInfoDialog, PromotionDialog}
+import com.mogproject.mogami.frontend.view.modal.{GameInfoDialog, PromotionDialog, YesNoDialog}
 import com.mogproject.mogami.frontend.view.piece.PieceFace
 import org.scalajs.dom.Element
+import scalatags.JsDom.all._
 
 /**
   *
@@ -125,5 +128,13 @@ trait BasePlaygroundView extends SAMView {
 
   def showGameInfoDialog(messageLang: Language, gameInfo: GameInfo): Unit = {
     GameInfoDialog(messageLang, gameInfo).show()
+  }
+
+  def showEditWarningDialog(messageLang: Language): Unit = {
+    val s = messageLang match {
+      case Japanese => p("棋譜およびコメントの情報が失われますが、よろしいですか?")
+      case English => p("The record and comments will be discarded. Are you sure?")
+    }
+    YesNoDialog(messageLang, s, () => PlaygroundSAM.doAction(ChangeModeAction(EditModeType, confirmed = true))).show()
   }
 }

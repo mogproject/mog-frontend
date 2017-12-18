@@ -51,6 +51,8 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
 
   def isLastDisplayPosition: Boolean = displayPosition == lastDisplayPosition
 
+  def isInitialState: Boolean = game.trunk.moves.isEmpty && game.branches.isEmpty && game.comments.isEmpty
+
   //
   // getters
   //

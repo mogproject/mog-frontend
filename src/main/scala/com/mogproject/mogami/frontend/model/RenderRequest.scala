@@ -13,3 +13,5 @@ case class PromotionDialogRequest(rawMove: Move, rotate: Boolean) extends Render
 case class CursorFlashRequest(cursor: Cursor) extends RenderRequest
 
 case object GameInfoDialogRequest extends RenderRequest
+
+case object EditWarningDialogRequest extends RenderRequest

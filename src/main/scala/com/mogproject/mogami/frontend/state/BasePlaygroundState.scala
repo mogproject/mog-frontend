@@ -147,6 +147,8 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
         newModel.mode.getGameControl.foreach { gc =>
           view.showGameInfoDialog(newModel.config.messageLang, gc.game.gameInfo)
         }
+      case EditWarningDialogRequest =>
+        view.showEditWarningDialog(newModel.config.messageLang)
     }
     adapter(newModel, newModel.copy(newRenderRequests = Seq.empty))
   }
