@@ -15,7 +15,7 @@ trait FooterLike extends WebComponent {
   override lazy val element: Div = div(
     hr(),
     isDevMode.fold("[Dev Mode]", ""),
-    small(p(textAlign := "right", marginRight := 20.px,
+    small(p(cls := "footer-text",
       "Shogi Playground © 2017 ",
       a(href := "https://mogproject.com", target := "_blank", "mogproject"),
       " - ",

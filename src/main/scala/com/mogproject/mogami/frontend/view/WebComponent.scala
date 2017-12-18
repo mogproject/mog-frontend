@@ -15,6 +15,18 @@ trait WebComponent {
     WebComponent.removeAllChildElements(element)
     WebComponent.removeElement(element)
   }
+
+  def replaceClass(elem: HTMLElement, replaceKeyword: String, newClassName: String*): Unit = {
+    val removeCandidates = for {
+      i <- 0 until elem.classList.length
+      cls = elem.classList(i)
+      if cls.contains(replaceKeyword)
+    } yield {
+      cls
+    }
+    removeCandidates.foreach(elem.classList.remove)
+    newClassName.foreach(elem.classList.add)
+  }
 }
 
 object WebComponent {

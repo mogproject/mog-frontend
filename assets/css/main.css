@@ -1,3 +1,133 @@
+/*
+ * Body
+ */
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+  /* disables selection */
+  user-select: none; /* CSS3 */
+  -moz-user-select: none; /* Firefox */
+  -webkit-user-select: none; /* Safari/Chrome */
+  -ms-user-select: none; /* IE10 */
+
+  /* scrolling */
+  -webkit-overflow-scrolling: touch;
+}
+
+div {
+  position: relative;
+}
+
+hr {
+  margin-top: 0px !important;
+  margin-bottom: 10px !important;
+}
+
+row {
+  height: 100%;
+}
+
+/*
+ * Forms
+ */
+
+.thin-btn {
+  margin-top: 2px !important;
+  margin-bottom: 2px !important;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+  padding-right: 10px !important;
+  padding-left: 10px !important;
+  height: 24px !important;
+}
+
+.mode-select {
+  width: 50px;
+}
+
+.menu-btn {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+}
+
+.small-padding {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  padding-right: 10px !important;
+  padding-left: 10px !important;
+}
+
+.no-margin {
+  margin: 0 !important;
+}
+
+.rect-select {
+  border-radius: 0 !important;
+  -webkit-appearance:none;
+}
+
+.long-select {
+  width: 168px;
+  margin-left: 14px;
+  margin-right: auto;
+
+  -webkit-transition: margin-left 0.3s;
+  -moz-transition: margin-left 0.3s;
+  -ms-transition: margin-left 0.3s;
+  -o-transition: margin-left 0.3s;
+  transition: margin-left 0.3s;
+}
+
+.btn-default.active {
+  background-color: #fff;
+}
+
+.btn-toggle.active {
+  color: #fff;
+  background-color: #3276b1;
+  border-color: #ccc;
+}
+
+.btn-toggle.active:focus, .btn-toggle.active:hover {
+  color: #fff;
+  background-color: #286090;
+  border-color: #204d74;
+}
+
+.btn-toggle.notActive{
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+}
+
+.btn-toggle.notActive:focus {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #8c8c8c;
+}
+
+.btn-toggle.notActive:hover{
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+
+.notActive{
+  color: #3276b1;
+  background-color: #fff;
+}
+
+
+/*
+ * Footer
+ */
+
+.footer-text {
+  text-align: right;
+  margin-right: 20.px;
+}
 
 /*
  * SVG Elements
@@ -206,16 +336,6 @@
 .navbar-nav>li>a {
   padding-top: 4px !important;
   padding-bottom: 4px !important;
-}
-
-.thin-btn {
-  margin-top: 2px !important;
-  margin-bottom: 2px !important;
-  padding-top: 2px !important;
-  padding-bottom: 2px !important;
-  padding-right: 10px !important;
-  padding-left: 10px !important;
-  height: 24px !important;
 }
 
 

@@ -8,7 +8,8 @@ import com.mogproject.mogami.util.MapUtil
 /**
   *
   */
-sealed abstract class Mode(val playable: Set[Player],
+sealed abstract class Mode(val modeType: ModeType,
+                           val playable: Set[Player],
                            val playerSelectable: Boolean,
                            val forwardAvailable: Boolean,
                            val boxAvailable: Boolean) {
@@ -137,18 +138,18 @@ sealed abstract class Mode(val playable: Set[Player],
   def updateGameControl(f: GameControl => GameControl): Option[Mode] = getGameControl.map(gc => setGameControl(f(gc)))
 }
 
-case class PlayMode(gameControl: GameControl, newBranchMode: Boolean = false) extends Mode(Player.constructor.toSet, true, false, false) {
+case class PlayMode(gameControl: GameControl, newBranchMode: Boolean = false) extends Mode(PlayModeType, Player.constructor.toSet, true, false, false) {
 
 }
 
-case class ViewMode(gameControl: GameControl) extends Mode(Set.empty, true, true, false) {
+case class ViewMode(gameControl: GameControl) extends Mode(ViewModeType, Set.empty, true, true, false) {
 
 }
 
-case class EditMode(gameInfo: GameInfo, turn: Player, board: BoardType, hand: HandType) extends Mode(Player.constructor.toSet, true, false, true) {
+case class EditMode(gameInfo: GameInfo, turn: Player, board: BoardType, hand: HandType) extends Mode(EditModeType, Player.constructor.toSet, true, false, true) {
 
 }
 
-case class LiveMode(player: Option[Player], gameControl: GameControl) extends Mode(player.toSet, false, false, false) {
+case class LiveMode(player: Option[Player], gameControl: GameControl) extends Mode(LiveModeType, player.toSet, false, false, false) {
 
 }
