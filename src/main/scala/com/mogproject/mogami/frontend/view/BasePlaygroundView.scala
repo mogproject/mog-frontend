@@ -137,4 +137,13 @@ trait BasePlaygroundView extends SAMView {
     }
     YesNoDialog(messageLang, s, () => PlaygroundSAM.doAction(ChangeModeAction(EditModeType, confirmed = true))).show()
   }
+
+  def askDeleteBranch(messageLang: Language, branchNo: BranchNo, callback: () => Unit): Unit = {
+    val s = messageLang match {
+      case Japanese => p(s"現在の変化 (Branch#${branchNo}) が削除されます。コメントも失われますが、よろしいですか?")
+      case English => p(s"Branch#${branchNo} will be deleted. Comments on this branch will also be removed. Are you sure?")
+    }
+    YesNoDialog(messageLang, s, callback).show()
+  }
+
 }

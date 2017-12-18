@@ -9,7 +9,7 @@ import com.mogproject.mogami.frontend.model.board.cursor.{MouseHoldEvent, _}
 /**
   *
   */
-case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAction with CursorAdjustable {
+case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAction with CursorAdjustable with PieceEditable {
 
   override def execute(model: BasePlaygroundModel): Option[BasePlaygroundModel] = {
     cursorEvent match {
@@ -72,13 +72,13 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
       //
       // Invalid Selection
       //
-      case (Some(c), _) if newModel.selectedCursor.isEmpty =>
+      case (Some(_), _) if newModel.selectedCursor.isEmpty =>
         Some(newModel)
       //
       // Invoke (Editing)
       //
-      case (Some(c), EditMode(gi, t, b, h)) if newModel.selectedCursor.isDefined =>
-        ??? // todo: impl
+      case (Some(c), em: EditMode) if newModel.selectedCursor.isDefined =>
+        Some(newModel.copy(newMode = editPiece(em, newModel.selectedCursor.get._2, c), newSelectedCursor = None))
       //
       // Invoke (Playing)
       //
@@ -112,8 +112,8 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
   private[this] def executeMouseUp(model: BasePlaygroundModel, cursor: Option[Cursor]): Option[BasePlaygroundModel] = {
     (model.selectedCursor, cursor) match {
       case (Some((_, selected)), Some(released)) if selected != released =>
-        val cursor = if (selected.isHand) {
-          Some(released) // no adjustment for hand pieces
+        val cursor = if (selected.isHand || model.mode.isEditMode) {
+          Some(released) // no adjustment for hand pieces or in Edit Mode
         } else {
           for {
             from <- selected.board

@@ -110,9 +110,8 @@ sealed abstract class Mode(val modeType: ModeType,
 
   def getBoxPieces: Map[Ptype, Int] = this match {
     case EditMode(_, _, b, h) =>
-      val bb = b.values.groupBy(_.demoted.ptype).mapValues(_.size)
-      val hh = h.filter(_._2 > 0).map { case (hd, n) => hd.ptype -> n }
-      val used = MapUtil.mergeMaps(bb, hh)(_ + _, 0)
+      val a = b.values.map(_.ptype.demoted).foldLeft(Map.empty[Ptype, Int]) { case (m, pt) => MapUtil.incrementMap(m, pt) }
+      val used = h.foldLeft(a) { case (m, (h, n)) => m.updated(h.ptype, m.getOrElse(h.ptype, 0) + n) }
       MapUtil.mergeMaps(State.capacity, used)(_ - _, 0).mapValues(math.max(0, _))
     case _ => Map.empty
   }

@@ -12,6 +12,8 @@ sealed abstract class Cursor(private val regionId: Int) {
 
   def isHand: Boolean = regionId == 1
 
+  def isBox: Boolean = regionId == 2
+
   def isPlayer: Boolean = regionId == 3
 
   def unary_! : Cursor

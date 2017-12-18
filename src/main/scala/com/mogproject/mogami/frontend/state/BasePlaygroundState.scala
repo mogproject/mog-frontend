@@ -129,7 +129,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
 
   private[this] def renderSelectedCursor(newModel: M): M = {
     val legalMoves = for {
-      (_, c) <- newModel.selectedCursor.toSet if newModel.config.visualEffectEnabled
+      (_, c) <- newModel.selectedCursor.toSet if newModel.config.visualEffectEnabled && !c.isBox
       from = c.moveFrom
       lm <- newModel.mode.getLegalMoves(from)
     } yield lm
