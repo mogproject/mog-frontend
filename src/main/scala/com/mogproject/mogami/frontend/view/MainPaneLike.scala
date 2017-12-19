@@ -94,19 +94,17 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
     controlBar.foreach(_.terminate())
     controlBar = Some(ControlBar(ControlBarType.Normal))
 
-    div(
-      div(cls := "container-fluid",
-        div(
-          id := "main-area",
-          cls := "main-area-pc",
-          if (svgAreas.size == 2) {
-            div(cls := "row", svgAreas.map(e => div(cls := "col-xs-6", e.element)))
-          } else {
-            div(svgAreas.head.element)
-          },
-          controlBar.get.element
-        )
-      )
+    div(cls := "container-fluid",
+      div(
+        id := "main-area",
+        cls := "main-area-pc",
+        if (svgAreas.size == 2) {
+          div(cls := "row", svgAreas.map(e => div(cls := "col-xs-6", e.element)))
+        } else {
+          div(svgAreas.head.element)
+        }
+      ),
+      controlBar.get.element
       // todo: other gadgets
     )
   }
