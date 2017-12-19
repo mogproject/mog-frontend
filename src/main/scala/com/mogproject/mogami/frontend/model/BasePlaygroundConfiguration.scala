@@ -12,6 +12,7 @@ case class BasePlaygroundConfiguration(layout: SVGAreaLayout = SVGStandardLayout
                                        pieceWidth: Option[Int] = None,
                                        flipType: FlipType = FlipDisabled,
                                        pieceFace: PieceFace = JapaneseOneCharFace,
+                                       newBranchMode: Boolean = false,
                                        messageLang: Language = English,
                                        recordLang: Language = Japanese,
                                        visualEffectEnabled: Boolean = true,

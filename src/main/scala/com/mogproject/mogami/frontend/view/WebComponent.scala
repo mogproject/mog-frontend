@@ -43,6 +43,10 @@ trait WebComponent {
     case _ => false
   }
 
+  def hide(): Unit = WebComponent.hideElement(element)
+
+  def show(): Unit = WebComponent.showElement(element)
+
 }
 
 object WebComponent {

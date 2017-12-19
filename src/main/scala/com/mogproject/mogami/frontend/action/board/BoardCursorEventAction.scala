@@ -82,8 +82,8 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
       //
       // Invoke (Playing)
       //
-      case (Some(BoardCursor(sq)), PlayMode(gc, newBranchMode)) if newModel.selectedCursor.isDefined =>
-        makeMove(gc, newModel.copy(newSelectedCursor = None), areaId, newModel.selectedCursor.get._2.moveFrom, sq, newBranchMode)
+      case (Some(BoardCursor(sq)), PlayMode(gc)) if newModel.selectedCursor.isDefined =>
+        makeMove(gc, newModel.copy(newSelectedCursor = None), areaId, newModel.selectedCursor.get._2.moveFrom, sq, newModel.config.newBranchMode)
       //
       // Invoke (Live)
       //

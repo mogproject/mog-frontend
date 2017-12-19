@@ -19,3 +19,5 @@ case object EditWarningDialogRequest extends RenderRequest
 case class EditAlertDialogRequest(message: String) extends RenderRequest
 
 case object CommentDialogRequest extends RenderRequest
+
+case object AskDeleteBranchRequest extends RenderRequest

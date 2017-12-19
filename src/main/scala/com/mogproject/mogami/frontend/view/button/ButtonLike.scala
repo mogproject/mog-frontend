@@ -50,6 +50,5 @@ trait ButtonLike[Key, Input <: HTMLElement, Output <: Element] extends WebCompon
     throw new RuntimeException("Could not find the selected value")
   }
 
-
   initialize()
 }

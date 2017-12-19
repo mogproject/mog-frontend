@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.view.control
 
 
 import com.mogproject.mogami.frontend.action.{OpenCommentDialogAction, UpdateGameControlAction}
-import com.mogproject.mogami.frontend.model.GameControl
+import com.mogproject.mogami.frontend.model.{EditModeType, ModeType}
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.bootstrap.Tooltip
@@ -103,8 +103,13 @@ case class CommentArea(isDisplayOnly: Boolean, isModal: Boolean, text: String = 
   //
   // Operations
   //
-  def updateComment(comment: String): Unit = {
-    textCommentInput.value = comment
-    if (!isDisplayOnly) textClearButton.disabled = comment.isEmpty
+  def refresh(modeType: ModeType, comment: String): Unit = {
+    if (modeType == EditModeType) {
+      hide()
+    } else {
+      show()
+      textCommentInput.value = comment
+      if (!isDisplayOnly) textClearButton.disabled = comment.isEmpty
+    }
   }
 }

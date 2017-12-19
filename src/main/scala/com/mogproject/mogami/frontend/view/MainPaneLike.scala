@@ -1,5 +1,6 @@
 package com.mogproject.mogami.frontend.view
 
+import com.mogproject.mogami.frontend.model.{GameControl, ModeType}
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.view.board.{SVGArea, SVGAreaLayout}
 import com.mogproject.mogami.frontend.view.control.{CommentArea, ControlBar, ControlBarType}
@@ -167,7 +168,11 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
     sideBarLeft.foreach(sb => f(sb.controlBar))
   }
 
-  def updateComment(comment: String): Unit = commentArea.updateComment(comment)
+  def updateComment(modeType: ModeType, comment: String): Unit = commentArea.refresh(modeType, comment)
+
+  def updateBranchArea(gameControl: Option[GameControl], recordLang: Language, modeType: ModeType, newBranchMode: Boolean): Unit = {
+    sideBarLeft.foreach(_.branchArea.refresh(gameControl, recordLang, modeType, newBranchMode))
+  }
 
   def playClickSound(): Unit = {
     clickSound.pause()

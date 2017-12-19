@@ -5,10 +5,10 @@ import com.mogproject.mogami.core.Player.{BLACK, WHITE}
 import com.mogproject.mogami.core.state.State.{BoardType, HandType}
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.Coord
-import com.mogproject.mogami.frontend.action.{ChangeModeAction, RefreshScreenAction}
+import com.mogproject.mogami.frontend.action.{ChangeModeAction, RefreshScreenAction, UpdateGameControlAction}
 import com.mogproject.mogami.frontend.api.Clipboard
 import com.mogproject.mogami.frontend.api.Clipboard.Event
-import com.mogproject.mogami.frontend.model.{EditModeType, GameControl}
+import com.mogproject.mogami.frontend.model.{EditModeType, GameControl, ModeType}
 import com.mogproject.mogami.frontend.model.board._
 import com.mogproject.mogami.frontend.model.board.cursor.Cursor
 import com.mogproject.mogami.frontend.sam.{PlaygroundSAM, SAMView}
@@ -141,12 +141,16 @@ trait BasePlaygroundView extends SAMView {
   //
   // Controls
   //
-  def renderControlBars(gameControl: GameControl, recordLang: Language): Unit = {
+  def renderControlBars(gameControl: Option[GameControl], recordLang: Language): Unit = {
     mainPane.updateControlBars(_.refresh(gameControl, recordLang))
   }
 
-  def renderComment(comment: String): Unit = {
-    mainPane.updateComment(comment)
+  def renderComment(modeType: ModeType, comment: String): Unit = {
+    mainPane.updateComment(modeType, comment)
+  }
+
+  def renderBranchArea(gameControl: Option[GameControl], recordLang: Language, modeType: ModeType, newBranchMode: Boolean): Unit = {
+    mainPane.updateBranchArea(gameControl, recordLang, modeType, newBranchMode)
   }
 
   //
@@ -165,15 +169,17 @@ trait BasePlaygroundView extends SAMView {
       case Japanese => p("棋譜およびコメントの情報が失われますが、よろしいですか?")
       case English => p("The record and comments will be discarded. Are you sure?")
     }
-    YesNoDialog(messageLang, s, () => PlaygroundSAM.doAction(ChangeModeAction(EditModeType, confirmed = true))).show()
+    val action = ChangeModeAction(EditModeType, confirmed = true)
+    YesNoDialog(messageLang, s, () => PlaygroundSAM.doAction(action)).show()
   }
 
-  def askDeleteBranch(messageLang: Language, branchNo: BranchNo, callback: () => Unit): Unit = {
+  def askDeleteBranch(messageLang: Language, branchNo: BranchNo): Unit = {
     val s = messageLang match {
       case Japanese => p(s"現在の変化 (Branch#${branchNo}) が削除されます。コメントも失われますが、よろしいですか?")
       case English => p(s"Branch#${branchNo} will be deleted. Comments on this branch will also be removed. Are you sure?")
     }
-    YesNoDialog(messageLang, s, callback).show()
+    val action = UpdateGameControlAction(gc => gc.copy(game = gc.game.deleteBranch(branchNo).getOrElse(gc.game)))
+    YesNoDialog(messageLang, s, () => PlaygroundSAM.doAction(action)).show()
   }
 
   def showEditAlertDialog(msg: String, messageLang: Language): Unit = {

@@ -1,5 +1,6 @@
 package com.mogproject.mogami.frontend.view.sidebar
 
+import com.mogproject.mogami.frontend.view.branch.BranchArea
 import com.mogproject.mogami.frontend.view.control.{ControlBar, ControlBarType}
 import org.scalajs.dom.html.{Div, Heading}
 
@@ -16,13 +17,16 @@ class SideBarLeft extends SideBarLike {
 
   lazy val controlBar = ControlBar(ControlBarType.LongList)
 
+  lazy val branchArea = BranchArea(isMobile = false)
+
   override lazy val content: Div = div(
     marginLeft := SideBarLeft.EXPANDED_MARGIN,
     cls := "sidebar-left-content",
     div(
       cls := "long-select",
       controlBar.element
-    )
+    ),
+    branchArea.element
   ).render
 
   override lazy val titleExpanded: Heading = h4(

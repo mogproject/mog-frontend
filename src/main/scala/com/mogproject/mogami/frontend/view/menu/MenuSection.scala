@@ -17,9 +17,9 @@ trait MenuSection extends WebComponent {
 
   def outputs: Seq[Div] = accordions.map(_.element)
 
-  def show(): Unit = outputs.foreach(_.style.display = display.block.v)
+  def showAll(): Unit = outputs.foreach(_.style.display = display.block.v)
 
-  def hide(): Unit = outputs.foreach(_.style.display = display.none.v)
+  def hideAll(): Unit = outputs.foreach(_.style.display = display.none.v)
 
   def collapseTitle(): Unit = accordions.foreach(_.collapseTitle())
 

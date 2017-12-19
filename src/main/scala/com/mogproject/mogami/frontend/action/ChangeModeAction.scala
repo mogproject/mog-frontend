@@ -46,6 +46,6 @@ case class ChangeModeAction(newModeType: ModeType, confirmed: Boolean) extends P
   }.map(_.copy(newActiveCursor = None, newSelectedCursor = None))
 
   private[this] def createMode(modeType: ModeType, gameControl: GameControl): Mode = {
-    (modeType == PlayModeType).fold(PlayMode(gameControl, newBranchMode = false), ViewMode(gameControl))
+    (modeType == PlayModeType).fold(PlayMode(gameControl), ViewMode(gameControl))
   }
 }

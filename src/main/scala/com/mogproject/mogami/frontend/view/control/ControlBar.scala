@@ -151,15 +151,21 @@ case class ControlBar(barType: ControlBarType) extends WebComponent {
   //
   // Actions
   //
-  def refresh(gameControl: GameControl, recordLang: Language): Unit = {
-    recordSelector.innerHTML = createRecordContent(gameControl.game, gameControl.displayBranchNo, recordLang)
-    recordSelector.selectedIndex = gameControl.displayPosition
+  def refresh(gameControl: Option[GameControl], recordLang: Language): Unit = {
+    gameControl match {
+      case Some(gc) =>
+        show()
+        recordSelector.innerHTML = createRecordContent(gc.game, gc.displayBranchNo, recordLang)
+        recordSelector.selectedIndex = gc.displayPosition
 
-    if (barType != ControlBarType.LongList) {
-      controlInputStepBackward.element.disabled = gameControl.isFirstDisplayPosition
-      controlInputBackward.element.disabled = gameControl.isFirstDisplayPosition
-      controlInputForward.element.disabled = gameControl.isLastDisplayPosition
-      controlInputStepForward.element.disabled = gameControl.isLastDisplayPosition
+        if (barType != ControlBarType.LongList) {
+          controlInputStepBackward.element.disabled = gc.isFirstDisplayPosition
+          controlInputBackward.element.disabled = gc.isFirstDisplayPosition
+          controlInputForward.element.disabled = gc.isLastDisplayPosition
+          controlInputStepForward.element.disabled = gc.isLastDisplayPosition
+        }
+      case None =>
+        hide()
     }
   }
 }

@@ -26,13 +26,23 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
     */
   lazy val displayMoves: Vector[Move] = game.getAllMoves(displayBranchNo)
 
-  val lastStatusPosition: Int = (displayBranchNo == 0).fold(game.trunk.moves.length, displayBranch.offset - game.trunk.offset + displayBranch.moves.length)
+  private[this] def getLastStatusPosition(branchNo: BranchNo): Int = {
+    val br = game.getBranch(branchNo).getOrElse(game.trunk)
+    br.moves.length + (displayBranchNo == 0).fold(0, br.offset - game.trunk.offset)
+  }
 
-  val lastDisplayPosition: Int = lastStatusPosition + (displayBranch.status match {
-    case GameStatus.IllegallyMoved => 2
-    case GameStatus.Playing => 0
-    case _ => 1
-  })
+  private[this] def getLastDisplayPosition(branchNo: BranchNo): Int = {
+    val br = game.getBranch(branchNo).getOrElse(game.trunk)
+    getLastStatusPosition(branchNo) + (br.status match {
+      case GameStatus.IllegallyMoved => 2
+      case GameStatus.Playing => 0
+      case _ => 1
+    })
+  }
+
+  val lastStatusPosition: Int = getLastStatusPosition(displayBranchNo)
+
+  val lastDisplayPosition: Int = getLastDisplayPosition(displayBranchNo)
 
   val statusPosition: Int = math.min(displayPosition, lastStatusPosition)
 
@@ -89,6 +99,10 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
   def withNextDisplayPosition: GameControl = copy(displayPosition = math.min(lastDisplayPosition, displayPosition + 1))
 
   def withLastDisplayPosition: GameControl = copy(displayPosition = lastDisplayPosition)
+
+  def changeDisplayBranch(branchNo: BranchNo): GameControl = {
+    copy(displayBranchNo = branchNo, displayPosition = math.min(getLastDisplayPosition(branchNo), displayPosition))
+  }
 
   //
   // move operations

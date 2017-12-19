@@ -62,14 +62,9 @@ sealed abstract class Mode(val modeType: ModeType,
       }
   }
 
-  def isNewBranchMode: Boolean = this match {
-    case PlayMode(_, b) => b
-    case _ => false
-  }
-
   def getPlayerNames: Map[Player, String] = {
     val tags = (this match {
-      case PlayMode(gc, _) => gc.game.gameInfo
+      case PlayMode(gc) => gc.game.gameInfo
       case ViewMode(gc) => gc.game.gameInfo
       case LiveMode(_, gc) => gc.game.gameInfo
       case EditMode(gi, _, _, _) => gi
@@ -79,7 +74,7 @@ sealed abstract class Mode(val modeType: ModeType,
 
   def getIndicators: Map[Player, BoardIndicator] = {
     val (turn, gs) = this match {
-      case PlayMode(gc, _) => (gc.getDisplayingState.turn, gc.getDisplayingGameStatus)
+      case PlayMode(gc) => (gc.getDisplayingState.turn, gc.getDisplayingGameStatus)
       case ViewMode(gc) => (gc.getDisplayingState.turn, gc.getDisplayingGameStatus)
       case LiveMode(_, gc) => (gc.getDisplayingState.turn, gc.getDisplayingGameStatus)
       case EditMode(_, t, _, _) => (t, GameStatus.Playing)
@@ -88,21 +83,21 @@ sealed abstract class Mode(val modeType: ModeType,
   }
 
   def getTurn: Player = this match {
-    case PlayMode(gc, _) => gc.getDisplayingState.turn
+    case PlayMode(gc) => gc.getDisplayingState.turn
     case ViewMode(gc) => gc.getDisplayingState.turn
     case LiveMode(_, gc) => gc.getDisplayingState.turn
     case EditMode(_, t, _, _) => t
   }
 
   def getBoardPieces: BoardType = this match {
-    case PlayMode(gc, _) => gc.getDisplayingState.board
+    case PlayMode(gc) => gc.getDisplayingState.board
     case ViewMode(gc) => gc.getDisplayingState.board
     case LiveMode(_, gc) => gc.getDisplayingState.board
     case EditMode(_, _, b, _) => b
   }
 
   def getHandPieces: HandType = this match {
-    case PlayMode(gc, _) => gc.getDisplayingState.hand
+    case PlayMode(gc) => gc.getDisplayingState.hand
     case ViewMode(gc) => gc.getDisplayingState.hand
     case LiveMode(_, gc) => gc.getDisplayingState.hand
     case EditMode(_, _, _, h) => h
@@ -117,7 +112,7 @@ sealed abstract class Mode(val modeType: ModeType,
   }
 
   def getGameControl: Option[GameControl] = this match {
-    case PlayMode(gc, _) => Some(gc)
+    case PlayMode(gc) => Some(gc)
     case ViewMode(gc) => Some(gc)
     case LiveMode(_, gc) => Some(gc)
     case EditMode(_, _, _, _) => None
@@ -140,7 +135,7 @@ sealed abstract class Mode(val modeType: ModeType,
   // Setters
   //
   def setGameControl(gameControl: GameControl): Mode = this match {
-    case x@PlayMode(_, _) => x.copy(gameControl = gameControl)
+    case x@PlayMode(_) => x.copy(gameControl = gameControl)
     case x@ViewMode(_) => x.copy(gameControl = gameControl)
     case x@LiveMode(_, _) => x.copy(gameControl = gameControl)
     case EditMode(_, _, _, _) => this
@@ -149,7 +144,7 @@ sealed abstract class Mode(val modeType: ModeType,
   def updateGameControl(f: GameControl => GameControl): Option[Mode] = getGameControl.map(gc => setGameControl(f(gc)))
 }
 
-case class PlayMode(gameControl: GameControl, newBranchMode: Boolean = false) extends Mode(PlayModeType, Player.constructor.toSet, true, false, false) {
+case class PlayMode(gameControl: GameControl) extends Mode(PlayModeType, Player.constructor.toSet, true, false, false) {
 
 }
 
