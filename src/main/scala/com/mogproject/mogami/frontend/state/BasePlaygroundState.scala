@@ -68,7 +68,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
   // Rendering functions
   //
   private[this] def renderLayout(newModel: M): M = {
-    view.renderLayout(newModel.config.flipType.numAreas, newModel.config.layout)
+    view.renderLayout(newModel.config.flipType.numAreas, newModel.config.getPieceWidth, newModel.config.layout)
     newModel
   }
 

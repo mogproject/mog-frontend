@@ -14,11 +14,24 @@ import scalatags.JsDom.all._
 /**
   *
   */
-trait MainPaneLike extends WebComponent {
+trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
 
   def isMobile: Boolean
 
   def isLandscape: Boolean
+
+  //
+  // Utility
+  //
+
+  private[this] def getSideBarWidth: Int = sidebars.map(_.currentWidth).sum + 3
+
+  def widenMainPane(): Unit = mainContent.style.width = 100.pct
+
+  def recenterMainPane(): Unit = mainContent.style.width = s"calc(100% - ${getSideBarWidth}px)"
+
+  override def handleUpdate(subject: SideBarLike): Unit = recenterMainPane()
+
 
   private[this] val svgAreas: mutable.ListBuffer[SVGArea] = mutable.ListBuffer.empty
 
@@ -58,30 +71,30 @@ trait MainPaneLike extends WebComponent {
     *
     * @param layout area layout
     */
-  def renderSVGAreas(numAreas: Int, layout: SVGAreaLayout): Unit = {
+  def renderSVGAreas(numAreas: Int, pieceWidth: Int, layout: SVGAreaLayout): Unit = {
     svgAreas.foreach(_.terminate())
     svgAreas.clear()
-
     svgAreas ++= (0 until numAreas).map(n => SVGArea(n, layout))
 
+    val areaWidth = layout.areaWidth(pieceWidth)
+
     val node = (isMobile, isLandscape) match {
-      case (true, true) => createMobileLandscapeMain()
-      case (true, false) => createMobilePortraitMain()
-      case (_, _) => createPCPortraitMain()
+      case (true, true) => createMobileLandscapeMain(areaWidth)
+      case (true, false) => createMobilePortraitMain(areaWidth)
+      case (_, _) => createPCPortraitMain(areaWidth)
     }
 
     mainArea.appendChild(node.render)
   }
 
-  private[this] def createPCPortraitMain(): TypedTag[Div] = {
+  private[this] def createPCPortraitMain(areaWidth: Int): TypedTag[Div] = {
     controlBar.foreach(_.terminate())
     controlBar = Some(ControlBar(ControlBarType.Normal))
     val numAreas = svgAreas.size
     div(
       div(cls := "container-fluid",
         div(cls := "main-area main-area-pc",
-          // todo
-          //          width := (layout.viewBoxBottomRight.x +70) * numAreas - 50, // +20 for 1 board, +90 for 2 boards
+          width := ((areaWidth + 70) * numAreas - 50).px, // +20 for 1 board, +90 for 2 boards
           if (numAreas == 2) {
             div(cls := "row",
               div(cls := "col-xs-6", svgAreas.head.element), div(cls := "col-xs-6", svgAreas(1).element)
@@ -90,21 +103,21 @@ trait MainPaneLike extends WebComponent {
             div(
               svgAreas.head.element
             )
-          }
-        ),
-        controlBar.get.element
+          },
+          controlBar.get.element
+        )
       )
       // todo: other gadgets
     )
   }
 
-  private[this] def createMobilePortraitMain(): TypedTag[Div] = {
+  private[this] def createMobilePortraitMain(areaWidth: Int): TypedTag[Div] = {
     controlBar.foreach(_.terminate())
     controlBar = Some(ControlBar(ControlBarType.Small))
     div(
       div(cls := "container-fluid",
         div(cls := "main-area main-area-mobile-portrait",
-          //        width := canvasWidth,
+          width := areaWidth.px,
           svgAreas.head.element
         ),
         controlBar.get.element
@@ -112,12 +125,12 @@ trait MainPaneLike extends WebComponent {
     )
   }
 
-  private[this] def createMobileLandscapeMain(): TypedTag[Div] = {
+  private[this] def createMobileLandscapeMain(areaWidth: Int): TypedTag[Div] = {
     controlBar.foreach(_.terminate())
     if (svgAreas.size == 1) controlBar = Some(ControlBar(ControlBarType.Small))
     div(cls := "container-fluid",
       div(cls := "main-area",
-        //      width := canvasWidth * 2 + 60,
+        width := (areaWidth * 2 + 60).px,
         div(cls := "row",
           div(cls := "col-xs-6", svgAreas.head.element),
           div(cls := "col-xs-6", (svgAreas.size > 1).fold(svgAreas(1).element, controlBar.map(_.element).toSeq))
@@ -140,4 +153,11 @@ trait MainPaneLike extends WebComponent {
     clickSound.currentTime = 0
     clickSound.play()
   }
+
+  def initialize(): Unit = {
+    sidebars.foreach(_.addObserver(this))
+    if (isMobile) widenMainPane() else recenterMainPane()
+  }
+
+  initialize()
 }

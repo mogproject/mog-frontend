@@ -1,6 +1,5 @@
 package com.mogproject.mogami.frontend.view.sidebar
 
-import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.control.{ControlBar, ControlBarType}
 import org.scalajs.dom.html.{Div, Heading}
 
@@ -16,8 +15,6 @@ class SideBarLeft extends SideBarLike {
   override protected val outputClass: String = "sidebar-left"
 
   lazy val controlBar = ControlBar(ControlBarType.LongList)
-
-//  override def childComponents: Seq[WebComponent] = Seq(controlBar)
 
   override lazy val content: Div = div(
     marginLeft := SideBarLeft.EXPANDED_MARGIN,

@@ -61,6 +61,14 @@ row {
   padding: 0 !important;
 }
 
+.modal-open {
+  padding-right: 0px !important;
+}
+
+.input-small {
+  font-size: 12px;
+}
+
 /*
  * Forms
  */
@@ -389,6 +397,21 @@ row {
   overflow: hidden;
 }
 
+.main-area {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.main-area-pc {
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 5px;
+}
+
+.main-area-mobile-portrait {
+  padding-bottom: 5px;
+}
+
 /*
  * Side Bar
  */
@@ -435,4 +458,34 @@ row {
 
 .panel-heading {
   cursor: pointer;
+}
+
+/*
+ * Control Bar
+ */
+
+.control-bar {
+  min-width: 300px;
+  max-width: 400px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 7px;
+  padding-right: 3px;
+}
+
+.control-small {
+  height: 28px !important
+}
+
+.control-long {
+  width: 100%;
+}
+
+.control-select {
+  /* control-button.width * 4 */
+  width: calc(100% - 176px);
+}
+
+.control-button {
+  width: 44px;
 }

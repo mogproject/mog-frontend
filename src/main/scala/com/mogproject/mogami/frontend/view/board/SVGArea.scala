@@ -73,7 +73,7 @@ case class SVGArea(areaId: Int, layout: SVGAreaLayout) extends WebComponent with
     player.setFlip(flip)
   }
 
-  def resize(pieceWidth: Int): Unit = svgDiv.style.width = (pieceWidth * layout.viewBoxBottomRight.x / layout.mediumPiece.x).px
+  def resize(pieceWidth: Int): Unit = {} //svgDiv.style.width = layout.areaWidth(pieceWidth).px
 
   def clearActiveCursor(): Unit = {
     board.effect.cursorEffector.stop()

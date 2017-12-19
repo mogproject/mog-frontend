@@ -26,6 +26,7 @@ sealed trait SVGAreaLayout {
 
   def viewBoxBottomRight: Coord
 
+  def areaWidth(pieceWidth: Int): Int = pieceWidth * viewBoxBottomRight.x / mediumPiece.x
 }
 
 // fixme: offsets
