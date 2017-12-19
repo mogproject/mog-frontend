@@ -19,7 +19,7 @@ class FlipButton extends ButtonLike[FlipType, Button, Div] with FlipTypeObserver
 
   override protected def generateInput(key: FlipType): Button = button(
     tpe := "button",
-    cls := "btn btn-default thin-btn",
+    cls := "btn btn-toggle thin-btn",
     "Flip ",
     span(cls := s"glyphicon glyphicon-retweet", aria.hidden := true)
   ).render
@@ -33,7 +33,7 @@ class FlipButton extends ButtonLike[FlipType, Button, Div] with FlipTypeObserver
   override def updateValue(newValue: FlipType): Unit = {
     val elem = inputs.head
     elem.disabled = newValue == DoubleBoard
-    replaceClass(elem, "btn-", (newValue == FlipEnabled).fold("btn-primary", "btn-default"))
+    updateLabelColor(elem, newValue == FlipEnabled)
   }
 
   override protected def invoke(key: FlipType): Unit = PlaygroundSAM.doAction(UpdateConfigurationAction(c => c.copy(flipType = !c.flipType)))
