@@ -27,6 +27,22 @@ trait WebComponent {
     removeCandidates.foreach(elem.classList.remove)
     newClassName.foreach(elem.classList.add)
   }
+
+
+  def disableElement(): Unit = setDisabled(true)
+
+  def enableElement(): Unit = setDisabled(false)
+
+  def setDisabled(disabled: Boolean): Unit = element match {
+    case e: HTMLElement => e.disabled = disabled
+    case _ =>
+  }
+
+  def isDisabled: Boolean = element match {
+    case e: HTMLElement => e.disabled.contains(true)
+    case _ => false
+  }
+
 }
 
 object WebComponent {

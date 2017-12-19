@@ -2,6 +2,7 @@ package com.mogproject.mogami.frontend.view
 
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.view.board.{SVGArea, SVGAreaLayout}
+import com.mogproject.mogami.frontend.view.sidebar.{SideBarLeft, SideBarLike, SideBarRight}
 import org.scalajs.dom.Element
 import org.scalajs.dom.html.Div
 
@@ -27,6 +28,12 @@ trait MainPaneLike extends WebComponent {
     mainArea
   ).render
 
+  private[this] val sideBarRight: Option[SideBarRight] = (!isMobile).option(new SideBarRight)
+
+  private[this] val sideBarLeft: Option[SideBarLeft] = (!isMobile).option(new SideBarLeft)
+
+  private[this] val sidebars: Seq[SideBarLike] = sideBarRight.toSeq ++ sideBarLeft
+
   private[this] lazy val clickSound = audio(source(src := "assets/mp3/click.mp3", tpe := "audio/wav")).render
 
   override lazy val element: Element = div(
@@ -34,7 +41,7 @@ trait MainPaneLike extends WebComponent {
       mainContent
     } else {
       div(cls := "row no-margin no-overflow",
-        // todo: add sidebars
+        sidebars.map(_.element),
         mainContent
       )
     },
