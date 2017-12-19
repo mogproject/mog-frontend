@@ -35,6 +35,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
       (renderAll || isUpdated(newModel, _.config.layout, _.mode.getGameControl.map(_.getDisplayingLastMove)), renderLastMove),
       (newModel.mode.isEditMode && (renderAll || isUpdated(newModel, _.config.layout, _.mode.boxAvailable, _.config.pieceFace, _.mode.getBoardPieces, _.mode.getHandPieces)), renderBoxPieces),
       (renderAll || isUpdated(newModel, _.mode.getGameControl, _.config.recordLang), renderControlBars),
+      (renderAll || isUpdated(newModel, _.mode.getGameControl), renderGameControl),
       (renderAll || isUpdated(newModel, _.activeCursor), renderActiveCursor),
       ((!newModel.mode.isViewMode || newModel.selectedCursor.isEmpty) && (renderAll || isUpdated(newModel, _.selectedCursor)), renderSelectedCursor),
       (newModel.renderRequests.nonEmpty, processRenderRequests)
@@ -130,6 +131,13 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
     newModel
   }
 
+  private[this] def renderGameControl(newModel: M): M = {
+    newModel.mode.getGameControl.foreach { gc =>
+      view.renderComment(gc.getComment.getOrElse(""))
+    }
+    newModel
+  }
+
   private[this] def renderActiveCursor(newModel: M): M = {
     view.renderActiveCursor(newModel.activeCursor)
     newModel
@@ -159,6 +167,9 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
         view.showEditWarningDialog(newModel.config.messageLang)
       case EditAlertDialogRequest(msg) =>
         view.showEditAlertDialog(msg, newModel.config.messageLang)
+      case CommentDialogRequest =>
+        val comment = newModel.mode.getGameControl.flatMap(gc => gc.game.getComment(gc.gamePosition)).getOrElse("")
+        view.showCommentDialog(newModel.config.messageLang, comment)
     }
     adapter(newModel, newModel.copy(newRenderRequests = Seq.empty))
   }

@@ -14,7 +14,7 @@ import com.mogproject.mogami.frontend.model.board.cursor.Cursor
 import com.mogproject.mogami.frontend.sam.{PlaygroundSAM, SAMView}
 import com.mogproject.mogami.frontend.view.board.SVGAreaLayout
 import com.mogproject.mogami.frontend.view.bootstrap.Tooltip
-import com.mogproject.mogami.frontend.view.modal.{AlertDialog, GameInfoDialog, PromotionDialog, YesNoDialog}
+import com.mogproject.mogami.frontend.view.modal._
 import com.mogproject.mogami.frontend.view.piece.PieceFace
 import org.scalajs.dom
 import org.scalajs.dom.{Element, UIEvent}
@@ -145,6 +145,10 @@ trait BasePlaygroundView extends SAMView {
     mainPane.updateControlBars(_.refresh(gameControl, recordLang))
   }
 
+  def renderComment(comment: String): Unit = {
+    mainPane.updateComment(comment)
+  }
+
   //
   // Dialogs
   //
@@ -178,6 +182,10 @@ trait BasePlaygroundView extends SAMView {
       case English => p("Invalid state.", br, s"(${msg})")
     }
     AlertDialog(messageLang, s).show()
+  }
+
+  def showCommentDialog(messageLang: Language, text: String): Unit = {
+    CommentDialog(messageLang, text).show()
   }
 
 }

@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.view
 
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.view.board.{SVGArea, SVGAreaLayout}
-import com.mogproject.mogami.frontend.view.control.{ControlBar, ControlBarType}
+import com.mogproject.mogami.frontend.view.control.{CommentArea, ControlBar, ControlBarType}
 import com.mogproject.mogami.frontend.view.sidebar.{SideBarLeft, SideBarLike, SideBarRight}
 import org.scalajs.dom
 import org.scalajs.dom.Element
@@ -38,6 +38,8 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
   private[this] val svgAreas: mutable.ListBuffer[SVGArea] = mutable.ListBuffer.empty
 
   private[this] var controlBar: Option[ControlBar] = None
+
+  private[this] val commentArea: CommentArea = CommentArea(isDisplayOnly = isMobile, isModal = false)
 
   private[this] val mainArea = div().render
 
@@ -104,8 +106,8 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
           div(svgAreas.head.element)
         }
       ),
-      controlBar.get.element
-      // todo: other gadgets
+      controlBar.get.element,
+      commentArea.element
     )
   }
 
@@ -120,7 +122,8 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
           cls := "main-area-mobile-portrait",
           svgAreas.head.element
         ),
-        controlBar.get.element
+        controlBar.get.element,
+        commentArea.element
       )
     )
   }
@@ -134,7 +137,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
         id := "main-area",
         div(cls := "row",
           div(cls := "col-xs-6", svgAreas.head.element),
-          div(cls := "col-xs-6", (svgAreas.size > 1).fold(svgAreas(1).element, controlBar.map(_.element).toSeq))
+          div(cls := "col-xs-6", (svgAreas.size > 1).fold(svgAreas(1).element, controlBar.map(_.element).toSeq :+ commentArea.element))
         )
       )
     )
@@ -163,6 +166,8 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
     controlBar.foreach(f)
     sideBarLeft.foreach(sb => f(sb.controlBar))
   }
+
+  def updateComment(comment: String): Unit = commentArea.updateComment(comment)
 
   def playClickSound(): Unit = {
     clickSound.pause()

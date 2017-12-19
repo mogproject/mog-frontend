@@ -496,3 +496,21 @@ select {
 .control-button {
   width: 44px;
 }
+
+/*
+ * Comment Area
+ */
+.comment-pc {
+  width: 400px;
+  padding-top: 3px;
+  padding-bottom: 10px;
+  padding-left: 7px;
+  padding-right: 7px;
+}
+
+.comment-mobile {
+  min-width: 300px;
+  max-width: 400px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+}

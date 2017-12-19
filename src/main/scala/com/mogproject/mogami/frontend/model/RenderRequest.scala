@@ -17,3 +17,5 @@ case object GameInfoDialogRequest extends RenderRequest
 case object EditWarningDialogRequest extends RenderRequest
 
 case class EditAlertDialogRequest(message: String) extends RenderRequest
+
+case object CommentDialogRequest extends RenderRequest
