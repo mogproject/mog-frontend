@@ -4,8 +4,10 @@ import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.view.board.{SVGArea, SVGAreaLayout}
 import com.mogproject.mogami.frontend.view.control.{ControlBar, ControlBarType}
 import com.mogproject.mogami.frontend.view.sidebar.{SideBarLeft, SideBarLike, SideBarRight}
+import org.scalajs.dom
 import org.scalajs.dom.Element
 import org.scalajs.dom.html.Div
+import org.scalajs.dom.raw.HTMLElement
 
 import scala.collection.mutable
 import scalatags.JsDom.TypedTag
@@ -85,24 +87,22 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
     }
 
     mainArea.appendChild(node.render)
+    resizeSVGAreas(pieceWidth, layout)
   }
 
   private[this] def createPCPortraitMain(areaWidth: Int): TypedTag[Div] = {
     controlBar.foreach(_.terminate())
     controlBar = Some(ControlBar(ControlBarType.Normal))
-    val numAreas = svgAreas.size
+
     div(
       div(cls := "container-fluid",
-        div(cls := "main-area main-area-pc",
-          width := ((areaWidth + 70) * numAreas - 50).px, // +20 for 1 board, +90 for 2 boards
-          if (numAreas == 2) {
-            div(cls := "row",
-              div(cls := "col-xs-6", svgAreas.head.element), div(cls := "col-xs-6", svgAreas(1).element)
-            )
+        div(
+          id := "main-area",
+          cls := "main-area-pc",
+          if (svgAreas.size == 2) {
+            div(cls := "row", svgAreas.map(e => div(cls := "col-xs-6", e.element)))
           } else {
-            div(
-              svgAreas.head.element
-            )
+            div(svgAreas.head.element)
           },
           controlBar.get.element
         )
@@ -114,10 +114,12 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
   private[this] def createMobilePortraitMain(areaWidth: Int): TypedTag[Div] = {
     controlBar.foreach(_.terminate())
     controlBar = Some(ControlBar(ControlBarType.Small))
+
     div(
       div(cls := "container-fluid",
-        div(cls := "main-area main-area-mobile-portrait",
-          width := areaWidth.px,
+        div(
+          id := "main-area",
+          cls := "main-area-mobile-portrait",
           svgAreas.head.element
         ),
         controlBar.get.element
@@ -127,16 +129,32 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
 
   private[this] def createMobileLandscapeMain(areaWidth: Int): TypedTag[Div] = {
     controlBar.foreach(_.terminate())
-    if (svgAreas.size == 1) controlBar = Some(ControlBar(ControlBarType.Small))
+    controlBar = (svgAreas.size == 1).option(ControlBar(ControlBarType.Small))
+
     div(cls := "container-fluid",
-      div(cls := "main-area",
-        width := (areaWidth * 2 + 60).px,
+      div(
+        id := "main-area",
         div(cls := "row",
           div(cls := "col-xs-6", svgAreas.head.element),
           div(cls := "col-xs-6", (svgAreas.size > 1).fold(svgAreas(1).element, controlBar.map(_.element).toSeq))
         )
       )
     )
+  }
+
+  def resizeSVGAreas(pieceWidth: Int, layout: SVGAreaLayout): Unit = {
+    val areaWidth = layout.areaWidth(pieceWidth)
+
+    val w = (isMobile, isLandscape) match {
+      case (false, _) => (areaWidth + 70) * svgAreas.size - 50 // +20 for 1 board, +90 for 2 boards
+      case (true, false) => areaWidth
+      case (true, true) => areaWidth * 2 + 60
+    }
+
+    dom.document.getElementById("main-area") match {
+      case e: HTMLElement => e.style.width = w.px
+      case _ =>
+    }
   }
 
   def updateSVGArea(f: SVGArea => Unit): Unit = svgAreas.foreach(f)

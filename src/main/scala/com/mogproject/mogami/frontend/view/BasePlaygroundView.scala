@@ -51,8 +51,8 @@ trait BasePlaygroundView extends SAMView {
     mainPane.renderSVGAreas(numAreas, pieceWidth, layout)
   }
 
-  def renderSize(pieceWidth: Int): Unit = {
-    mainPane.updateSVGArea(_.resize(pieceWidth))
+  def renderSize(pieceWidth: Int, layout: SVGAreaLayout): Unit = {
+    mainPane.resizeSVGAreas(pieceWidth, layout)
   }
 
   def renderIndex(useJapanese: Boolean = false): Unit = {

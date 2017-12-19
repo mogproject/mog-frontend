@@ -73,7 +73,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
   }
 
   private[this] def renderSize(newModel: M): M = {
-    view.renderSize(newModel.config.getPieceWidth)
+    view.renderSize(newModel.config.getPieceWidth, newModel.config.layout)
     newModel
   }
 
