@@ -3,7 +3,7 @@ package com.mogproject.mogami.frontend.view.modal
 import com.mogproject.mogami.Game
 import com.mogproject.mogami.frontend.model.BasePlaygroundConfiguration
 import com.mogproject.mogami.frontend.view.{English, Japanese}
-import com.mogproject.mogami.frontend.view.menu.MenuPane
+import com.mogproject.mogami.frontend.view.menu.{GameHelpMenu, AboutMenu, MenuPane}
 import org.scalajs.jquery.JQuery
 
 import scalatags.JsDom.all._
@@ -22,7 +22,7 @@ case class MenuDialog(gameID: String, config: BasePlaygroundConfiguration, game:
     case English => "Menu"
   }
 
-  val menuPane = MenuPane(true)
+  val menuPane = MenuPane(Seq(GameHelpMenu, AboutMenu))
 
   override val modalBody: ElemType = div(bodyDefinition, menuPane.element)
 

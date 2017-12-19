@@ -154,6 +154,13 @@ trait BasePlaygroundView extends SAMView {
   }
 
   //
+  // Menu
+  //
+  def renderMenuSections(modeType: ModeType): Unit = {
+    mainPane.updateMenuSections(modeType)
+  }
+
+  //
   // Dialogs
   //
   def askPromote(messageLang: Language, pieceFace: PieceFace, pieceSize: Coord, rawMove: Move, rotate: Boolean): Unit = {

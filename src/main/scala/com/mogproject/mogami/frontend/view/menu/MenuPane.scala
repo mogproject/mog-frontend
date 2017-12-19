@@ -11,21 +11,11 @@ import scalatags.JsDom.all._
 /**
   *
   */
-case class MenuPane(isMobile: Boolean) extends WebComponent {
-//  val linksMenu = new LinksMenu
-
-//  val settingsMenu = new SettingsMenu
-
-  lazy val sections: Seq[MenuSection] = Seq(
-    HelpMenu,
-    InfoMenu
-//    linksMenu,
-//    settingsMenu
-  )
+case class MenuPane(accordions: Seq[AccordionMenu]) extends WebComponent {
 
   override lazy val element: Div = div(
     cls := "panel-group", id := "accordion", role := "tablist", aria.multiselectable := true,
-    sections.map(_.outputs)
+    accordions.map(_.element)
   ).render
 
   def collapseMenu(): Unit = {
@@ -37,10 +27,10 @@ case class MenuPane(isMobile: Boolean) extends WebComponent {
     }
     jQuery(".panel-collapse").asInstanceOf[BootstrapJQuery].collapse("hide")
 
-    sections.foreach(_.collapseTitle())
+    accordions.foreach(_.collapseTitle())
   }
 
   def expandMenu(): Unit = {
-    sections.foreach(_.expandTitle())
+    accordions.foreach(_.expandTitle())
   }
 }
