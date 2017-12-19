@@ -57,6 +57,13 @@ row {
   height: 100%;
 }
 
+select {
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  padding-right: 3px !important;
+  padding-left: 3px !important;
+}
+
 .container-fluid {
   padding: 0 !important;
 }
