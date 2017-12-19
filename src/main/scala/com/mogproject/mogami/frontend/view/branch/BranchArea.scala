@@ -6,10 +6,9 @@ import com.mogproject.mogami.frontend.action.{UpdateConfigurationAction, UpdateG
 import com.mogproject.mogami.frontend.action.dialog.AskDeleteBranchAction
 import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
-import com.mogproject.mogami.frontend.view.bootstrap.Tooltip
 import com.mogproject.mogami.frontend.view.{English, Japanese, Language, WebComponent}
-import com.mogproject.mogami.frontend.view.button.RadioButton
-import org.scalajs.dom.html.{Button, Div}
+import com.mogproject.mogami.frontend.view.button.{RadioButton, SingleButton}
+import org.scalajs.dom.html.Div
 import org.scalajs.dom.raw.HTMLSelectElement
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom
@@ -41,16 +40,12 @@ case class BranchArea(isMobile: Boolean) extends WebComponent {
     tooltip = (!isMobile).option("Creates a new branch")
   )
 
-  private[this] lazy val deleteBranchButton = button(
-    tpe := "button",
-    cls := "btn btn-default btn-block",
-    data("toggle") := "tooltip",
-    data("placement") := "bottom",
-    data("original-title") := "Delete this branch",
-    data("dismiss") := "modal",
-    onclick := { () => PlaygroundSAM.doAction(AskDeleteBranchAction) },
-    isMobile.fold("Delete", span(cls := "glyphicon glyphicon-trash"))
-  ).render
+  private[this] lazy val deleteBranchButton = SingleButton(
+    Map(English -> isMobile.fold(span("Delete"), span(cls := "glyphicon glyphicon-trash")).render),
+    clickAction = Some(() => PlaygroundSAM.doAction(AskDeleteBranchAction)),
+    tooltip = Map(English -> "Delete this branch"),
+    isBlockButton = true
+  )
 
   private[this] lazy val forksButtons = div("").render
 
@@ -63,25 +58,20 @@ case class BranchArea(isMobile: Boolean) extends WebComponent {
     changeBranchButton.selectedIndex = displayBranch
   }
 
-  private[this] def createForkButton(move: Move, branchNo: BranchNo, language: Language, tooltipPlacement: String): Button = button(
-    tpe := "button",
-    cls := "btn btn-default btn-block",
-    data("toggle") := "tooltip",
-    data("placement") := tooltipPlacement,
-    data("original-title") := branchNoToString(branchNo),
-    data("dismiss") := "modal",
-    onclick := {
-      () =>
-        dom.window.setTimeout(
-          () => PlaygroundSAM.doAction(UpdateGameControlAction(_.changeDisplayBranch(branchNo).withNextDisplayPosition)),
-          0
-        )
-    },
-    move.player.toSymbolString() + (language match {
+  private[this] def createForkButton(move: Move, branchNo: BranchNo, recordLang: Language, tooltipPlacement: String): SingleButton = SingleButton(
+    Map(English -> span(move.player.toSymbolString() + (recordLang match {
       case English => move.toWesternNotationString
       case Japanese => move.toJapaneseNotationString
-    })
-  ).render
+    })).render),
+    clickAction = Some(() =>
+      dom.window.setTimeout(
+        () => PlaygroundSAM.doAction(UpdateGameControlAction(_.changeDisplayBranch(branchNo).withNextDisplayPosition)),
+        0
+      )),
+    tooltip = Map(English -> branchNoToString(branchNo)),
+    tooltipPlacement = tooltipPlacement,
+    isBlockButton = true
+  )
 
   //
   // layout
@@ -97,7 +87,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent {
     br(),
     div(cls := "row",
       div(cls := "col-xs-7 col-sm-9", label(paddingTop := "6px", "Delete This Branch")),
-      div(cls := "col-xs-5 col-sm-3", deleteBranchButton)
+      div(cls := "col-xs-5 col-sm-3", deleteBranchButton.element)
     )
   ).render
 
@@ -128,7 +118,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent {
       marginBottom := 20.px,
       div(cls := "btn-group", role := "group",
         div(cls := "btn-group", width := 130.px, marginBottom := 10.px, changeBranchButton),
-        div(cls := "btn-group", deleteBranchButton)
+        div(cls := "btn-group", deleteBranchButton.element)
       ),
       forksButtons
     )
@@ -139,7 +129,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent {
   //
   private[this] def playModeElements = Seq(
     playModeMenu
-  ) ++ isMobile.fold(Seq.empty, Seq(newBranchButton.element, deleteBranchButton))
+  ) ++ isMobile.fold(Seq.empty, Seq(newBranchButton.element, deleteBranchButton.element))
 
   def showEditMenu(): Unit = playModeElements.foreach(WebComponent.showElement)
 
@@ -148,7 +138,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent {
   private[this] def updateButtons(game: Game, gamePosition: GamePosition, recordLang: Language): Unit = {
     updateBranchList(game.branches.length, gamePosition.branch)
 
-    deleteBranchButton.disabled = gamePosition.isTrunk
+    deleteBranchButton.setDisabled(gamePosition.isTrunk)
 
     val forks = game.getForks(gamePosition)
 
@@ -158,18 +148,17 @@ case class BranchArea(isMobile: Boolean) extends WebComponent {
       val nextMove = game.getMove(gamePosition).map(_ -> gamePosition.branch)
 
       val buttons = (nextMove.toSeq ++ forks).map { case (m, b) => createForkButton(m, b, recordLang, isMobile.fold("bottom", "right")) }
-      Tooltip.enableHoverToolTip(buttons)
 
       val elem = (if (isMobile) {
         div(
           cls := "row",
-          buttons.map(div(cls := "col-sm-4 col-xs-6", _))
+          buttons.map(b => div(cls := "col-sm-4 col-xs-6", b.element))
         )
       } else {
         div(
           cls := "row",
           marginLeft := 0.px,
-          buttons.map(div(cls := "col-xs-8", paddingLeft := 0.px, _))
+          buttons.map(b => div(cls := "col-xs-8", paddingLeft := 0.px, b.element))
         )
       }).render
 

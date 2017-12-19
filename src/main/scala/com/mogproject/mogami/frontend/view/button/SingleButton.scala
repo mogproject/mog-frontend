@@ -21,10 +21,18 @@ case class SingleButton(
                          holdAction: Option[() => Unit] = None,
                          holdCheck: () => Boolean = () => false,
                          tooltip: Map[Language, String] = Map.empty,
+                         tooltipPlacement: String = "bottom",
+                         isBlockButton: Boolean = false,
                          useOnClick: Boolean = true
                        ) extends WebComponent with EventManageable {
 
-  def initialize(): Unit = {
+  private[this] val btn: Button = button(
+    cls := (("btn" +: buttonClass) ++ isBlockButton.option("btn-block")).mkString(" "),
+    buttonWidth.map(width := _),
+    tooltip.nonEmpty.option(Seq(data("toggle") := "tooltip", data("placement") := tooltipPlacement))
+  ).render
+
+  override lazy val element: HTMLElement = {
     // set event handlers
     (clickAction, holdAction, useOnClick) match {
       case (Some(f), Some(g), _) => setClickEvent(btn, f, Some(g), Some(holdCheck))
@@ -38,15 +46,9 @@ case class SingleButton(
 
     // set label
     updateLabel(English)
+
+    btn
   }
-
-  private[this] val btn: Button = button(
-    cls := ("btn" +: buttonClass).mkString(" "),
-    buttonWidth.map(width := _),
-    tooltip.nonEmpty.option(Seq(data("toggle") := "tooltip", data("placement") := "bottom"))
-  ).render
-
-  override lazy val element: HTMLElement = btn
 
   def updateLabel(lang: Language): Unit = {
     labels.get(lang) match {
@@ -58,7 +60,5 @@ case class SingleButton(
       case None => // do nothing
     }
   }
-
-  initialize()
 }
 

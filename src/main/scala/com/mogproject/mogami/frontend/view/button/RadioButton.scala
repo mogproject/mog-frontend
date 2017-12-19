@@ -1,6 +1,7 @@
 package com.mogproject.mogami.frontend.view.button
 
 import com.mogproject.mogami.frontend.view.Language
+import com.mogproject.mogami.frontend.view.bootstrap.Tooltip
 import org.scalajs.dom.html.{Anchor, Div}
 
 import scalatags.JsDom.all._
@@ -22,12 +23,17 @@ case class RadioButton[Key](keys: Seq[Key],
 
   override protected def invoke(key: Key): Unit = onClick(key)
 
-  override val element: Div = div(
-    cls := "input-group",
-    tooltip.map { s => Seq(data("toggle") := "tooltip", data("placement") := "bottom", data("original-title") := s) },
-    div(cls := ("btn-group" :: buttonGroupClasses.toList).mkString(" "),
-      inputs
-    )
-  ).render
+  override lazy val element: Div = {
+    val elem = div(
+      cls := "input-group",
+      tooltip.map { s => Seq(data("toggle") := "tooltip", data("placement") := "bottom", data("original-title") := s) },
+      div(cls := ("btn-group" :: buttonGroupClasses.toList).mkString(" "),
+        inputs
+      )
+    ).render
+
+    if (tooltip.isDefined) Tooltip.enableHoverToolTip(elem)
+    elem
+  }
 
 }
