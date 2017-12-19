@@ -4,7 +4,7 @@ import com.mogproject.mogami.frontend.action.ChangeModeAction
 import com.mogproject.mogami.frontend.model.{EditModeType, ModeType, PlayModeType, ViewModeType}
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 import com.mogproject.mogami.frontend.view.button.RadioButton
-import com.mogproject.mogami.frontend.view.nav.NavBarLike
+import com.mogproject.mogami.frontend.view.nav.{FlipButton, NavBarLike}
 import com.mogproject.mogami.frontend.view.observer.ModeTypeObserver
 
 /**
@@ -20,7 +20,9 @@ case class NavBar(isMobile: Boolean = false) extends NavBarLike with ModeTypeObs
     Seq.empty
   )
 
-  lazy val buttons = Seq(modeButton)
+  lazy val flipButton: FlipButton = new FlipButton
+
+  lazy val buttons = Seq(modeButton, flipButton)
 
   override def handleUpdate(modeType: ModeType): Unit = {
     modeButton.updateValue(modeType)
