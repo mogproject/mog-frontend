@@ -57,8 +57,8 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
       //
       // Player (Playing/Viewing)
       //
-      case (Some(PlayerCursor(_)), _) if model.mode.playerSelectable =>
-        Some(newModel.addRenderRequest(GameInfoDialogRequest))
+      case (Some(PlayerCursor(_)), _) if model.mode.playerSelectable && !model.mode.isEditMode =>
+        Some(newModel.addRenderRequest(GameInfoDialogRequest).copy(newActiveCursor = None))
       //
       // Forward/Backward
       //
