@@ -178,7 +178,7 @@ trait BasePlaygroundView extends SAMView {
       case Japanese => p(s"現在の変化 (Branch#${branchNo}) が削除されます。コメントも失われますが、よろしいですか?")
       case English => p(s"Branch#${branchNo} will be deleted. Comments on this branch will also be removed. Are you sure?")
     }
-    val action = UpdateGameControlAction(gc => gc.copy(game = gc.game.deleteBranch(branchNo).getOrElse(gc.game)))
+    val action = UpdateGameControlAction(_.deleteBranch(branchNo))
     YesNoDialog(messageLang, s, () => PlaygroundSAM.doAction(action)).show()
   }
 

@@ -104,6 +104,12 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
     copy(displayBranchNo = branchNo, displayPosition = math.min(getLastDisplayPosition(branchNo), displayPosition))
   }
 
+  def deleteBranch(branchNo: BranchNo): GameControl = {
+    // if a displaying branch is deleted, change to the trunk
+    val gc = if (branchNo == displayBranchNo) changeDisplayBranch(0) else this
+    game.deleteBranch(branchNo).map(g => gc.copy(game = g)).getOrElse(this)
+  }
+
   //
   // move operations
   //
