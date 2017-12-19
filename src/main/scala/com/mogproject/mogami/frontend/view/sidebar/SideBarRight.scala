@@ -49,14 +49,15 @@ class SideBarRight extends SideBarLike with Observer[AccordionMenu] {
     menuPane.expandMenu()
   }
 
-//  override def initialize(): Unit = {
-//    super.initialize()
-//    menuPane.sections.foreach(_.accordions.foreach(_.addObserver(this)))
-//  }
+  def initialize(): Unit = {
+    menuPane.sections.foreach(_.accordions.foreach(_.addObserver(this)))
+  }
 
   override def handleUpdate(subject: AccordionMenu): Unit = {
     expandSideBar()
   }
+
+  initialize()
 }
 
 object SideBarRight {

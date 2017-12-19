@@ -17,6 +17,8 @@ case class MenuPane(isMobile: Boolean) extends WebComponent {
 //  val settingsMenu = new SettingsMenu
 
   lazy val sections: Seq[MenuSection] = Seq(
+    HelpMenu,
+    InfoMenu
 //    linksMenu,
 //    settingsMenu
   )
@@ -25,9 +27,6 @@ case class MenuPane(isMobile: Boolean) extends WebComponent {
     cls := "panel-group", id := "accordion", role := "tablist", aria.multiselectable := true,
     sections.map(_.outputs)
   ).render
-
-//  override def childComponents: Seq[WebComponent] = sections
-
 
   def collapseMenu(): Unit = {
     jQuery(".panel-collapse").asInstanceOf[BootstrapJQuery].collapse {
