@@ -8,7 +8,7 @@ import com.mogproject.mogami.frontend.Coord
 import com.mogproject.mogami.frontend.action.{ChangeModeAction, RefreshScreenAction}
 import com.mogproject.mogami.frontend.api.Clipboard
 import com.mogproject.mogami.frontend.api.Clipboard.Event
-import com.mogproject.mogami.frontend.model.EditModeType
+import com.mogproject.mogami.frontend.model.{EditModeType, GameControl}
 import com.mogproject.mogami.frontend.model.board._
 import com.mogproject.mogami.frontend.model.board.cursor.Cursor
 import com.mogproject.mogami.frontend.sam.{PlaygroundSAM, SAMView}
@@ -138,6 +138,16 @@ trait BasePlaygroundView extends SAMView {
     mainPane.updateSVGArea(_.board.effect.forwardEffector.start(isForward))
   }
 
+  //
+  // Controls
+  //
+  def renderControlBars(gameControl: GameControl, recordLang: Language): Unit = {
+    mainPane.updateControlBars(_.refresh(gameControl, recordLang))
+  }
+
+  //
+  // Dialogs
+  //
   def askPromote(messageLang: Language, pieceFace: PieceFace, pieceSize: Coord, rawMove: Move, rotate: Boolean): Unit = {
     PromotionDialog(messageLang, pieceFace, pieceSize, rawMove, rotate).show()
   }

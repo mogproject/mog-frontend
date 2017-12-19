@@ -34,6 +34,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
       (renderAll || isUpdated(newModel, _.config.layout, _.config.pieceFace, _.mode.getHandPieces), renderHandPieces),
       (renderAll || isUpdated(newModel, _.config.layout, _.mode.getGameControl.map(_.getDisplayingLastMove)), renderLastMove),
       (newModel.mode.isEditMode && (renderAll || isUpdated(newModel, _.config.layout, _.mode.boxAvailable, _.config.pieceFace, _.mode.getBoardPieces, _.mode.getHandPieces)), renderBoxPieces),
+      (renderAll || isUpdated(newModel, _.mode.getGameControl, _.config.recordLang), renderControlBars),
       (renderAll || isUpdated(newModel, _.activeCursor), renderActiveCursor),
       ((!newModel.mode.isViewMode || newModel.selectedCursor.isEmpty) && (renderAll || isUpdated(newModel, _.selectedCursor)), renderSelectedCursor),
       (newModel.renderRequests.nonEmpty, processRenderRequests)
@@ -119,6 +120,13 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
 
   private[this] def renderBoxPieces(newModel: M): M = {
     view.renderBoxPieces(newModel.mode.getBoxPieces, newModel.config.pieceFace)
+    newModel
+  }
+
+  private[this] def renderControlBars(newModel: M): M = {
+    newModel.mode.getGameControl.foreach { gc =>
+      view.renderControlBars(gc, newModel.config.recordLang)
+    }
     newModel
   }
 
