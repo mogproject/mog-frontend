@@ -15,7 +15,7 @@ class SideBarLeft extends SideBarLike {
 
   override val EXPANDED_WIDTH: Int = SideBarLeft.EXPANDED_WIDTH
 
-  override protected val outputClass: String = "sidebar-left"
+  override protected val outputClass: String = "sidebar-left hidden-xs"
 
   lazy val controlBar = ControlBar(ControlBarType.LongList)
 

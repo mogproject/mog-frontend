@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view.sidebar
 
-import com.mogproject.mogami.frontend.view.menu.{AccordionMenu, GameHelpMenu, AboutMenu, MenuPane}
+import com.mogproject.mogami.frontend.view.menu._
 import com.mogproject.mogami.frontend.view.{Observer, WebComponent}
 import org.scalajs.dom.html.{Div, Heading}
 
@@ -13,7 +13,10 @@ class SideBarRight extends SideBarLike with Observer[AccordionMenu] {
 
   override val EXPANDED_WIDTH: Int = SideBarRight.EXPANDED_WIDTH
 
-  lazy val menuPane = MenuPane(Seq(GameHelpMenu, AboutMenu))
+
+  private[this] val settingMenu = new SettingMenu
+
+  lazy val menuPane = MenuPane(Seq(settingMenu, GameHelpMenu, AboutMenu))
 
   override protected val outputClass: String = "sidebar-right"
 

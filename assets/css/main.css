@@ -475,6 +475,13 @@ ul {
   cursor: pointer;
 }
 
+.dropdown-menu.left {
+  left:auto;
+  right:0;
+  ::before {left:auto !important; right:9px;}
+  ::after {left:auto !important; right:10px;}
+}
+
 /*
  * Control Bar
  */
@@ -521,4 +528,15 @@ ul {
   max-width: 400px;
   padding-top: 3px;
   padding-bottom: 3px;
+}
+
+/*
+ * Alert
+ */
+
+.setting-alert {
+  margin-top: 20px;
+  margin-bottom: 0px;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }

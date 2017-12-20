@@ -89,6 +89,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
       case (_, _) => createPCPortraitMain(areaWidth)
     }
 
+    WebComponent.removeAllChildElements(mainArea)
     mainArea.appendChild(node.render)
     resizeSVGAreas(pieceWidth, layout)
   }

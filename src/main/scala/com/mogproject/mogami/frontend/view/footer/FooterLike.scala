@@ -20,7 +20,7 @@ trait FooterLike extends WebComponent {
       a(href := "https://mogproject.com", target := "_blank", "mogproject"),
       " - ",
       a(href := "https://www.paypal.me/mogproject", target := "_blank", "Donate me"),
-      " - ",
+      br,
       "Try ", a(href := "https://www.facebook.com/shogibot/", target := "_blank", "Shogi Bot"),
       " and ", a(href := "https://live.mogproject.com/", target := "_blank", "Shogi Playground Live!")
     ))

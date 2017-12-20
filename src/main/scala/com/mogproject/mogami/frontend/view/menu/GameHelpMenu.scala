@@ -15,7 +15,7 @@ object GameHelpMenu extends AccordionMenu {
   override lazy val icon: String = "question-sign"
   override lazy val content: JsDom.TypedTag[Div] = div(
     ul(
-      li("Click on a player name to set the game information."),
+      li("Click on a player name to set game information."),
       li("In Play Mode, you can move pieces by a flick."),
       li("In View Mode, click (or hold) on any squares on the right-hand side of the board to move to the next position, and click (or hold) the left-hand side to the previous position."),
       li("If you click and hold 'forward' or 'backward' button, the position changes continuously.")
