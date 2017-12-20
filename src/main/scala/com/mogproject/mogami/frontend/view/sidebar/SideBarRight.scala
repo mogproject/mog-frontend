@@ -1,7 +1,7 @@
 package com.mogproject.mogami.frontend.view.sidebar
 
 import com.mogproject.mogami.frontend.view.menu._
-import com.mogproject.mogami.frontend.view.{Observer, WebComponent}
+import com.mogproject.mogami.frontend.view.{Observer, PlaygroundSite, WebComponent}
 import org.scalajs.dom.html.{Div, Heading}
 
 import scalatags.JsDom.all._
@@ -9,14 +9,11 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class SideBarRight extends SideBarLike with Observer[AccordionMenu] {
+trait SideBarRight extends SideBarLike with Observer[AccordionMenu] {
+
+  def getMenuPane: MenuPane
 
   override val EXPANDED_WIDTH: Int = SideBarRight.EXPANDED_WIDTH
-
-
-  private[this] val settingMenu = new SettingMenu
-
-  lazy val menuPane = MenuPane(Seq(settingMenu, GameHelpMenu, AboutMenu))
 
   override protected val outputClass: String = "sidebar-right"
 
@@ -37,21 +34,21 @@ class SideBarRight extends SideBarLike with Observer[AccordionMenu] {
   override def content: Div = div(
     titleExpanded,
     titleCollapsed,
-    menuPane.element
+    getMenuPane.element
   ).render
 
   override def collapseSideBar(): Unit = if (!isCollapsed) {
     super.collapseSideBar()
-    menuPane.collapseMenu()
+    getMenuPane.collapseMenu()
   }
 
   override def expandSideBar(): Unit = if (isCollapsed) {
     super.expandSideBar()
-    menuPane.expandMenu()
+    getMenuPane.expandMenu()
   }
 
   def initialize(): Unit = {
-    menuPane.accordions.foreach(_.addObserver(this))
+    getMenuPane.accordions.foreach(_.addObserver(this))
   }
 
   override def handleUpdate(subject: AccordionMenu): Unit = {

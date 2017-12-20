@@ -9,11 +9,13 @@ import com.mogproject.mogami.frontend.action.{ChangeModeAction, RefreshScreenAct
 import com.mogproject.mogami.frontend.api.Clipboard
 import com.mogproject.mogami.frontend.api.Clipboard.Event
 import com.mogproject.mogami.frontend.model._
+import com.mogproject.mogami.frontend.model.analyze.AnalyzeResult
 import com.mogproject.mogami.frontend.model.board._
 import com.mogproject.mogami.frontend.model.board.cursor.Cursor
 import com.mogproject.mogami.frontend.sam.{PlaygroundSAM, SAMView}
 import com.mogproject.mogami.frontend.view.board.SVGAreaLayout
 import com.mogproject.mogami.frontend.view.bootstrap.Tooltip
+import com.mogproject.mogami.frontend.view.menu.MenuPane
 import com.mogproject.mogami.frontend.view.modal._
 import org.scalajs.dom
 import org.scalajs.dom.{Element, UIEvent}
@@ -30,6 +32,8 @@ trait BasePlaygroundView extends SAMView {
   def website: PlaygroundSite
 
   def mainPane: MainPaneLike = website.mainPane
+
+  def menuPane: MenuPane = website.menuPane
 
   override def initialize(): Unit = {
     // create elements
@@ -156,11 +160,18 @@ trait BasePlaygroundView extends SAMView {
   // Menu
   //
   def updateModeType(modeType: ModeType): Unit = {
+    menuPane.accordions.foreach(_.refresh(modeType))
     mainPane.updateModeType(modeType)
   }
 
   def updateConfigMenu(config: BasePlaygroundConfiguration): Unit = {
-    mainPane.updateConfigMenu(config)
+    website.settingMenu.refresh(config)
+  }
+
+  def renderCheckmateAnalyzeResult(result: AnalyzeResult): Unit = {
+    // todo: notify to the menu dialog
+
+
   }
 
   //

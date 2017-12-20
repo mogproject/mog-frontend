@@ -6,7 +6,10 @@ import org.scalajs.dom.Element
 /**
   *
   */
-case class TestMainPane(isMobile: Boolean = false, isLandscape: Boolean = false) extends MainPaneLike {
+class TestMainPane(val isMobile: Boolean = false,
+                   val isLandscape: Boolean = false,
+                   getSiteFunction: => PlaygroundSite) extends MainPaneLike {
+  override def getSite: PlaygroundSite = getSiteFunction
 
 }
 
@@ -17,7 +20,7 @@ case class Footer(isDevMode: Boolean = true) extends FooterLike {
 
 case class TestSite(isMobile: Boolean, isLandscape: Boolean) extends PlaygroundSite {
 
-  override lazy val mainPane: MainPaneLike = TestMainPane(isMobile, isLandscape)
+  override lazy val mainPane: MainPaneLike = new TestMainPane(isMobile, isLandscape, this)
 
   override lazy val navBar: NavBar = NavBar(isMobile)
 

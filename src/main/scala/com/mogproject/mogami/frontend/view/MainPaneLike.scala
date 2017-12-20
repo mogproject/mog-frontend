@@ -1,10 +1,10 @@
 package com.mogproject.mogami.frontend.view
 
-import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, GameControl, ModeType}
+import com.mogproject.mogami.frontend.model.{GameControl, ModeType}
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.view.board.{SVGArea, SVGAreaLayout}
 import com.mogproject.mogami.frontend.view.control.{CommentArea, ControlBar, ControlBarType}
-import com.mogproject.mogami.frontend.view.menu.SettingMenu
+import com.mogproject.mogami.frontend.view.menu.MenuPane
 import com.mogproject.mogami.frontend.view.sidebar.{SideBarLeft, SideBarLike, SideBarRight}
 import org.scalajs.dom
 import org.scalajs.dom.Element
@@ -23,6 +23,8 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
   def isMobile: Boolean
 
   def isLandscape: Boolean
+
+  def getSite: PlaygroundSite
 
   //
   // Utility
@@ -51,7 +53,9 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
     mainArea
   ).render
 
-  private[this] val sideBarRight: Option[SideBarRight] = (!isMobile).option(new SideBarRight)
+  private[this] val sideBarRight: Option[SideBarRight] = (!isMobile).option(new SideBarRight {
+    override def getMenuPane: MenuPane = getSite.menuPane
+  })
 
   private[this] val sideBarLeft: Option[SideBarLeft] = (!isMobile).option(new SideBarLeft)
 
@@ -188,15 +192,6 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
 
   def updateModeType(modeType: ModeType): Unit = {
     sideBarLeft.foreach(_.refresh(modeType))
-    sideBarRight.foreach(_.menuPane.accordions.foreach(_.refresh(modeType)))
-  }
-
-  def updateConfigMenu(config: BasePlaygroundConfiguration): Unit = {
-    // todo: refactor using Observer pattern
-    sideBarRight.foreach(_.menuPane.accordions.foreach {
-      case s: SettingMenu => s.refresh(config)
-      case _ =>
-    })
   }
 
   def playClickSound(): Unit = {

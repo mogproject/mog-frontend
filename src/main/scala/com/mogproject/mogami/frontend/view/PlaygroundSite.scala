@@ -1,6 +1,7 @@
 package com.mogproject.mogami.frontend.view
 
 import com.mogproject.mogami.frontend.view.footer.FooterLike
+import com.mogproject.mogami.frontend.view.menu.{AboutMenu, GameHelpMenu, MenuPane, SettingMenu}
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.view.nav.NavBarLike
 import org.scalajs.dom.Element
@@ -16,6 +17,10 @@ trait PlaygroundSite extends WebComponent {
   def navBar: NavBarLike
 
   def mainPane: MainPaneLike
+
+  val settingMenu = new SettingMenu
+
+  lazy val menuPane = MenuPane(Seq(settingMenu, GameHelpMenu, AboutMenu))
 
   def footer: FooterLike
 
