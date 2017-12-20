@@ -145,21 +145,26 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
     )
   }
 
+  private[this] def getSVGAreaSize(pieceWidth: Int, layout: SVGAreaLayout, numAreas: Int): Int = {
+    val areaWidth = layout.areaWidth(pieceWidth)
+    (isMobile, isLandscape) match {
+      case (false, _) => (areaWidth + 70) * numAreas - 50 // +20 for 1 board, +90 for 2 boards
+      case (true, false) => areaWidth
+      case (true, true) => areaWidth * 2 + 60
+    }
+  }
+
   def resizeSVGAreas(pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
     dom.document.getElementById("main-area") match {
       case e: HTMLElement =>
         pieceWidth match {
           case Some(pw) =>
-            val areaWidth = layout.areaWidth(pw)
-            val w = (isMobile, isLandscape) match {
-              case (false, _) => (areaWidth + 70) * svgAreas.size - 50 // +20 for 1 board, +90 for 2 boards
-              case (true, false) => areaWidth
-              case (true, true) => areaWidth * 2 + 60
-            }
+            val w = getSVGAreaSize(pw, layout, svgAreas.size)
             e.style.maxWidth = w.px
             e.style.width = w.px
           case None =>
-            e.style.maxWidth = 410.px  // todo: remove magic number
+            e.style.maxWidth = getSVGAreaSize(40, layout, svgAreas.size).px
+            e.style.minWidth = getSVGAreaSize(15, layout, svgAreas.size).px
             e.style.width = 100.pct
         }
       case _ =>
