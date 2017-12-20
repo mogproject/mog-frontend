@@ -26,6 +26,7 @@ class CheckmateButton extends WebComponent {
   private[this] lazy val analyzeButton: SingleButton = SingleButton(
     Map(English -> span("Analyze").render),
     clickAction = Some({ () => disableAnalyzeButton(); PlaygroundSAM.doAction(AnalyzeCheckmateAction(validateTimeout(), started = false)) }),
+    tooltip = Map(English -> "Analyze this position for checkmate"),
     isBlockButton = true
   )
 
