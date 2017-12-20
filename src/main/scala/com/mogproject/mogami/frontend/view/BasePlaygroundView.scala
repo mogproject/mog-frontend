@@ -10,7 +10,7 @@ import com.mogproject.mogami.frontend.action.{ChangeModeAction, RefreshScreenAct
 import com.mogproject.mogami.frontend.api.Clipboard
 import com.mogproject.mogami.frontend.api.Clipboard.Event
 import com.mogproject.mogami.frontend.model._
-import com.mogproject.mogami.frontend.model.analyze.{AnalyzeCompleted, AnalyzeResult, AnalyzeStarted}
+import com.mogproject.mogami.frontend.model.analyze._
 import com.mogproject.mogami.frontend.model.board._
 import com.mogproject.mogami.frontend.model.board.cursor.Cursor
 import com.mogproject.mogami.frontend.sam.{PlaygroundSAM, SAMView}
@@ -169,12 +169,17 @@ trait BasePlaygroundView extends SAMView {
     website.settingMenu.refresh(config)
   }
 
-  def renderCheckmateAnalyzeResult(result: AnalyzeResult, recordLang: Language): Unit = {
+  def renderAnalyzeResult(result: AnalyzeResult, recordLang: Language): Unit = result match {
+    case r: CheckmateAnalyzeResult => renderCheckmateAnalyzeResult(r, recordLang)
+    case r: CountAnalyzeResult => renderCountAnalyzeResult(r)
+  }
+
+  def renderCheckmateAnalyzeResult(result: CheckmateAnalyzeResult, recordLang: Language): Unit = {
     result match {
-      case AnalyzeResult(AnalyzeStarted, timeoutSec, _) =>
+      case CheckmateAnalyzeResult(AnalyzeStarted, timeoutSec, _) =>
         website.analyzeMenu.checkmateButton.displayCheckmateMessage("Analyzing...")
         dom.window.setTimeout(() => PlaygroundSAM.doAction(AnalyzeCheckmateAction(timeoutSec, started = true)), 100)
-      case AnalyzeResult(AnalyzeCompleted, _, res) =>
+      case CheckmateAnalyzeResult(AnalyzeCompleted, _, res) =>
         res match {
           case None =>
             website.analyzeMenu.checkmateButton.displayCheckmateMessage("This position is too difficult to solve.")
@@ -188,6 +193,20 @@ trait BasePlaygroundView extends SAMView {
             website.analyzeMenu.checkmateButton.displayCheckmateMessage(s"Found a checkmate:\n${s.mkString(" ")}")
         }
         dom.window.setTimeout(() => website.analyzeMenu.checkmateButton.enableAnalyzeButton(), 500)
+    }
+  }
+
+  def renderCountAnalyzeResult(result: CountAnalyzeResult): Unit = {
+    result match {
+      case CountAnalyzeResult(AnalyzeCompleted, point, isKingInPromotionZone, numPiecesInPromotionZone) =>
+        val plural = (1 < numPiecesInPromotionZone).fold("s", "")
+
+        val msg = Seq(
+          s"Points: ${point}",
+          "In the promotion zone: " + isKingInPromotionZone.fold("King + ", "") + s"${numPiecesInPromotionZone} piece${plural}"
+        ).mkString("\n")
+        website.analyzeMenu.pointCountButton.displayMessage(msg)
+      case _ =>
     }
   }
 

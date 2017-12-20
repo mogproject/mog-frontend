@@ -2,9 +2,9 @@ package com.mogproject.mogami.frontend.view.menu.analyze
 
 import com.mogproject.mogami.frontend.action.analyze.AnalyzeCheckmateAction
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
-import com.mogproject.mogami.frontend.view.{English, Language, WebComponent}
+import com.mogproject.mogami.frontend.view.{English, WebComponent}
 import com.mogproject.mogami.frontend.view.button.SingleButton
-import org.scalajs.dom.html.{Button, Div, Input}
+import org.scalajs.dom.html.{Div, Input}
 
 import scala.util.Try
 import scalatags.JsDom.all._
@@ -48,10 +48,10 @@ class CheckmateButton extends WebComponent {
         "Timeout"
       ),
       div(cls := "col-xs-6 col-sm-4",
-        marginTop := -8,
+        marginTop := (-8).px,
         div(cls := "input-group",
           timeoutInput,
-          span(cls := "input-group-addon", padding := 6, "sec")
+          span(cls := "input-group-addon", padding := 6.px, "sec")
         )
       )
     ),

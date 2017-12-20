@@ -122,6 +122,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
 
   private[this] def renderGameControl(newModel: M): Unit = {
     view.renderComment(newModel.mode.modeType, newModel.mode.getGameControl.flatMap(_.getComment).getOrElse(""))
+    view.website.analyzeMenu.pointCountButton.clearMessage()
   }
 
   private[this] def renderBranchArea(newModel: M): Unit = {
@@ -150,7 +151,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
   }
 
   private[this] def renderAnalyzeResult(newModel: M): Unit = {
-    newModel.analyzeResult.foreach(r => view.renderCheckmateAnalyzeResult(r, newModel.config.recordLang))
+    newModel.analyzeResult.foreach(r => view.renderAnalyzeResult(r, newModel.config.recordLang))
   }
 
   private[this] def processRenderRequests(newModel: M): Unit = {
