@@ -22,7 +22,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
 
   private[this] def renderImpl(newModel: M, renderAll: Boolean = false, observables: Map[M => Any, Observable[Any]]): (BasePlaygroundState[M, V], Option[SAMAction[M]]) = {
 
-    val fs: Seq[(Boolean, M => M)] = Seq(
+    val fs: Seq[(Boolean, M => Unit)] = Seq(
       (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas), renderLayout),
       (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas, _.config.pieceWidth), renderSize),
       (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas, _.config.recordLang), renderIndex),
@@ -40,11 +40,12 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
       (renderAll || isUpdated(newModel, _.config), renderConfigMenu),
       (renderAll || isUpdated(newModel, _.mode.modeType), renderModeType),
       (renderAll || isUpdated(newModel, _.activeCursor), renderActiveCursor),
+      (newModel.analyzeResult.isDefined, renderAnalyzeResult),
       ((!newModel.mode.isViewMode || newModel.selectedCursor.isEmpty) && (renderAll || isUpdated(newModel, _.selectedCursor)), renderSelectedCursor),
       (newModel.renderRequests.nonEmpty, processRenderRequests)
     )
 
-    val nextModel = fs.foldLeft(newModel) { case (m, (cond, f)) => if (cond) f(m) else m }
+    fs.foreach { case (cond, f) => if (cond) f(newModel) }
 
     // Notify observers
     observables.foreach { case (f, obs) => if (renderAll || isUpdated(newModel, f)) obs.notifyObservers(f(newModel)) }
@@ -54,7 +55,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
     if (newModel.mode.isPrevious(model.mode)) view.renderForward(false)
     if (newModel.mode.isNext(model.mode)) view.renderForward(true)
 
-    (this.copy(model = nextModel), None)
+    (this.copy(model = adapter(newModel, newModel.copy(newAnalyzeResult = None, newRenderRequests = Seq.empty))), None)
   }
 
   override def initialize(observables: Map[M => Any, Observable[Any]]): Unit = {
@@ -71,103 +72,88 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
   //
   // Rendering functions
   //
-  private[this] def renderLayout(newModel: M): M = {
+  private[this] def renderLayout(newModel: M): Unit = {
     view.renderLayout(newModel.config.flipType.numAreas, newModel.config.pieceWidth, newModel.config.layout)
-    newModel
   }
 
-  private[this] def renderSize(newModel: M): M = {
+  private[this] def renderSize(newModel: M): Unit = {
     view.renderSize(newModel.config.pieceWidth, newModel.config.layout)
-    newModel
   }
 
-  private[this] def renderIndex(newModel: M): M = {
+  private[this] def renderIndex(newModel: M): Unit = {
     view.renderIndex(newModel.config.recordLang == Japanese)
-    newModel
   }
 
-  private[this] def renderFlip(newModel: M): M = {
+  private[this] def renderFlip(newModel: M): Unit = {
     view.renderFlip(newModel.config.flipType)
-    newModel
   }
 
-  private[this] def renderPlayerNames(newModel: M): M = {
+  private[this] def renderPlayerNames(newModel: M): Unit = {
     view.renderPlayerNames(newModel.mode.getPlayerNames, newModel.config.messageLang)
-    newModel
   }
 
-  private[this] def renderIndicators(newModel: M): M = {
+  private[this] def renderIndicators(newModel: M): Unit = {
     view.renderIndicators(newModel.mode.getIndicators)
-    newModel
   }
 
-  private[this] def renderBox(newModel: M): M = {
+  private[this] def renderBox(newModel: M): Unit = {
     view.renderBox(newModel.mode.boxAvailable)
-    newModel
-
   }
 
-  private[this] def renderBoardPieces(newModel: M): M = {
+  private[this] def renderBoardPieces(newModel: M): Unit = {
     view.renderBoardPieces(newModel.mode.getBoardPieces, newModel.config.pieceFace)
-    newModel
   }
 
-  private[this] def renderHandPieces(newModel: M): M = {
+  private[this] def renderHandPieces(newModel: M): Unit = {
     view.renderHandPieces(newModel.mode.getHandPieces, newModel.config.pieceFace)
-    newModel
   }
 
-  private[this] def renderLastMove(newModel: M): M = {
+  private[this] def renderLastMove(newModel: M): Unit = {
     view.renderLastMove(newModel.mode.getLastMove)
-    newModel
   }
 
-  private[this] def renderBoxPieces(newModel: M): M = {
+  private[this] def renderBoxPieces(newModel: M): Unit = {
     view.renderBoxPieces(newModel.mode.getBoxPieces, newModel.config.pieceFace)
-    newModel
   }
 
-  private[this] def renderControlBars(newModel: M): M = {
+  private[this] def renderControlBars(newModel: M): Unit = {
     view.renderControlBars(newModel.mode.getGameControl, newModel.config.recordLang)
-    newModel
   }
 
-  private[this] def renderGameControl(newModel: M): M = {
+  private[this] def renderGameControl(newModel: M): Unit = {
     view.renderComment(newModel.mode.modeType, newModel.mode.getGameControl.flatMap(_.getComment).getOrElse(""))
-    newModel
   }
 
-  private[this] def renderBranchArea(newModel: M): M = {
+  private[this] def renderBranchArea(newModel: M): Unit = {
     view.renderBranchArea(newModel.mode.getGameControl, newModel.config.recordLang, newModel.mode.modeType, newModel.config.newBranchMode)
-    newModel
   }
 
-  private[this] def renderModeType(newModel: M): M = {
+  private[this] def renderModeType(newModel: M): Unit = {
     view.updateModeType(newModel.mode.modeType)
-    newModel
   }
 
-  private[this] def renderConfigMenu(newModel: M): M = {
+  private[this] def renderConfigMenu(newModel: M): Unit = {
     view.updateConfigMenu(newModel.config)
-    newModel
   }
 
-  private[this] def renderActiveCursor(newModel: M): M = {
+  private[this] def renderActiveCursor(newModel: M): Unit = {
     view.renderActiveCursor(newModel.activeCursor)
-    newModel
   }
 
-  private[this] def renderSelectedCursor(newModel: M): M = {
+  private[this] def renderSelectedCursor(newModel: M): Unit = {
     val legalMoves = for {
       (_, c) <- newModel.selectedCursor.toSet if newModel.config.visualEffectEnabled && !c.isBox
       from = c.moveFrom
       lm <- newModel.mode.getLegalMoves(from)
     } yield lm
     view.renderSelectedCursor(newModel.selectedCursor.map(_._2), newModel.config.visualEffectEnabled, legalMoves)
-    newModel
   }
 
-  private[this] def processRenderRequests(newModel: M): M = {
+  private[this] def renderAnalyzeResult(newModel: M): Unit = {
+    newModel.analyzeResult.foreach(r => view.renderCheckmateAnalyzeResult(r, newModel.config.recordLang))
+  }
+
+  private[this] def processRenderRequests(newModel: M): Unit = {
     newModel.renderRequests.foreach {
       case PromotionDialogRequest(rawMove, rotate) =>
         view.askPromote(newModel.config.messageLang, newModel.config.pieceFace, newModel.config.layout.mediumPiece, rawMove, rotate)
@@ -189,7 +175,6 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
           view.askDeleteBranch(newModel.config.messageLang, gc.displayBranchNo)
         }
     }
-    adapter(newModel, newModel.copy(newRenderRequests = Seq.empty))
   }
 
   private[this] def renderMove(newModel: M): Unit = {

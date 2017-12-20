@@ -16,9 +16,12 @@ class AnalyzeMenu extends AccordionMenu {
   override lazy val title: String = ident
   override lazy val icon: String = "education"
   override lazy val visibleMode = Set(PlayModeType, ViewModeType)
+
+  lazy val checkmateButton = new CheckmateButton
+
   override lazy val content: JsDom.TypedTag[Div] = div(
     label("Analyze for Checkmate"),
-    CheckmateButton.element,
+    checkmateButton.element,
     br(),
     label("Count points")
 //    PointCountButton.output

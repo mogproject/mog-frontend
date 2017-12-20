@@ -4,7 +4,6 @@ import com.mogproject.mogami.frontend.view.{Observable, Observer}
 
 import scala.annotation.tailrec
 import scala.collection.mutable
-import scala.reflect.ClassTag
 
 /**
   * Implementation of the SAM (State-Action-Model) pattern

@@ -20,7 +20,7 @@ class BasePlaygroundModel(val mode: Mode,
            newSelectedCursor: Option[(Int, Cursor)] = selectedCursor,
            newAnalyzeResult: Option[AnalyzeResult] = analyzeResult,
            newRenderRequests: Seq[RenderRequest] = renderRequests): BasePlaygroundModel = {
-    new BasePlaygroundModel(newMode, newConfig, newActiveCursor, newSelectedCursor, analyzeResult, newRenderRequests)
+    new BasePlaygroundModel(newMode, newConfig, newActiveCursor, newSelectedCursor, newAnalyzeResult, newRenderRequests)
   }
 
   def addRenderRequest(renderRequest: RenderRequest): BasePlaygroundModel = {

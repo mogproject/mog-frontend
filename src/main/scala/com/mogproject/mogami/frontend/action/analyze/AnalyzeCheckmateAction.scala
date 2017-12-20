@@ -8,7 +8,7 @@ import com.mogproject.mogami.mate.MateSolver
 /**
   *
   */
-case class AnalyzeCheckmateAction(timeoutSec: Int, started: Boolean = false) extends PlaygroundAction {
+case class AnalyzeCheckmateAction(timeoutSec: Int, started: Boolean) extends PlaygroundAction {
   override def execute(model: BasePlaygroundModel): Option[BasePlaygroundModel] = {
     if (!started) {
       Some(model.copy(newAnalyzeResult = Some(AnalyzeResult(AnalyzeStarted, timeoutSec, None))))

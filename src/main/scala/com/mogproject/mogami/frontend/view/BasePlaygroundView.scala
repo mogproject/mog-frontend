@@ -5,11 +5,12 @@ import com.mogproject.mogami.core.Player.{BLACK, WHITE}
 import com.mogproject.mogami.core.state.State.{BoardType, HandType}
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.Coord
+import com.mogproject.mogami.frontend.action.analyze.AnalyzeCheckmateAction
 import com.mogproject.mogami.frontend.action.{ChangeModeAction, RefreshScreenAction, UpdateGameControlAction}
 import com.mogproject.mogami.frontend.api.Clipboard
 import com.mogproject.mogami.frontend.api.Clipboard.Event
 import com.mogproject.mogami.frontend.model._
-import com.mogproject.mogami.frontend.model.analyze.AnalyzeResult
+import com.mogproject.mogami.frontend.model.analyze.{AnalyzeCompleted, AnalyzeResult, AnalyzeStarted}
 import com.mogproject.mogami.frontend.model.board._
 import com.mogproject.mogami.frontend.model.board.cursor.Cursor
 import com.mogproject.mogami.frontend.sam.{PlaygroundSAM, SAMView}
@@ -168,10 +169,26 @@ trait BasePlaygroundView extends SAMView {
     website.settingMenu.refresh(config)
   }
 
-  def renderCheckmateAnalyzeResult(result: AnalyzeResult): Unit = {
-    // todo: notify to the menu dialog
-
-
+  def renderCheckmateAnalyzeResult(result: AnalyzeResult, recordLang: Language): Unit = {
+    result match {
+      case AnalyzeResult(AnalyzeStarted, timeoutSec, _) =>
+        website.analyzeMenu.checkmateButton.displayCheckmateMessage("Analyzing...")
+        dom.window.setTimeout(() => PlaygroundSAM.doAction(AnalyzeCheckmateAction(timeoutSec, started = true)), 100)
+      case AnalyzeResult(AnalyzeCompleted, _, res) =>
+        res match {
+          case None =>
+            website.analyzeMenu.checkmateButton.displayCheckmateMessage("This position is too difficult to solve.")
+          case Some(Nil) =>
+            website.analyzeMenu.checkmateButton.displayCheckmateMessage("No checkmates.")
+          case Some(moves) =>
+            val s = moves.map(m => m.player.toSymbolString() + (recordLang match {
+              case Japanese => m.toJapaneseNotationString
+              case English => m.toWesternNotationString
+            }))
+            website.analyzeMenu.checkmateButton.displayCheckmateMessage(s"Found a checkmate:\n${s.mkString(" ")}")
+        }
+        dom.window.setTimeout(() => website.analyzeMenu.checkmateButton.enableAnalyzeButton(), 500)
+    }
   }
 
   //

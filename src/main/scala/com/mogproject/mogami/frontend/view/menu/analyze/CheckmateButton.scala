@@ -12,9 +12,9 @@ import scalatags.JsDom.all._
 /**
   *
   */
-object CheckmateButton extends WebComponent {
+class CheckmateButton extends WebComponent {
 
-  val DEFAULT_TIMEOUT = 5
+  private[this] final val DEFAULT_TIMEOUT = 5
 
   private[this] val timeoutInput: Input = input(
     tpe := "text",
@@ -23,9 +23,9 @@ object CheckmateButton extends WebComponent {
     value := DEFAULT_TIMEOUT
   ).render
 
-  private[this] val analyzeButton: SingleButton = SingleButton(
+  private[this] lazy val analyzeButton: SingleButton = SingleButton(
     Map(English -> span("Analyze").render),
-    clickAction = Some({ () => disableAnalyzeButton(); PlaygroundSAM.doAction(AnalyzeCheckmateAction(validateTimeout())) }),
+    clickAction = Some({ () => disableAnalyzeButton(); PlaygroundSAM.doAction(AnalyzeCheckmateAction(validateTimeout(), started = false)) }),
     isBlockButton = true
   )
 
@@ -74,7 +74,7 @@ object CheckmateButton extends WebComponent {
     solverMessage.innerHTML = ""
   }
 
-  def disableAnalyzeButton(): Unit = analyzeButton.enableElement()
+  def disableAnalyzeButton(): Unit = analyzeButton.disableElement()
 
-  def enableAnalyzeButton(): Unit = analyzeButton.disableElement()
+  def enableAnalyzeButton(): Unit = analyzeButton.enableElement()
 }
