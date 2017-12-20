@@ -1,5 +1,7 @@
 package com.mogproject.mogami.frontend.view.sidebar
 
+import com.mogproject.mogami.util.Implicits._
+import com.mogproject.mogami.frontend.model.{EditModeType, ModeType}
 import com.mogproject.mogami.frontend.view.branch.BranchArea
 import com.mogproject.mogami.frontend.view.control.{ControlBar, ControlBarType}
 import org.scalajs.dom.html.{Div, Heading}
@@ -19,6 +21,10 @@ class SideBarLeft extends SideBarLike {
 
   lazy val branchArea = BranchArea(isMobile = false)
 
+  lazy val editHelpArea = new EditHelpArea
+
+  private[this] val title = span(cls := "sidebar-left-title").render
+
   override lazy val content: Div = div(
     marginLeft := SideBarLeft.EXPANDED_MARGIN,
     cls := "sidebar-left-content",
@@ -26,14 +32,16 @@ class SideBarLeft extends SideBarLike {
       cls := "long-select",
       controlBar.element
     ),
-    branchArea.element
+    branchArea.element,
+    editHelpArea.element
   ).render
 
   override lazy val titleExpanded: Heading = h4(
     cls := "sidebar-heading",
     onclick := { () => collapseSideBar() },
     span(cls := "pull-right glyphicon glyphicon-minus"),
-    marginLeft := 14.px, "Moves"
+
+    title
   ).render
 
   override lazy val titleCollapsed: Heading = h4(
@@ -52,6 +60,11 @@ class SideBarLeft extends SideBarLike {
   override def expandSideBar(): Unit = if (isCollapsed) {
     super.expandSideBar()
     content.style.marginLeft = SideBarLeft.EXPANDED_MARGIN
+  }
+
+  def refresh(modeType: ModeType): Unit = {
+    title.innerHTML = (modeType == EditModeType).fold("Edit", "Moves")
+    if (modeType == EditModeType) editHelpArea.show() else editHelpArea.hide()
   }
 }
 

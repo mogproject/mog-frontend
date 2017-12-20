@@ -37,7 +37,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
       (renderAll || isUpdated(newModel, _.mode.getGameControl, _.config.recordLang), renderControlBars),
       (renderAll || isUpdated(newModel, _.mode.getGameControl), renderGameControl),
       (renderAll || isUpdated(newModel, _.mode.modeType, _.mode.getGameControl, _.config.recordLang, _.config.newBranchMode), renderBranchArea),
-      (renderAll || isUpdated(newModel, _.mode.modeType), renderMenuSections),
+      (renderAll || isUpdated(newModel, _.mode.modeType), renderModeType),
       (renderAll || isUpdated(newModel, _.activeCursor), renderActiveCursor),
       ((!newModel.mode.isViewMode || newModel.selectedCursor.isEmpty) && (renderAll || isUpdated(newModel, _.selectedCursor)), renderSelectedCursor),
       (newModel.renderRequests.nonEmpty, processRenderRequests)
@@ -141,8 +141,8 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
     newModel
   }
 
-  private[this] def renderMenuSections(newModel: M): M = {
-    view.renderMenuSections(newModel.mode.modeType)
+  private[this] def renderModeType(newModel: M): M = {
+    view.updateModeType(newModel.mode.modeType)
     newModel
   }
 

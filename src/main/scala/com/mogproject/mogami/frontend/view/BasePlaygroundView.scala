@@ -156,8 +156,8 @@ trait BasePlaygroundView extends SAMView {
   //
   // Menu
   //
-  def renderMenuSections(modeType: ModeType): Unit = {
-    mainPane.updateMenuSections(modeType)
+  def updateModeType(modeType: ModeType): Unit = {
+    mainPane.updateModeType(modeType)
   }
 
   //

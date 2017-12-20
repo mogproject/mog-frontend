@@ -64,6 +64,10 @@ select {
   padding-left: 3px !important;
 }
 
+ul {
+  padding-left: 20px;
+}
+
 .container-fluid {
   padding: 0 !important;
 }
@@ -452,6 +456,10 @@ select {
 
 .sidebar-heading {
   cursor: pointer;
+}
+
+.sidebar-left-title {
+  margin-left: 14px;
 }
 
 .sidebar-left-content {

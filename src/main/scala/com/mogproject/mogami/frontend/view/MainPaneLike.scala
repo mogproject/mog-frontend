@@ -174,7 +174,10 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
     sideBarLeft.foreach(_.branchArea.refresh(gameControl, recordLang, modeType, newBranchMode))
   }
 
-  def updateMenuSections(modeType: ModeType): Unit = sideBarRight.foreach(_.menuPane.accordions.foreach(_.refresh(modeType)))
+  def updateModeType(modeType: ModeType): Unit = {
+    sideBarLeft.foreach(_.refresh(modeType))
+    sideBarRight.foreach(_.menuPane.accordions.foreach(_.refresh(modeType)))
+  }
 
   def playClickSound(): Unit = {
     clickSound.pause()
