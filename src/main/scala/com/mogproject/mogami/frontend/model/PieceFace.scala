@@ -1,4 +1,4 @@
-package com.mogproject.mogami.frontend.view.piece
+package com.mogproject.mogami.frontend.model
 
 import com.mogproject.mogami.Ptype
 

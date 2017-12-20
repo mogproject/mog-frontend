@@ -3,9 +3,9 @@ package com.mogproject.mogami.frontend.view.board
 import com.mogproject.mogami._
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.Rect
+import com.mogproject.mogami.frontend.model.{JapaneseOneCharFace, PieceFace}
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.board.effect.EffectorTarget
-import com.mogproject.mogami.frontend.view.piece.{JapaneseOneCharFace, PieceFace}
 import org.scalajs.dom.Element
 import org.scalajs.dom.raw.{SVGImageElement, SVGTextElement}
 

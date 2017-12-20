@@ -3,7 +3,7 @@ package com.mogproject.mogami.frontend.view.menu
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.action.{PlaygroundAction, UpdateConfigurationAction}
 import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipDisabled}
-import com.mogproject.mogami.frontend.model.{BasePlaygroundModel, _}
+import com.mogproject.mogami.frontend.model.{BasePlaygroundModel, PieceFace, _}
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
 import com.mogproject.mogami.frontend.view.button.{DropdownMenu, RadioButton}
@@ -38,7 +38,7 @@ class SettingMenu extends AccordionMenu {
   ).render
 
   private[this] def renderDropdownButtonElement[A, M <: BasePlaygroundModel](title: String, button: DropdownMenu[A, M]) = div(
-    marginBottom := 10.px,
+    marginBottom := 15.px,
     div(
       cls := "pull-right",
       marginTop := (-8).px,
@@ -62,7 +62,7 @@ class SettingMenu extends AccordionMenu {
   private[this] lazy val boardSizeButton = DropdownMenu[Option[Int], BasePlaygroundModel](
     sizeSettings.map(_._1).toVector,
     sizeSettings.map { case (k, v) => k -> Map[Language, String](English -> v) }.toMap,
-    {pw => UpdateConfigurationAction(_.copy(pieceWidth = pw))},
+    pw => UpdateConfigurationAction(_.copy(pieceWidth = pw)),
     menuClass = "left",
     separatorIndexes = Seq(1)
   )
@@ -73,6 +73,11 @@ class SettingMenu extends AccordionMenu {
     l => UpdateConfigurationAction(_.copy(layout = l))
   )
 
+  private[this] lazy val pieceFaceButton = DropdownMenu[PieceFace, BasePlaygroundModel](
+    Vector(JapaneseOneCharFace),
+    Map(JapaneseOneCharFace -> Map(English -> "Japanese 1")),
+    pf => UpdateConfigurationAction(_.copy(pieceFace = pf))
+  )
 
   //
   // Toggle Buttons
@@ -88,6 +93,7 @@ class SettingMenu extends AccordionMenu {
   override lazy val content: JsDom.TypedTag[Div] = div(
     renderDropdownButtonElement("Board Size", boardSizeButton),
     renderDropdownButtonElement("Layout", layoutButton),
+    renderDropdownButtonElement("Piece Graphic", pieceFaceButton),
     renderToggleButtonElement("Double Board Mode", doubleBoardButton),
     renderToggleButtonElement("Visual Effects", visualEffectButton),
     renderToggleButtonElement("Sound Effects", soundEffectButton),

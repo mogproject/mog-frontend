@@ -8,14 +8,13 @@ import com.mogproject.mogami.frontend.Coord
 import com.mogproject.mogami.frontend.action.{ChangeModeAction, RefreshScreenAction, UpdateGameControlAction}
 import com.mogproject.mogami.frontend.api.Clipboard
 import com.mogproject.mogami.frontend.api.Clipboard.Event
-import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, EditModeType, GameControl, ModeType}
+import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.frontend.model.board._
 import com.mogproject.mogami.frontend.model.board.cursor.Cursor
 import com.mogproject.mogami.frontend.sam.{PlaygroundSAM, SAMView}
 import com.mogproject.mogami.frontend.view.board.SVGAreaLayout
 import com.mogproject.mogami.frontend.view.bootstrap.Tooltip
 import com.mogproject.mogami.frontend.view.modal._
-import com.mogproject.mogami.frontend.view.piece.PieceFace
 import org.scalajs.dom
 import org.scalajs.dom.{Element, UIEvent}
 
@@ -47,11 +46,11 @@ trait BasePlaygroundView extends SAMView {
 
   }
 
-  def renderLayout(numAreas: Int, pieceWidth: Int, layout: SVGAreaLayout): Unit = {
+  def renderLayout(numAreas: Int, pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
     mainPane.renderSVGAreas(numAreas, pieceWidth, layout)
   }
 
-  def renderSize(pieceWidth: Int, layout: SVGAreaLayout): Unit = {
+  def renderSize(pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
     mainPane.resizeSVGAreas(pieceWidth, layout)
   }
 

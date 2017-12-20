@@ -30,9 +30,9 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
 
   private[this] def getSideBarWidth: Int = sidebars.map(_.currentWidth).sum + 3
 
-  def widenMainPane(): Unit = mainContent.style.width = 100.pct
+  private[this] def widenMainPane(): Unit = mainContent.style.width = 100.pct
 
-  def recenterMainPane(): Unit = mainContent.style.width = s"calc(100% - ${getSideBarWidth}px)"
+  private[this] def recenterMainPane(): Unit = mainContent.style.width = s"calc(100% - ${getSideBarWidth}px)"
 
   override def handleUpdate(subject: SideBarLike): Unit = recenterMainPane()
 
@@ -77,17 +77,15 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
     *
     * @param layout area layout
     */
-  def renderSVGAreas(numAreas: Int, pieceWidth: Int, layout: SVGAreaLayout): Unit = {
+  def renderSVGAreas(numAreas: Int, pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
     svgAreas.foreach(_.terminate())
     svgAreas.clear()
     svgAreas ++= (0 until numAreas).map(n => SVGArea(n, layout))
 
-    val areaWidth = layout.areaWidth(pieceWidth)
-
     val node = (isMobile, isLandscape) match {
-      case (true, true) => createMobileLandscapeMain(areaWidth)
-      case (true, false) => createMobilePortraitMain(areaWidth)
-      case (_, _) => createPCPortraitMain(areaWidth)
+      case (true, true) => createMobileLandscapeMain
+      case (true, false) => createMobilePortraitMain
+      case (_, _) => createPCPortraitMain
     }
 
     WebComponent.removeAllChildElements(mainArea)
@@ -95,7 +93,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
     resizeSVGAreas(pieceWidth, layout)
   }
 
-  private[this] def createPCPortraitMain(areaWidth: Int): TypedTag[Div] = {
+  private[this] def createPCPortraitMain: TypedTag[Div] = {
     controlBar.foreach(_.terminate())
     controlBar = Some(ControlBar(ControlBarType.Normal))
 
@@ -114,7 +112,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
     )
   }
 
-  private[this] def createMobilePortraitMain(areaWidth: Int): TypedTag[Div] = {
+  private[this] def createMobilePortraitMain: TypedTag[Div] = {
     controlBar.foreach(_.terminate())
     controlBar = Some(ControlBar(ControlBarType.Small))
 
@@ -131,7 +129,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
     )
   }
 
-  private[this] def createMobileLandscapeMain(areaWidth: Int): TypedTag[Div] = {
+  private[this] def createMobileLandscapeMain: TypedTag[Div] = {
     controlBar.foreach(_.terminate())
     controlBar = (svgAreas.size == 1).option(ControlBar(ControlBarType.Small))
 
@@ -146,17 +144,23 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
     )
   }
 
-  def resizeSVGAreas(pieceWidth: Int, layout: SVGAreaLayout): Unit = {
-    val areaWidth = layout.areaWidth(pieceWidth)
-
-    val w = (isMobile, isLandscape) match {
-      case (false, _) => (areaWidth + 70) * svgAreas.size - 50 // +20 for 1 board, +90 for 2 boards
-      case (true, false) => areaWidth
-      case (true, true) => areaWidth * 2 + 60
-    }
-
+  def resizeSVGAreas(pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
     dom.document.getElementById("main-area") match {
-      case e: HTMLElement => e.style.width = w.px
+      case e: HTMLElement =>
+        pieceWidth match {
+          case Some(pw) =>
+            val areaWidth = layout.areaWidth(pw)
+            val w = (isMobile, isLandscape) match {
+              case (false, _) => (areaWidth + 70) * svgAreas.size - 50 // +20 for 1 board, +90 for 2 boards
+              case (true, false) => areaWidth
+              case (true, true) => areaWidth * 2 + 60
+            }
+            e.style.maxWidth = w.px
+            e.style.width = w.px
+          case None =>
+            e.style.maxWidth = 410.px  // todo: remove magic number
+            e.style.width = 100.pct
+        }
       case _ =>
     }
   }

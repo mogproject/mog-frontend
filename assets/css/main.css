@@ -411,6 +411,9 @@ ul {
 #main-area {
   margin-left: auto;
   margin-right: auto;
+  min-width: 166px;
+  max-width: 410px;
+  width: 100%;
 }
 
 .main-area-pc {
