@@ -1,9 +1,11 @@
 package com.mogproject.mogami.frontend.view.menu.analyze
 
+import com.mogproject.mogami.Move
 import com.mogproject.mogami.frontend.action.analyze.AnalyzeCheckmateAction
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
-import com.mogproject.mogami.frontend.view.{English, WebComponent}
+import com.mogproject.mogami.frontend.view.{English, Japanese, Language, WebComponent}
 import com.mogproject.mogami.frontend.view.button.SingleButton
+import org.scalajs.dom
 import org.scalajs.dom.html.{Div, Input}
 
 import scala.util.Try
@@ -25,7 +27,7 @@ class CheckmateButton extends WebComponent {
 
   private[this] lazy val analyzeButton: SingleButton = SingleButton(
     Map(English -> span("Analyze").render),
-    clickAction = Some({ () => disableAnalyzeButton(); PlaygroundSAM.doAction(AnalyzeCheckmateAction(validateTimeout(), started = false)) }),
+    clickAction = Some(() => clickAction()),
     tooltip = Map(English -> "Analyze this position for checkmate"),
     isBlockButton = true
   )
@@ -67,15 +69,37 @@ class CheckmateButton extends WebComponent {
   //
   // messaging
   //
-  def displayCheckmateMessage(message: String): Unit = {
+  private[this] def clickAction(): Unit = {
+    disableAnalyzeButton()
+    displayCheckmateMessage("Analyzing...")
+    dom.window.setTimeout(() => PlaygroundSAM.doAction(AnalyzeCheckmateAction(validateTimeout())), 100)
+  }
+
+  def displayResult(result: Option[Seq[Move]], recordLang: Language): Unit = {
+    result match {
+      case None =>
+        displayCheckmateMessage("This position is too difficult to solve.")
+      case Some(Nil) =>
+        displayCheckmateMessage("No checkmates.")
+      case Some(moves) =>
+        val s = moves.map(m => m.player.toSymbolString() + (recordLang match {
+          case Japanese => m.toJapaneseNotationString
+          case English => m.toWesternNotationString
+        }))
+        displayCheckmateMessage(s"Found a checkmate:\n${s.mkString(" ")}")
+    }
+    dom.window.setTimeout(() => enableAnalyzeButton(), 500)
+  }
+
+  private[this] def displayCheckmateMessage(message: String): Unit = {
     solverMessage.innerHTML = message.replace("\n", br().toString())
   }
 
-  def clearCheckmateMessage(): Unit = {
+  private[this] def clearCheckmateMessage(): Unit = {
     solverMessage.innerHTML = ""
   }
 
-  def disableAnalyzeButton(): Unit = analyzeButton.disableElement()
+  private[this] def disableAnalyzeButton(): Unit = analyzeButton.disableElement()
 
-  def enableAnalyzeButton(): Unit = analyzeButton.enableElement()
+  private[this] def enableAnalyzeButton(): Unit = analyzeButton.enableElement()
 }

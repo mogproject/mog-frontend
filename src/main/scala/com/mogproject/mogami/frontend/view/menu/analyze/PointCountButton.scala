@@ -1,5 +1,6 @@
 package com.mogproject.mogami.frontend.view.menu.analyze
 
+import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.action.analyze.CountPointAction
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 import com.mogproject.mogami.frontend.view.{English, WebComponent}
@@ -37,7 +38,17 @@ class PointCountButton extends WebComponent {
   //
   // messaging
   //
-  def displayMessage(message: String): Unit = {
+  def displayResult(point: Int, isKingInPromotionZone: Boolean, numPiecesInPromotionZone: Int): Unit = {
+    val plural = (1 < numPiecesInPromotionZone).fold("s", "")
+
+    val msg = Seq(
+      s"Points: ${point}",
+      "In the promotion zone: " + isKingInPromotionZone.fold("King + ", "") + s"${numPiecesInPromotionZone} piece${plural}"
+    ).mkString("\n")
+    displayMessage(msg)
+  }
+
+  private[this] def displayMessage(message: String): Unit = {
     countMessage.innerHTML = message.replace("\n", br().toString())
   }
 

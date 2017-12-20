@@ -170,44 +170,16 @@ trait BasePlaygroundView extends SAMView {
   }
 
   def renderAnalyzeResult(result: AnalyzeResult, recordLang: Language): Unit = result match {
-    case r: CheckmateAnalyzeResult => renderCheckmateAnalyzeResult(r, recordLang)
-    case r: CountAnalyzeResult => renderCountAnalyzeResult(r)
+    case CheckmateAnalyzeResult(r) => renderCheckmateAnalyzeResult(r, recordLang)
+    case CountAnalyzeResult(p, k, n) => renderCountAnalyzeResult(p, k, n)
   }
 
-  def renderCheckmateAnalyzeResult(result: CheckmateAnalyzeResult, recordLang: Language): Unit = {
-    result match {
-      case CheckmateAnalyzeResult(AnalyzeStarted, timeoutSec, _) =>
-        website.analyzeMenu.checkmateButton.displayCheckmateMessage("Analyzing...")
-        dom.window.setTimeout(() => PlaygroundSAM.doAction(AnalyzeCheckmateAction(timeoutSec, started = true)), 100)
-      case CheckmateAnalyzeResult(AnalyzeCompleted, _, res) =>
-        res match {
-          case None =>
-            website.analyzeMenu.checkmateButton.displayCheckmateMessage("This position is too difficult to solve.")
-          case Some(Nil) =>
-            website.analyzeMenu.checkmateButton.displayCheckmateMessage("No checkmates.")
-          case Some(moves) =>
-            val s = moves.map(m => m.player.toSymbolString() + (recordLang match {
-              case Japanese => m.toJapaneseNotationString
-              case English => m.toWesternNotationString
-            }))
-            website.analyzeMenu.checkmateButton.displayCheckmateMessage(s"Found a checkmate:\n${s.mkString(" ")}")
-        }
-        dom.window.setTimeout(() => website.analyzeMenu.checkmateButton.enableAnalyzeButton(), 500)
-    }
+  def renderCheckmateAnalyzeResult(result: Option[Seq[Move]], recordLang: Language): Unit = {
+    website.analyzeMenu.checkmateButton.displayResult(result, recordLang)
   }
 
-  def renderCountAnalyzeResult(result: CountAnalyzeResult): Unit = {
-    result match {
-      case CountAnalyzeResult(AnalyzeCompleted, point, isKingInPromotionZone, numPiecesInPromotionZone) =>
-        val plural = (1 < numPiecesInPromotionZone).fold("s", "")
-
-        val msg = Seq(
-          s"Points: ${point}",
-          "In the promotion zone: " + isKingInPromotionZone.fold("King + ", "") + s"${numPiecesInPromotionZone} piece${plural}"
-        ).mkString("\n")
-        website.analyzeMenu.pointCountButton.displayMessage(msg)
-      case _ =>
-    }
+  def renderCountAnalyzeResult(point: Int, isKingInPromotionZone: Boolean, numPiecesInPromotionZone: Int): Unit = {
+    website.analyzeMenu.pointCountButton.displayResult(point, isKingInPromotionZone, numPiecesInPromotionZone)
   }
 
   //
