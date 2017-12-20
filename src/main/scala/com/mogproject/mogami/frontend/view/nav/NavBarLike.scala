@@ -1,7 +1,8 @@
 package com.mogproject.mogami.frontend.view.nav
 
 import com.mogproject.mogami.util.Implicits._
-import com.mogproject.mogami.frontend.view.WebComponent
+import com.mogproject.mogami.frontend.view.{English, WebComponent}
+import com.mogproject.mogami.frontend.view.button.SingleButton
 import org.scalajs.dom.Element
 import org.scalajs.dom.html.Div
 

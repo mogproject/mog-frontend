@@ -68,7 +68,20 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
   //
   def getDisplayingState: State = game.getState(gamePosition).get
 
-  def getDisplayingGameStatus: GameStatus = isLastStatusPosition.fold(displayBranch.status, GameStatus.Playing)
+  /** last status position => cannot move */
+  private[this] val finalizedGameStatus = Seq(GameStatus.Mated, GameStatus.Uchifuzume, GameStatus.PerpetualCheck, GameStatus.Drawn)
+
+  /**
+    * Get the game status of a displaying position.
+    * @return
+    */
+  def getDisplayingGameStatus: GameStatus = {
+    if (isAdditionalPosition || (isLastStatusPosition && finalizedGameStatus.contains(displayBranch.status))) {
+      displayBranch.status
+    } else {
+      GameStatus.Playing
+    }
+  }
 
   def getDisplayingIllegalMove: Option[IllegalMove] = (isAdditionalPosition, displayBranch.finalAction) match {
     case (true, Some(x@IllegalMove(_))) => Some(x)

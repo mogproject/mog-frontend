@@ -390,6 +390,10 @@ ul {
   padding-bottom: 4px !important;
 }
 
+.btn-resign {
+  margin-left: 40px;
+}
+
 /*
  * Main Pane
  */

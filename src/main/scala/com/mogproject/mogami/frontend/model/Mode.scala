@@ -43,6 +43,10 @@ sealed abstract class Mode(val modeType: ModeType,
     }
   }
 
+  def canMakeMove: Boolean = {
+    !isViewMode && getGameControl.exists(_.getDisplayingGameStatus == GameStatus.Playing) && playable.contains(getTurn)
+  }
+
   def isPrevious(mode: Mode): Boolean = (this, mode) match {
     case (ViewMode(a), ViewMode(b)) => a.displayPosition == b.displayPosition - 1
     case _ => false
