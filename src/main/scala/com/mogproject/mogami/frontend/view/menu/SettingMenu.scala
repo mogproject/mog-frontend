@@ -1,12 +1,13 @@
 package com.mogproject.mogami.frontend.view.menu
 
 import com.mogproject.mogami.util.Implicits._
-import com.mogproject.mogami.frontend.action.{PlaygroundAction, UpdateConfigurationAction}
+import com.mogproject.mogami.frontend.action.UpdateConfigurationAction
 import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipDisabled}
 import com.mogproject.mogami.frontend.model.{BasePlaygroundModel, PieceFace, _}
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
 import com.mogproject.mogami.frontend.view.button.{DropdownMenu, RadioButton}
+import com.mogproject.mogami.frontend.view.menu.setting.LanguageSelector
 import com.mogproject.mogami.frontend.view.{English, Language, WebComponent}
 import org.scalajs.dom.html.Div
 
@@ -86,9 +87,8 @@ class SettingMenu extends AccordionMenu {
   private[this] lazy val visualEffectButton: RadioButton[Boolean] = createToggleButton(v => _.copy(visualEffectEnabled = v))
   private[this] lazy val soundEffectButton: RadioButton[Boolean] = createToggleButton(v => _.copy(soundEffectEnabled = v))
 
-//  private[this] val messageLanguageSelector = LanguageSelector("Messages", onClick = { v => PlaygroundSAM.doAction(UpdateConfigurationAction(_.copy(messageLang = v))) })
-//  private[this] val recordLanguageSelector = LanguageSelector("Record", onClick = { v => PlaygroundSAM.doAction(UpdateConfigurationAction(_.copy(recordLang = v))) })
-  //  private[this] val pieceLanguageSelector = LanguageSelector("Pieces", onClick = { v => SAM.doAction(UpdateConfigurationAction(_.copy(pieceLang = v))) })
+  private[this] lazy val messageLanguageSelector = LanguageSelector("Messages", onClick = { v => PlaygroundSAM.doAction(UpdateConfigurationAction(_.copy(messageLang = v))) })
+  private[this] lazy val recordLanguageSelector = LanguageSelector("Record", onClick = { v => PlaygroundSAM.doAction(UpdateConfigurationAction(_.copy(recordLang = v))) })
 
   override lazy val content: JsDom.TypedTag[Div] = div(
     renderDropdownButtonElement("Board Size", boardSizeButton),
@@ -97,8 +97,8 @@ class SettingMenu extends AccordionMenu {
     renderToggleButtonElement("Double Board Mode", doubleBoardButton),
     renderToggleButtonElement("Visual Effects", visualEffectButton),
     renderToggleButtonElement("Sound Effects", soundEffectButton),
-//    messageLanguageSelector.element,
-//    recordLanguageSelector.element,
+    messageLanguageSelector.element,
+    recordLanguageSelector.element,
     div(
       cls := "alert alert-success setting-alert",
       "These settings will be saved for your browser."
@@ -112,9 +112,8 @@ class SettingMenu extends AccordionMenu {
     doubleBoardButton.updateValue(config.flipType == DoubleBoard)
     visualEffectButton.updateValue(config.visualEffectEnabled)
     soundEffectButton.updateValue(config.soundEffectEnabled)
-//    messageLanguageSelector.updateValue(config.messageLang)
-//    recordLanguageSelector.updateValue(config.recordLang)
-//    pieceLanguageSelector.updateValue(config.pieceLang)
+    messageLanguageSelector.updateValue(config.messageLang)
+    recordLanguageSelector.updateValue(config.recordLang)
   }
 
 
