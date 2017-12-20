@@ -1,7 +1,7 @@
 package com.mogproject.mogami.frontend.view.button
 
 import com.mogproject.mogami.frontend.model.BasePlaygroundModel
-import com.mogproject.mogami.frontend.sam.{PlaygroundSAM, SAMAction, SAMModel}
+import com.mogproject.mogami.frontend.sam.{PlaygroundSAM, SAMAction}
 import com.mogproject.mogami.frontend.view.{English, Language, WebComponent}
 import org.scalajs.dom.Element
 import org.scalajs.dom.html.LI
@@ -54,7 +54,7 @@ case class DropdownMenu[A, M <: BasePlaygroundModel](items: Vector[A],
     WebComponent.removeAllChildElements(menuItems)
     items.zipWithIndex.map { case (item, ind) =>
       if (separatorIndexes.contains(ind)) menuItems.appendChild(separator)
-      val elem = li(a(href := "#", onclick := { () => select(item); PlaygroundSAM.doAction(actionBuilder(item)) }, lookupLabel(item, language))).render
+      val elem = li(a(href := "#", onclick := { () => select(item); PlaygroundSAM.doAction(actionBuilder(item)) }, lookupLabel(item, language).get)).render
       menuItems.appendChild(elem)
     }
     currentLanguage = language
@@ -63,12 +63,15 @@ case class DropdownMenu[A, M <: BasePlaygroundModel](items: Vector[A],
   def separator: LI = li(role := "separator", cls := "divider").render
 
   def select(item: A): Unit = {
-    labelButton.innerHTML = lookupLabel(item, currentLanguage) + " " + span(cls := "caret")
+    lookupLabel(item, currentLanguage) match {
+      case Some(s) => labelButton.innerHTML = s + " " + span(cls := "caret")
+      case None => // do nothing
+    }
   }
 
   //
   // Utilities
   //
-  private[this] def lookupLabel(item: A, language: Language): String = labels.get(item).flatMap(_.get(language)).getOrElse("")
+  private[this] def lookupLabel(item: A, language: Language): Option[String] = labels.get(item).flatMap(_.get(language))
 
 }

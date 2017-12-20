@@ -8,7 +8,7 @@ import com.mogproject.mogami.frontend.Coord
 import com.mogproject.mogami.frontend.action.{ChangeModeAction, RefreshScreenAction, UpdateGameControlAction}
 import com.mogproject.mogami.frontend.api.Clipboard
 import com.mogproject.mogami.frontend.api.Clipboard.Event
-import com.mogproject.mogami.frontend.model.{EditModeType, GameControl, ModeType}
+import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, EditModeType, GameControl, ModeType}
 import com.mogproject.mogami.frontend.model.board._
 import com.mogproject.mogami.frontend.model.board.cursor.Cursor
 import com.mogproject.mogami.frontend.sam.{PlaygroundSAM, SAMView}
@@ -158,6 +158,10 @@ trait BasePlaygroundView extends SAMView {
   //
   def updateModeType(modeType: ModeType): Unit = {
     mainPane.updateModeType(modeType)
+  }
+
+  def updateConfigMenu(config: BasePlaygroundConfiguration): Unit = {
+    mainPane.updateConfigMenu(config)
   }
 
   //
