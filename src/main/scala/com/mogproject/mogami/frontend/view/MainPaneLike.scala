@@ -28,11 +28,12 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
   // Utility
   //
 
-  private[this] def getSideBarWidth: Int = sidebars.map(_.currentWidth).sum + 3
-
   private[this] def widenMainPane(): Unit = mainContent.style.width = 100.pct
 
-  private[this] def recenterMainPane(): Unit = mainContent.style.width = s"calc(100% - ${getSideBarWidth}px)"
+  private[this] def recenterMainPane(): Unit = {
+    val s = sidebars.reverse.map(_.isCollapsed.fold("0", "1")).mkString("")
+    if (s.nonEmpty) replaceClass(mainContent, "main-area-w-pc-", "main-area-w-pc-" + s)
+  }
 
   override def handleUpdate(subject: SideBarLike): Unit = recenterMainPane()
 
