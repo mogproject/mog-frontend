@@ -22,7 +22,7 @@ case class MenuDialog(gameID: String, config: BasePlaygroundConfiguration, game:
     case English => "Menu"
   }
 
-  val menuPane = MenuPane(Seq(GameHelpMenu, AboutMenu))
+  val menuPane = MenuPane(Seq())
 
   override val modalBody: ElemType = div(bodyDefinition, menuPane.element)
 

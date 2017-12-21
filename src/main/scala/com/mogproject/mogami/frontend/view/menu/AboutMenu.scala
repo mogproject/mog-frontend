@@ -9,7 +9,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-object AboutMenu extends AccordionMenu {
+class AboutMenu extends AccordionMenu {
   override lazy val ident: String = "About"
   override lazy val title: String = "About This Site"
   override lazy val icon: String = "info-sign"

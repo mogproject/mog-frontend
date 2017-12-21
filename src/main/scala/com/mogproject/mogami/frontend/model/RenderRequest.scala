@@ -2,6 +2,7 @@ package com.mogproject.mogami.frontend.model
 
 import com.mogproject.mogami.Move
 import com.mogproject.mogami.frontend.model.board.cursor.Cursor
+import com.mogproject.mogami.frontend.model.io.RecordFormat
 
 /**
   *
@@ -21,3 +22,5 @@ case class EditAlertDialogRequest(message: String) extends RenderRequest
 case object CommentDialogRequest extends RenderRequest
 
 case object AskDeleteBranchRequest extends RenderRequest
+
+case class CopyRecordRequest(format: RecordFormat) extends RenderRequest

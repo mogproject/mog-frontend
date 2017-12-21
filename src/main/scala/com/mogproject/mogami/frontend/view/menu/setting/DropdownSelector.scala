@@ -15,10 +15,10 @@ case class DropdownSelector[A](labelString: String,
                                items: Vector[(A, String)],
                                f: A => BasePlaygroundConfiguration => BasePlaygroundConfiguration,
                                separatorIndexes: Seq[Int] = Seq.empty) extends WebComponent {
-  private[this] val button = DropdownMenu[A, BasePlaygroundModel](
+  private[this] val button = DropdownMenu[A](
     items.map(_._1),
     items.map { case (k, v) => k -> Map[Language, String](English -> v) }.toMap,
-    k => UpdateConfigurationAction(f(k)),
+    DropdownMenu.buildClickAction(k => UpdateConfigurationAction(f(k))),
     menuClass = "left",
     separatorIndexes = separatorIndexes
   )

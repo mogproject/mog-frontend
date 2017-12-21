@@ -18,16 +18,26 @@ trait PlaygroundSite extends WebComponent {
 
   def mainPane: MainPaneLike
 
+  //val shareMenu = new ShareMenu
+  //lazy val branchMenu = new BranchMenu
+  //val resetMenu = new ResetMenu
+
+  val manageMenu = new ManageMenu
+
   lazy val actionMenu = new ActionMenu
 
   val settingMenu = new SettingMenu
 
   val analyzeMenu = new AnalyzeMenu
 
+  val gameHelpMenu = new GameHelpMenu
+
+  val aboutMenu = new AboutMenu
+
   lazy val menuPane: MenuPane = if (isMobile) {
-    MenuPane(Seq(actionMenu, analyzeMenu, settingMenu, GameHelpMenu, AboutMenu))
+    MenuPane(Seq(manageMenu, actionMenu, analyzeMenu, settingMenu, gameHelpMenu, aboutMenu))
   } else {
-    MenuPane(Seq(analyzeMenu, settingMenu, GameHelpMenu, AboutMenu))
+    MenuPane(Seq(manageMenu, analyzeMenu, settingMenu, gameHelpMenu, aboutMenu))
   }
 
   def footer: FooterLike

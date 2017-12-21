@@ -2,6 +2,7 @@ package com.mogproject.mogami.frontend.model
 
 import com.mogproject.mogami.core.move.IllegalMove
 import com.mogproject.mogami.core.state.State.PromotionFlag
+import com.mogproject.mogami.frontend.model.io.{CSA, KI2, KIF, RecordFormat}
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.{GamePosition, _}
 
@@ -184,4 +185,9 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
       .map { g => this.copy(game = g, displayBranchNo = effectiveBranchNo, displayPosition = statusPosition + moveForward.fold(1, 0))}
   }
 
+  def getRecord(format: RecordFormat): String = format match {
+    case CSA => game.toCsaString
+    case KIF => game.toKifString
+    case KI2 => game.toKi2String
+  }
 }

@@ -175,6 +175,10 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
         newModel.mode.getGameControl.foreach { gc =>
           view.askDeleteBranch(newModel.config.messageLang, gc.displayBranchNo)
         }
+      case CopyRecordRequest(format) =>
+        newModel.mode.getGameControl.foreach { gc =>
+          view.website.manageMenu.saveLoadButton.renderRecord(gc.getRecord(format))
+        }
     }
   }
 

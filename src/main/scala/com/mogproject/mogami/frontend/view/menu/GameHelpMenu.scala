@@ -9,7 +9,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-object GameHelpMenu extends AccordionMenu {
+class GameHelpMenu extends AccordionMenu {
   override lazy val ident: String = "Help"
   override lazy val title: String = ident
   override lazy val icon: String = "question-sign"

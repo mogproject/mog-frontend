@@ -1,5 +1,8 @@
 package com.mogproject.mogami.frontend.view
 
+import com.mogproject.mogami.frontend.action.PlaygroundAction
+import com.mogproject.mogami.frontend.sam.PlaygroundSAM
+import org.scalajs.dom
 import org.scalajs.dom.raw.{HTMLElement, SVGElement}
 import org.scalajs.dom.{Element, Node}
 
@@ -47,6 +50,11 @@ trait WebComponent {
 
   def show(): Unit = WebComponent.showElement(element)
 
+  def doAction(action: PlaygroundAction, delayMS: Int = 0): Unit = if (delayMS <= 0) {
+    PlaygroundSAM.doAction(action)
+  } else {
+    dom.window.setTimeout(() => PlaygroundSAM.doAction(action), delayMS)
+  }
 }
 
 object WebComponent {
