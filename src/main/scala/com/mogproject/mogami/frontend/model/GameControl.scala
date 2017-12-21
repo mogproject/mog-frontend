@@ -73,6 +73,7 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
 
   /**
     * Get the game status of a displaying position.
+    *
     * @return
     */
   def getDisplayingGameStatus: GameStatus = {
@@ -168,8 +169,15 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
   }
 
   private[this] def makeMoveOnCurrentBranch(move: Move, offset: Int): Option[GameControl] = {
-    game.truncated(gamePosition).updateBranch(displayBranchNo)(_.makeMove(move)).map(g => this.copy(game = g, displayPosition = displayPosition + offset))
+    game.truncated(gamePosition).updateBranch(displayBranchNo)(_.makeMove(move)).map { g =>
+      this.copy(game = g, displayPosition = displayPosition + offset)
+    }
   }
 
+  def makeSpecialMove(specialMove: SpecialMove, moveForward: Boolean): Option[GameControl] = {
+    game.truncated(gamePosition).updateBranch(displayBranchNo)(b => Some(b.updateFinalAction(Some(specialMove)))).map { g =>
+      this.copy(game = g, displayPosition = statusPosition + moveForward.fold(1, 0))
+    }
+  }
 
 }
