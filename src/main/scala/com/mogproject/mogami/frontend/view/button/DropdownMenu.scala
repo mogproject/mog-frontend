@@ -62,13 +62,14 @@ case class DropdownMenu[A](items: Vector[A],
     WebComponent.removeAllChildElements(menuItems)
 
     // header
-    val header = dropdownHeader.map(hd => h6(cls := "dropdown-header", hd).render)
+    dropdownHeader.foreach(hd => menuItems.appendChild(h6(cls := "dropdown-header", hd).render))
 
-    val elems = items.zipWithIndex.map { case (item, ind) =>
+    // items and separators
+    items.zipWithIndex.map { case (item, ind) =>
       if (separatorIndexes.contains(ind)) menuItems.appendChild(separator)
-      li(a(href := "#", onclick := { () => select(item); clickAction(item) }, lookupLabel(item, language).get)).render
+      menuItems.appendChild(li(a(onclick := { () => select(item); clickAction(item) }, lookupLabel(item, language).get)).render)
     }
-    (header ++ elems).foreach(menuItems.appendChild)
+
     currentLanguage = language
   }
 
