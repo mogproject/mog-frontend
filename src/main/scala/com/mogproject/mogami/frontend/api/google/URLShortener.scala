@@ -55,3 +55,9 @@ case class URLShortener(
 
   }
 }
+
+object URLShortener {
+  private[this] lazy val impl = URLShortener()
+
+  def makeShortenedURL(longUrl: String, callback: String => Unit, failure: String => Unit): Unit = impl.makeShortenedURL(longUrl, callback, failure)
+}

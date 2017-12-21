@@ -1,5 +1,7 @@
 package com.mogproject.mogami.frontend.view.button
 
+import com.mogproject.mogami.frontend._
+import com.mogproject.mogami.frontend.api.google.URLShortener
 import org.scalajs.dom.html.Div
 
 import scalatags.JsDom.all._
@@ -8,26 +10,26 @@ import scalatags.JsDom.all._
   *
   */
 trait ShortenButtonLike extends CopyButtonLike {
-  def onClick(): Unit
-
   override protected val labelString = ""
 
-  private[this] val shortenButton = button(
-    cls := "btn btn-default",
-    tpe := "button",
-    data("toggle") := "tooltip",
-    data("placement") := "bottom",
-    data("original-title") := "Create a short URL by Google URL Shortener",
-    onclick := { () => onClick() },
-    "Shorten URL ",
-    span(cls := s"glyphicon glyphicon-arrow-right", aria.hidden := true)
-  ).render
+  def target: String
+
+  private[this] val shortenButton = SingleButton(
+    Map(English -> Seq(StringFrag("Shorten URL "), span(cls := s"glyphicon glyphicon-arrow-right", aria.hidden := true)).render),
+    clickAction = Some({ () => clickAction() }),
+    tooltip = Map(English -> "Create a short URL by Google URL Shortener")
+  )
+
+  private[this] def clickAction(): Unit = {
+    updateValue("creating...", completed = false)
+    URLShortener.makeShortenedURL(target, updateValue(_, completed = true), updateValue(_, completed = false))
+  }
 
   override lazy val element: Div = div(
     div(cls := "input-group",
       marginTop := 3,
       div(cls := "input-group-btn",
-        shortenButton
+        shortenButton.element
       ),
       inputElem,
       div(cls := "input-group-btn",
@@ -38,8 +40,14 @@ trait ShortenButtonLike extends CopyButtonLike {
 
   def updateValue(value: String, completed: Boolean): Unit = {
     updateValue(value)
-    shortenButton.disabled = completed
+    shortenButton.setDisabled(completed)
     copyButton.disabled = !completed
   }
 
+  def clear(): Unit = {
+    updateValue("", completed = false)
+  }
+
+  // initialize
+  clear()
 }

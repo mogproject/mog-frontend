@@ -15,7 +15,7 @@ trait CopyButtonLike extends WebComponent {
   protected def labelString: String
 
   protected lazy val inputElem: Input = input(
-    tpe := "text", id := ident, cls := "form-control", aria.label := "...", readonly := "readonly"
+    tpe := "text", id := ident, cls := "form-control", readonly := "readonly"
   ).render
 
   protected lazy val copyButton: Button = button(
