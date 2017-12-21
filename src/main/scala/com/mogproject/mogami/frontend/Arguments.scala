@@ -6,6 +6,7 @@ import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.core.state.StateCache.Implicits._
 import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipEnabled}
 import com.mogproject.mogami.frontend.model._
+import com.mogproject.mogami.frontend.view.board.{SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
 
 import scala.annotation.tailrec
 import scala.collection.mutable
@@ -82,6 +83,14 @@ case class Arguments(sfen: Option[String] = None,
         case Success(n) if n > 0 => f(sofar.copy(config = sofar.config.copy(pieceWidth = Some(n))), xs)
         case _ =>
           println(s"Invalid parameter: size=${s}")
+          f(sofar, xs)
+      }
+      case ("layout" :: s :: Nil) :: xs => s.toLowerCase match {
+        case "s" => f(sofar.copy(config = sofar.config.copy(layout = SVGStandardLayout)), xs)
+        case "c" => f(sofar.copy(config = sofar.config.copy(layout = SVGCompactLayout)), xs)
+        case "w" => f(sofar.copy(config = sofar.config.copy(layout = SVGWideLayout)), xs)
+        case _ =>
+          println(s"Invalid parameter: layout=${s}")
           f(sofar, xs)
       }
       case ("device" :: s :: Nil) :: xs => s.toLowerCase match {

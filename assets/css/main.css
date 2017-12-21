@@ -452,11 +452,10 @@ ul {
 .main-area-pc {
   padding-left: 10px;
   padding-right: 10px;
-  padding-bottom: 5px;
 }
 
 .main-area-mobile-portrait {
-  padding-bottom: 5px;
+
 }
 
 /*
@@ -529,7 +528,7 @@ ul {
 .control-bar {
   min-width: 300px;
   max-width: 400px;
-  padding-top: 5px;
+  padding-top: 0px;
   padding-bottom: 5px;
   padding-left: 7px;
   padding-right: 3px;
