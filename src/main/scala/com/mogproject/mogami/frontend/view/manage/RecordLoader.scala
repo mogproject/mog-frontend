@@ -27,8 +27,8 @@ trait RecordLoader {
 
     result match {
       case Success(g) =>
-        displayFileLoadMessage(s"Loaded: ${fileName}")
-        displayFileLoadTooltip(getToolTipMessage(g))
+        displayFileLoadMessage(s"Loaded: ${fileName}<br/>${getLoadInfo(g)}")
+        displayFileLoadTooltip("Loaded!")
 
         doAction(LoadGameAction(g))
         doAction(HideMenuModalAction, 1000) // close menu modal after 1 sec (mobile)
@@ -50,7 +50,7 @@ trait RecordLoader {
       case Success(g) =>
         displayFileLoadMessage("")
         displayTextLoadMessage("")
-        displayTextLoadTooltip(getToolTipMessage(g))
+        displayTextLoadTooltip("Loaded!")
 
         doAction(LoadGameAction(g))
         doAction(HideMenuModalAction, 1000) // close menu modal after 1 sec (mobile)
@@ -61,9 +61,9 @@ trait RecordLoader {
     }
   }
 
-  private[this] def getToolTipMessage(g: Game): String = {
+  private[this] def getLoadInfo(g: Game): String = {
     val ss = Seq(s"${g.trunk.moves.length} moves") ++ g.branches.nonEmpty.option(s"${g.branches.length} branches")
-    s"Loaded! (${ss.mkString(", ")})"
+    ss.mkString("(", ", ", ")")
   }
 
 }

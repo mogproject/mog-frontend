@@ -15,6 +15,7 @@ case class DropdownMenu[A](items: Vector[A],
                            labels: Map[A, Map[Language, String]],
                            clickAction: A => Unit = { (_: A) => },
                            dropdownClass: String = "dropdown",
+                           labelClass: String = "",
                            menuClass: String = "",
                            dropdownHeader: Option[String] = None,
                            separatorIndexes: Seq[Int] = Seq.empty
@@ -32,14 +33,13 @@ case class DropdownMenu[A](items: Vector[A],
   // HTML Elements
   //
   private[this] lazy val labelButton = button(
-    cls := "btn btn-default dropdown-toggle",
+    cls := "btn btn-default dropdown-toggle " + labelClass,
     tpe := "button",
     data("toggle") := "dropdown"
   ).render
 
   private[this] lazy val menuItems = ul(
-    cls := "dropdown-menu " + menuClass,
-    dropdownHeader.map(hd => h6(cls := "dropdown-header", hd))
+    cls := "dropdown-menu " + menuClass
   ).render
 
   private[this] lazy val dropdownElem = div(
@@ -58,12 +58,17 @@ case class DropdownMenu[A](items: Vector[A],
   // Operations
   //
   def renderItems(language: Language): Unit = {
+    // reset
     WebComponent.removeAllChildElements(menuItems)
-    items.zipWithIndex.map { case (item, ind) =>
+
+    // header
+    val header = dropdownHeader.map(hd => h6(cls := "dropdown-header", hd).render)
+
+    val elems = items.zipWithIndex.map { case (item, ind) =>
       if (separatorIndexes.contains(ind)) menuItems.appendChild(separator)
-      val elem = li(a(href := "#", onclick := { () => select(item); clickAction(item) }, lookupLabel(item, language).get)).render
-      menuItems.appendChild(elem)
+      li(a(href := "#", onclick := { () => select(item); clickAction(item) }, lookupLabel(item, language).get)).render
     }
+    (header ++ elems).foreach(menuItems.appendChild)
     currentLanguage = language
   }
 

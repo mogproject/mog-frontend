@@ -2,10 +2,10 @@ package com.mogproject.mogami.frontend.view.manage
 
 import com.mogproject.mogami.frontend.action.manage.{CopyRecordAction, SaveRecordAction}
 import com.mogproject.mogami.frontend.io.TextReader
-import com.mogproject.mogami.frontend.model.io.{CSA, KI2, KIF, RecordFormat}
-import com.mogproject.mogami.frontend.view.{English, WebComponent}
+import com.mogproject.mogami.frontend.model.io.RecordFormat
+import com.mogproject.mogami.frontend.view.{English, Language, WebComponent}
 import com.mogproject.mogami.frontend.view.bootstrap.Tooltip
-import com.mogproject.mogami.frontend.view.button.DropdownMenu
+import com.mogproject.mogami.frontend.view.button.{DropdownMenu, SingleButton}
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom
 import org.scalajs.dom.html._
@@ -113,19 +113,15 @@ class SaveLoadButton extends WebComponent with RecordLoader {
     RecordFormat.all,
     DropdownMenu.buildLabels(RecordFormat.all),
     dropdownClass = "input-group-btn",
+    labelClass = "dropdown-record",
     dropdownHeader = Some("Format")
   )
 
-  private[this] val fileSaveButton: Button = button(
-    cls := "btn btn-default",
-    tpe := "button",
-    data("toggle") := "tooltip",
-    data("placement") := "bottom",
-    data("dismiss") := "modal",
-    data("original-title") := "Save the record as a file",
-    onclick := { () => doAction(SaveRecordAction(fileSaveFormat.getValue, getFileName)) },
-    "Save"
-  ).render
+  private[this] val fileSaveButton: SingleButton = SingleButton(
+    Map(English -> "Save".render),
+    tooltip = Map(English -> "Save record as a file"),
+    clickAction = Some({ () => doAction(SaveRecordAction(fileSaveFormat.getValue, getFileName))})
+  )
 
   private[this] lazy val textCopyButton: Button = button(
     cls := "btn btn-default",
@@ -179,7 +175,7 @@ class SaveLoadButton extends WebComponent with RecordLoader {
       div(cls := "input-group-btn", fileSaveFormat.element),
       div(
         cls := "input-group-btn",
-        fileSaveButton,
+        fileSaveButton.element,
         textCopyButton
       )
     )

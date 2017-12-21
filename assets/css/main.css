@@ -518,6 +518,10 @@ ul {
   ::after {left:auto !important; right:10px;}
 }
 
+.dropdown-record {
+  width: 60px;
+}
+
 /*
  * Control Bar
  */
