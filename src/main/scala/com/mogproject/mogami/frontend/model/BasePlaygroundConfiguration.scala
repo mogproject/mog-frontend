@@ -51,9 +51,9 @@ case class BasePlaygroundConfiguration(layout: SVGAreaLayout = SVGStandardLayout
   }
 
   def collapseByDefault: Boolean = {
-    pieceWidth.map(layout.areaWidth).exists { w =>
-      !deviceType.isMobile && BasePlaygroundConfiguration.getClientWidth < w + SideBarLeft.EXPANDED_WIDTH + SideBarRight.EXPANDED_WIDTH
-    }
+    val pw = pieceWidth.getOrElse(BasePlaygroundConfiguration.MIN_PIECE_WIDTH)
+    val aw = BasePlaygroundConfiguration.getSVGAreaSize(deviceType, pw, layout, flipType.numAreas)
+    !deviceType.isMobile && BasePlaygroundConfiguration.getClientWidth < aw + SideBarLeft.EXPANDED_WIDTH + SideBarRight.EXPANDED_WIDTH
   }
 
   def loadLocalStorage(): BasePlaygroundConfiguration = {
@@ -70,6 +70,10 @@ case class BasePlaygroundConfiguration(layout: SVGAreaLayout = SVGStandardLayout
 }
 
 object BasePlaygroundConfiguration {
+
+  /** used for limiting automatic board scaling */
+  final val MIN_PIECE_WIDTH: Int = 15
+  final val MAX_PIECE_WIDTH: Int = 40
 
   private[this] final val LANDSCAPE_MARGIN_HEIGHT: Int = 44
   private[this] final val PORTRAIT_MARGIN_HEIGHT: Int = LANDSCAPE_MARGIN_HEIGHT * 2 + 20
@@ -115,10 +119,19 @@ object BasePlaygroundConfiguration {
   else
     math.min(dom.window.innerHeight, getScreenHeight - LANDSCAPE_MARGIN_HEIGHT)
 
-  def getDefaultCanvasWidth: Int = getDefaultCanvasWidth(getClientWidth, getClientHeight, getIsLandscape)
+//  def getDefaultCanvasWidth: Int = getDefaultCanvasWidth(getClientWidth, getClientHeight, getIsLandscape)
+//
+//  def getDefaultCanvasWidth(clientWidth: Double, clientHeight: Double, isLandscape: Boolean): Int = {
+//    math.max(100, math.min(math.min(clientWidth - 10, (clientHeight - isLandscape.fold(76, 60)) * 400 / 576).toInt, 400))
+//  }
 
-  def getDefaultCanvasWidth(clientWidth: Double, clientHeight: Double, isLandscape: Boolean): Int = {
-    math.max(100, math.min(math.min(clientWidth - 10, (clientHeight - isLandscape.fold(76, 60)) * 400 / 576).toInt, 400))
+  def getSVGAreaSize(deviceType: DeviceType, pieceWidth: Int, layout: SVGAreaLayout, numAreas: Int): Int = {
+    val areaWidth = layout.areaWidth(pieceWidth)
+    deviceType match {
+      case DeviceType.PC => (areaWidth + 70) * numAreas - 50 // +20 for 1 board, +90 for 2 boards
+      case DeviceType.MobilePortrait => areaWidth
+      case DeviceType.MobileLandscape => areaWidth * 2 + 60
+    }
   }
 
 }

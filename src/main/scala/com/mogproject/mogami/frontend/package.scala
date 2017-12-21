@@ -16,6 +16,9 @@ package object frontend {
   type Rect = com.mogproject.mogami.frontend.view.coordinate.Rect
   val Rect = com.mogproject.mogami.frontend.view.coordinate.Rect
 
+  type DeviceType = com.mogproject.mogami.frontend.model.DeviceType.DeviceType
+  val DeviceType = com.mogproject.mogami.frontend.model.DeviceType
+
   type Language = com.mogproject.mogami.frontend.model.Language
   val Language = com.mogproject.mogami.frontend.model.Language
   val English = com.mogproject.mogami.frontend.model.English
@@ -26,4 +29,11 @@ package object frontend {
 
   type WebComponent = com.mogproject.mogami.frontend.view.WebComponent
   val WebComponent = com.mogproject.mogami.frontend.view.WebComponent
+
+  type Mode = com.mogproject.mogami.frontend.model.Mode
+  type ModeType = com.mogproject.mogami.frontend.model.ModeType
+  val PlayModeType = com.mogproject.mogami.frontend.model.PlayModeType
+  val ViewModeType = com.mogproject.mogami.frontend.model.ViewModeType
+  val EditModeType = com.mogproject.mogami.frontend.model.EditModeType
+  val LiveModeType = com.mogproject.mogami.frontend.model.LiveModeType
 }

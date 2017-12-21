@@ -23,6 +23,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
   private[this] def renderImpl(newModel: M, renderAll: Boolean = false, observables: Map[M => Any, Observable[Any]]): (BasePlaygroundState[M, V], Option[SAMAction[M]]) = {
 
     val fs: Seq[(Boolean, M => Unit)] = Seq(
+      (renderAll || isUpdated(newModel, _.config.deviceType), renderScreen),
       (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas), renderLayout),
       (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas, _.config.pieceWidth), renderSize),
       (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas, _.config.recordLang), renderIndex),
@@ -72,12 +73,16 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
   //
   // Rendering functions
   //
+  private[this] def renderScreen(newModel: M): Unit = {
+    if (newModel.config.collapseByDefault) view.mainPane.collapseSideBarRight()
+  }
+
   private[this] def renderLayout(newModel: M): Unit = {
-    view.renderLayout(newModel.config.flipType.numAreas, newModel.config.pieceWidth, newModel.config.layout)
+    view.renderLayout(newModel.config.deviceType, newModel.config.flipType.numAreas, newModel.config.pieceWidth, newModel.config.layout)
   }
 
   private[this] def renderSize(newModel: M): Unit = {
-    view.renderSize(newModel.config.pieceWidth, newModel.config.layout)
+    view.renderSize(newModel.config.deviceType, newModel.config.pieceWidth, newModel.config.layout)
   }
 
   private[this] def renderIndex(newModel: M): Unit = {

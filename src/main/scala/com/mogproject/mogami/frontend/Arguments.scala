@@ -15,7 +15,8 @@ import scala.util.{Failure, Success, Try}
 /**
   * stores parameters
   */
-case class Arguments(usen: Option[String] = None,
+case class Arguments(sfen: Option[String] = None,
+                     usen: Option[String] = None,
                      gameInfo: GameInfo = GameInfo(),
                      gamePosition: GamePosition = GamePosition(0, 0),
                      comments: Map[BranchNo, Map[Position, String]] = Map.empty,
@@ -27,6 +28,7 @@ case class Arguments(usen: Option[String] = None,
   def parseQueryString(query: String): Arguments = {
     @tailrec
     def f(sofar: Arguments, ls: List[List[String]]): Arguments = ls match {
+      case ("sfen" :: s :: Nil) :: xs => f(sofar.copy(sfen = Some(s)), xs)
       case ("u" :: s :: Nil) :: xs => f(sofar.copy(usen = Some(s)), xs)
       case (x :: s :: Nil) :: xs if x.startsWith("c") => // comments
         parseGamePosition(x.drop(1)) match {
@@ -37,25 +39,22 @@ case class Arguments(usen: Option[String] = None,
             println(s"Invalid parameter: ${x}=${s}")
             f(sofar, xs)
         }
-      case ("mlang" :: s :: Nil) :: xs => s match {
-        case "ja" => f(sofar.copy(config = sofar.config.copy(messageLang = Japanese)), xs)
-        case "en" => f(sofar.copy(config = sofar.config.copy(messageLang = English)), xs)
-        case _ =>
+      case ("mlang" :: s :: Nil) :: xs => Language.parseString(s) match {
+        case Some(lang) => f(sofar.copy(config = sofar.config.copy(messageLang = lang)), xs)
+        case None =>
           println(s"Invalid parameter: mlang=${s}")
           f(sofar, xs)
       }
-      case ("rlang" :: s :: Nil) :: xs => s match {
-        case "ja" => f(sofar.copy(config = sofar.config.copy(recordLang = Japanese)), xs)
-        case "en" => f(sofar.copy(config = sofar.config.copy(recordLang = English)), xs)
-        case _ =>
+      case ("rlang" :: s :: Nil) :: xs => Language.parseString(s) match {
+        case Some(lang) => f(sofar.copy(config = sofar.config.copy(recordLang = lang)), xs)
+        case None =>
           println(s"Invalid parameter: rlang=${s}")
           f(sofar, xs)
       }
-      case ("p" :: s :: Nil) :: xs => s match {
-        case "jp1" => f(sofar.copy(config = sofar.config.copy(pieceFace = JapaneseOneCharFace)), xs)
-        case "we1" => f(sofar.copy(config = sofar.config.copy(pieceFace = ???)), xs)
-        case _ =>
-          println(s"Invalid parameter: pf=${s}")
+      case ("p" :: s :: Nil) :: xs => PieceFace.parseString(s) match {
+        case Some(pf) => f(sofar.copy(config = sofar.config.copy(pieceFace = pf)), xs)
+        case None =>
+          println(s"Invalid parameter: p=${s}")
           f(sofar, xs)
       }
       case ("move" :: s :: Nil) :: xs => parseGamePosition(s) match {
@@ -89,7 +88,7 @@ case class Arguments(usen: Option[String] = None,
         case "1" => f(sofar.copy(config = sofar.config.copy(deviceType = DeviceType.MobilePortrait)), xs)
         case "2" => f(sofar.copy(config = sofar.config.copy(deviceType = DeviceType.MobileLandscape)), xs)
         case _ =>
-          println(s"Invalid parameter: mobile=${s}")
+          println(s"Invalid parameter: device=${s}")
           f(sofar, xs)
       }
       case ("bn" :: s :: Nil) :: xs => f(sofar.copy(gameInfo = sofar.gameInfo.updated('blackName, s)), xs)
@@ -108,7 +107,9 @@ case class Arguments(usen: Option[String] = None,
           println(s"Invalid parameter: debug=${s}")
           f(sofar, xs)
       }
-      case _ :: xs => f(sofar, xs)
+      case x :: xs =>
+        println(s"Unknown parameter: ${x}")
+        f(sofar, xs)
       case Nil => sofar
     }
 
@@ -154,9 +155,9 @@ case class ArgumentsBuilder(game: Game,
     createUrl(imageActionParams ++ gameParams ++ gameInfoParams ++ positionParams)
   }
 
-  private[this] def gameParams: Seq[(String, String)] = Seq(("u", game.toUsenString))
+  private[this] lazy val gameParams: Seq[(String, String)] = Seq(("u", game.toUsenString))
 
-  private[this] def commentParams: Seq[(String, String)] = {
+  private[this] lazy val commentParams: Seq[(String, String)] = {
     val comments = mutable.HashMap[HistoryHash, String]()
     comments ++= game.comments
 

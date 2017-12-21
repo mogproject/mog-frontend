@@ -4,12 +4,9 @@ import com.mogproject.mogami._
 import com.mogproject.mogami.core.Player.{BLACK, WHITE}
 import com.mogproject.mogami.core.state.State.{BoardType, HandType}
 import com.mogproject.mogami.util.Implicits._
-import com.mogproject.mogami.frontend.Coord
-import com.mogproject.mogami.frontend.action.analyze.AnalyzeCheckmateAction
 import com.mogproject.mogami.frontend.action.{ChangeModeAction, RefreshScreenAction, UpdateGameControlAction}
 import com.mogproject.mogami.frontend.api.Clipboard
 import com.mogproject.mogami.frontend.api.Clipboard.Event
-import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.frontend.model.analyze._
 import com.mogproject.mogami.frontend.model.board._
 import com.mogproject.mogami.frontend.model.board.cursor.Cursor
@@ -17,6 +14,8 @@ import com.mogproject.mogami.frontend.sam.{PlaygroundSAM, SAMView}
 import com.mogproject.mogami.frontend.view.board.SVGAreaLayout
 import com.mogproject.mogami.frontend.view.bootstrap.Tooltip
 import com.mogproject.mogami.frontend.view.menu.MenuPane
+import com.mogproject.mogami.frontend._
+import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, GameControl, ModeType}
 import com.mogproject.mogami.frontend.view.modal._
 import org.scalajs.dom
 import org.scalajs.dom.{Element, UIEvent}
@@ -51,12 +50,12 @@ trait BasePlaygroundView extends SAMView {
 
   }
 
-  def renderLayout(numAreas: Int, pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
-    mainPane.renderSVGAreas(numAreas, pieceWidth, layout)
+  def renderLayout(deviceType: DeviceType, numAreas: Int, pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
+    mainPane.renderSVGAreas(deviceType, numAreas, pieceWidth, layout)
   }
 
-  def renderSize(pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
-    mainPane.resizeSVGAreas(pieceWidth, layout)
+  def renderSize(deviceType: DeviceType, pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
+    mainPane.resizeSVGAreas(deviceType, pieceWidth, layout)
   }
 
   def renderIndex(useJapanese: Boolean = false): Unit = {

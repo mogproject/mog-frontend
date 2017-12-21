@@ -1,5 +1,6 @@
 package com.mogproject.mogami.frontend.view
 
+import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.footer.FooterLike
 import com.mogproject.mogami.frontend.view.menu._
 import com.mogproject.mogami.util.Implicits._
@@ -50,5 +51,4 @@ trait PlaygroundSite extends WebComponent {
       footer.element
     )
   ).render
-
 }

@@ -1,6 +1,7 @@
 package com.mogproject.mogami.frontend.view.menu
 
-import com.mogproject.mogami.frontend.model.{PlayModeType, ViewModeType}
+import com.mogproject.mogami.frontend.ArgumentsBuilder
+import com.mogproject.mogami.frontend.model.{BasePlaygroundModel, PlayModeType, ViewModeType}
 import com.mogproject.mogami.frontend.view.share._
 import org.scalajs.dom.html.Div
 
@@ -39,4 +40,15 @@ class ShareMenu extends AccordionMenu {
     notesViewButton.element,
     notesViewShortenButton.element
   )
+
+  def refresh(model: BasePlaygroundModel): Unit = {
+    model.mode.getGameControl.foreach { gc =>
+      val builder = ArgumentsBuilder(gc.game, gc.gamePosition, model.config)
+      recordCopyButton.updateValue(builder.toRecordUrl)
+      snapshotCopyButton.updateValue(builder.toSnapshotUrl)
+      imageLinkButton.updateValue(builder.toImageLinkUrl)
+      sfenStringCopyButton.updateValue(gc.game.toSfenString)
+      notesViewButton.updateValue(builder.toNotesViewUrl)
+    }
+  }
 }

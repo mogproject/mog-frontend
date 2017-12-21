@@ -5,6 +5,7 @@ import com.mogproject.mogami.frontend.model.BasePlaygroundModel
   *
   */
 object RefreshScreenAction extends PlaygroundAction {
-  // todo: impl
-  override def execute(model: BasePlaygroundModel): Option[BasePlaygroundModel] = Some(model)
+  override def execute(model: BasePlaygroundModel): Option[BasePlaygroundModel] = {
+    UpdateConfigurationAction(_.updateScreenSize()).execute(model)
+  }
 }

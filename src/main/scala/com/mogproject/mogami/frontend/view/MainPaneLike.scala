@@ -1,6 +1,7 @@
 package com.mogproject.mogami.frontend.view
 
-import com.mogproject.mogami.frontend.model.{GameControl, Language, ModeType}
+import com.mogproject.mogami.frontend.model.DeviceType.DeviceType
+import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.view.board.{SVGArea, SVGAreaLayout}
 import com.mogproject.mogami.frontend.view.control.{CommentArea, ControlBar, ControlBarType}
@@ -19,10 +20,7 @@ import scalatags.JsDom.all._
   *
   */
 trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
-
   def isMobile: Boolean
-
-  def isLandscape: Boolean
 
   def getSite: PlaygroundSite
 
@@ -82,20 +80,20 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
     *
     * @param layout area layout
     */
-  def renderSVGAreas(numAreas: Int, pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
+  def renderSVGAreas(deviceType: DeviceType, numAreas: Int, pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
     svgAreas.foreach(_.terminate())
     svgAreas.clear()
     svgAreas ++= (0 until numAreas).map(n => SVGArea(n, layout))
 
-    val node = (isMobile, isLandscape) match {
-      case (true, true) => createMobileLandscapeMain
-      case (true, false) => createMobilePortraitMain
-      case (_, _) => createPCPortraitMain
+    val node = deviceType match {
+      case DeviceType.MobileLandscape => createMobileLandscapeMain
+      case DeviceType.MobilePortrait => createMobilePortraitMain
+      case DeviceType.PC => createPCPortraitMain
     }
 
     WebComponent.removeAllChildElements(mainArea)
     mainArea.appendChild(node.render)
-    resizeSVGAreas(pieceWidth, layout)
+    resizeSVGAreas(deviceType, pieceWidth, layout)
   }
 
   private[this] def createPCPortraitMain: TypedTag[Div] = {
@@ -149,26 +147,18 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
     )
   }
 
-  private[this] def getSVGAreaSize(pieceWidth: Int, layout: SVGAreaLayout, numAreas: Int): Int = {
-    val areaWidth = layout.areaWidth(pieceWidth)
-    (isMobile, isLandscape) match {
-      case (false, _) => (areaWidth + 70) * numAreas - 50 // +20 for 1 board, +90 for 2 boards
-      case (true, false) => areaWidth
-      case (true, true) => areaWidth * 2 + 60
-    }
-  }
-
-  def resizeSVGAreas(pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
+  def resizeSVGAreas(deviceType: DeviceType, pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
     dom.document.getElementById("main-area") match {
       case e: HTMLElement =>
         pieceWidth match {
           case Some(pw) =>
-            val w = getSVGAreaSize(pw, layout, svgAreas.size)
+            val w = BasePlaygroundConfiguration.getSVGAreaSize(deviceType, pw, layout, svgAreas.size)
             e.style.maxWidth = w.px
+            e.style.minWidth = BasePlaygroundConfiguration.getSVGAreaSize(deviceType, BasePlaygroundConfiguration.MIN_PIECE_WIDTH, layout, svgAreas.size).px
             e.style.width = w.px
           case None =>
-            e.style.maxWidth = getSVGAreaSize(40, layout, svgAreas.size).px
-            e.style.minWidth = getSVGAreaSize(15, layout, svgAreas.size).px
+            e.style.maxWidth = BasePlaygroundConfiguration.getSVGAreaSize(deviceType, BasePlaygroundConfiguration.MAX_PIECE_WIDTH, layout, svgAreas.size).px
+            e.style.minWidth = BasePlaygroundConfiguration.getSVGAreaSize(deviceType, BasePlaygroundConfiguration.MIN_PIECE_WIDTH, layout, svgAreas.size).px
             e.style.width = 100.pct
         }
       case _ =>
@@ -193,6 +183,8 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
   def updateModeType(modeType: ModeType): Unit = {
     sideBarLeft.foreach(_.refresh(modeType))
   }
+
+  def collapseSideBarRight(): Unit = sideBarRight.foreach(_.collapseSideBar())
 
   def playClickSound(): Unit = {
     clickSound.pause()

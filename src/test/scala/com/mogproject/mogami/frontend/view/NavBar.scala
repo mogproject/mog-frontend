@@ -12,7 +12,7 @@ import com.mogproject.mogami.frontend.view.observer.ModeTypeObserver
 /**
   *
   */
-case class NavBar(isMobile: Boolean = false) extends NavBarLike with ModeTypeObserver {
+case class NavBar(isMobile: Boolean) extends NavBarLike with ModeTypeObserver {
 
   lazy val modeButton: RadioButton[ModeType] = RadioButton(
     Seq(PlayModeType, ViewModeType, EditModeType),
