@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view
 
-import com.mogproject.mogami.frontend.model.{GameControl, ModeType}
+import com.mogproject.mogami.frontend.model.{GameControl, Language, ModeType}
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.view.board.{SVGArea, SVGAreaLayout}
 import com.mogproject.mogami.frontend.view.control.{CommentArea, ControlBar, ControlBarType}

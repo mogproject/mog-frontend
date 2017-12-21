@@ -1,7 +1,7 @@
 package com.mogproject.mogami.frontend.view.modal
 
+import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.event.EventManageable
-import com.mogproject.mogami.frontend.view.{English, Japanese, Language}
 import org.scalajs.dom.html.Element
 import org.scalajs.jquery.JQuery
 

@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.view
 
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.action.ChangeModeAction
-import com.mogproject.mogami.frontend.model.{EditModeType, ModeType, PlayModeType, ViewModeType}
+import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 import com.mogproject.mogami.frontend.view.action.ResignButton
 import com.mogproject.mogami.frontend.view.button.RadioButton

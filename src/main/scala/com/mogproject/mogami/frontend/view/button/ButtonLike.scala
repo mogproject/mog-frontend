@@ -1,7 +1,7 @@
 package com.mogproject.mogami.frontend.view.button
 
 import com.mogproject.mogami.frontend.view.event.EventManageable
-import com.mogproject.mogami.frontend.view.{English, Language, WebComponent}
+import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom.Element
 import org.scalajs.dom.raw.HTMLElement

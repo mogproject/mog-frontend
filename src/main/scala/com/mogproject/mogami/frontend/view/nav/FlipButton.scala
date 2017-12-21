@@ -2,9 +2,9 @@ package com.mogproject.mogami.frontend.view.nav
 
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.action.UpdateConfigurationAction
+import com.mogproject.mogami.frontend.model.Language
 import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipEnabled, FlipType}
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
-import com.mogproject.mogami.frontend.view.Language
 import com.mogproject.mogami.frontend.view.button.ButtonLike
 import com.mogproject.mogami.frontend.view.observer.FlipTypeObserver
 import org.scalajs.dom.html.{Button, Div}

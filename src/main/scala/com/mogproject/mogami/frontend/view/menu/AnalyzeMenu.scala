@@ -1,7 +1,7 @@
 package com.mogproject.mogami.frontend.view.menu
 
 import com.mogproject.mogami.frontend.model.{PlayModeType, ViewModeType}
-import com.mogproject.mogami.frontend.view.menu.analyze.{CheckmateButton, PointCountButton}
+import com.mogproject.mogami.frontend.view.analyze.{CheckmateButton, PointCountButton}
 import org.scalajs.dom.html.Div
 
 import scalatags.JsDom

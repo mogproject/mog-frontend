@@ -1,8 +1,7 @@
 package com.mogproject.mogami.frontend.view.button
 
 import com.mogproject.mogami.frontend.action.PlaygroundAction
-import com.mogproject.mogami.frontend.sam.PlaygroundSAM
-import com.mogproject.mogami.frontend.view.{English, Language, WebComponent}
+import com.mogproject.mogami.frontend._
 import org.scalajs.dom.Element
 import org.scalajs.dom.html.LI
 

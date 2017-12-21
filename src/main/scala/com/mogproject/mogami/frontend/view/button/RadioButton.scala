@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view.button
 
-import com.mogproject.mogami.frontend.view.Language
+import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.bootstrap.Tooltip
 import org.scalajs.dom.html.{Anchor, Div}
 

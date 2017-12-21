@@ -1,9 +1,9 @@
 package com.mogproject.mogami.frontend.view.menu.setting
 
 import com.mogproject.mogami.frontend.action.UpdateConfigurationAction
-import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, BasePlaygroundModel}
+import com.mogproject.mogami.frontend.model.BasePlaygroundConfiguration
 import com.mogproject.mogami.frontend.view.button.DropdownMenu
-import com.mogproject.mogami.frontend.view.{English, Language, WebComponent}
+import com.mogproject.mogami.frontend._
 import org.scalajs.dom.Element
 
 import scalatags.JsDom.all._

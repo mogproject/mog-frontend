@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view.button
 
-import com.mogproject.mogami.frontend.view.WebComponent
+import com.mogproject.mogami.frontend._
 import org.scalajs
 import org.scalajs.dom.html.{Button, Div, Input}
 

@@ -1,10 +1,7 @@
 package com.mogproject.mogami.frontend.view.button
 
 import com.mogproject.mogami.Ptype
-import com.mogproject.mogami.frontend.Coord
-import com.mogproject.mogami.frontend.model.PieceFace
-import com.mogproject.mogami.frontend.view.WebComponent
-import com.mogproject.mogami.frontend.view.coordinate.Rect
+import com.mogproject.mogami.frontend._
 import org.scalajs.dom.Element
 
 import scalatags.JsDom.{Modifier, svgAttrs, svgTags}

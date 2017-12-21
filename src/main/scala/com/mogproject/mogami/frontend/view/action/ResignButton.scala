@@ -1,12 +1,11 @@
 package com.mogproject.mogami.frontend.view.action
 
 import com.mogproject.mogami.frontend.action.game.ResignAction
-import com.mogproject.mogami.frontend.model.Mode
-import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 import com.mogproject.mogami.frontend.view.button.SingleButton
 import com.mogproject.mogami.frontend.view.modal.YesNoDialog
 import com.mogproject.mogami.frontend.view.observer.ModeObserver
-import com.mogproject.mogami.frontend.view.{English, Japanese, Language, WebComponent}
+import com.mogproject.mogami.frontend._
+import com.mogproject.mogami.frontend.model.Mode
 import org.scalajs.dom.raw.HTMLElement
 
 import scalatags.JsDom.all._

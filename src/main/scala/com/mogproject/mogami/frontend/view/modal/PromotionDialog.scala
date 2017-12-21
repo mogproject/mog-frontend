@@ -2,11 +2,9 @@ package com.mogproject.mogami.frontend.view.modal
 
 import com.mogproject.mogami._
 import com.mogproject.mogami.frontend.action.board.MakeMoveAction
-import com.mogproject.mogami.frontend.Coord
-import com.mogproject.mogami.frontend.model.PieceFace
+import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 import com.mogproject.mogami.frontend.view.button.PieceFaceButton
-import com.mogproject.mogami.frontend.view.{English, Japanese, Language}
 import com.mogproject.mogami.frontend.view.event.EventManageable
 import org.scalajs.jquery.JQuery
 

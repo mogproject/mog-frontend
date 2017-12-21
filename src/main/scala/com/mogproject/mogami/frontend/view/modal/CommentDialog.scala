@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view.modal
 
-import com.mogproject.mogami.frontend.view.{English, Japanese, Language}
+import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.control.CommentArea
 
 import scalatags.JsDom.all._

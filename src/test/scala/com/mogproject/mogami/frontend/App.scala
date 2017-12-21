@@ -2,8 +2,7 @@ package com.mogproject.mogami.frontend
 
 import com.mogproject.mogami._
 import com.mogproject.mogami.core.state.StateCache.Implicits._
-import com.mogproject.mogami.frontend.model.{BasePlaygroundModel, GameControl, PlayMode, TestModel}
-import com.mogproject.mogami.frontend.sam.PlaygroundSAM
+import com.mogproject.mogami.frontend.model.{GameControl, PlayMode, TestModel}
 import com.mogproject.mogami.frontend.state.TestState
 import com.mogproject.mogami.frontend.view.TestView
 import org.scalajs.dom

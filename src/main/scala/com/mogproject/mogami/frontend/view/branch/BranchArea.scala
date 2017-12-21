@@ -6,7 +6,7 @@ import com.mogproject.mogami.frontend.action.{UpdateConfigurationAction, UpdateG
 import com.mogproject.mogami.frontend.action.dialog.AskDeleteBranchAction
 import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
-import com.mogproject.mogami.frontend.view.{English, Japanese, Language, WebComponent}
+import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.button.{RadioButton, SingleButton}
 import org.scalajs.dom.html.Div
 import org.scalajs.dom.raw.HTMLSelectElement

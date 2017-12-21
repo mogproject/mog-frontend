@@ -1,9 +1,8 @@
-package com.mogproject.mogami.frontend.view.menu.analyze
+package com.mogproject.mogami.frontend.view.analyze
 
 import com.mogproject.mogami.Move
+import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.analyze.AnalyzeCheckmateAction
-import com.mogproject.mogami.frontend.sam.PlaygroundSAM
-import com.mogproject.mogami.frontend.view.{English, Japanese, Language, WebComponent}
 import com.mogproject.mogami.frontend.view.button.SingleButton
 import org.scalajs.dom
 import org.scalajs.dom.html.{Div, Input}

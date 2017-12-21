@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view.modal
 
-import com.mogproject.mogami.frontend.view.{English, Japanese, Language}
+import com.mogproject.mogami.frontend._
 import org.scalajs.dom.html.Element
 
 import scalatags.JsDom.TypedTag

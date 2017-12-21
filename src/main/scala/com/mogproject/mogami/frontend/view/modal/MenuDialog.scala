@@ -1,9 +1,9 @@
 package com.mogproject.mogami.frontend.view.modal
 
 import com.mogproject.mogami.Game
+import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.model.BasePlaygroundConfiguration
-import com.mogproject.mogami.frontend.view.{English, Japanese}
-import com.mogproject.mogami.frontend.view.menu.{GameHelpMenu, AboutMenu, MenuPane}
+import com.mogproject.mogami.frontend.view.menu.{AboutMenu, GameHelpMenu, MenuPane}
 import org.scalajs.jquery.JQuery
 
 import scalatags.JsDom.all._

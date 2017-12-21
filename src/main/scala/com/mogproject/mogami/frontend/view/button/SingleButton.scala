@@ -3,7 +3,7 @@ package com.mogproject.mogami.frontend.view.button
 import com.mogproject.mogami.frontend.view.bootstrap.Tooltip
 import com.mogproject.mogami.frontend.view.event.EventManageable
 import com.mogproject.mogami.util.Implicits._
-import com.mogproject.mogami.frontend.view.{English, Language, WebComponent}
+import com.mogproject.mogami.frontend._
 import org.scalajs.dom.Node
 import org.scalajs.dom.html.Button
 import org.scalajs.dom.raw.HTMLElement

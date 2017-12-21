@@ -1,9 +1,8 @@
 package com.mogproject.mogami.frontend.view.modal
 
 import com.mogproject.mogami._
+import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.board.UpdateGameInfoAction
-import com.mogproject.mogami.frontend.sam.PlaygroundSAM
-import com.mogproject.mogami.frontend.view.{English, Japanese, Language}
 import org.scalajs.dom.html.Input
 import org.scalajs.jquery.JQuery
 

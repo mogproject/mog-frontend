@@ -1,10 +1,11 @@
-package com.mogproject.mogami.frontend.view.menu.analyze
+package com.mogproject.mogami.frontend.view.analyze
 
-import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.action.analyze.CountPointAction
+import com.mogproject.mogami.frontend.model.English
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
-import com.mogproject.mogami.frontend.view.{English, WebComponent}
+import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.button.SingleButton
+import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom.html.Div
 
 import scalatags.JsDom.all._

@@ -4,11 +4,10 @@ package com.mogproject.mogami.frontend.view.control
 import com.mogproject.mogami.core.move.{DeclareWin, SpecialMove}
 import com.mogproject.mogami._
 import com.mogproject.mogami.frontend.action.{PlaygroundAction, UpdateGameControlAction}
-import com.mogproject.mogami.frontend.model.GameControl
-import com.mogproject.mogami.frontend.sam.PlaygroundSAM
+import com.mogproject.mogami.frontend.model.{English, GameControl, Japanese, Language}
 import com.mogproject.mogami.frontend.view.button.SingleButton
 import com.mogproject.mogami.frontend.view.control.ControlBarType.ControlBarType
-import com.mogproject.mogami.frontend.view.{English, Japanese, Language, WebComponent}
+import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom.raw.{HTMLElement, HTMLSelectElement}
 
