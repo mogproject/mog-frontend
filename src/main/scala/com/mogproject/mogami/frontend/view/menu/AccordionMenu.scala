@@ -1,8 +1,7 @@
 package com.mogproject.mogami.frontend.view.menu
 
-import com.mogproject.mogami.frontend.model.ModeType
-import com.mogproject.mogami.frontend.view.bootstrap.Tooltip
-import com.mogproject.mogami.frontend.view.{Observable, WebComponent}
+import com.mogproject.mogami.frontend._
+import com.mogproject.mogami.frontend.view.Observable
 import org.scalajs.dom.html.Div
 import com.mogproject.mogami.util.Implicits._
 

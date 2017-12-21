@@ -4,7 +4,6 @@ import com.mogproject.mogami.frontend.action.manage.{CopyRecordAction, SaveRecor
 import com.mogproject.mogami.frontend.io.TextReader
 import com.mogproject.mogami.frontend.model.io.RecordFormat
 import com.mogproject.mogami.frontend._
-import com.mogproject.mogami.frontend.view.bootstrap.Tooltip
 import com.mogproject.mogami.frontend.view.button.{DropdownMenu, SingleButton}
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom

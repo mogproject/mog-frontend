@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view.event
 
-import com.mogproject.mogami.frontend.view.bootstrap.BootstrapJQuery
+import com.mogproject.mogami.frontend._
 import org.scalajs.dom
 import org.scalajs.dom.raw.{HTMLElement, UIEvent}
 import org.scalajs.dom.{Element, MouseEvent, TouchEvent}

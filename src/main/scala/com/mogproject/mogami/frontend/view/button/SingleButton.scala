@@ -1,6 +1,5 @@
 package com.mogproject.mogami.frontend.view.button
 
-import com.mogproject.mogami.frontend.view.bootstrap.Tooltip
 import com.mogproject.mogami.frontend.view.event.EventManageable
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend._

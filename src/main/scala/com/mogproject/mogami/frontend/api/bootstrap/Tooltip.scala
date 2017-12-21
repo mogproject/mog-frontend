@@ -1,4 +1,4 @@
-package com.mogproject.mogami.frontend.view.bootstrap
+package com.mogproject.mogami.frontend.api.bootstrap
 
 import org.scalajs.dom
 import org.scalajs.dom.Element

@@ -36,4 +36,8 @@ package object frontend {
   val ViewModeType = com.mogproject.mogami.frontend.model.ViewModeType
   val EditModeType = com.mogproject.mogami.frontend.model.EditModeType
   val LiveModeType = com.mogproject.mogami.frontend.model.LiveModeType
+
+  val Tooltip = com.mogproject.mogami.frontend.api.bootstrap.Tooltip
+  type BootstrapJQuery = com.mogproject.mogami.frontend.api.bootstrap.BootstrapJQuery
+
 }
