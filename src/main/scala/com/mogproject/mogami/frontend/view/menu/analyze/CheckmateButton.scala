@@ -26,7 +26,7 @@ class CheckmateButton extends WebComponent {
   ).render
 
   private[this] lazy val analyzeButton: SingleButton = SingleButton(
-    Map(English -> span("Analyze").render),
+    Map(English -> "Analyze".render),
     clickAction = Some(() => clickAction()),
     tooltip = Map(English -> "Analyze this position for checkmate"),
     isBlockButton = true

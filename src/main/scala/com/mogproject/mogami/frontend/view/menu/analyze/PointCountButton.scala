@@ -15,7 +15,7 @@ import scalatags.JsDom.all._
 class PointCountButton extends WebComponent {
 
   private[this] val countButton: SingleButton = SingleButton(
-    Map(English -> span("Count").render),
+    Map(English -> "Count".render),
     clickAction = Some(() => PlaygroundSAM.doAction(CountPointAction)),
     tooltip = Map(English -> "Count points for this position"),
     isBlockButton = true

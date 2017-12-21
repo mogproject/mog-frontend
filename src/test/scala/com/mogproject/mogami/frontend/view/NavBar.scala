@@ -4,8 +4,9 @@ import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.action.ChangeModeAction
 import com.mogproject.mogami.frontend.model.{EditModeType, ModeType, PlayModeType, ViewModeType}
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
+import com.mogproject.mogami.frontend.view.action.ResignButton
 import com.mogproject.mogami.frontend.view.button.RadioButton
-import com.mogproject.mogami.frontend.view.nav.{FlipButton, NavBarLike, ResignButton}
+import com.mogproject.mogami.frontend.view.nav.{FlipButton, NavBarLike}
 import com.mogproject.mogami.frontend.view.observer.ModeTypeObserver
 
 /**
@@ -23,7 +24,7 @@ case class NavBar(isMobile: Boolean = false) extends NavBarLike with ModeTypeObs
 
   lazy val flipButton: FlipButton = new FlipButton
 
-  lazy val resignButton: ResignButton = new ResignButton
+  lazy val resignButton: ResignButton = ResignButton(isSmall = true, confirm = false)
 
   lazy val buttons: Seq[WebComponent] = Seq(modeButton, flipButton) ++ isMobile.fold(Seq.empty, Seq(resignButton))
 
