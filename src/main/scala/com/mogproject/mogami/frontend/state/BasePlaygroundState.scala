@@ -40,6 +40,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
       (renderAll || isUpdated(newModel, _.mode.modeType, _.mode.getGameControl, _.config.recordLang, _.config.newBranchMode), renderBranchArea),
       (renderAll || isUpdated(newModel, _.config), renderConfigMenu),
       (renderAll || isUpdated(newModel, _.mode.modeType), renderModeType),
+      (renderAll || isUpdated(newModel, _.mode.getGameControl, _.config.flipType), renderShareUrls),
       (renderAll || isUpdated(newModel, _.activeCursor), renderActiveCursor),
       (newModel.analyzeResult.isDefined, renderAnalyzeResult),
       ((!newModel.mode.isViewMode || newModel.selectedCursor.isEmpty) && (renderAll || isUpdated(newModel, _.selectedCursor)), renderSelectedCursor),
@@ -140,6 +141,10 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
 
   private[this] def renderConfigMenu(newModel: M): Unit = {
     view.updateConfigMenu(newModel.config)
+  }
+
+  private[this] def renderShareUrls(newModel: M): Unit = {
+    view.website.shareMenu.refresh(newModel)
   }
 
   private[this] def renderActiveCursor(newModel: M): Unit = {

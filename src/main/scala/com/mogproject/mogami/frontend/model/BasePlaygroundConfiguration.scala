@@ -19,12 +19,12 @@ case class BasePlaygroundConfiguration(layout: SVGAreaLayout = SVGStandardLayout
                                        flipType: FlipType = FlipDisabled,
                                        pieceFace: PieceFace = JapaneseOneCharFace,
                                        newBranchMode: Boolean = false,
-                                       messageLang: Language = English,
-                                       recordLang: Language = Japanese,
+                                       messageLang: Language = BasePlaygroundConfiguration.browserLanguage,
+                                       recordLang: Language = BasePlaygroundConfiguration.browserLanguage,
                                        visualEffectEnabled: Boolean = true,
                                        soundEffectEnabled: Boolean = false,
-                                       baseUrl: String = "",
-                                       deviceType: DeviceType = DeviceType.PC,
+                                       baseUrl: String = BasePlaygroundConfiguration.defaultBaseUrl,
+                                       deviceType: DeviceType = BasePlaygroundConfiguration.defaultDeviceType,
                                        isDev: Boolean = false,
                                        isDebug: Boolean = false
                                       ) {
@@ -47,7 +47,7 @@ case class BasePlaygroundConfiguration(layout: SVGAreaLayout = SVGStandardLayout
   }
 
   def updateScreenSize(): BasePlaygroundConfiguration = {
-    this.copy(deviceType = deviceType.setLandscape(BasePlaygroundConfiguration.getIsLandscape), pieceWidth = None)
+    this.copy(deviceType = DeviceType(deviceType.isMobile, BasePlaygroundConfiguration.getIsLandscape), pieceWidth = None)
   }
 
   def collapseByDefault: Boolean = {
@@ -97,6 +97,8 @@ object BasePlaygroundConfiguration {
 
   def getIsLandscape: Boolean = MobileScreen.isLandscape
 
+  lazy val defaultDeviceType: DeviceType = DeviceType(defaultIsMobile, getIsLandscape)
+
   // possibly using an in-app browser
   private[this] def isInAppBrowser: Boolean = defaultIsMobile && (getIsLandscape ^ dom.window.innerWidth > dom.window.innerHeight)
 
@@ -119,12 +121,6 @@ object BasePlaygroundConfiguration {
   else
     math.min(dom.window.innerHeight, getScreenHeight - LANDSCAPE_MARGIN_HEIGHT)
 
-//  def getDefaultCanvasWidth: Int = getDefaultCanvasWidth(getClientWidth, getClientHeight, getIsLandscape)
-//
-//  def getDefaultCanvasWidth(clientWidth: Double, clientHeight: Double, isLandscape: Boolean): Int = {
-//    math.max(100, math.min(math.min(clientWidth - 10, (clientHeight - isLandscape.fold(76, 60)) * 400 / 576).toInt, 400))
-//  }
-
   def getSVGAreaSize(deviceType: DeviceType, pieceWidth: Int, layout: SVGAreaLayout, numAreas: Int): Int = {
     val areaWidth = layout.areaWidth(pieceWidth)
     deviceType match {
@@ -134,4 +130,13 @@ object BasePlaygroundConfiguration {
     }
   }
 
+  def getMaxSVGAreaSize(deviceType: DeviceType, pieceWidth: Int, layout: SVGAreaLayout, numAreas: Int): Int = {
+    val aw = getSVGAreaSize(deviceType, MAX_PIECE_WIDTH, layout, numAreas)
+    if (deviceType.isMobile) {
+      val maxAreaSize = math.min(getClientWidth - 10, (getClientHeight - deviceType.isLandscape.fold(76, 60)) * 400 / 576).toInt
+      math.min(maxAreaSize, aw)
+    } else {
+      aw
+    }
+  }
 }
