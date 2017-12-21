@@ -47,7 +47,8 @@ class SaveLoadButton extends WebComponent with RecordLoader {
 
   private[this] lazy val fileLoadMessage: Div = div(
     cls := "col-xs-7 col-sm-9 text-muted",
-    marginTop := 6
+    marginTop := 6.px,
+    height := 40.px
   ).render
 
   //
@@ -143,7 +144,7 @@ class SaveLoadButton extends WebComponent with RecordLoader {
     label("Load from File"),
     div(
       cls := "row",
-      marginTop := 3,
+      marginTop := 3.px,
       div(cls := "col-xs-5 col-sm-3", fileLoadButton),
       fileLoadMessage
     ),

@@ -84,6 +84,7 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] {
       .on("show.bs.collapse", { () => f(true); notifyObservers(this) })
       .on("hide.bs.collapse", () => f(false))
 
+    f(false)
     expandTitle()
   }
 
