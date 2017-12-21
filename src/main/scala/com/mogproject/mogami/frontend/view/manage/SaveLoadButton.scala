@@ -3,7 +3,7 @@ package com.mogproject.mogami.frontend.view.manage
 import com.mogproject.mogami.frontend.action.manage.{CopyRecordAction, SaveRecordAction}
 import com.mogproject.mogami.frontend.io.TextReader
 import com.mogproject.mogami.frontend.model.io.RecordFormat
-import com.mogproject.mogami.frontend.view.{English, Language, WebComponent}
+import com.mogproject.mogami.frontend.view.{English, Japanese, Language, WebComponent}
 import com.mogproject.mogami.frontend.view.bootstrap.Tooltip
 import com.mogproject.mogami.frontend.view.button.{DropdownMenu, SingleButton}
 import com.mogproject.mogami.util.Implicits._
@@ -64,40 +64,34 @@ class SaveLoadButton extends WebComponent with RecordLoader {
     data("placement") := "top"
   ).render
 
-  private[this] lazy val textLoadButton: Button = button(
-    tpe := "button",
-    cls := "btn btn-default btn-block",
-    data("toggle") := "tooltip",
-    data("placement") := "bottom",
-    data("original-title") := s"Load a record from the text area",
-    onclick := { () =>
+  private[this] lazy val textLoadButton: SingleButton = SingleButton(
+    Map(English -> "Load".render, Japanese -> "読込".render),
+    tooltip = Map(English -> "Load record from the text area"),
+    isBlockButton = true,
+    clickAction = Some({ () =>
       val text = textLoadInput.value
       val format = RecordFormat.detect(text)
       displayTextLoadMessage(s"Loading as ${format} Format...")
-      textLoadButton.disabled = true
+      textLoadButton.disableElement()
       dom.window.setTimeout(() => readRecordText(format, text), 500)
-    },
-    "Load"
-  ).render
+    })
+  )
 
   private[this] lazy val textLoadMessage: Div = div(
     cls := "col-sm-9 col-xs-8 text-muted",
     marginTop := 6
   ).render
 
-  private[this] lazy val textClearButton: Button = button(
-    tpe := "button",
-    cls := "btn btn-default btn-block",
-    data("toggle") := "tooltip",
-    data("placement") := "bottom",
-    data("original-title") := s"Clear the text area",
-    onclick := { () =>
+  private[this] lazy val textClearButton: SingleButton = SingleButton(
+    Map(English -> "Clear".render, Japanese -> "消去".render),
+    tooltip = Map(English -> "Clear the text area"),
+    isBlockButton = true,
+    clickAction = Some({ () =>
       displayTextLoadMessage("")
       textLoadInput.value = ""
       displayTextLoadTooltip("Cleared!")
-    },
-    "Clear"
-  ).render
+    })
+  )
 
   //
   // elements #3: Save to File/ Clipboard
@@ -120,7 +114,7 @@ class SaveLoadButton extends WebComponent with RecordLoader {
   private[this] val fileSaveButton: SingleButton = SingleButton(
     Map(English -> "Save".render),
     tooltip = Map(English -> "Save record as a file"),
-    clickAction = Some({ () => doAction(SaveRecordAction(fileSaveFormat.getValue, getFileName))})
+    clickAction = Some({ () => doAction(SaveRecordAction(fileSaveFormat.getValue, getFileName)) })
   )
 
   private[this] lazy val textCopyButton: Button = button(
@@ -159,13 +153,13 @@ class SaveLoadButton extends WebComponent with RecordLoader {
     div(
       cls := "row",
       marginTop := 3,
-      div(cls := "col-xs-5 col-sm-3", textLoadButton),
+      div(cls := "col-xs-5 col-sm-3", textLoadButton.element),
       textLoadMessage
     ),
     div(
       cls := "row",
       marginTop := 3,
-      div(cls := "col-xs-5 col-sm-3", textClearButton)
+      div(cls := "col-xs-5 col-sm-3", textClearButton.element)
     ),
     br(),
     label("Save to File / Clipboard"),
@@ -243,7 +237,7 @@ class SaveLoadButton extends WebComponent with RecordLoader {
   }
 
   private[this] def clearTextLoad(): Unit = {
-    textLoadButton.disabled = false
+    textLoadButton.enableElement()
   }
 
   //
