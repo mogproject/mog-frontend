@@ -1,5 +1,6 @@
 package com.mogproject.mogami.frontend.view.action
 
+import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.action.game.ResignAction
 import com.mogproject.mogami.frontend.view.button.SingleButton
 import com.mogproject.mogami.frontend.view.modal.YesNoDialog
@@ -33,9 +34,9 @@ case class ResignButton(isSmall: Boolean, confirm: Boolean) extends WebComponent
   )
 
   def clickAction(): Unit = if (confirm) {
-    YesNoDialog(English, div("Do you really want to resign?"), () => PlaygroundSAM.doAction(ResignAction)).show()
+    YesNoDialog(English, div("Do you really want to resign?"), () => doAction(ResignAction)).show()
   } else {
-    PlaygroundSAM.doAction(ResignAction)
+    doAction(ResignAction)
   }
 
   override def handleUpdate(mode: Mode): Unit = setDisabled(!mode.canMakeMove)
