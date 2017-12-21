@@ -48,6 +48,9 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
 
   def gamePosition: GamePosition = GamePosition(displayBranchNo, statusPosition + game.trunk.offset)
 
+  /** If the position is before the offset of a branch, actually you are seeing the trunk. */
+  def effectiveBranchNo: BranchNo = (statusPosition < displayBranch.offset).fold(0, displayBranchNo)
+
   //
   // predicates
   //
@@ -175,9 +178,10 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
   }
 
   def makeSpecialMove(specialMove: SpecialMove, moveForward: Boolean): Option[GameControl] = {
-    game.truncated(gamePosition).updateBranch(displayBranchNo)(b => Some(b.updateFinalAction(Some(specialMove)))).map { g =>
-      this.copy(game = g, displayPosition = statusPosition + moveForward.fold(1, 0))
-    }
+    game
+      .truncated(GamePosition(effectiveBranchNo, statusPosition))
+      .updateBranch(effectiveBranchNo)(b => Some(b.updateFinalAction(Some(specialMove))))
+      .map { g => this.copy(game = g, displayBranchNo = effectiveBranchNo, displayPosition = statusPosition + moveForward.fold(1, 0))}
   }
 
 }
