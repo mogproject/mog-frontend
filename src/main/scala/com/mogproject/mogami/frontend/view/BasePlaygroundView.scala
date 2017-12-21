@@ -4,7 +4,7 @@ import com.mogproject.mogami._
 import com.mogproject.mogami.core.Player.{BLACK, WHITE}
 import com.mogproject.mogami.core.state.State.{BoardType, HandType}
 import com.mogproject.mogami.util.Implicits._
-import com.mogproject.mogami.frontend.action.{ChangeModeAction, RefreshScreenAction, UpdateGameControlAction}
+import com.mogproject.mogami.frontend.action.{ChangeModeAction, UpdateConfigurationAction, UpdateGameControlAction}
 import com.mogproject.mogami.frontend.api.Clipboard
 import com.mogproject.mogami.frontend.api.Clipboard.Event
 import com.mogproject.mogami.frontend.model.analyze._
@@ -41,7 +41,7 @@ trait BasePlaygroundView extends SAMView {
 
 
     // add rotation detection
-    dom.window.addEventListener("orientationchange", (_: UIEvent) => PlaygroundSAM.doAction(RefreshScreenAction))
+    dom.window.addEventListener("orientationchange", (_: UIEvent) => PlaygroundSAM.doAction(UpdateConfigurationAction(_.updateScreenOrientation())))
 
     // initialize clipboard.js
     val cp = new Clipboard(".btn")

@@ -46,7 +46,7 @@ case class BasePlaygroundConfiguration(layout: SVGAreaLayout = SVGStandardLayout
     parseFlip(List.empty)
   }
 
-  def updateScreenSize(): BasePlaygroundConfiguration = {
+  def updateScreenOrientation(): BasePlaygroundConfiguration = {
     this.copy(deviceType = DeviceType(deviceType.isMobile, BasePlaygroundConfiguration.getIsLandscape), pieceWidth = None)
   }
 
