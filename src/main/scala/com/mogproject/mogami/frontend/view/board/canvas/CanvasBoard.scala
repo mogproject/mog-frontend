@@ -136,15 +136,15 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, gameControl: GameCon
     drawBackground()
     drawLastMoveReverse()
     drawBoardReverse()
-    drawHandReverse()
     drawPlayer(pl1)
+    drawHandReverse()
 
     waitDraw { () =>
       val pl2 = flipped.fold(BLACK, WHITE)
       rotateCanvas()
       drawBoardUnturned()
-      drawHandUnturned()
       drawPlayer(pl2)
+      drawHandUnturned()
 
       waitDraw(callback)
     }

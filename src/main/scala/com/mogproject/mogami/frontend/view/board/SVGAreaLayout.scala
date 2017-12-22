@@ -136,7 +136,11 @@ case object SVGWideLayout extends SVGAreaLayout {
 
   private[this] val blackPlayerArea = Rect(blackHandTopLeft - Coord(0, playerHeight), 2 * mediumPiece.x, playerHeight)
   private[this] val blackSymbolArea = Rect(blackPlayerArea.leftTop + Coord(textOffset, symbolOffset - symbolSize), symbolSize, symbolSize)
-  private[this] val blackPlayerNameArea = Rect(blackPlayerArea.leftTop + Coord(playerBorderStroke + textOffset, playerBorderStroke), blackPlayerArea.width - 2 * playerBorderStroke - textOffset, blackPlayerArea.height - 2 * playerBorderStroke - indicatorHeight)
+  private[this] val blackPlayerNameArea = Rect(
+    blackPlayerArea.leftTop + Coord(playerBorderStroke + textOffset, playerBorderStroke + 10 /* adjustment*/),
+    blackPlayerArea.width - 2 * playerBorderStroke - textOffset,
+    blackPlayerArea.height - 2 * playerBorderStroke - indicatorHeight - 10
+  )
   private[this] val blackIndicatorArea = Rect(blackPlayerNameArea.leftBottom - Coord(textOffset, 0), blackPlayerNameArea.width + textOffset, indicatorHeight)
   private[this] val blackIndicatorBackground = Seq(
     Rect(
