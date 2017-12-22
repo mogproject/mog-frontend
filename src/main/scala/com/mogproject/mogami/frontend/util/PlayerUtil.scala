@@ -9,12 +9,19 @@ import com.mogproject.mogami.frontend.model.{English, Japanese}
   */
 object PlayerUtil {
 
+  val blackTag = 'blackName
+  val whiteTag = 'whiteName
+  val tagNames: Map[Player, Symbol] = Map(BLACK -> blackTag, WHITE -> whiteTag)
+
   def normalizeGameInfo(gameInfo: GameInfo): GameInfo = {
     gameInfo.copy(tags = gameInfo.tags.filter {
-      case ('blackName, s) => s.nonEmpty
-      case ('whiteName, s) => s.nonEmpty
+      case (t, s) if t == blackTag || t == whiteTag => s.nonEmpty
       case _ => true
     })
+  }
+
+  def getPlayerNames(gameInfo: GameInfo): Map[Player, String] = {
+    (gameInfo.tags.get(blackTag).map(BLACK -> _) ++ gameInfo.tags.get(whiteTag).map(WHITE -> _)).toMap
   }
 
   def getDefaultPlayerName(player: Player, messageLang: Language, isHandicapped: Boolean): String = {
@@ -26,6 +33,10 @@ object PlayerUtil {
       case (BLACK, English, _) => "Black"
       case (WHITE, English, _) => "White"
     }
+  }
+
+  def getPlayerName(gameInfo: GameInfo, player: Player, messageLang: Language, isHandicapped: Boolean): String = {
+    gameInfo.tags.get(tagNames(player)).filter(_.nonEmpty).getOrElse(PlayerUtil.getDefaultPlayerName(player, messageLang, isHandicapped))
   }
 
 }

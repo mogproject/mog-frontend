@@ -3,6 +3,7 @@ package com.mogproject.mogami.frontend.model
 import com.mogproject.mogami._
 import com.mogproject.mogami.frontend.model.board.BoardIndicator
 import com.mogproject.mogami.frontend.model.board.cursor._
+import com.mogproject.mogami.frontend.util.PlayerUtil
 import com.mogproject.mogami.util.MapUtil
 
 /**
@@ -67,13 +68,13 @@ sealed abstract class Mode(val modeType: ModeType,
   }
 
   def getPlayerNames: Map[Player, String] = {
-    val tags = (this match {
+    val g = this match {
       case PlayMode(gc) => gc.game.gameInfo
       case ViewMode(gc) => gc.game.gameInfo
       case LiveMode(_, gc) => gc.game.gameInfo
       case EditMode(gi, _, _, _) => gi
-    }).tags
-    (tags.get('blackName).map(BLACK -> _) ++ tags.get('whiteName).map(WHITE -> _)).toMap
+    }
+    PlayerUtil.getPlayerNames(g)
   }
 
   def getIndicators: Map[Player, BoardIndicator] = {

@@ -103,8 +103,6 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
 
   def getDisplayingLastMoveTo: Option[Square] = getDisplayingLastMove.map(_.to)
 
-  def getPlayerName(player: Player): String = game.gameInfo.tags.getOrElse(player.isBlack.fold('blackName, 'whiteName), "")
-
   def getComment: Option[String] = game.getComment(gamePosition)
 
   //

@@ -17,6 +17,7 @@ import com.mogproject.mogami.frontend.view.menu.MenuPane
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, GameControl, ModeType}
 import com.mogproject.mogami.frontend.util.PlayerUtil
+import com.mogproject.mogami.frontend.view.board.canvas.CanvasBoard
 import com.mogproject.mogami.frontend.view.modal._
 import org.scalajs.dom
 import org.scalajs.dom.{Element, UIEvent}
@@ -232,11 +233,11 @@ trait BasePlaygroundView extends SAMView {
   //
   // Image action
   //
-  def drawAsImage(): Unit = {
+  def drawAsImage(config: BasePlaygroundConfiguration, gameControl: GameControl): Unit = {
     dom.window.document.body.style.backgroundColor = "black"
 
     val t = "Snapshot - Shogi Playground"
-    val base64 = mainPane.getFirstSVGArea.getImageBase64
+    val base64 = CanvasBoard(config, gameControl).toBase64
     val elem = a(attr("download") := "snapshot.png", title := t, href := base64, img(alt := t, src := base64))
     dom.window.document.body.innerHTML = elem.toString
   }

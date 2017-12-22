@@ -22,20 +22,18 @@ case class GameInfoDialog(messageLang: Language, gameInfo: GameInfo, isHandicapp
     case English => "Player Names"
   }
 
-  private[this] val tagNames: Map[Player, Symbol] = Map(BLACK -> 'blackName, WHITE -> 'whiteName)
-
   private[this] val inputNames: Map[Player, Input] = List(BLACK, WHITE).map { p =>
     p -> input(
       tpe := "text",
       cls := "form-control",
       maxlength := 12,
       onfocus := { () => inputNames(p).select() },
-      value := gameInfo.tags.get(tagNames(p)).filter(_.nonEmpty).getOrElse(PlayerUtil.getDefaultPlayerName(p, messageLang, isHandicapped))
+      value := PlayerUtil.getPlayerName(gameInfo, p, messageLang, isHandicapped)
     ).render
   }.toMap
 
   private[this] def getGameInfo: GameInfo =
-    gameInfo.copy(tags = tagNames.map { case (p, t) => t -> inputNames(p).value })
+    gameInfo.copy(tags = PlayerUtil.tagNames.map { case (p, t) => t -> inputNames(p).value })
 
   //
   // modal traits

@@ -4,7 +4,9 @@ import com.mogproject.mogami._
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.core.state.StateCache.Implicits._
 import com.mogproject.mogami.frontend.model._
+import com.mogproject.mogami.frontend.model.board.FlipEnabled
 import com.mogproject.mogami.frontend.state.TestState
+import com.mogproject.mogami.frontend.util.PlayerUtil
 import com.mogproject.mogami.frontend.view.TestView
 import org.scalajs.dom
 
@@ -43,9 +45,7 @@ object App extends JSApp {
       case NotesAction =>
         view.drawNotes(game, args.config.recordLang)
       case ImageAction =>
-        PlaygroundSAM.initialize(TestModel.adapter)
-        SAM.initialize(TestState(model, view))
-        view.drawAsImage()
+        view.drawAsImage(args.config, mode.getGameControl.get)
       case PlayAction =>
         // initialize state
         PlaygroundSAM.initialize(TestModel.adapter)
