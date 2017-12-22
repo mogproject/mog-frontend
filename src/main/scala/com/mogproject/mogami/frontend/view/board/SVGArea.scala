@@ -58,6 +58,7 @@ case class SVGArea(areaId: Int, layout: SVGAreaLayout) extends WebComponent with
     * Event listeners belong here.
     */
   private[this] lazy val svgDiv: Div = div(
+    marginBottom := (-5).px,
     svgElement,
     svgBox
   ).render

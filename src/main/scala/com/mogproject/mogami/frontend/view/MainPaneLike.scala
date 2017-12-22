@@ -22,7 +22,7 @@ import scalatags.JsDom.all._
 trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
   def isMobile: Boolean
 
-  def getSite: PlaygroundSite
+  def getSite: () => PlaygroundSite
 
   //
   // Utility
@@ -52,7 +52,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
   ).render
 
   private[this] val sideBarRight: Option[SideBarRight] = (!isMobile).option(new SideBarRight {
-    override def getMenuPane: MenuPane = getSite.menuPane
+    override def getMenuPane: MenuPane = getSite().menuPane
   })
 
   private[this] val sideBarLeft: Option[SideBarLeft] = (!isMobile).option(new SideBarLeft)
@@ -105,7 +105,10 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
         id := "main-area",
         cls := "main-area-pc",
         if (svgAreas.size == 2) {
-          div(cls := "row", svgAreas.map(e => div(cls := "col-xs-6", e.element)))
+          div(cls := "row",
+            div(cls := "col-xs-6", svgAreas.head.element),
+            div(cls := "col-xs-6 main-second", svgAreas(1).element)
+          )
         } else {
           div(svgAreas.head.element)
         }

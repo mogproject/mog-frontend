@@ -458,6 +458,11 @@ ul {
 
 }
 
+.main-second {
+  border-left: 6px solid #999999;
+  padding-left: 9px;
+}
+
 /*
  * Side Bar
  */
@@ -528,7 +533,7 @@ ul {
 .control-bar {
   min-width: 300px;
   max-width: 400px;
-  padding-top: 0px;
+  padding-top: 5px;
   padding-bottom: 5px;
   padding-left: 7px;
   padding-right: 3px;
