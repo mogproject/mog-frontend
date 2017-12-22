@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.view.manage
 
 import com.mogproject.mogami.Game
 import com.mogproject.mogami.util.Implicits._
-import com.mogproject.mogami.frontend.action.dialog.HideMenuModalAction
+import com.mogproject.mogami.frontend.action.dialog.MenuDialogAction
 import com.mogproject.mogami.frontend.action.game.LoadGameAction
 import com.mogproject.mogami.frontend.model.io.{CSA, KI2, KIF, RecordFormat}
 import com.mogproject.mogami.core.state.StateCache.Implicits._ // todo: fixme
@@ -31,7 +31,7 @@ trait RecordLoader {
         displayFileLoadTooltip("Loaded!")
 
         doAction(LoadGameAction(g))
-        doAction(HideMenuModalAction, 1000) // close menu modal after 1 sec (mobile)
+        doAction(MenuDialogAction(false), 1000) // close menu modal after 1 sec (mobile)
 
       case Failure(e) =>
         displayFileLoadMessage(s"Error: ${e.getMessage}")
@@ -53,7 +53,7 @@ trait RecordLoader {
         displayTextLoadTooltip("Loaded!")
 
         doAction(LoadGameAction(g))
-        doAction(HideMenuModalAction, 1000) // close menu modal after 1 sec (mobile)
+        doAction(MenuDialogAction(false), 1000) // close menu modal after 1 sec (mobile)
 
       case Failure(e) =>
         displayTextLoadMessage(s"Error: ${e.getMessage}")

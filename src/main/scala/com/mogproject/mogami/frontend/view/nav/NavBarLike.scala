@@ -1,6 +1,7 @@
 package com.mogproject.mogami.frontend.view.nav
 
 import com.mogproject.mogami.frontend._
+import com.mogproject.mogami.frontend.action.dialog.MenuDialogAction
 import com.mogproject.mogami.frontend.view.action.ResignButton
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.view.button.SingleButton
@@ -24,7 +25,13 @@ trait NavBarLike extends WebComponent {
 
   lazy val resignButton: ResignButton = ResignButton(isSmall = true, confirm = false)
 
-  def buttons: Seq[WebComponent] = Seq(flipButton) ++ (!isMobile).option(resignButton)
+  lazy val menuButton: SingleButton = SingleButton(
+    Map(English -> Seq(StringFrag("Menu "), span(cls := s"glyphicon glyphicon-menu-hamburger", aria.hidden := true)).render),
+    buttonClass = Seq("btn-default", "thin-btn", "menu-btn"),
+    clickAction = Some({() => doAction(MenuDialogAction(true))})
+  )
+
+  def buttons: Seq[WebComponent] = Seq(flipButton) ++ (!isMobile).option(resignButton) ++ isMobile.option(menuButton)
 
   def classNames: String = "navbar navbar-default navbar-fixed-top"
 
@@ -41,10 +48,6 @@ trait NavBarLike extends WebComponent {
         ul(cls := "nav navbar-nav",
           brandElem,
           buttons.map(b => li(b.element))
-
-          //          li(flipButton.dom),
-          //          li(resignButton.dom),
-          //          isMobile.fold(li(paddingLeft := "10px", div(menuButton.dom)), "")
         )
       )
     )

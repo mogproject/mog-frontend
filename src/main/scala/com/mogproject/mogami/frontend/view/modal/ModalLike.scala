@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view.modal
 
-import com.mogproject.mogami.frontend._
+import com.mogproject.mogami.frontend.{BootstrapJQuery, _}
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom
 import org.scalajs.dom.Element

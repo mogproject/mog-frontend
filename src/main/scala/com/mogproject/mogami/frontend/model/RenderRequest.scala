@@ -24,3 +24,5 @@ case object CommentDialogRequest extends RenderRequest
 case object AskDeleteBranchRequest extends RenderRequest
 
 case class CopyRecordRequest(format: RecordFormat) extends RenderRequest
+
+case class MenuDialogRequest(open: Boolean) extends RenderRequest

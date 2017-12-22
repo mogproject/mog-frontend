@@ -1,14 +1,13 @@
 package com.mogproject.mogami.frontend.action.dialog
 
 import com.mogproject.mogami.frontend.action.PlaygroundAction
-import com.mogproject.mogami.frontend.model.BasePlaygroundModel
+import com.mogproject.mogami.frontend.model.{BasePlaygroundModel, MenuDialogRequest}
 
 /**
   *
   */
-object HideMenuModalAction extends PlaygroundAction {
+case class MenuDialogAction(open: Boolean) extends PlaygroundAction {
   override def execute(model: BasePlaygroundModel): Option[BasePlaygroundModel] = {
-    // todo: impl
-    None
+    Some(model.addRenderRequest(MenuDialogRequest(open)))
   }
 }

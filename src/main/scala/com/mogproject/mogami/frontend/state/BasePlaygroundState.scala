@@ -187,6 +187,8 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
         newModel.mode.getGameControl.foreach { gc =>
           view.website.manageMenu.saveLoadButton.renderRecord(gc.getRecord(format))
         }
+      case MenuDialogRequest(isOpen) =>
+        if (isOpen) view.showMenuDialog(newModel.config.messageLang) else view.hideMenuDialog()
     }
   }
 

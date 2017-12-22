@@ -99,6 +99,7 @@ ul {
 }
 
 .menu-btn {
+  margin-left: 10px;
   padding-left: 8px !important;
   padding-right: 8px !important;
 }

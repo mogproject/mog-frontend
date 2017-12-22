@@ -223,4 +223,12 @@ trait BasePlaygroundView extends SAMView {
     CommentDialog(messageLang, text).show()
   }
 
+  def showMenuDialog(messageLang: Language): Unit = {
+    website.menuDialog.show()
+  }
+
+  def hideMenuDialog(): Unit = {
+    website.menuDialog.hide()
+  }
+
 }

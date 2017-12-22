@@ -1,8 +1,8 @@
 package com.mogproject.mogami.frontend.view
 
-import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.footer.FooterLike
 import com.mogproject.mogami.frontend.view.menu._
+import com.mogproject.mogami.frontend.view.modal.MenuDialog
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.view.nav.NavBarLike
 import org.scalajs.dom.Element
@@ -20,27 +20,22 @@ trait PlaygroundSite extends WebComponent {
   def mainPane: MainPaneLike
 
   val shareMenu = new ShareMenu
-  //lazy val branchMenu = new BranchMenu
-
+  lazy val branchMenu = new BranchMenu
   val manageMenu = new ManageMenu
-
   lazy val actionMenu = new ActionMenu
-
   val analyzeMenu = new AnalyzeMenu
-
   val resetMenu = new ResetMenu
-
   val settingMenu = new SettingMenu
-
   val gameHelpMenu = new GameHelpMenu
-
   val aboutMenu = new AboutMenu
 
   lazy val menuPane: MenuPane = if (isMobile) {
-    MenuPane(Seq(shareMenu, manageMenu, actionMenu, analyzeMenu, resetMenu, settingMenu, gameHelpMenu, aboutMenu))
+    MenuPane(Seq(shareMenu, manageMenu, actionMenu, branchMenu, analyzeMenu, resetMenu, settingMenu, gameHelpMenu, aboutMenu))
   } else {
     MenuPane(Seq(shareMenu, manageMenu, analyzeMenu, resetMenu, settingMenu, gameHelpMenu, aboutMenu))
   }
+
+  lazy val menuDialog = MenuDialog(menuPane)
 
   def footer: FooterLike
 
