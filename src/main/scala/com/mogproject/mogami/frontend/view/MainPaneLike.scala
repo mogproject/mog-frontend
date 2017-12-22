@@ -172,6 +172,8 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
 
   def updateSVGArea(areaId: Int, f: SVGArea => Unit): Unit = f(svgAreas(areaId))
 
+  def getFirstSVGArea: SVGArea = svgAreas.head
+
   def updateControlBars(f: ControlBar => Unit): Unit = {
     controlBar.foreach(f)
     sideBarLeft.foreach(sb => f(sb.controlBar))

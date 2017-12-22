@@ -43,7 +43,9 @@ object App extends JSApp {
       case NotesAction =>
         view.drawNotes(game, args.config.recordLang)
       case ImageAction =>
-        ???
+        PlaygroundSAM.initialize(TestModel.adapter)
+        SAM.initialize(TestState(model, view))
+        view.drawAsImage()
       case PlayAction =>
         // initialize state
         PlaygroundSAM.initialize(TestModel.adapter)

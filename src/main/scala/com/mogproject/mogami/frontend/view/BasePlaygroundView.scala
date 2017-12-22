@@ -228,4 +228,17 @@ trait BasePlaygroundView extends SAMView {
     dom.window.document.head.appendChild(link(rel := "stylesheet", tpe := "text/css", href := "assets/css/notesview.css").render)
     dom.window.document.body.innerHTML = game.trunk.toHtmlString(recordLang == Japanese, game.comments)
   }
+
+  //
+  // Image action
+  //
+  def drawAsImage(): Unit = {
+    dom.window.document.body.style.backgroundColor = "black"
+
+    val t = "Snapshot - Shogi Playground"
+    val base64 = mainPane.getFirstSVGArea.getImageBase64
+    val elem = a(attr("download") := "snapshot.png", title := t, href := base64, img(alt := t, src := base64))
+    dom.window.document.body.innerHTML = elem.toString
+  }
+
 }

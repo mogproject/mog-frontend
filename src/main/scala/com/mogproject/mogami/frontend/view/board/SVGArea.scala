@@ -7,9 +7,10 @@ import com.mogproject.mogami.frontend.view.board.board.SVGBoard
 import com.mogproject.mogami.frontend.view.board.box.SVGBox
 import com.mogproject.mogami.frontend.view.board.hand.SVGHand
 import com.mogproject.mogami.frontend.view.board.player.SVGPlayer
+import org.scalajs.dom
 import org.scalajs.dom.Element
 import org.scalajs.dom.html.Div
-import org.scalajs.dom.raw.SVGElement
+import org.scalajs.dom.raw._
 
 import scalatags.JsDom.all._
 import scalatags.JsDom.svgAttrs
@@ -149,6 +150,11 @@ case class SVGArea(areaId: Int, layout: SVGAreaLayout) extends WebComponent with
   def showBox(): Unit = WebComponent.showElement(svgBox)
 
   def hideBox(): Unit = WebComponent.hideElement(svgBox)
+
+  def getImageBase64: String = {
+    // todo: impl
+    ""
+  }
 
   //
   // Event
