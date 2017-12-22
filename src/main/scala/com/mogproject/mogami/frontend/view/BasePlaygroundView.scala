@@ -15,6 +15,7 @@ import com.mogproject.mogami.frontend.view.board.SVGAreaLayout
 import com.mogproject.mogami.frontend.view.menu.MenuPane
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, GameControl, ModeType}
+import com.mogproject.mogami.frontend.util.PlayerUtil
 import com.mogproject.mogami.frontend.view.modal._
 import org.scalajs.dom
 import org.scalajs.dom.{Element, UIEvent}
@@ -71,20 +72,9 @@ trait BasePlaygroundView extends SAMView {
 
   def renderPlayerNames(playerNames: Map[Player, String], messageLang: Language, isHandicapped: Boolean): Unit = {
     mainPane.updateSVGArea(_.player.drawNames(
-      playerNames.getOrElse(BLACK, getDefaultPlayerName(BLACK, messageLang, isHandicapped)),
-      playerNames.getOrElse(WHITE, getDefaultPlayerName(WHITE, messageLang, isHandicapped))
+      playerNames.getOrElse(BLACK, PlayerUtil.getDefaultPlayerName(BLACK, messageLang, isHandicapped)),
+      playerNames.getOrElse(WHITE, PlayerUtil.getDefaultPlayerName(WHITE, messageLang, isHandicapped))
     ))
-  }
-
-  private[this] def getDefaultPlayerName(player: Player, messageLang: Language, isHandicapped: Boolean): String = {
-    (player, messageLang, isHandicapped) match {
-      case (BLACK, Japanese, true) => "下手"
-      case (BLACK, Japanese, false) => "先手"
-      case (WHITE, Japanese, true) => "上手"
-      case (WHITE, Japanese, false) => "後手"
-      case (BLACK, English, _) => "Black"
-      case (WHITE, English, _) => "White"
-    }
   }
 
   def renderIndicators(indicators: Map[Player, BoardIndicator]): Unit = {

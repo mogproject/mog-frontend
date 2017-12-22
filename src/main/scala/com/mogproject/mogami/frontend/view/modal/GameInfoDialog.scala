@@ -3,6 +3,7 @@ package com.mogproject.mogami.frontend.view.modal
 import com.mogproject.mogami._
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.board.UpdateGameInfoAction
+import com.mogproject.mogami.frontend.util.PlayerUtil
 import org.scalajs.dom.html.Input
 import org.scalajs.jquery.JQuery
 
@@ -21,13 +22,6 @@ case class GameInfoDialog(messageLang: Language, gameInfo: GameInfo, isHandicapp
     case English => "Player Names"
   }
 
-  // todo: refactor w/ BasePlaygroundView
-  private[this] val defaultNames: Map[Player, String] = (messageLang, isHandicapped) match {
-    case (Japanese, false) => Map(BLACK -> "先手", WHITE -> "後手")
-    case (Japanese, true) => Map(BLACK -> "下手", WHITE -> "上手")
-    case (English, _) => Map(BLACK -> "Black", WHITE -> "White")
-  }
-
   private[this] val tagNames: Map[Player, Symbol] = Map(BLACK -> 'blackName, WHITE -> 'whiteName)
 
   private[this] val inputNames: Map[Player, Input] = List(BLACK, WHITE).map { p =>
@@ -36,7 +30,7 @@ case class GameInfoDialog(messageLang: Language, gameInfo: GameInfo, isHandicapp
       cls := "form-control",
       maxlength := 12,
       onfocus := { () => inputNames(p).select() },
-      value := gameInfo.tags.get(tagNames(p)).filter(_.nonEmpty).getOrElse(defaultNames(p))
+      value := gameInfo.tags.get(tagNames(p)).filter(_.nonEmpty).getOrElse(PlayerUtil.getDefaultPlayerName(p, messageLang, isHandicapped))
     ).render
   }.toMap
 
