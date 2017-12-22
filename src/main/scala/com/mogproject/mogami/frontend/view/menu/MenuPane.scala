@@ -1,5 +1,6 @@
 package com.mogproject.mogami.frontend.view.menu
 
+import com.mogproject.mogami.frontend
 import com.mogproject.mogami.frontend._
 import org.scalajs.dom.html.Div
 import org.scalajs.jquery.jQuery

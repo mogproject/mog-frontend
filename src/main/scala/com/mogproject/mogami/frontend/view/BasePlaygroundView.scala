@@ -69,19 +69,21 @@ trait BasePlaygroundView extends SAMView {
     }
   }
 
-  def renderPlayerNames(playerNames: Map[Player, String], messageLang: Language): Unit = {
+  def renderPlayerNames(playerNames: Map[Player, String], messageLang: Language, isHandicapped: Boolean): Unit = {
     mainPane.updateSVGArea(_.player.drawNames(
-      playerNames.getOrElse(BLACK, getDefaultPlayerName(BLACK, messageLang)),
-      playerNames.getOrElse(WHITE, getDefaultPlayerName(WHITE, messageLang))
+      playerNames.getOrElse(BLACK, getDefaultPlayerName(BLACK, messageLang, isHandicapped)),
+      playerNames.getOrElse(WHITE, getDefaultPlayerName(WHITE, messageLang, isHandicapped))
     ))
   }
 
-  private[this] def getDefaultPlayerName(player: Player, messageLang: Language): String = {
-    (player, messageLang) match {
-      case (BLACK, Japanese) => "先手"
-      case (WHITE, Japanese) => "後手"
-      case (BLACK, English) => "Black"
-      case (WHITE, English) => "White"
+  private[this] def getDefaultPlayerName(player: Player, messageLang: Language, isHandicapped: Boolean): String = {
+    (player, messageLang, isHandicapped) match {
+      case (BLACK, Japanese, true) => "下手"
+      case (BLACK, Japanese, false) => "先手"
+      case (WHITE, Japanese, true) => "上手"
+      case (WHITE, Japanese, false) => "後手"
+      case (BLACK, English, _) => "Black"
+      case (WHITE, English, _) => "White"
     }
   }
 
@@ -187,8 +189,8 @@ trait BasePlaygroundView extends SAMView {
     PromotionDialog(messageLang, pieceFace, pieceSize, rawMove, rotate).show()
   }
 
-  def showGameInfoDialog(messageLang: Language, gameInfo: GameInfo): Unit = {
-    GameInfoDialog(messageLang, gameInfo).show()
+  def showGameInfoDialog(messageLang: Language, gameInfo: GameInfo, isHandicapped: Boolean): Unit = {
+    GameInfoDialog(messageLang, gameInfo, isHandicapped).show()
   }
 
   def showEditWarningDialog(messageLang: Language): Unit = {

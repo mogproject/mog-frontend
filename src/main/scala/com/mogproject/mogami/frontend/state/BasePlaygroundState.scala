@@ -95,7 +95,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
   }
 
   private[this] def renderPlayerNames(newModel: M): Unit = {
-    view.renderPlayerNames(newModel.mode.getPlayerNames, newModel.config.messageLang)
+    view.renderPlayerNames(newModel.mode.getPlayerNames, newModel.config.messageLang, newModel.mode.getGameControl.exists(_.isHandicapped))
   }
 
   private[this] def renderIndicators(newModel: M): Unit = {
@@ -171,9 +171,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
       case CursorFlashRequest(cursor: Cursor) =>
         view.mainPane.updateSVGArea(_.flashCursor(cursor))
       case GameInfoDialogRequest =>
-        newModel.mode.getGameControl.foreach { gc =>
-          view.showGameInfoDialog(newModel.config.messageLang, gc.game.gameInfo)
-        }
+        newModel.mode.getGameControl.foreach { gc => view.showGameInfoDialog(newModel.config.messageLang, gc.game.gameInfo, gc.isHandicapped) }
       case EditWarningDialogRequest =>
         view.showEditWarningDialog(newModel.config.messageLang)
       case EditAlertDialogRequest(msg) =>
@@ -196,5 +194,4 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
     if (newModel.mode.isViewMode) view.renderForward(true)
     newModel.mode.getLastMove.foreach(view.renderMoveEffect(_, newModel.config.pieceFace, newModel.config.visualEffectEnabled, newModel.config.soundEffectEnabled))
   }
-
 }

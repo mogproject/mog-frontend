@@ -21,24 +21,25 @@ trait PlaygroundSite extends WebComponent {
 
   val shareMenu = new ShareMenu
   //lazy val branchMenu = new BranchMenu
-  //val resetMenu = new ResetMenu
 
   val manageMenu = new ManageMenu
 
   lazy val actionMenu = new ActionMenu
 
-  val settingMenu = new SettingMenu
-
   val analyzeMenu = new AnalyzeMenu
+
+  val resetMenu = new ResetMenu
+
+  val settingMenu = new SettingMenu
 
   val gameHelpMenu = new GameHelpMenu
 
   val aboutMenu = new AboutMenu
 
   lazy val menuPane: MenuPane = if (isMobile) {
-    MenuPane(Seq(shareMenu, manageMenu, actionMenu, analyzeMenu, settingMenu, gameHelpMenu, aboutMenu))
+    MenuPane(Seq(shareMenu, manageMenu, actionMenu, analyzeMenu, resetMenu, settingMenu, gameHelpMenu, aboutMenu))
   } else {
-    MenuPane(Seq(shareMenu, manageMenu, analyzeMenu, settingMenu, gameHelpMenu, aboutMenu))
+    MenuPane(Seq(shareMenu, manageMenu, analyzeMenu, resetMenu, settingMenu, gameHelpMenu, aboutMenu))
   }
 
   def footer: FooterLike

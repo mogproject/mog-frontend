@@ -11,7 +11,7 @@ import scalatags.JsDom.all._
 /**
   * Game information dialog
   */
-case class GameInfoDialog(messageLang: Language, gameInfo: GameInfo) extends ModalLike {
+case class GameInfoDialog(messageLang: Language, gameInfo: GameInfo, isHandicapped: Boolean) extends ModalLike {
 
   //
   // game info specific
@@ -21,9 +21,11 @@ case class GameInfoDialog(messageLang: Language, gameInfo: GameInfo) extends Mod
     case English => "Player Names"
   }
 
-  private[this] val defaultNames: Map[Player, String] = messageLang match {
-    case Japanese => Map(BLACK -> "先手", WHITE -> "後手")
-    case English => Map(BLACK -> "Black", WHITE -> "White")
+  // todo: refactor w/ BasePlaygroundView
+  private[this] val defaultNames: Map[Player, String] = (messageLang, isHandicapped) match {
+    case (Japanese, false) => Map(BLACK -> "先手", WHITE -> "後手")
+    case (Japanese, true) => Map(BLACK -> "下手", WHITE -> "上手")
+    case (English, _) => Map(BLACK -> "Black", WHITE -> "White")
   }
 
   private[this] val tagNames: Map[Player, Symbol] = Map(BLACK -> 'blackName, WHITE -> 'whiteName)
@@ -80,5 +82,4 @@ case class GameInfoDialog(messageLang: Language, gameInfo: GameInfo) extends Mod
       inputNames(BLACK).focus()
     })
   }
-
 }

@@ -4,7 +4,7 @@ import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipDisabled}
 import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
-import com.mogproject.mogami.frontend.view.menu.setting.{BooleanSelector, DropdownSelector, LanguageSelector}
+import com.mogproject.mogami.frontend.view.setting.{BooleanSelector, DropdownSelector, LanguageSelector}
 import org.scalajs.dom.html.Div
 
 import scalatags.JsDom
