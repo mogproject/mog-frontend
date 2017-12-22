@@ -13,11 +13,11 @@ class ImageLinkButton extends CopyButtonLike with ViewButtonLike {
     */
   sealed abstract class ImageSize(val w: Int)
 
-  case object Small extends ImageSize(240)
+  case object Small extends ImageSize(30)
 
-  case object Medium extends ImageSize(320)
+  case object Medium extends ImageSize(40)
 
-  case object Large extends ImageSize(400)
+  case object Large extends ImageSize(50)
 
   private[this] val allSizes = Vector(Small, Medium, Large)
 
@@ -52,7 +52,7 @@ class ImageLinkButton extends CopyButtonLike with ViewButtonLike {
   override def updateValue(value: String): Unit = updateValueWithSize(Some(value))
 
   private[this] def updateValueWithSize(baseUrl: Option[String] = None): Unit = {
-    val sizeParams = s"&size=${sizeButton.getValue.w}"
+    val sizeParams = s"&sz=${sizeButton.getValue.w}"
     val base = baseUrl.getOrElse(getValue)
     val url = base.replaceAll("[&]size=\\d+", "") + sizeParams
 
