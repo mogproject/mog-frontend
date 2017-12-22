@@ -237,9 +237,10 @@ trait BasePlaygroundView extends SAMView {
     dom.window.document.body.style.backgroundColor = "black"
 
     val t = "Snapshot - Shogi Playground"
-    val base64 = CanvasBoard(config, gameControl).toBase64
-    val elem = a(attr("download") := "snapshot.png", title := t, href := base64, img(alt := t, src := base64))
-    dom.window.document.body.innerHTML = elem.toString
+    CanvasBoard(config, gameControl).processPNGData { data =>
+      val elem = a(attr("download") := "snapshot.png", title := t, href := data, img(alt := t, src := data))
+      dom.window.document.body.innerHTML = elem.toString
+    }
   }
 
 }

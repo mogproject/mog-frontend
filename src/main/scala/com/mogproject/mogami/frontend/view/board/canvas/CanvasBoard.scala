@@ -2,6 +2,8 @@ package com.mogproject.mogami.frontend.view.board.canvas
 
 import com.mogproject.mogami.frontend.model.board.FlipEnabled
 import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, GameControl}
+import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
+import org.scalajs.dom
 import org.scalajs.dom.CanvasRenderingContext2D
 import org.scalajs.dom.html.Canvas
 
@@ -10,17 +12,21 @@ import scalatags.JsDom.all._
 /**
   * For PNG image creation
   */
-case class CanvasBoard(config: BasePlaygroundConfiguration, gameControl: GameControl) {
-
-  private[this] val pieceWidth = config.pieceWidth.getOrElse(40)
+case class CanvasBoard(config: BasePlaygroundConfiguration, gameControl: GameControl) extends CanvasRenderer {
 
   private[this] val canvasWidth = config.layout.viewBoxBottomRight.x
   private[this] val canvasHeight = config.layout.viewBoxBottomRight.y
+
+  protected val cv: Canvas = canvas(widthA := canvasWidth, heightA := canvasHeight).render
+  protected val ctx: CanvasRenderingContext2D = cv.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
+
+  private[this] val pieceWidth = config.pieceWidth.getOrElse(40)
 
   private[this] val displayState = gameControl.getDisplayingState
   private[this] val lastMove = gameControl.getDisplayingLastMove
 
   private[this] val flipped = config.flipType == FlipEnabled
+
   // pieceWidth: Int,
   //  layout: SVGAreaLayout,
   //  messageLang: Language, // for default player names
@@ -31,40 +37,47 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, gameControl: GameCon
   //  state: State,
   //  lastMove: Option[Move]
 
-  /** set background as white */
-  private[this] def drawBackground(ctx: CanvasRenderingContext2D): Unit = {
-    ctx.fillStyle = "#ffffff"
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight)
+  object color {
+    final val BACKGROUND = "#ffffff"
+
+    /** @note should match with svg.css */
+    final val BORDER = "#000000"
+    final val LAST_MOVE = "#e0e0e0"
   }
 
-  private[this] def drawBoard(ctx: CanvasRenderingContext2D): Unit = {
+  /** set background as white */
+  private[this] def drawBackground(): Unit = {
+    renderRect(Rect(Coord(0, 0), canvasWidth, canvasHeight), Some(color.BACKGROUND))
+  }
+
+  private[this] def drawLastMoveReverse(): Unit = {
+    val rs = lastMove.toSeq.flatMap { mv =>
+      mv.moveFrom match {
+        case Left(sq) => Seq(sq, mv.to).map(s => config.layout.board.getRect(s, flipped))
+        case Right(h) => Seq(config.layout.hand.getRect(h.toPiece, flipped), config.layout.board.getRect(mv.to, flipped))
+      }
+    }
+    rs.foreach(renderRect(_, Some(color.LAST_MOVE)))
+  }
+
+  private[this] def drawBoardReverse(): Unit = {
     val lo = config.layout.board
 
-    ctx.strokeStyle = "#000000"
-    ctx.fillStyle = "#000000"
+    renderRect(config.layout.board.boardBorderRect, None, Some(color.BORDER), 10)
+    lo.boardLineRects.foreach(renderLine(_, color.BORDER, 5))
+    lo.boardCircleCoords.foreach(renderCircle(_, lo.CIRCLE_SIZE, color.BORDER))
 
-    ctx.lineWidth = 10
-    ctx.beginPath()
-    ctx.rect(lo.boardBorderRect.left, lo.boardBorderRect.top, lo.boardBorderRect.width, lo.boardBorderRect.height)
-    ctx.stroke()
-
-    ctx.lineWidth = 5
-    lo.boardLineRects.foreach { r =>
-      ctx.beginPath()
-      ctx.moveTo(r.left, r.top)
-      ctx.lineTo(r.right, r.bottom)
-      ctx.stroke()
+    displayState.board.filter(_._2.owner.isBlack ^ flipped).foreach { case (sq, pc) =>
+      renderImage(lo.getPieceRect(sq, flipped), config.pieceFace.getImagePath(pc.ptype))
     }
 
-    lo.boardCircleCoords.foreach { c =>
-      ctx.beginPath()
-      ctx.arc(c.x, c.y, lo.CIRCLE_SIZE, 0, math.Pi * 2, anticlockwise = true)
-      ctx.fill()
-    }
+  }
 
-    displayState.board.foreach { case (sq, pc) =>
-      val r = lo.getPieceRect(sq, flipped)
-      ctx.drawImage(img(src := config.pieceFace.getImagePath(pc.ptype)).render, r.left, r.top, r.width, r.height)
+  private[this] def drawBoardUnturned(): Unit = {
+    val lo = config.layout.board
+
+    displayState.board.filter(_._2.owner.isWhite ^ flipped) foreach { case (sq, pc) =>
+      renderImage(lo.getPieceRect(!sq, flipped), config.pieceFace.getImagePath(pc.ptype))
     }
   }
 
@@ -78,18 +91,36 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, gameControl: GameCon
     if (w <= targetWidth) cv else resizeGradually(cv, targetWidth)
   }
 
-  def toBase64: String = {
-    // create a canvas
-    val cv = canvas(widthA := canvasWidth, heightA := canvasHeight).render
-    val ctx = cv.getContext("2d").asInstanceOf[CanvasRenderingContext2D]
+  private[this] def draw(callback: () => Unit): Unit = {
+    drawBackground()
+    drawLastMoveReverse()
+    drawBoardReverse()
 
-    drawBackground(ctx)
-    drawBoard(ctx)
+    waitDraw { () =>
+      rotateCanvas()
+      drawBoardUnturned()
+      waitDraw(callback)
+    }
+  }
 
-    // scale image
-    val cv2 = resizeGradually(cv, config.layout.areaWidth(pieceWidth))
+  private[this] def waitDraw(callback: () => Unit): Unit = {
+    if (isImageReady) {
+      callback()
+    } else {
+      dom.window.setTimeout(() => waitDraw(callback), 100)
+    }
+  }
 
-    // export image
-    cv2.toDataURL("image/png")
+  def processPNGData(callback: String => Unit): Unit = {
+    draw(() => {
+      // scale image
+      val cv2 = resizeGradually(cv, config.layout.areaWidth(pieceWidth))
+
+      // export image
+      val data = cv2.toDataURL("image/png")
+
+      // callback
+      callback(data)
+    })
   }
 }
