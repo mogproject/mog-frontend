@@ -67,7 +67,11 @@ case object SVGStandardLayout extends SVGAreaLayout {
     )
   )
 
-  override def player: SVGPlayerLayout = SVGPlayerLayout(board.center, blackPlayerArea, blackSymbolArea, blackPlayerNameArea, blackIndicatorArea, blackIndicatorBackground)
+  override def player: SVGPlayerLayout = SVGPlayerLayout(
+    board.center, blackPlayerArea, blackSymbolArea, blackPlayerNameArea, blackIndicatorArea, blackIndicatorBackground,
+    playerNameFontSize = 80,
+    indicatorFontSize = 80
+  )
 
   override def viewBoxBottomRight: Coord = board.offset + Coord(board.VIEW_BOX_WIDTH, board.VIEW_BOX_HEIGHT + smallPiece.y + topMargin)
 }
@@ -146,7 +150,11 @@ case object SVGWideLayout extends SVGAreaLayout {
     )
   )
 
-  override def player: SVGPlayerLayout = SVGPlayerLayout(board.center, blackPlayerArea, blackSymbolArea, blackPlayerNameArea, blackIndicatorArea, blackIndicatorBackground)
+  override def player: SVGPlayerLayout = SVGPlayerLayout(
+    board.center, blackPlayerArea, blackSymbolArea, blackPlayerNameArea, blackIndicatorArea, blackIndicatorBackground,
+    playerNameFontSize = 80,
+    indicatorFontSize = 80
+  )
 
   override def viewBoxBottomRight: Coord = board.offset + Coord(board.VIEW_BOX_WIDTH + 2 * mediumPiece.x + boardMargin, board.VIEW_BOX_HEIGHT)
 }

@@ -25,13 +25,14 @@
 }
 
 .board-index-text {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   text-anchor: middle;
   font-size: 60px;
   pointer-events: none;
 }
 
 .hand-number-text {
-  font-family: Tahoma, Geneva, sans-serif;
+  font-family: Tahoma,Geneva,sans-serif;
   font-weight: 900;
   text-anchor: middle;
   stroke: #333333;
@@ -42,6 +43,7 @@
 }
 
 .player-name-text {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   pointer-events: none;
 }
 
@@ -59,6 +61,7 @@
 
 /* Indicators */
 .indicator-text {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   font-weight: 900;
   text-anchor: middle;
   fill: #eeeeee;

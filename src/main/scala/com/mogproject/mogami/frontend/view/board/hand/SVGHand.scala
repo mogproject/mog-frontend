@@ -31,16 +31,6 @@ case class SVGHand(layout: SVGHandLayout) extends SVGHandPieceManager with Effec
 
   def getRect(hand: Hand): Rect = getRect(hand.toPiece)
 
-  def getNumberRect(piece: Piece): Rect = {
-    val r = getRect(piece)
-    val c = if (piece.owner.isWhite ^ isFlipped) {
-      r.rightBottom - layout.numberAdjustment - layout.numberSize
-    } else {
-      r.leftTop + layout.numberAdjustment
-    }
-    Rect(c, layout.numberSize.x, layout.numberSize.y)
-  }
-
   override def clientPos2Cursor(clientX: Double, clientY: Double): Option[Cursor] = {
     val numRooms = layout.numRows * layout.numColumns
 

@@ -35,8 +35,6 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
   //
   // Utility
   //
-  private[this] def getSymbolImagePath(player: Player): String = s"assets/img/p/common/${player.toString.take(2)}.svg"
-
   def getRect(player: Player): Rect = layout.getRectByPlayer(getFlippedPlayer(player), layout.blackNameRect)
 
   //
@@ -45,7 +43,7 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
   private[this] val borderElements: Seq[RectElement] = layout.borders.map(_.render)
 
   private[this] val symbolElements: SymmetricElement[SVGImageElement] = SymmetricElement { pl =>
-    layout.getSymbolArea(pl).toSVGImage(getSymbolImagePath(getFlippedPlayer(pl)), rotated = pl.isWhite).render
+    layout.getSymbolArea(pl).toSVGImage(layout.getSymbolImagePath(getFlippedPlayer(pl)), rotated = pl.isWhite).render
   }
 
   private[this] val nameElements: SymmetricElement[svg.Text] = SymmetricElement { pl =>
@@ -98,7 +96,7 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
 
   def drawSymbols(): Unit = {
     symbolElements.foreach { case (pl, elem) =>
-      elem.setAttribute("xlink:href", getSymbolImagePath(getFlippedPlayer(pl)))
+      elem.setAttribute("xlink:href", layout.getSymbolImagePath(getFlippedPlayer(pl)))
     }
   }
 

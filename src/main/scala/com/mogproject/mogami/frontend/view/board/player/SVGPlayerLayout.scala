@@ -17,12 +17,14 @@ case class SVGPlayerLayout(center: Coord,
                            blackNameArea: Rect,
                            blackIndicatorArea: Rect,
                            blackIndicatorBackground: Seq[Rect],
-                           playerNameFontSize: Int = 80,
-                           indicatorFontSize: Int = 80,
+                           playerNameFontSize: Int,
+                           indicatorFontSize: Int,
                            playerNameTopToBottom: Boolean = false
                           ) {
 
   private[this] def generateBorder(rect: Rect): TypedTag[RectElement] = rect.toSVGRect(cls := "player-border")
+
+  def getSymbolImagePath(player: Player): String = s"assets/img/p/common/${player.toString.take(2)}.svg"
 
   def getRectByPlayer(player: Player, rect: Rect): Rect = player.isWhite.when[Rect](_.rotate(center))(rect)
 

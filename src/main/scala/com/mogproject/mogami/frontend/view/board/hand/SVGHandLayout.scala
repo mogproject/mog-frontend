@@ -35,6 +35,18 @@ case class SVGHandLayout(center: Coord, blackOffset: Coord, pieceWidth: Int, pie
     Rect(os + Coord(c * pieceWidth, r * pieceHeight), pieceWidth, pieceHeight)
   }
 
+  def getPieceRect(piece: Piece, isFlipped: Boolean): Rect = getRect(piece, isFlipped).toInnerRect(PIECE_FACE_SIZE, PIECE_FACE_SIZE)
+
+  def getNumberRect(piece: Piece, isFlipped: Boolean): Rect = {
+    val r = getRect(piece, isFlipped)
+    val c = if (piece.owner.isWhite ^ isFlipped) {
+      r.rightBottom - numberAdjustment - numberSize
+    } else {
+      r.leftTop + numberAdjustment
+    }
+    Rect(c, numberSize.x, numberSize.y)
+  }
+
   private[this] def generateBorder(rect: Rect): TypedTag[RectElement] = rect.toSVGRect(cls := "board-border")
 
   // Elements

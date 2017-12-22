@@ -11,9 +11,9 @@ import com.mogproject.mogami.util.Implicits._
 trait SVGHandPieceManager extends SVGPieceManager[Hand, Int] {
   self: SVGHand =>
 
-  override def getPieceRect(key: Hand): Rect = getRect(key).toInnerRect(layout.PIECE_FACE_SIZE, layout.PIECE_FACE_SIZE)
+  override def getPieceRect(key: Hand): Rect = layout.getPieceRect(key.toPiece, isFlipped)
 
-  override protected def getNumberRect(key: Hand): Rect = getNumberRect(key.toPiece)
+  override protected def getNumberRect(key: Hand): Rect = layout.getNumberRect(key.toPiece, isFlipped)
 
   override protected def isFlipped(key: Hand, value: Int): Boolean = key.owner.isWhite ^ isFlipped
 
