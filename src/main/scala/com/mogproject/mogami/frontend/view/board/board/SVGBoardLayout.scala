@@ -24,6 +24,8 @@ case class SVGBoardLayout(offset: Coord, pieceWidth: Int, pieceHeight: Int) {
     getRect(9 - s.file, s.rank - 1)
   }
 
+  def getPieceRect(square: Square, isFlipped: Boolean): Rect = getRect(square, isFlipped).toInnerRect(PIECE_FACE_SIZE, PIECE_FACE_SIZE)
+
   def center: Coord = offset + Coord(MARGIN_SIZE + pieceWidth * 9 / 2, MARGIN_SIZE + pieceHeight * 9 / 2)
 
   final val VIEW_BOX_WIDTH: Int = 2048
@@ -39,15 +41,19 @@ case class SVGBoardLayout(offset: Coord, pieceWidth: Int, pieceHeight: Int) {
   final val VIEW_BOX_HEIGHT: Int = BOARD_HEIGHT + MARGIN_SIZE * 2
 
   // Elements
-  def boardBoarder: TypedTag[RectElement] = Rect(getCoord(0, 0), BOARD_WIDTH, BOARD_HEIGHT).toSVGRect(cls := "board-border")
+  def boardBorderRect = Rect(getCoord(0, 0), BOARD_WIDTH, BOARD_HEIGHT)
 
-  def boardLines: Seq[TypedTag[Line]] = for {
+  def boardBorder: TypedTag[RectElement] = boardBorderRect.toSVGRect(cls := "board-border")
+
+  def boardLineRects: Seq[Rect] = for {
     i <- 1 to 8
     r <- Seq(Rect(getCoord(0, i), BOARD_WIDTH, 0), Rect(getCoord(i, 0), 0, BOARD_HEIGHT))
-  } yield r.toSVGLine(cls := "board-line")
+  } yield r
 
-  def boardCircles: Seq[TypedTag[Circle]] = (0 to 3).map { i =>
-    getCoord(3 << (i & 1), 3 << ((i >> 1) & 1)).toSVGCircle(CIRCLE_SIZE, cls := "board-circle")
-  }
+  def boardLines: Seq[TypedTag[Line]] = boardLineRects.map(_.toSVGLine(cls := "board-line"))
+
+  def boardCircleCoords: Seq[Coord] = (0 to 3).map(i => getCoord(3 << (i & 1), 3 << ((i >> 1) & 1)))
+
+  def boardCircles: Seq[TypedTag[Circle]] = boardCircleCoords.map(_.toSVGCircle(CIRCLE_SIZE, cls := "board-circle"))
 
 }

@@ -24,7 +24,7 @@ case class SVGBoard(layout: SVGBoardLayout) extends SVGBoardPieceManager with SV
   //
   // Elements
   //
-  private[this] val borderElement: RectElement = boardBoarder.render
+  private[this] val borderElement: RectElement = boardBorder.render
 
   override protected def thresholdElement: Element = borderElement
 

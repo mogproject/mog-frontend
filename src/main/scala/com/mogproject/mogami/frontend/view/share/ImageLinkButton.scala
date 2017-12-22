@@ -28,13 +28,17 @@ class ImageLinkButton extends CopyButtonLike with ViewButtonLike {
 
   override protected val labelString = "Snapshot Image"
 
-  private[this] val sizeButton = DropdownMenu(
-    allSizes,
-    DropdownMenu.buildLabels(allSizes),
-    dropdownClass = "input-group-btn",
-    clickAction = { (_: ImageSize) => updateValueWithSize() },
-    dropdownHeader = Some("Image Size")
-  )
+  private[this] val sizeButton = {
+    val d = DropdownMenu(
+      allSizes,
+      DropdownMenu.buildLabels(allSizes),
+      dropdownClass = "input-group-btn",
+      clickAction = { (_: ImageSize) => updateValueWithSize() },
+      dropdownHeader = Some("Image Size")
+    )
+    d.select(Medium)
+    d
+  }
 
   override lazy val element: Div = div(
     label(labelString),

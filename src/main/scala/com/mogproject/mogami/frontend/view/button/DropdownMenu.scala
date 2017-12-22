@@ -31,23 +31,23 @@ case class DropdownMenu[A](items: Vector[A],
   //
   // HTML Elements
   //
-  private[this] lazy val labelButton = button(
+  private[this] val labelButton = button(
     cls := "btn btn-default dropdown-toggle " + labelClass,
     tpe := "button",
     data("toggle") := "dropdown"
   ).render
 
-  private[this] lazy val menuItems = ul(
+  private[this] val menuItems = ul(
     cls := "dropdown-menu " + menuClass
   ).render
 
-  private[this] lazy val dropdownElem = div(
+  private[this] val dropdownElem = div(
     cls := dropdownClass,
     labelButton,
     menuItems
   ).render
 
-  override lazy val element: Element = {
+  override val element: Element = {
     renderItems(currentLanguage)
     select(items.head)
     dropdownElem

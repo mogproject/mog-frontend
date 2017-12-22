@@ -11,7 +11,7 @@ import com.mogproject.mogami.{Piece, Ptype, Square}
 trait SVGBoardPieceManager extends SVGPieceManager[Square, Piece] {
   self: SVGBoard =>
 
-  override def getPieceRect(key: Square): Rect = getRect(key).toInnerRect(layout.PIECE_FACE_SIZE, layout.PIECE_FACE_SIZE)
+  override def getPieceRect(key: Square): Rect = layout.getPieceRect(key, isFlipped)
 
   override protected def getNumberRect(key: Square): Rect = ???
 
