@@ -3,7 +3,7 @@ package com.mogproject.mogami.frontend
 import com.mogproject.mogami._
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.core.state.StateCache.Implicits._
-import com.mogproject.mogami.frontend.model.{GameControl, PlayMode, TestModel, ViewMode}
+import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.frontend.state.TestState
 import com.mogproject.mogami.frontend.view.TestView
 import org.scalajs.dom
@@ -38,9 +38,17 @@ object App extends JSApp {
     // create view
     val view = TestView(args.config.deviceType.isMobile, dom.document.getElementById("app"))
 
-    // initialize state
-    PlaygroundSAM.initialize(TestModel.adapter)
-    SAM.initialize(TestState(model, view))
+    // handle special actions
+    args.action match {
+      case NotesAction =>
+        view.drawNotes(game, args.config.recordLang)
+      case ImageAction =>
+        ???
+      case PlayAction =>
+        // initialize state
+        PlaygroundSAM.initialize(TestModel.adapter)
+        SAM.initialize(TestState(model, view))
+    }
   }
 
   private[this] def createGameFromArgs(args: Arguments): Game = {

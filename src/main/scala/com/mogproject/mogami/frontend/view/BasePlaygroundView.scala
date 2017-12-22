@@ -3,6 +3,7 @@ package com.mogproject.mogami.frontend.view
 import com.mogproject.mogami._
 import com.mogproject.mogami.core.Player.{BLACK, WHITE}
 import com.mogproject.mogami.core.state.State.{BoardType, HandType}
+import com.mogproject.mogami.core.state.StateCache
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.action.{ChangeModeAction, UpdateConfigurationAction, UpdateGameControlAction}
 import com.mogproject.mogami.frontend.api.Clipboard
@@ -38,7 +39,6 @@ trait BasePlaygroundView extends SAMView {
   override def initialize(): Unit = {
     // create elements
     rootElem.appendChild(website.element)
-
 
     // add rotation detection
     dom.window.addEventListener("orientationchange", (_: UIEvent) => PlaygroundSAM.doAction(UpdateConfigurationAction(_.updateScreenOrientation())))
@@ -221,4 +221,11 @@ trait BasePlaygroundView extends SAMView {
     website.menuDialog.hide()
   }
 
+  //
+  // Notes action
+  //
+  def drawNotes(game: Game, recordLang: Language)(implicit stateCache: StateCache): Unit = {
+    dom.window.document.head.appendChild(link(rel := "stylesheet", tpe := "text/css", href := "assets/css/notesview.css").render)
+    dom.window.document.body.innerHTML = game.trunk.toHtmlString(recordLang == Japanese, game.comments)
+  }
 }
