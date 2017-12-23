@@ -82,7 +82,7 @@ case class Arguments(sfen: Option[String] = None,
       case ("sz" :: s :: Nil) :: xs => Try(s.toInt) match {
         case Success(n) if n > 0 => f(sofar.copy(config = sofar.config.copy(pieceWidth = Some(n))), xs)
         case _ =>
-          println(s"Invalid parameter: size=${s}")
+          println(s"Invalid parameter: sz=${s}")
           f(sofar, xs)
       }
       case ("layout" :: s :: Nil) :: xs => s.toLowerCase match {

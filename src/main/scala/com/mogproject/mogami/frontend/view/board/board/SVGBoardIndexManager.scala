@@ -28,8 +28,7 @@ trait SVGBoardIndexManager {
   //
   // Utility
   //
-  private[this] def getImagePath(index: Int): String = s"assets/img/n/N${index}.svg"
-
+  // todo: refactor to use layout functions
   private[this] def generateFileIndex(index: Int): TypedTag[SVGElement] = {
     val base = getRect(Square(index, 1))
     val left = base.left + pieceWidth / 2
@@ -40,7 +39,7 @@ trait SVGBoardIndexManager {
   private[this] def generateJapaneseRankIndex(index: Int): TypedTag[SVGElement] = {
     val base = getRect(Square(1, index))
     val r = Rect(Coord(offset.x + MARGIN_SIZE + BOARD_WIDTH, base.top), MARGIN_SIZE, base.height)
-    r.toInnerRect(INDEX_SIZE, INDEX_SIZE).toSVGImage(getImagePath(index), rotated = false)
+    r.toInnerRect(INDEX_SIZE, INDEX_SIZE).toSVGImage(layout.getJapaneseRankIndexImagePath(index), rotated = false)
   }
 
   private[this] def generateWesternRankIndex(index: Int): TypedTag[SVGElement] = {

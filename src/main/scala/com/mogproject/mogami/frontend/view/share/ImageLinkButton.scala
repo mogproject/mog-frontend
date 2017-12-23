@@ -58,7 +58,7 @@ class ImageLinkButton extends CopyButtonLike with ViewButtonLike {
   private[this] def updateValueWithSize(baseUrl: Option[String] = None): Unit = {
     val sizeParams = s"&sz=${sizeButton.getValue.w}"
     val base = baseUrl.getOrElse(getValue)
-    val url = base.replaceAll("[&]size=\\d+", "") + sizeParams
+    val url = base.replaceAll("[&]sz=\\d+", "") + sizeParams
 
     super.updateValue(url)
     updateViewUrl(url)

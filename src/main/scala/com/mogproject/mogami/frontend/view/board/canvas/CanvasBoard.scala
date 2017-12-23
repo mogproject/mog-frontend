@@ -3,7 +3,7 @@ package com.mogproject.mogami.frontend.view.board.canvas
 import com.mogproject.mogami._
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.board._
-import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, GameControl}
+import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, GameControl, Japanese}
 import com.mogproject.mogami.frontend.util.PlayerUtil
 import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
 import org.scalajs.dom
@@ -30,8 +30,6 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, gameControl: GameCon
   private[this] val flipped = config.flipType == FlipEnabled
   private[this] val boardPieceReversed = displayState.board.filter(_._2.owner.isBlack ^ flipped)
   private[this] val boardPieceUnturned = displayState.board.filter(_._2.owner.isWhite ^ flipped)
-  private[this] val handPieceReversed = displayState.hand.filter { case (h, n) => (h.owner.isBlack ^ flipped) && n > 0 }
-  private[this] val handPieceUnturned = displayState.hand.filter { case (h, n) => (h.owner.isWhite ^ flipped) && n > 0 }
   private[this] val playerNames = Player.constructor.map(p => p -> PlayerUtil.getPlayerName(gameControl.game.gameInfo, p, config.messageLang, gameControl.isHandicapped)).toMap
   private[this] val indicator = BoardIndicator.fromGameStatus(displayState.turn, gameControl.getDisplayingGameStatus)
 
@@ -43,6 +41,8 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, gameControl: GameCon
     final val TEXT = "#000000"
     final val LAST_MOVE = "#e0e0e0"
     final val PLAYER = "#eeeeee"
+    final val HAND_NUMBER_FILL = "#f3f372"
+    final val HAND_NUMBER_STROKE = "#333333"
 
     final val INDICATOR: Map[BoardIndicator, String] = Map(
       IndicatorTurn -> "#8db6dd",
@@ -55,18 +55,23 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, gameControl: GameCon
   object stroke {
     final val BORDER = 10
     final val LINE = 5
+    final val HAND_NUMBER = 7
   }
 
   object font {
     final val DEFAULT = """"Helvetica Neue",Helvetica,Arial,sans-serif"""
     final val HAND_NUMBER = "Tahoma,Geneva,sans-serif"
+
+    object size {
+      final val INDICATOR = 60
+      final val HAND_NUMBER = 110
+    }
+
   }
 
   /** set background as white */
   private[this] def drawBackground(): Unit = {
     renderRect(Rect(Coord(0, 0), canvasWidth, canvasHeight), Some(color.BACKGROUND))
-
-    // indexes
   }
 
   private[this] def drawLastMoveReverse(): Unit = {
@@ -79,12 +84,17 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, gameControl: GameCon
     rs.foreach(renderRect(_, Some(color.LAST_MOVE)))
   }
 
-  private[this] def drawBoardReverse(): Unit = {
+  private[this] def drawForeground(): Unit = {
     val lo = config.layout.board
 
     renderRect(lo.boardBorderRect, None, Some(color.BORDER), stroke.BORDER)
     lo.boardLineRects.foreach(renderLine(_, color.BORDER, stroke.LINE)) // drawn after last move
     lo.boardCircleCoords.foreach(renderCircle(_, lo.CIRCLE_SIZE, color.BORDER))
+  }
+
+  private[this] def drawBoardReverse(): Unit = {
+    val lo = config.layout.board
+
     boardPieceReversed.foreach { case (sq, pc) => renderPiece(lo.getPieceRect(sq, flipped), pc.ptype) }
   }
 
@@ -94,18 +104,38 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, gameControl: GameCon
     boardPieceUnturned.foreach { case (sq, pc) => renderPiece(lo.getPieceRect(sq, !flipped), pc.ptype) }
   }
 
-  private[this] def drawHandReverse(): Unit = {
+  private[this] def drawHand(player: Player): Unit = {
     val lo = config.layout.hand
 
-    Seq(lo.blackRect, lo.whiteRect).foreach(renderRect(_, None, Some(color.BORDER), stroke.BORDER))
-    handPieceReversed.foreach { case (h, n) => renderPiece(lo.getPieceRect(h.toPiece, flipped), h.ptype) }
-    // num pieces
+    renderRect(lo.blackRect, None, Some(color.BORDER), stroke.BORDER)
+    displayState.hand.foreach {
+      case (h, n) if (h.owner == player ^ flipped) && n > 0 =>
+        val p = h.toPiece.copy(owner = BLACK)
+        renderPiece(lo.getPieceRect(p, flipped), h.ptype)
+      case _ =>
+    }
   }
 
-  private[this] def drawHandUnturned(): Unit = {
+  private[this] def drawHandNumbers(player: Player): Unit = {
     val lo = config.layout.hand
 
-    handPieceUnturned.foreach { case (h, n) => renderPiece(lo.getPieceRect(h.toPiece, !flipped), h.ptype) }
+    displayState.hand.foreach {
+      case (h, n) if (h.owner == player ^ flipped) && n > 1 =>
+        val p = h.toPiece.copy(owner = BLACK)
+        renderText(
+          lo.getNumberRect(p, flipped),
+          n.toString,
+          font.size.HAND_NUMBER,
+          font.HAND_NUMBER,
+          color.HAND_NUMBER_FILL,
+          isBold = true,
+          alignCenter = false,
+          Some(color.HAND_NUMBER_STROKE),
+          stroke.HAND_NUMBER,
+          trim = false
+        )
+      case _ =>
+    }
   }
 
   private[this] def drawPlayer(player: Player): Unit = {
@@ -115,7 +145,64 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, gameControl: GameCon
     lo.getIndicatorBackground(BLACK).foreach(renderRect(_, indicator.get(player).flatMap(color.INDICATOR.get)))
     renderText(lo.blackNameArea, playerNames(player), lo.playerNameFontSize, font.DEFAULT, color.TEXT)
     renderImage(lo.blackSymbolArea, lo.getSymbolImagePath(player))
-    // indicator text
+    indicator.get(player).foreach { ind => renderText(lo.blackIndicatorArea, ind.text, lo.indicatorFontSize, font.DEFAULT, color.PLAYER, isBold = true, alignCenter = true) }
+  }
+
+  //
+  // Indexes
+  //
+  private[this] def drawIndexes(): Unit = {
+    for (i <- 1 to 9) {
+      drawFileIndex(i)
+      (config.recordLang == Japanese).fold(drawJapaneseRankIndex(i), drawWesternRankIndex(i))
+    }
+  }
+
+  private[this] def drawFileIndex(index: Int): Unit = {
+    val r = config.layout.board.getFileIndexRect(index, flipped)
+    renderText(r, index.toString, font.size.INDICATOR, font.DEFAULT, color.TEXT, alignCenter = true)
+  }
+
+  private[this] def drawJapaneseRankIndex(index: Int): Unit = {
+    val r = config.layout.board.getRankIndexRect(index, flipped)
+    renderImage(r, config.layout.board.getJapaneseRankIndexImagePath(index))
+  }
+
+  private[this] def drawWesternRankIndex(index: Int): Unit = {
+    val r = config.layout.board.getRankIndexRect(index, flipped)
+    renderText(r, ('a' + (index - 1)).toChar.toString, font.size.INDICATOR, font.DEFAULT, color.TEXT, alignCenter = true)
+  }
+
+  private[this] def draw(callback: () => Unit): Unit = {
+    ctx.save()
+    rotateCanvas()
+
+    /** @note drawing order matters */
+    val pl1 = flipped.fold(BLACK, WHITE)
+    drawBackground()
+    drawLastMoveReverse()
+    drawForeground()
+    drawBoardReverse()
+    drawPlayer(pl1)
+    drawHand(pl1)
+
+    waitDraw { () =>
+      drawHandNumbers(pl1)
+
+      waitDraw { () =>
+        ctx.restore()
+        val pl2 = flipped.fold(WHITE, BLACK)
+        drawBoardUnturned()
+        drawPlayer(pl2)
+        drawHand(pl2)
+        drawIndexes()
+
+        waitDraw { () =>
+          drawHandNumbers(pl2)
+          callback()
+        }
+      }
+    }
   }
 
   /**
@@ -129,25 +216,6 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, gameControl: GameCon
     ctx.drawImage(original, 0, 0, w, h)
 
     if (w <= targetWidth) cv else resizeGradually(cv, targetWidth)
-  }
-
-  private[this] def draw(callback: () => Unit): Unit = {
-    val pl1 = flipped.fold(WHITE, BLACK)
-    drawBackground()
-    drawLastMoveReverse()
-    drawBoardReverse()
-    drawPlayer(pl1)
-    drawHandReverse()
-
-    waitDraw { () =>
-      val pl2 = flipped.fold(BLACK, WHITE)
-      rotateCanvas()
-      drawBoardUnturned()
-      drawPlayer(pl2)
-      drawHandUnturned()
-
-      waitDraw(callback)
-    }
   }
 
   private[this] def waitDraw(callback: () => Unit): Unit = {

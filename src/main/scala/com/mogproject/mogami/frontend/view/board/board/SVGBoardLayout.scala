@@ -6,7 +6,7 @@ import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.{Coord, Rect}
 import org.scalajs.dom.svg.{Circle, Line, RectElement}
 
-import scalatags.JsDom.TypedTag
+import scalatags.JsDom.{TypedTag, svgAttrs}
 import scalatags.JsDom.all._
 
 /**
@@ -25,6 +25,19 @@ case class SVGBoardLayout(offset: Coord, pieceWidth: Int, pieceHeight: Int) {
   }
 
   def getPieceRect(square: Square, isFlipped: Boolean): Rect = getRect(square, isFlipped).toInnerRect(PIECE_FACE_SIZE, PIECE_FACE_SIZE)
+
+  // Index
+  def getJapaneseRankIndexImagePath(index: Int): String = s"assets/img/n/N${index}.svg"
+
+  def getFileIndexRect(index: Int, isFlipped: Boolean): Rect = {
+    val base = getRect(Square(isFlipped.fold(10 - index, index), 1), isFlipped = false)
+    base.copy(leftTop = base.leftTop + Coord(0, -MARGIN_SIZE), height = MARGIN_SIZE).toInnerRect(INDEX_SIZE, INDEX_SIZE)
+  }
+
+  def getRankIndexRect(index: Int, isFlipped: Boolean): Rect = {
+    val base = getRect(Square(1, isFlipped.fold(10 - index, index)), isFlipped = false)
+    base.copy(leftTop = base.leftTop + Coord(pieceWidth, 0), width = MARGIN_SIZE).toInnerRect(INDEX_SIZE, INDEX_SIZE)
+  }
 
   def center: Coord = offset + Coord(MARGIN_SIZE + pieceWidth * 9 / 2, MARGIN_SIZE + pieceHeight * 9 / 2)
 

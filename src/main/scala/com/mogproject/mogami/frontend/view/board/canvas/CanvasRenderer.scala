@@ -1,6 +1,7 @@
 package com.mogproject.mogami.frontend.view.board.canvas
 
 import com.mogproject.mogami.Ptype
+import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.Rect
 import com.mogproject.mogami.frontend.view.coordinate.Coord
 import org.scalajs.dom
@@ -65,19 +66,31 @@ trait CanvasRenderer {
   //
   // Text Render
   //
-  def renderText(rect: Rect, text: String, fontSize: Int, fontFamily: String, textColor: String): Unit = {
+  def renderText(rect: Rect, text: String, fontSize: Int, fontFamily: String, textColor: String,
+                 isBold: Boolean = false, alignCenter: Boolean = false, strokeColor: Option[String] = None, strokeWidth: Int = 0, trim: Boolean = true): Unit = {
     // workaround
     val adjustedFontSize = fontSize * 8 / 10
-    val fontSpec = s"${adjustedFontSize}pt ${fontFamily}"
+    val fontSpec = s"${isBold.fold("bold ", "")}${adjustedFontSize}pt ${fontFamily}"
 
     // trim text
-    val trimmedText = binarySearchForTrim(text, fontSpec, rect.width)
+    val trimmedText = trim.fold(binarySearchForTrim(text, fontSpec, rect.width), text)
 
     ctx.font = fontSpec
     ctx.fillStyle = textColor
-    ctx.textBaseline = "bottom"
+    ctx.textBaseline = "alphabetic"
 
-    ctx.fillText(trimmedText, rect.left, rect.bottom - adjustedFontSize / 10)
+    // center text
+    val x = rect.left + alignCenter.fold((rect.width - ctx.measureText(text).width) / 2, 0)
+    val y = rect.bottom - (rect.height - adjustedFontSize) / 2
+
+    // draw
+    ctx.fillText(trimmedText, x, y) //rect.bottom - adjustedFontSize / 10)
+
+    strokeColor.foreach { st =>
+      ctx.lineWidth = strokeWidth
+      ctx.strokeStyle = st
+      ctx.strokeText(trimmedText, x, y)
+    }
   }
 
   /**
