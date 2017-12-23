@@ -60,11 +60,13 @@ case class BasePlaygroundConfiguration(layout: SVGAreaLayout = SVGStandardLayout
     val ls = LocalStorage.load()
     this.copy(
       pieceWidth = ls.pieceWidth,
-      flipType = ls.doubleBoardMode.contains(true).fold(DoubleBoard, flipType),
-      messageLang = ls.messageLang.getOrElse(messageLang),
-      recordLang = ls.recordLang.getOrElse(recordLang),
+      layout = ls.layout.getOrElse(layout),
       pieceFace = ls.pieceFace.getOrElse(pieceFace),
-      visualEffectEnabled = ls.visualEffect.getOrElse(true)
+      flipType = ls.doubleBoardMode.contains(true).fold(DoubleBoard, flipType),
+      visualEffectEnabled = ls.visualEffect.getOrElse(visualEffectEnabled),
+      soundEffectEnabled = ls.soundEffect.getOrElse(soundEffectEnabled),
+      messageLang = ls.messageLang.getOrElse(messageLang),
+      recordLang = ls.recordLang.getOrElse(recordLang)
     )
   }
 }

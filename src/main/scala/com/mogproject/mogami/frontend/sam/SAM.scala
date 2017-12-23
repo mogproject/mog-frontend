@@ -85,7 +85,7 @@ object SAM {
 
   def setDebugLog(enabled: Boolean): Unit = verboseLogEnabled = enabled
 
-  protected def debug(message: String): Unit = if (verboseLogEnabled) println(message)
+  def debug(message: String): Unit = if (verboseLogEnabled) println(message)
 
   private[this] var samImpl: SAMLike = new SAMLike {}
 
