@@ -224,14 +224,16 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     lazy val config = model.config
     val areaUpdated = (flag & (CONF_LAYOUT | CONF_NUM_AREAS)) != 0
 
+    def check(mask: Int) = areaUpdated || (flag & mask) != 0
+
     // 1. Area
     if (areaUpdated) renderSVGAreas(config.deviceType, config.flipType.numAreas, config.pieceWidth, config.layout)
 
     // 2. Piece Width
-    if (areaUpdated || (flag & CONF_PIECE_WIDTH) != 0) resizeSVGAreas(config.deviceType, config.pieceWidth, config.layout)
+    if (check(CONF_PIECE_WIDTH)) resizeSVGAreas(config.deviceType, config.pieceWidth, config.layout)
 
     // 3. Flip
-    if (areaUpdated || (flag & CONF_FLIP_TYPE) != 0) {
+    if (check(CONF_FLIP_TYPE)) {
       config.flipType match {
         case FlipDisabled => updateSVGArea(_.setFlip(false))
         case FlipEnabled => updateSVGArea(_.setFlip(true))
@@ -240,10 +242,10 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     }
 
     // 4. Indexes
-    if (areaUpdated || (flag & (CONF_FLIP_TYPE | CONF_RCD_LANG)) != 0) updateSVGArea(_.board.drawIndexes(config.recordLang == Japanese))
+    if (check(CONF_FLIP_TYPE | CONF_RCD_LANG)) updateSVGArea(_.board.drawIndexes(config.recordLang == Japanese))
 
     // 5. Player Names
-    if (areaUpdated || (flag & (GAME_INFO | CONF_MSG_LANG)) != 0) {
+    if (check(GAME_INFO | CONF_MSG_LANG)) {
       val names = PlayerUtil.getCompletePlayerNames(model.mode.getGameInfo, config.messageLang, gc.exists(_.isHandicapped))
       updateSVGArea(_.player.drawNames(names))
     }
