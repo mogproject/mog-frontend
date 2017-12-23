@@ -58,20 +58,23 @@ case class Rect(leftTop: Coord, width: Int, height: Int) {
     * @return
     */
   def toSVGText(text: String, rotated: Boolean, alignCenter: Boolean, fontSetting: Option[(Int, Int, Boolean)], modifier: Modifier*): TypedTag[svg.Text] = {
-    val c = (rotated, alignCenter, fontSetting) match {
-      case (false, false, None) => leftBottom
-      case (false, true, None) => Coord(center.x, bottom)
-      case (true, false, None) => -rightTop - Coord(1, 1)
-      case (true, true, None) => Coord(-center.x - 1, -top-1)
-      case (false, _, Some((_, _, true))) => Coord(center.x, top)
-      case (true, _, Some((_, _, true))) => Coord(-center.x -1, -bottom-1)
-      case (false, false, Some((fs, fc, false))) => leftBottom - Coord(0, height / 2 + fc - fs)
-      case (false, true, Some((fs, fc, false))) => Coord(center.x, bottom) - Coord(0, height / 2 + fc - fs)
-      case (true, false, Some((fs, fc, false))) => -rightTop - Coord(1, 1) - Coord(0, height / 2 + fc - fs)
-      case (true, true,  Some((fs, fc, false))) => Coord(-center.x - 1, -top-1) - Coord(0, height / 2 + fc - fs)
-    }
+    val c = getSVGTextStartPoint(rotated, alignCenter, fontSetting)
     val as = Seq(svgAttrs.x := c.x, svgAttrs.y := c.y) ++ rotated.option(Coord.rotateAttribute) ++ fontSetting.map(fontSize := _._1.px) ++ modifier
     svgTags.text(text, as)
+  }
+
+  protected[coordinate] def getSVGTextStartPoint(rotated: Boolean, alignCenter: Boolean, fontSetting: Option[(Int, Int, Boolean)]): Coord = {
+    val topToBottom = fontSetting.exists(_._3)
+    val baseX = (rotated, alignCenter, topToBottom) match {
+      case (_, _, true) => center.x
+      case (_, true, _) => center.x
+      case (false, _, _) => left
+      case (true, _, _) => right
+    }
+    val baseY = (rotated ^ topToBottom).fold(top, bottom)
+    val offsetY = fontSetting.map(fs => height / 2 + fs._2 - fs._1).filter(_ => !topToBottom).getOrElse(0)
+
+    rotated.fold(Coord(-baseX - 1, -baseY - 1 - offsetY), Coord(baseX, baseY - offsetY))
   }
 
   /**
