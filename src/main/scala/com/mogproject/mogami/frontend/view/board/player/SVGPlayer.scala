@@ -53,7 +53,7 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
     val classNames = "player-name-text" + layout.playerNameTopToBottom.fold(" text-tb", "")
 
     layout.getNameArea(pl).copy(leftTop = Coord(0, 0))
-      .toSVGText("", pl.isWhite, Some((fs, fc, layout.playerNameTopToBottom)), cls := classNames).render
+      .toSVGText("", pl.isWhite, false, Some((fs, fc, layout.playerNameTopToBottom)), cls := classNames).render
   }
 
   private[this] val nameElementsWrapper: SymmetricElement[svg.SVG] = SymmetricElement { pl =>
@@ -69,7 +69,7 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
     val fs = layout.indicatorFontSize
     val fc = fs * 67 / 100 // center of the font
 
-    layout.getIndicatorTextArea(pl).toSVGText("", pl.isWhite, Some((fs, fc, false)), cls := "indicator-text").render
+    layout.getIndicatorTextArea(pl).toSVGText("", pl.isWhite, true, Some((fs, fc, false)), cls := "indicator-text").render
   }
 
   val elements: Seq[SVGElement] = borderElements ++ indicatorBackgrounds.values ++ symbolElements.values ++ nameElementsWrapper.values ++ indicatorTextElements.values

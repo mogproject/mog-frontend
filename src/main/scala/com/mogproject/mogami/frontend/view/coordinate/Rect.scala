@@ -44,7 +44,7 @@ case class Rect(leftTop: Coord, width: Int, height: Int) {
 
   def toSVGImage(url: String, rotated: Boolean, modifier: Modifier*): TypedTag[SVGImageElement] = {
     val r = rotated.fold(-this, this)
-    val as = Seq(svgAttrs.xLinkHref := url) ++ rotated.option(Coord.rotateAttribution)
+    val as = Seq(svgAttrs.xLinkHref := url) ++ rotated.option(Coord.rotateAttribute)
     svgTags.image(Seq(svgAttrs.x := r.left, svgAttrs.y := r.top, svgAttrs.width := width, svgAttrs.height := height) ++ as ++ modifier: _*)
   }
 
@@ -52,24 +52,25 @@ case class Rect(leftTop: Coord, width: Int, height: Int) {
     *
     * @param text
     * @param rotated
+    * @param alignCenter true to be centered
     * @param fontSetting (font_size, vertical_center, is_top_to_bottom)
     * @param modifier
     * @return
     */
-  def toSVGText(text: String, rotated: Boolean, fontSetting: Option[(Int, Int, Boolean)], modifier: Modifier*): TypedTag[svg.Text] = {
-    val c = rotated.fold(-rightTop - Coord(1, 1), leftBottom)
-
-    val d = (for {
-      (fs, fc, isTb) <- fontSetting
-    } yield {
-      if (isTb) {
-        rotated.fold(Coord(-center.x - 1, -height - 1), Coord(center.x, 0)) // todo: refactor
-      } else {
-        c - Coord(0, height / 2 + fc - fs)
-      }
-    }).getOrElse(c)
-
-    val as = Seq(svgAttrs.x := d.x, svgAttrs.y := d.y) ++ rotated.option(Coord.rotateAttribution) ++ fontSetting.map(fontSize := _._1.px) ++ modifier
+  def toSVGText(text: String, rotated: Boolean, alignCenter: Boolean, fontSetting: Option[(Int, Int, Boolean)], modifier: Modifier*): TypedTag[svg.Text] = {
+    val c = (rotated, alignCenter, fontSetting) match {
+      case (false, false, None) => leftBottom
+      case (false, true, None) => Coord(center.x, bottom)
+      case (true, false, None) => -rightTop - Coord(1, 1)
+      case (true, true, None) => Coord(-center.x - 1, -top-1)
+      case (false, _, Some((_, _, true))) => Coord(center.x, top)
+      case (true, _, Some((_, _, true))) => Coord(-center.x -1, -bottom-1)
+      case (false, false, Some((fs, fc, false))) => leftBottom - Coord(0, height / 2 + fc - fs)
+      case (false, true, Some((fs, fc, false))) => Coord(center.x, bottom) - Coord(0, height / 2 + fc - fs)
+      case (true, false, Some((fs, fc, false))) => -rightTop - Coord(1, 1) - Coord(0, height / 2 + fc - fs)
+      case (true, true,  Some((fs, fc, false))) => Coord(-center.x - 1, -top-1) - Coord(0, height / 2 + fc - fs)
+    }
+    val as = Seq(svgAttrs.x := c.x, svgAttrs.y := c.y) ++ rotated.option(Coord.rotateAttribute) ++ fontSetting.map(fontSize := _._1.px) ++ modifier
     svgTags.text(text, as)
   }
 

@@ -12,7 +12,7 @@ trait SVGBoxPieceManager extends SVGPieceManager[Ptype, Int] {
 
   override def getPieceRect(key: Ptype): Rect = layout.getRect(key)
 
-  override protected def getNumberRect(key: Ptype): Rect = Rect(getPieceRect(key).leftTop + layout.numberAdjustment, layout.numberSize.x, layout.numberSize.y)
+  override protected def getNumberRect(key: Ptype): Rect = layout.getNumberRect(key)
 
   override protected def isFlipped(key: Ptype, value: Int): Boolean = false
 

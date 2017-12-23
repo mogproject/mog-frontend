@@ -32,5 +32,5 @@ case class Coord(x: Int = 0, y: Int = 0) {
 }
 
 object Coord {
-  val rotateAttribution: Modifier = svgAttrs.transform := "rotate(180)"
+  val rotateAttribute: Modifier = svgAttrs.transform := "rotate(180)"
 }

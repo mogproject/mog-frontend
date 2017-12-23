@@ -20,11 +20,11 @@ case class SVGBoxLayout(centerX: Int,
                         shadowWidth: Int = 30
                        ) {
 
-  final val numberSize: Coord = Coord(120, 120)
+  final val numberSize: Coord = Coord(162, 110) // .y = font size (in css)
 
   final val PIECE_FACE_SIZE: Int = pieceSize.x * 20 / 21
 
-  final val numberAdjustment: Coord = Coord(pieceSize.x * 7 / 8, pieceSize.x * 8 / 7 - numberSize.y)
+  final val numberAdjustment: Coord = Coord(50, 20)
 
   val boxWidth: Int = 8 * pieceSize.x
 
@@ -39,15 +39,18 @@ case class SVGBoxLayout(centerX: Int,
   val boxShadow: Seq[TypedTag[RectElement]] = Seq(labelRect, shadowRect).map(_.toSVGRect(cls := "box-label"))
 
   val boxLabelText: TypedTag[SVGTextElement] = {
-    val r = labelRect.copy(leftTop = Coord(labelRect.center.x, labelRect.top), width = 0)
     val fs = labelFontSize
     val fc = fs * 60 / 100 // center of the font
-    r.toSVGText("UNUSED PIECES", false, Some((fs, fc, false)), cls := "indicator-text")
+    labelRect.toSVGText("UNUSED PIECES", false, true, Some((fs, fc, false)), cls := "indicator-text")
   }
 
   val extendedHeight: Int = labelHeight + boxRect.height + 2 * strokeWidth + bottomMargin
 
   def getRect(ptype: Ptype): Rect = {
     Rect(boxRect.leftTop + Coord(ptype.sortId * pieceSize.x, 0), pieceSize.x, pieceSize.y)
+  }
+
+  def getNumberRect(ptype: Ptype): Rect = {
+    Rect(getRect(ptype).rightBottom + numberAdjustment - numberSize, numberSize.x, numberSize.y)
   }
 }

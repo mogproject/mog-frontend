@@ -1,22 +1,17 @@
 package com.mogproject.mogami.frontend.view.board.board
 
-import com.mogproject.mogami.Square
 import com.mogproject.mogami.frontend.view.WebComponent
-import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom.raw.SVGElement
 
 import scalatags.JsDom.all._
-import scalatags.JsDom.svgTags.text
-import scalatags.JsDom.{TypedTag, svgAttrs}
+import scalatags.JsDom.TypedTag
 
 /**
   *
   */
 trait SVGBoardIndexManager {
   self: SVGBoard =>
-  
-  import layout._
 
   private[this] val textClass = "board-index-text"
 
@@ -28,25 +23,16 @@ trait SVGBoardIndexManager {
   //
   // Utility
   //
-  // todo: refactor to use layout functions
   private[this] def generateFileIndex(index: Int): TypedTag[SVGElement] = {
-    val base = getRect(Square(index, 1))
-    val left = base.left + pieceWidth / 2
-    val top = offset.y + MARGIN_SIZE * 5 / 6
-    text(svgAttrs.x := left, svgAttrs.y := top, cls := textClass, index.toString)
+    layout.getFileIndexRect(index, isFlipped).toSVGText(index.toString, false, true, None, cls := textClass)
   }
 
   private[this] def generateJapaneseRankIndex(index: Int): TypedTag[SVGElement] = {
-    val base = getRect(Square(1, index))
-    val r = Rect(Coord(offset.x + MARGIN_SIZE + BOARD_WIDTH, base.top), MARGIN_SIZE, base.height)
-    r.toInnerRect(INDEX_SIZE, INDEX_SIZE).toSVGImage(layout.getJapaneseRankIndexImagePath(index), rotated = false)
+    layout.getRankIndexRect(index, isFlipped).toSVGImage(layout.getJapaneseRankIndexImagePath(index), rotated = false)
   }
 
   private[this] def generateWesternRankIndex(index: Int): TypedTag[SVGElement] = {
-    val base = getRect(Square(1, index))
-    val left = offset.x + MARGIN_SIZE * 3 / 2 + BOARD_WIDTH
-    val top = base.top + (pieceHeight + INDEX_SIZE) / 2
-    text(svgAttrs.x := left, svgAttrs.y := top, cls := textClass, ('a' + (index - 1)).toChar.toString)
+    layout.getRankIndexRect(index, isFlipped).toSVGText(('a' + (index - 1)).toChar.toString, false, true, None, cls := textClass)
   }
 
 

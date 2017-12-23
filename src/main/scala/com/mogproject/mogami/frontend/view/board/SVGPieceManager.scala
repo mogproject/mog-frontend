@@ -51,7 +51,7 @@ trait SVGPieceManager[Key, Value] {
   }
 
   def generateNumberElement(key: Key, value: Value, modifiers: Modifier*): TypedTag[SVGTextElement] = {
-    getNumberRect(key).toSVGText(value.toString, isFlipped(key, value), None, cls := "hand-number-text")
+    getNumberRect(key).toSVGText(value.toString, isFlipped(key, value), true, None, cls := "hand-number-text")
   }
 
 
