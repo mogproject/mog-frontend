@@ -171,9 +171,9 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
     view.updateModeType(newModel.mode.modeType)
   }
 
-  private[this] def renderConfigMenu(newModel: M): Unit = {
-    view.updateConfigMenu(newModel.config)
-  }
+//  private[this] def renderConfigMenu(newModel: M): Unit = {
+//    view.updateConfigMenu(newModel.config)
+//  }
 
   private[this] def renderShareUrls(newModel: M): Unit = {
     view.website.shareMenu.refresh(newModel)

@@ -2,7 +2,8 @@ package com.mogproject.mogami.frontend.view.menu
 
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipDisabled}
-import com.mogproject.mogami.frontend.model._
+import com.mogproject.mogami.frontend._
+import com.mogproject.mogami.frontend.model.JapaneseOneCharFace
 import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
 import com.mogproject.mogami.frontend.view.setting.{BooleanSelector, DropdownSelector, LanguageSelector}
 import org.scalajs.dom.html.Div
@@ -13,7 +14,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class SettingMenu extends AccordionMenu {
+class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
   override lazy val ident: String = "Settings"
   override lazy val title: String = ident
   override lazy val icon: String = "wrench"
@@ -67,7 +68,14 @@ class SettingMenu extends AccordionMenu {
     )
   )
 
-  def refresh(config: BasePlaygroundConfiguration): Unit = {
+  //
+  // Observer
+  //
+  override val samObserveMask: Int = ObserveFlag.CONF
+
+  override def refresh(model: BasePlaygroundModel): Unit = {
+    val config = model.config
+
     boardSizeSelector.select(config.pieceWidth)
     layoutSelector.select(config.layout)
     pieceFaceSelector.select(config.pieceFace)
@@ -79,6 +87,5 @@ class SettingMenu extends AccordionMenu {
     messageLanguageSelector.updateValue(config.messageLang)
     recordLanguageSelector.updateValue(config.recordLang)
   }
-
 
 }

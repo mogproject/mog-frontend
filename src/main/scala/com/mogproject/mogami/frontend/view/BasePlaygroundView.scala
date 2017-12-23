@@ -156,9 +156,9 @@ trait BasePlaygroundView extends SAMView {
     mainPane.updateModeType(modeType)
   }
 
-  def updateConfigMenu(config: BasePlaygroundConfiguration): Unit = {
-    website.settingMenu.refresh(config)
-  }
+//  def updateConfigMenu(config: BasePlaygroundConfiguration): Unit = {
+//    website.settingMenu.refresh(config)
+//  }
 
   def renderAnalyzeResult(result: AnalyzeResult, recordLang: Language): Unit = result match {
     case CheckmateAnalyzeResult(r) => renderCheckmateAnalyzeResult(r, recordLang)
