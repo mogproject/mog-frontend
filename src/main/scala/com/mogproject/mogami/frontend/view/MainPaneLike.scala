@@ -1,7 +1,9 @@
 package com.mogproject.mogami.frontend.view
 
 import com.mogproject.mogami.frontend.model.DeviceType.DeviceType
-import com.mogproject.mogami.frontend.model._
+import com.mogproject.mogami.frontend._
+import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipDisabled, FlipEnabled}
+import com.mogproject.mogami.frontend.util.PlayerUtil
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.view.board.{SVGArea, SVGAreaLayout}
 import com.mogproject.mogami.frontend.view.control.{CommentArea, ControlBar, ControlBarType}
@@ -19,7 +21,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
+trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObserver[BasePlaygroundModel] {
   def isMobile: Boolean
 
   def getSite: () => PlaygroundSite
@@ -203,4 +205,47 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] {
   }
 
   initialize()
+
+  //
+  // Observer
+  //
+  override val samObserveMask: Int = {
+    import ObserveFlag._
+    val modes = MODE_FROM_EDIT | MODE_TO_EDIT | GAME_BRANCH | GAME_INFO | GAME_POSITION
+    val confs = CONF_LAYOUT | CONF_NUM_AREAS | CONF_FLIP_TYPE | CONF_PIECE_WIDTH | CONF_PIECE_FACE | CONF_MSG_LANG | CONF_RCD_LANG
+    val cursors = CURSOR_ACTIVE | CURSOR_SELECT | CURSOR_FLASH
+    modes | confs | cursors
+  }
+
+  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+    import ObserveFlag._
+
+    lazy val gc = model.mode.getGameControl
+    lazy val config = model.config
+    val areaUpdated = (flag & (CONF_LAYOUT | CONF_NUM_AREAS)) != 0
+
+    // 1. Area
+    if (areaUpdated) renderSVGAreas(config.deviceType, config.flipType.numAreas, config.pieceWidth, config.layout)
+
+    // 2. Piece Width
+    if (areaUpdated || (flag & CONF_PIECE_WIDTH) != 0) resizeSVGAreas(config.deviceType, config.pieceWidth, config.layout)
+
+    // 3. Flip
+    if (areaUpdated || (flag & CONF_FLIP_TYPE) != 0) {
+      config.flipType match {
+        case FlipDisabled => updateSVGArea(_.setFlip(false))
+        case FlipEnabled => updateSVGArea(_.setFlip(true))
+        case DoubleBoard => Seq(0, 1).foreach { n => updateSVGArea(n, _.setFlip(n == 1)) }
+      }
+    }
+
+    // 4. Indexes
+    if (areaUpdated || (flag & (CONF_FLIP_TYPE | CONF_RCD_LANG)) != 0) updateSVGArea(_.board.drawIndexes(config.recordLang == Japanese))
+
+    // 5. Player Names
+    if (areaUpdated || (flag & (GAME_INFO | CONF_MSG_LANG)) != 0) {
+      val names = PlayerUtil.getCompletePlayerNames(model.mode.getGameInfo, config.messageLang, gc.exists(_.isHandicapped))
+      updateSVGArea(_.player.drawNames(names))
+    }
+  }
 }

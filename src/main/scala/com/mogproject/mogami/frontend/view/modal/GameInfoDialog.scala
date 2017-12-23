@@ -28,7 +28,7 @@ case class GameInfoDialog(messageLang: Language, gameInfo: GameInfo, isHandicapp
       cls := "form-control",
       maxlength := 12,
       onfocus := { () => inputNames(p).select() },
-      value := PlayerUtil.getPlayerName(gameInfo, p, messageLang, isHandicapped)
+      value := PlayerUtil.getCompletePlayerName(gameInfo, p, messageLang, isHandicapped)
     ).render
   }.toMap
 

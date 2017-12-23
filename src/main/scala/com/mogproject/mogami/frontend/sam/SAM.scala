@@ -68,7 +68,7 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
   private[this] def notifyObservers(flag: Int, model: M): Unit = observers.foreach { o =>
     if ((o.samObserveMask & flag) != 0) {
       SAM.debug(s"Refreshing: ${o}")
-      o.refresh(model)
+      o.refresh(model, flag)
     }
   }
 

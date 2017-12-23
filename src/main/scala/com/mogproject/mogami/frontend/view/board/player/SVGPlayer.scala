@@ -106,6 +106,10 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
     refreshNames()
   }
 
+  def drawNames(names: Map[Player, String]): Unit = {
+    drawNames(names(BLACK), names(WHITE))
+  }
+
   def refreshNames(): Unit = {
     playerNames.foreach { case (pl, s) => nameElements.getFirst(pl).textContent = s }
   }

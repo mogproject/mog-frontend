@@ -28,7 +28,7 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, gameControl: GameCon
   private[this] val displayState = gameControl.getDisplayingState
   private[this] val lastMove = gameControl.getDisplayingLastMove
   private[this] val flipped = config.flipType == FlipEnabled
-  private[this] val playerNames = Player.constructor.map(p => p -> PlayerUtil.getPlayerName(gameControl.game.gameInfo, p, config.messageLang, gameControl.isHandicapped)).toMap
+  private[this] val playerNames = PlayerUtil.getCompletePlayerNames(gameControl.game.gameInfo, config.messageLang, gameControl.isHandicapped)
   private[this] val indicator = BoardIndicator.fromGameStatus(displayState.turn, gameControl.getDisplayingGameStatus)
 
   object color {

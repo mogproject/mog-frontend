@@ -35,8 +35,12 @@ object PlayerUtil {
     }
   }
 
-  def getPlayerName(gameInfo: GameInfo, player: Player, messageLang: Language, isHandicapped: Boolean): String = {
+  def getCompletePlayerName(gameInfo: GameInfo, player: Player, messageLang: Language, isHandicapped: Boolean): String = {
     gameInfo.tags.get(tagNames(player)).filter(_.nonEmpty).getOrElse(PlayerUtil.getDefaultPlayerName(player, messageLang, isHandicapped))
   }
 
+
+  def getCompletePlayerNames(gameInfo: GameInfo, messageLang: Language, isHandicapped: Boolean): Map[Player, String] = {
+    Player.constructor.map(p => p -> getCompletePlayerName(gameInfo, p, messageLang, isHandicapped)).toMap
+  }
 }

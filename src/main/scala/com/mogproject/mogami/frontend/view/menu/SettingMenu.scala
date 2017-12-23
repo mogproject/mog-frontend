@@ -73,7 +73,7 @@ class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
   //
   override val samObserveMask: Int = ObserveFlag.CONF
 
-  override def refresh(model: BasePlaygroundModel): Unit = {
+  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
     val config = model.config
 
     boardSizeSelector.select(config.pieceWidth)

@@ -41,5 +41,5 @@ class FlipButton extends ButtonLike[FlipType, Button, Div] with SAMObserver[Base
   //
   override val samObserveMask: Int = ObserveFlag.CONF_FLIP_TYPE
 
-  override def refresh(model: BasePlaygroundModel): Unit = updateValue(model.config.flipType)
+  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = updateValue(model.config.flipType)
 }

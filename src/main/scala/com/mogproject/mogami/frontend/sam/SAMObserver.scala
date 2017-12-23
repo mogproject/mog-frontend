@@ -7,7 +7,12 @@ trait SAMObserver[M <: SAMModel] {
 
   def samObserveMask: Int
 
-  def refresh(model: M): Unit
+  /**
+    *
+    * @param model model
+    * @param flag -1: all bits on => refresh all
+    */
+  def refresh(model: M, flag: Int): Unit
 
   SAM.addObserver(this)
 

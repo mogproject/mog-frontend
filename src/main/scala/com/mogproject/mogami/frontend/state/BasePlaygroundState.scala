@@ -56,10 +56,10 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
     //
     //    val fs: Seq[(Boolean, M => Unit)] = Seq(
     //      (renderAll || isUpdated(newModel, _.config.deviceType), renderScreen),
-    //      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas), renderLayout),
-    //      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas, _.config.pieceWidth), renderSize),
-    //      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas, _.config.recordLang), renderIndex),
-    //      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType), renderFlip),
+    //-      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas), renderLayout),
+    //-      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas, _.config.pieceWidth), renderSize),
+    //-      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas, _.config.recordLang), renderIndex),
+    //-      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType), renderFlip),
     //      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas, _.mode.getPlayerNames, _.config.messageLang), renderPlayerNames),
     //      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas, _.mode.getIndicators), renderIndicators),
     //      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas, _.mode.boxAvailable), renderBox),

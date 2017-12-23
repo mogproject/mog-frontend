@@ -52,6 +52,6 @@ case class ResignButton(isSmall: Boolean, confirm: Boolean) extends WebComponent
     MODE_TYPE | GAME_BRANCH | GAME_POSITION
   }
 
-  override def refresh(model: BasePlaygroundModel): Unit = setDisabled(!model.mode.canMakeMove)
+  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = setDisabled(!model.mode.canMakeMove)
 
 }

@@ -29,7 +29,7 @@ case class NavBar(isMobile: Boolean) extends NavBarLike with SAMObserver[TestMod
   //
   override val samObserveMask: Int = ObserveFlag.MODE_TYPE
 
-  override def refresh(model: TestModel): Unit = {
+  override def refresh(model: TestModel, flag: Int): Unit = {
     val modeType = model.mode.modeType
     modeButton.updateValue(modeType)
     replaceClass(navElem, "nav-bg-", s"nav-bg-${modeType.toString.take(4).toLowerCase()}")
