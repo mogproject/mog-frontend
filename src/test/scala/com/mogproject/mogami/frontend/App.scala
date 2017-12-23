@@ -6,6 +6,7 @@ import com.mogproject.mogami.core.state.StateCache.Implicits._
 import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.frontend.state.TestState
 import com.mogproject.mogami.frontend.view.TestView
+import com.mogproject.mogami.frontend.view.board.{SVGCompactLayout, SVGStandardLayout}
 import org.scalajs.dom
 
 import scala.scalajs.js.JSApp
@@ -46,7 +47,9 @@ object App extends JSApp {
       case NotesAction =>
         view.drawNotes(game, args.config.recordLang)
       case ImageAction =>
-        view.drawAsImage(args.config, mode.getGameControl.get)
+        // todo: support compact layout
+        val conf = if (args.config.layout == SVGCompactLayout) args.config.copy(layout = SVGStandardLayout) else args.config
+        view.drawAsImage(conf, mode.getGameControl.get)
       case PlayAction =>
         // initialize state
         PlaygroundSAM.initialize(TestModel.adapter)
