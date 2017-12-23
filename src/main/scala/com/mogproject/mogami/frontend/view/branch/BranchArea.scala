@@ -70,7 +70,8 @@ case class BranchArea(isMobile: Boolean) extends WebComponent {
       )),
     tooltip = Map(English -> branchNoToString(branchNo)),
     tooltipPlacement = tooltipPlacement,
-    isBlockButton = true
+    isBlockButton = true,
+    dismissModal = true
   )
 
   //

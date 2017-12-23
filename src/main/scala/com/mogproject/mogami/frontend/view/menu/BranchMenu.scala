@@ -15,12 +15,12 @@ class BranchMenu extends AccordionMenu {
   override lazy val ident: String = "Branch"
   override lazy val title: String = ident
   override lazy val icon: String = "share-alt"
-  override lazy val visibleMode = Set(PlayModeType)
+  override lazy val visibleMode = Set(PlayModeType, ViewModeType)
 
-  private[this] lazy val branchButton = BranchArea(true)
+  lazy val branchArea = BranchArea(true)
 
   override lazy val content: JsDom.TypedTag[Div] = div(
-    branchButton.element
+    branchArea.element
   )
 }
 
