@@ -30,21 +30,24 @@ trait ObserveFlagLike {
   // Mode
   //
   final val MODE_TYPE = 0x00010000
-  final val MODE_FROM_EDIT = 0x00020000
-  final val MODE_TO_EDIT = 0x00040000
+  final val MODE_EDIT = 0x00020000
 
   final val GAME_BRANCH = 0x00100000 // Includes Trunk. Check {turn, board, hand} in Edit Mode
   final val GAME_INFO = 0x00200000
   final val GAME_COMMENT = 0x00400000
   final val GAME_POSITION = 0x00800000
-  final val GAME_HANDICAP = 0x01000000
+  final val GAME_INDICATOR = 0x01000000
+  final val GAME_HANDICAP = 0x02000000
+  final val GAME_JUST_MOVED = 0x04000000
+  final val GAME_NEXT_POS = 0x08000000
+  final val GAME_PREV_POS = 0x10000000
 
   //
   // Cursor
   //
-  final val CURSOR_ACTIVE = 0x10000000
-  final val CURSOR_SELECT = 0x20000000
-  final val CURSOR_FLASH = 0x40000000
+  final val CURSOR_ACTIVE = 0x20000000
+  final val CURSOR_SELECT = 0x40000000
+  final val CURSOR_FLASH = 0x80000000
 
 }
 
@@ -85,8 +88,7 @@ object ObserveFlag extends ObserveFlagLike {
       if (a.modeType != b.modeType) {
         ret |= MODE_TYPE
 
-        if (a.isEditMode) ret |= MODE_FROM_EDIT
-        if (b.isEditMode) ret |= MODE_TO_EDIT
+        if (a.isEditMode || b.isEditMode) ret |= MODE_EDIT
       }
 
       if (a.getGameInfo != b.getGameInfo) ret |= GAME_INFO
@@ -104,7 +106,12 @@ object ObserveFlag extends ObserveFlagLike {
         case _ =>
       }
 
+      if (a.getIndicators != b.getIndicators) ret |= GAME_INDICATOR
       if (a.isHandicapped != b.isHandicapped) ret |= GAME_HANDICAP
+
+      if (b.isJustMoved(a)) ret |= GAME_JUST_MOVED
+      if (b.isNext(a)) ret |= GAME_NEXT_POS
+      if (b.isPrevious(a)) ret |= GAME_PREV_POS
     }
 
     //
@@ -112,7 +119,7 @@ object ObserveFlag extends ObserveFlagLike {
     //
     if (oldModel.activeCursor != newModel.activeCursor) ret |= CURSOR_ACTIVE
     if (oldModel.selectedCursor != newModel.selectedCursor) ret |= CURSOR_SELECT
-    if (oldModel.flashedCursor != newModel.flashedCursor) ret |= CURSOR_FLASH
+    if (newModel.flashedCursor.isDefined) ret |= CURSOR_FLASH
 
     ret
   }

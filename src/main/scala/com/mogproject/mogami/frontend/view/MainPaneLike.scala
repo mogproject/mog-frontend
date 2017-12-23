@@ -211,7 +211,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   //
   override val samObserveMask: Int = {
     import ObserveFlag._
-    val modes = MODE_FROM_EDIT | MODE_TO_EDIT | GAME_BRANCH | GAME_INFO | GAME_POSITION | GAME_HANDICAP
+    val modes = MODE_EDIT | GAME_BRANCH | GAME_INFO | GAME_POSITION | GAME_HANDICAP | GAME_INDICATOR | GAME_JUST_MOVED | GAME_NEXT_POS | GAME_PREV_POS
     val confs = CONF_LAYOUT | CONF_NUM_AREAS | CONF_FLIP_TYPE | CONF_PIECE_WIDTH | CONF_PIECE_FACE | CONF_MSG_LANG | CONF_RCD_LANG
     val cursors = CURSOR_ACTIVE | CURSOR_SELECT | CURSOR_FLASH
     modes | confs | cursors
@@ -221,6 +221,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     import ObserveFlag._
 
     lazy val gc = model.mode.getGameControl
+    lazy val mode = model.mode
     lazy val config = model.config
     val areaUpdated = (flag & (CONF_LAYOUT | CONF_NUM_AREAS)) != 0
 
@@ -242,12 +243,73 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     }
 
     // 4. Indexes
-    if (check(CONF_FLIP_TYPE | CONF_RCD_LANG)) updateSVGArea(_.board.drawIndexes(config.recordLang == Japanese))
+    if (check(CONF_RCD_LANG)) updateSVGArea(_.board.drawIndexes(config.recordLang == Japanese))
 
     // 5. Player Names
     if (check(GAME_INFO | CONF_MSG_LANG | GAME_HANDICAP)) {
-      val names = PlayerUtil.getCompletePlayerNames(model.mode.getGameInfo, config.messageLang, model.mode.isHandicapped)
+      val names = PlayerUtil.getCompletePlayerNames(mode.getGameInfo, config.messageLang, mode.isHandicapped)
       updateSVGArea(_.player.drawNames(names))
     }
+
+    // 6. Indicators
+    if (check(GAME_INDICATOR)) updateSVGArea(_.player.drawIndicators(mode.getIndicators))
+
+    // 7. Box
+    if (check(MODE_EDIT)) updateSVGArea(mode.boxAvailable.fold(_.showBox(), _.hideBox()))
+
+    // 8. Board/Hand/Box Pieces / Last Move
+    if (check(GAME_BRANCH | GAME_POSITION | CONF_PIECE_FACE)) {
+      updateSVGArea { area =>
+        area.board.drawPieces(mode.getBoardPieces, config.pieceFace)
+        area.hand.drawPieces(mode.getHandPieces, config.pieceFace)
+        area.drawLastMove(mode.getLastMove)
+        if (mode.isEditMode) area.box.drawPieces(mode.getBoxPieces, config.pieceFace)
+      }
+    }
+
+    // 9. Active Cursor
+    if ((flag & CURSOR_ACTIVE) != 0) {
+      // clear current active cursor
+      updateSVGArea(_.clearActiveCursor())
+
+      // draw new cursor
+      model.activeCursor match {
+        case Some((n, c)) => updateSVGArea(n, _.drawCursor(c))
+        case None => // do nothing
+      }
+    }
+
+    // 10. Selected Cursor
+    if ((!mode.isViewMode || model.selectedCursor.isEmpty) && (flag & CURSOR_SELECT) != 0) {
+      val legalMoves = for {
+        (_, c) <- model.selectedCursor.toSet if config.visualEffectEnabled && !c.isBox
+        from = c.moveFrom
+        lm <- mode.getLegalMoves(from)
+      } yield lm
+
+      // clear current selected cursor
+      updateSVGArea(_.unselect())
+
+      // draw new cursor
+      model.selectedCursor.map(_._2).foreach { c => updateSVGArea(_.select(c, config.visualEffectEnabled, legalMoves)) }
+    }
+
+    // 11. Flash Cursor
+    if ((flag & CURSOR_FLASH) != 0) model.flashedCursor.foreach { c => updateSVGArea(_.flashCursor(c)) }
+
+
+    // 12. Move Effect
+    if ((flag & GAME_JUST_MOVED) != 0) {
+      mode.getLastMove.foreach { move =>
+        if (config.soundEffectEnabled) playClickSound()
+        if (config.visualEffectEnabled) {
+          updateSVGArea(a => a.board.effect.moveEffector.start(a.board.getRect(move.to)))
+          if (move.promote) updateSVGArea(_.board.startPromotionEffect(move.to, move.oldPiece, config.pieceFace))
+        }
+      }
+    }
+
+    // 13. Move Forward/Backward Effect
+    if ((flag & (GAME_NEXT_POS | GAME_PREV_POS)) != 0 && model.selectedCursor.isDefined) updateSVGArea(_.board.effect.forwardEffector.start((flag & GAME_NEXT_POS) != 0))
   }
 }

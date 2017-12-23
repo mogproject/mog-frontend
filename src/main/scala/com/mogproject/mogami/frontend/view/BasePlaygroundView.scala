@@ -51,56 +51,56 @@ trait BasePlaygroundView extends SAMView {
 
   }
 
-  def renderLayout(deviceType: DeviceType, numAreas: Int, pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
-    mainPane.renderSVGAreas(deviceType, numAreas, pieceWidth, layout)
-  }
-
-  def renderSize(deviceType: DeviceType, pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
-    mainPane.resizeSVGAreas(deviceType, pieceWidth, layout)
-  }
-
-  def renderIndex(useJapanese: Boolean = false): Unit = {
-    mainPane.updateSVGArea(_.board.drawIndexes(useJapanese))
-  }
-
-  def renderFlip(flipType: FlipType): Unit = {
-    flipType match {
-      case FlipDisabled => mainPane.updateSVGArea(_.setFlip(false))
-      case FlipEnabled => mainPane.updateSVGArea(_.setFlip(true))
-      case DoubleBoard => Seq(0, 1).foreach { n => mainPane.updateSVGArea(n, _.setFlip(n == 1)) }
-    }
-  }
-
-  def renderPlayerNames(playerNames: Map[Player, String], messageLang: Language, isHandicapped: Boolean): Unit = {
-    mainPane.updateSVGArea(_.player.drawNames(
-      playerNames.getOrElse(BLACK, PlayerUtil.getDefaultPlayerName(BLACK, messageLang, isHandicapped)),
-      playerNames.getOrElse(WHITE, PlayerUtil.getDefaultPlayerName(WHITE, messageLang, isHandicapped))
-    ))
-  }
-
-  def renderIndicators(indicators: Map[Player, BoardIndicator]): Unit = {
-    mainPane.updateSVGArea(_.player.drawIndicators(indicators.get(BLACK), indicators.get(WHITE)))
-  }
-
-  def renderBox(enabled: Boolean): Unit = {
-    mainPane.updateSVGArea(enabled.fold(_.showBox(), _.hideBox()))
-  }
-
-  def renderBoardPieces(board: BoardType, pieceFace: PieceFace): Unit = {
-    mainPane.updateSVGArea(_.board.drawPieces(board, pieceFace, keepLastMove = false))
-  }
-
-  def renderHandPieces(hand: HandType, pieceFace: PieceFace): Unit = {
-    mainPane.updateSVGArea(_.hand.drawPieces(hand, pieceFace, keepLastMove = false))
-  }
-
-  def renderLastMove(lastMove: Option[Move]): Unit = {
-    mainPane.updateSVGArea(_.drawLastMove(lastMove))
-  }
-
-  def renderBoxPieces(pieces: Map[Ptype, Int], pieceFace: PieceFace): Unit = {
-    mainPane.updateSVGArea(_.box.drawPieces(pieces, pieceFace, keepLastMove = false))
-  }
+//  def renderLayout(deviceType: DeviceType, numAreas: Int, pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
+//    mainPane.renderSVGAreas(deviceType, numAreas, pieceWidth, layout)
+//  }
+//
+//  def renderSize(deviceType: DeviceType, pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
+//    mainPane.resizeSVGAreas(deviceType, pieceWidth, layout)
+//  }
+//
+//  def renderIndex(useJapanese: Boolean = false): Unit = {
+//    mainPane.updateSVGArea(_.board.drawIndexes(useJapanese))
+//  }
+//
+//  def renderFlip(flipType: FlipType): Unit = {
+//    flipType match {
+//      case FlipDisabled => mainPane.updateSVGArea(_.setFlip(false))
+//      case FlipEnabled => mainPane.updateSVGArea(_.setFlip(true))
+//      case DoubleBoard => Seq(0, 1).foreach { n => mainPane.updateSVGArea(n, _.setFlip(n == 1)) }
+//    }
+//  }
+//
+//  def renderPlayerNames(playerNames: Map[Player, String], messageLang: Language, isHandicapped: Boolean): Unit = {
+//    mainPane.updateSVGArea(_.player.drawNames(
+//      playerNames.getOrElse(BLACK, PlayerUtil.getDefaultPlayerName(BLACK, messageLang, isHandicapped)),
+//      playerNames.getOrElse(WHITE, PlayerUtil.getDefaultPlayerName(WHITE, messageLang, isHandicapped))
+//    ))
+//  }
+//
+//  def renderIndicators(indicators: Map[Player, BoardIndicator]): Unit = {
+//    mainPane.updateSVGArea(_.player.drawIndicators(indicators.get(BLACK), indicators.get(WHITE)))
+//  }
+//
+//  def renderBox(enabled: Boolean): Unit = {
+//    mainPane.updateSVGArea(enabled.fold(_.showBox(), _.hideBox()))
+//  }
+//
+//  def renderBoardPieces(board: BoardType, pieceFace: PieceFace): Unit = {
+//    mainPane.updateSVGArea(_.board.drawPieces(board, pieceFace, keepLastMove = false))
+//  }
+//
+//  def renderHandPieces(hand: HandType, pieceFace: PieceFace): Unit = {
+//    mainPane.updateSVGArea(_.hand.drawPieces(hand, pieceFace, keepLastMove = false))
+//  }
+//
+//  def renderLastMove(lastMove: Option[Move]): Unit = {
+//    mainPane.updateSVGArea(_.drawLastMove(lastMove))
+//  }
+//
+//  def renderBoxPieces(pieces: Map[Ptype, Int], pieceFace: PieceFace): Unit = {
+//    mainPane.updateSVGArea(_.box.drawPieces(pieces, pieceFace, keepLastMove = false))
+//  }
 
   def renderActiveCursor(activeCursor: Option[(Int, Cursor)]): Unit = {
     // clear current active cursor

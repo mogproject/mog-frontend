@@ -61,8 +61,8 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
     //-      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas, _.config.recordLang), renderIndex),
     //-      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType), renderFlip),
     //-      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas, _.mode.getPlayerNames, _.config.messageLang), renderPlayerNames),
-    //      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas, _.mode.getIndicators), renderIndicators),
-    //      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas, _.mode.boxAvailable), renderBox),
+    //-      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas, _.mode.getIndicators), renderIndicators),
+    //-      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas, _.mode.boxAvailable), renderBox),
     //      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas, _.config.pieceFace, _.mode.getBoardPieces), renderBoardPieces),
     //      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType.numAreas, _.config.pieceFace, _.mode.getHandPieces), renderHandPieces),
     //      (renderAll || isUpdated(newModel, _.config.layout, _.config.flipType, _.mode.getGameControl.map(_.getDisplayingLastMove)), renderLastMove),
@@ -110,49 +110,49 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
     if (newModel.config.collapseByDefault) view.mainPane.collapseSideBarRight()
   }
 
-  private[this] def renderLayout(newModel: M): Unit = {
-    view.renderLayout(newModel.config.deviceType, newModel.config.flipType.numAreas, newModel.config.pieceWidth, newModel.config.layout)
-  }
+//  private[this] def renderLayout(newModel: M): Unit = {
+//    view.renderLayout(newModel.config.deviceType, newModel.config.flipType.numAreas, newModel.config.pieceWidth, newModel.config.layout)
+//  }
+//
+//  private[this] def renderSize(newModel: M): Unit = {
+//    view.renderSize(newModel.config.deviceType, newModel.config.pieceWidth, newModel.config.layout)
+//  }
+//
+//  private[this] def renderIndex(newModel: M): Unit = {
+//    view.renderIndex(newModel.config.recordLang == Japanese)
+//  }
+//
+//  private[this] def renderFlip(newModel: M): Unit = {
+//    view.renderFlip(newModel.config.flipType)
+//  }
+//
+//  private[this] def renderPlayerNames(newModel: M): Unit = {
+//    view.renderPlayerNames(newModel.mode.getPlayerNames, newModel.config.messageLang, newModel.mode.getGameControl.exists(_.isHandicapped))
+//  }
+//
+//  private[this] def renderIndicators(newModel: M): Unit = {
+//    view.renderIndicators(newModel.mode.getIndicators)
+//  }
+//
+//  private[this] def renderBox(newModel: M): Unit = {
+//    view.renderBox(newModel.mode.boxAvailable)
+//  }
 
-  private[this] def renderSize(newModel: M): Unit = {
-    view.renderSize(newModel.config.deviceType, newModel.config.pieceWidth, newModel.config.layout)
-  }
-
-  private[this] def renderIndex(newModel: M): Unit = {
-    view.renderIndex(newModel.config.recordLang == Japanese)
-  }
-
-  private[this] def renderFlip(newModel: M): Unit = {
-    view.renderFlip(newModel.config.flipType)
-  }
-
-  private[this] def renderPlayerNames(newModel: M): Unit = {
-    view.renderPlayerNames(newModel.mode.getPlayerNames, newModel.config.messageLang, newModel.mode.getGameControl.exists(_.isHandicapped))
-  }
-
-  private[this] def renderIndicators(newModel: M): Unit = {
-    view.renderIndicators(newModel.mode.getIndicators)
-  }
-
-  private[this] def renderBox(newModel: M): Unit = {
-    view.renderBox(newModel.mode.boxAvailable)
-  }
-
-  private[this] def renderBoardPieces(newModel: M): Unit = {
-    view.renderBoardPieces(newModel.mode.getBoardPieces, newModel.config.pieceFace)
-  }
-
-  private[this] def renderHandPieces(newModel: M): Unit = {
-    view.renderHandPieces(newModel.mode.getHandPieces, newModel.config.pieceFace)
-  }
-
-  private[this] def renderLastMove(newModel: M): Unit = {
-    view.renderLastMove(newModel.mode.getLastMove)
-  }
-
-  private[this] def renderBoxPieces(newModel: M): Unit = {
-    view.renderBoxPieces(newModel.mode.getBoxPieces, newModel.config.pieceFace)
-  }
+//  private[this] def renderBoardPieces(newModel: M): Unit = {
+//    view.renderBoardPieces(newModel.mode.getBoardPieces, newModel.config.pieceFace)
+//  }
+//
+//  private[this] def renderHandPieces(newModel: M): Unit = {
+//    view.renderHandPieces(newModel.mode.getHandPieces, newModel.config.pieceFace)
+//  }
+//
+//  private[this] def renderLastMove(newModel: M): Unit = {
+//    view.renderLastMove(newModel.mode.getLastMove)
+//  }
+//
+//  private[this] def renderBoxPieces(newModel: M): Unit = {
+//    view.renderBoxPieces(newModel.mode.getBoxPieces, newModel.config.pieceFace)
+//  }
 
   private[this] def renderControlBars(newModel: M): Unit = {
     view.renderControlBars(newModel.mode.getGameControl, newModel.config.recordLang)

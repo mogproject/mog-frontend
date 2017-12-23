@@ -120,13 +120,16 @@ case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippa
     refreshIndicators()
   }
 
+  def drawIndicators(indicators: Map[Player, BoardIndicator]): Unit = {
+    drawIndicators(indicators.get(BLACK), indicators.get(WHITE))
+  }
+
   def refreshIndicators(): Unit = {
     indicators.foreach {
       case (pl, ind) =>
         indicatorTextElements.getFirst(pl).textContent = ind.map(_.text).getOrElse("")
         indicatorBackgrounds.get(pl).foreach(WebComponent.setClass(_, ind.map(_.className).getOrElse("indicator-none")))
     }
-
   }
 
   //
