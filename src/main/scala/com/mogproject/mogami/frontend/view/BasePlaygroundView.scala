@@ -15,7 +15,7 @@ import com.mogproject.mogami.frontend.sam.{PlaygroundSAM, SAMView}
 import com.mogproject.mogami.frontend.view.board.SVGAreaLayout
 import com.mogproject.mogami.frontend.view.menu.MenuPane
 import com.mogproject.mogami.frontend._
-import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, GameControl, ModeType}
+import com.mogproject.mogami.frontend.model.{AnalyzeResultMessage, BasePlaygroundConfiguration, GameControl, Message, ModeType}
 import com.mogproject.mogami.frontend.util.PlayerUtil
 import com.mogproject.mogami.frontend.view.board.canvas.CanvasBoard
 import com.mogproject.mogami.frontend.view.modal._

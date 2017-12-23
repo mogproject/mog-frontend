@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.action.analyze
 
 import com.mogproject.mogami.{BISHOP, KING, Ptype, ROOK}
 import com.mogproject.mogami.frontend.action.PlaygroundAction
-import com.mogproject.mogami.frontend.model.BasePlaygroundModel
+import com.mogproject.mogami.frontend.model.{AnalyzeResultMessage, BasePlaygroundModel}
 import com.mogproject.mogami.frontend.model.analyze.CountAnalyzeResult
 
 /**
@@ -17,7 +17,7 @@ object CountPointAction extends PlaygroundAction {
       val hp = st.hand.filter(_._1.owner == t).map { case (k, v) => getPtypePoint(k.ptype) * v }.sum
       val isKingInPromotionZone = st.turnsKing.exists(_.isPromotionZone(t))
       val numPiecesInPromotionZone = st.board.count { case (k, v) => k.isPromotionZone(t) && v.owner == t && v.ptype != KING }
-      model.copy(newAnalyzeResult = Some(CountAnalyzeResult(bp + hp, isKingInPromotionZone, numPiecesInPromotionZone)))
+      model.copy(newMessageBox = Some(AnalyzeResultMessage(CountAnalyzeResult(bp + hp, isKingInPromotionZone, numPiecesInPromotionZone))))
     }
   }
 

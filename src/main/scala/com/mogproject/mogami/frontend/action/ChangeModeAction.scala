@@ -23,7 +23,7 @@ case class ChangeModeAction(newModeType: ModeType, confirmed: Boolean) extends P
 
       // (Play|View) -> Edit (warning)
       case (_, _, EditModeType) =>
-        Some(model.addRenderRequest(EditWarningDialogRequest))
+        Some(model.copy(newMessageBox = Some(HandleDialogMessage(EditWarningDialog))))
 
       // Edit -> (Play|View)
       case (EditMode(gi, t, b, h), None, _) =>
@@ -31,7 +31,7 @@ case class ChangeModeAction(newModeType: ModeType, confirmed: Boolean) extends P
           case Success(gc) =>
             Some(model.copy(newMode = createMode(newModeType, gc)))
           case Failure(e) =>
-            Some(model.addRenderRequest(EditAlertDialogRequest(e.getMessage)))
+            Some(model.copy(newMessageBox = Some(HandleDialogMessage(EditAlertDialog(e.getMessage)))))
         }
 
       // Play -> View | View -> Play

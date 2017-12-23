@@ -4,6 +4,7 @@ import com.mogproject.mogami.frontend.view.{Observable, Observer}
 
 import scala.annotation.tailrec
 import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 
 /**
   * Implementation of the SAM (State-Action-Model) pattern
@@ -20,7 +21,9 @@ trait SAMLike {
 
   def doAction[M <: SAMModel](action: SAMAction[M]): Unit = {}
 
-  def addModelObserver[A](extractor: Any => A, observer: Observer[Any]): Unit = {}
+  def addObserver[M <: SAMModel](observer: SAMObserver[M]): Unit = {}
+
+  //  def addModelObserver[A](extractor: Any => A, observer: Observer[Any]): Unit = {}
 }
 
 
@@ -40,7 +43,18 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
 
     result match {
       case Some(nextModel) =>
-        val (nextState, nextAction) = state.render(nextModel, observables.toMap)
+        // process observers
+        val flag = state.getObserveFlag(nextModel)
+        SAM.debug(s"Observer flag: ${flag}")
+
+        observers.foreach { o =>
+          if ((o.samObserveMask & flag) != 0) {
+            SAM.debug(s"Refreshing: ${o}")
+            o.refresh(nextModel)
+          }
+        }
+
+        val (nextState, nextAction) = state.render(nextModel)
         SAM.debug(s"nextState: ${nextState}")
         SAM.debug(s"nextAction: ${nextAction}")
 
@@ -54,26 +68,33 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
     }
   }
 
-  private[this] val observables: mutable.Map[M => Any, Observable[Any]] = mutable.Map.empty
+  private[this] val observers: ListBuffer[SAMObserver[M]] = ListBuffer.empty
 
-  override def addModelObserver[A](extractor: Any => A, observer: Observer[Any]): Unit = extractor match {
-    case f: (M => A) => addModelObserverImpl(f, observer)
-    case _ => //do nothing
+  override def addObserver[N <: SAMModel](observer: SAMObserver[N]): Unit = observer match {
+    case o: SAMObserver[M] => observers.+=:(o)
+    case _ => // do nothing
   }
 
-  def addModelObserverImpl[A](extractor: M => A, observer: Observer[Any]): Unit = {
-    observables.get(extractor) match {
-      case Some(obs) => obs.addObserver(observer)
-      case None =>
-        val obs = new Observable[Any] {}
-        obs.addObserver(observer)
-        observables += (extractor -> obs)
-    }
-  }
+  //  private[this] val observables: mutable.Map[M => Any, Observable[Any]] = mutable.Map.empty
+  //
+  //  override def addModelObserver[A](extractor: Any => A, observer: Observer[Any]): Unit = extractor match {
+  //    case f: (M => A) => addModelObserverImpl(f, observer)
+  //    case _ => //do nothing
+  //  }
+  //
+  //  def addModelObserverImpl[A](extractor: M => A, observer: Observer[Any]): Unit = {
+  //    observables.get(extractor) match {
+  //      case Some(obs) => obs.addObserver(observer)
+  //      case None =>
+  //        val obs = new Observable[Any] {}
+  //        obs.addObserver(observer)
+  //        observables += (extractor -> obs)
+  //    }
+  //  }
 
   override def initialize(): Unit = {
     state.view.initialize()
-    state.initialize(observables.toMap)
+//    state.initialize(observables.toMap)
   }
 }
 
@@ -99,10 +120,15 @@ object SAM {
     debug("SAM Debug mode enabled.")
   }
 
-  def addModelObserver[A](extractor: Any => A, observer: Observer[Any]): Unit = {
-    samImpl.addModelObserver(extractor, observer)
-  }
+//  @deprecated
+//  def addModelObserver[A](extractor: Any => A, observer: Observer[Any]): Unit = {
+//    samImpl.addModelObserver(extractor, observer)
+//  }
 
+
+  def addObserver[M <: SAMModel](observer: SAMObserver[M]): Unit = {
+    samImpl.addObserver(observer)
+  }
 }
 
 

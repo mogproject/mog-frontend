@@ -123,6 +123,13 @@ sealed abstract class Mode(val modeType: ModeType,
     case EditMode(_, _, _, _) => None
   }
 
+  def getGameInfo: GameInfo = this match {
+    case PlayMode(gc) => gc.game.gameInfo
+    case ViewMode(gc) => gc.game.gameInfo
+    case LiveMode(_, gc) => gc.game.gameInfo
+    case EditMode(gi, _, _, _) => gi
+  }
+
   def getLegalMoves(moveFrom: MoveFrom): Set[Square] = {
     (for {
       gc <- getGameControl

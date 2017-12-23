@@ -10,7 +10,9 @@ trait SAMState[M <: SAMModel] {
 
   def view: SAMView
 
-  def render(newModel: M, observables: Map[M => Any, Observable[Any]]): (SAMState[M], Option[SAMAction[M]])
+  def getObserveFlag(newModel: M): Int
 
-  def initialize(observables: Map[M => Any, Observable[Any]]): Unit
+  def render(newModel: M): (SAMState[M], Option[SAMAction[M]])
+
+  def initialize(): Unit
 }

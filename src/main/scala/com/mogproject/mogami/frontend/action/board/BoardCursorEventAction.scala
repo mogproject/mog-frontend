@@ -45,8 +45,8 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
     * @return
     */
   private[this] def executeMouseDown(model: BasePlaygroundModel, areaId: Int, cursor: Option[Cursor]): Option[BasePlaygroundModel] = {
-    val renderRequest = cursor.flatMap(c => model.mode.canActivate(c).option(CursorFlashRequest(c)))
-    val newModel = model.addRenderRequests(renderRequest.toSeq)
+    val flashedCursor = cursor.flatMap(c => model.mode.canActivate(c).option(c))
+    val newModel = model.copy(newFlashedCursor = flashedCursor)
 
     (cursor, newModel.mode) match {
       //
@@ -58,7 +58,7 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
       // Player (Playing/Viewing)
       //
       case (Some(PlayerCursor(_)), _) if model.mode.playerSelectable && !model.mode.isEditMode =>
-        Some(newModel.addRenderRequest(GameInfoDialogRequest).copy(newActiveCursor = None))
+        Some(newModel.copy(newMessageBox = Some(HandleDialogMessage(GameInfoDialog)), newActiveCursor = None))
       //
       // Forward/Backward
       //
@@ -147,7 +147,7 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
       case 1 => Some(newModel.copy(newModel.mode.setGameControl(gc.makeMove(candidates.head, newBranchMode, moveForward = true).get)))
       case 2 =>
         val isFlipped = newModel.config.isAreaFlipped(areaId) ^ candidates.head.player.isWhite
-        Some(newModel.addRenderRequest(PromotionDialogRequest(candidates.head, isFlipped)))
+        Some(newModel.copy(newMessageBox = Some(HandleDialogMessage(PromotionDialog(candidates.head, isFlipped)))))
       case _ => None // never happens
     }
   }

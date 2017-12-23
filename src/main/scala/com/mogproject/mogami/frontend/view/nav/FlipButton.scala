@@ -6,7 +6,6 @@ import com.mogproject.mogami.frontend.model.Language
 import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipEnabled, FlipType}
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 import com.mogproject.mogami.frontend.view.button.ButtonLike
-import com.mogproject.mogami.frontend.view.observer.FlipTypeObserver
 import org.scalajs.dom.html.{Button, Div}
 
 import scalatags.JsDom.all._
@@ -14,7 +13,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class FlipButton extends ButtonLike[FlipType, Button, Div] with FlipTypeObserver {
+class FlipButton extends ButtonLike[FlipType, Button, Div] {
   override protected lazy val keys = Seq(FlipEnabled)
 
   override protected def generateInput(key: FlipType): Button = button(
@@ -38,5 +37,5 @@ class FlipButton extends ButtonLike[FlipType, Button, Div] with FlipTypeObserver
 
   override protected def invoke(key: FlipType): Unit = PlaygroundSAM.doAction(UpdateConfigurationAction(c => c.copy(flipType = !c.flipType)))
 
-  override def handleUpdate(flipType: FlipType): Unit = updateValue(flipType)
+//  override def handleUpdate(flipType: FlipType): Unit = updateValue(flipType)
 }
