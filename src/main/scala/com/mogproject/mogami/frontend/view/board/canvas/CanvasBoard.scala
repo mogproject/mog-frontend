@@ -77,8 +77,8 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, gameControl: GameCon
   private[this] def drawLastMoveReverse(): Unit = {
     val rs = lastMove.toSeq.flatMap { mv =>
       mv.moveFrom match {
-        case Left(sq) => Seq(sq, mv.to).map(s => config.layout.board.getRect(s, flipped))
-        case Right(h) => Seq(config.layout.hand.getRect(h.toPiece, flipped), config.layout.board.getRect(mv.to, flipped))
+        case Left(sq) => Seq(sq, mv.to).map(s => config.layout.board.getRect(s, !flipped))
+        case Right(h) => Seq(config.layout.hand.getRect(h.toPiece, !flipped), config.layout.board.getRect(mv.to, !flipped))
       }
     }
     rs.foreach(renderRect(_, Some(color.LAST_MOVE)))
@@ -92,16 +92,11 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, gameControl: GameCon
     lo.boardCircleCoords.foreach(renderCircle(_, lo.CIRCLE_SIZE, color.BORDER))
   }
 
-  private[this] def drawBoardReverse(): Unit = {
+  private[this] def drawBoard(player: Player): Unit = {
     val lo = config.layout.board
-
-    boardPieceReversed.foreach { case (sq, pc) => renderPiece(lo.getPieceRect(sq, flipped), pc.ptype) }
-  }
-
-  private[this] def drawBoardUnturned(): Unit = {
-    val lo = config.layout.board
-
-    boardPieceUnturned.foreach { case (sq, pc) => renderPiece(lo.getPieceRect(sq, !flipped), pc.ptype) }
+    displayState.board.filter(_._2.owner == player).foreach {
+      case (sq, pc) => renderPiece(lo.getPieceRect(sq, player.isWhite), pc.ptype)
+    }
   }
 
   private[this] def drawHand(player: Player): Unit = {
@@ -109,9 +104,8 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, gameControl: GameCon
 
     renderRect(lo.blackRect, None, Some(color.BORDER), stroke.BORDER)
     displayState.hand.foreach {
-      case (h, n) if (h.owner == player ^ flipped) && n > 0 =>
-        val p = h.toPiece.copy(owner = BLACK)
-        renderPiece(lo.getPieceRect(p, flipped), h.ptype)
+      case (h, n) if (h.owner == player) && n > 0 =>
+        renderPiece(lo.getPieceRect(h.toPiece, player.isWhite), h.ptype)
       case _ =>
     }
   }
@@ -120,16 +114,15 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, gameControl: GameCon
     val lo = config.layout.hand
 
     displayState.hand.foreach {
-      case (h, n) if (h.owner == player ^ flipped) && n > 1 =>
-        val p = h.toPiece.copy(owner = BLACK)
+      case (h, n) if (h.owner == player) && n > 1 =>
         renderText(
-          lo.getNumberRect(p, flipped),
+          lo.getNumberRect(h.toPiece, player.isWhite),
           n.toString,
           font.size.HAND_NUMBER,
           font.HAND_NUMBER,
           color.HAND_NUMBER_FILL,
           isBold = true,
-          alignCenter = false,
+          alignCenter = true,
           Some(color.HAND_NUMBER_STROKE),
           stroke.HAND_NUMBER,
           trim = false
@@ -178,27 +171,29 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, gameControl: GameCon
     rotateCanvas()
 
     /** @note drawing order matters */
-    val pl1 = flipped.fold(BLACK, WHITE)
     drawBackground()
     drawLastMoveReverse()
     drawForeground()
-    drawBoardReverse()
-    drawPlayer(pl1)
-    drawHand(pl1)
+
+    val pl = flipped.fold(BLACK, WHITE)
+    drawBoard(pl)
+    drawPlayer(pl)
+    drawHand(pl)
 
     waitDraw { () =>
-      drawHandNumbers(pl1)
+      drawHandNumbers(pl)
 
       waitDraw { () =>
         ctx.restore()
-        val pl2 = flipped.fold(WHITE, BLACK)
-        drawBoardUnturned()
-        drawPlayer(pl2)
-        drawHand(pl2)
+
+        drawBoard(!pl)
+        drawPlayer(!pl)
+        drawHand(!pl)
+
         drawIndexes()
 
         waitDraw { () =>
-          drawHandNumbers(pl2)
+          drawHandNumbers(!pl)
           callback()
         }
       }

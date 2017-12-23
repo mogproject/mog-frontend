@@ -3,6 +3,7 @@ package com.mogproject.mogami.frontend.view.board.hand
 
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.Piece
+import com.mogproject.mogami.core.Player.BLACK
 import com.mogproject.mogami.frontend.Coord
 import com.mogproject.mogami.frontend.view.coordinate.Rect
 import org.scalajs.dom.svg.RectElement
@@ -21,11 +22,11 @@ case class SVGHandLayout(center: Coord, blackOffset: Coord, pieceWidth: Int, pie
 
   val whiteOffset: Coord = whiteRect.leftTop
 
-  final val numberSize: Coord = Coord(120, 120)
+  final val numberSize: Coord = Coord(162, 110) // .y = font size (in css)
 
   final val PIECE_FACE_SIZE: Int = pieceWidth * 20 / 21
 
-  final val numberAdjustment: Coord = Coord(pieceWidth * 7 / 8, pieceWidth * 8 / 7 - numberSize.y)
+  final val numberAdjustment: Coord = Coord(50, 20)
 
   def getRect(piece: Piece, isFlipped: Boolean): Rect = {
     val isBlackArea = piece.owner.isBlack ^ isFlipped
@@ -38,13 +39,8 @@ case class SVGHandLayout(center: Coord, blackOffset: Coord, pieceWidth: Int, pie
   def getPieceRect(piece: Piece, isFlipped: Boolean): Rect = getRect(piece, isFlipped).toInnerRect(PIECE_FACE_SIZE, PIECE_FACE_SIZE)
 
   def getNumberRect(piece: Piece, isFlipped: Boolean): Rect = {
-    val r = getRect(piece, isFlipped)
-    val c = if (piece.owner.isWhite ^ isFlipped) {
-      r.rightBottom - numberAdjustment - numberSize
-    } else {
-      r.leftTop + numberAdjustment
-    }
-    Rect(c, numberSize.x, numberSize.y)
+    val r = getRect(Piece(BLACK, piece.ptype), isFlipped = false)
+    (piece.owner.isWhite ^  isFlipped).when[Rect](_.rotate(center))(Rect(r.rightBottom + numberAdjustment - numberSize, numberSize.x, numberSize.y))
   }
 
   private[this] def generateBorder(rect: Rect): TypedTag[RectElement] = rect.toSVGRect(cls := "board-border")
