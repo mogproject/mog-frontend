@@ -4,9 +4,7 @@ import com.mogproject.mogami._
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.core.state.StateCache.Implicits._
 import com.mogproject.mogami.frontend.model._
-import com.mogproject.mogami.frontend.model.board.FlipEnabled
 import com.mogproject.mogami.frontend.state.TestState
-import com.mogproject.mogami.frontend.util.PlayerUtil
 import com.mogproject.mogami.frontend.view.TestView
 import org.scalajs.dom
 
@@ -22,6 +20,9 @@ object App extends JSApp {
     val args = Arguments()
       .loadLocalStorage()
       .parseQueryString(dom.window.location.search)
+
+    // set debug log
+    SAM.setDebugLog(args.config.isDebug)
 
     // load game
     val game = createGameFromArgs(args)

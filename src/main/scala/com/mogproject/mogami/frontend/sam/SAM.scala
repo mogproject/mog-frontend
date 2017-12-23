@@ -1,9 +1,6 @@
 package com.mogproject.mogami.frontend.sam
 
-import com.mogproject.mogami.frontend.view.{Observable, Observer}
-
 import scala.annotation.tailrec
-import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 /**
@@ -22,8 +19,6 @@ trait SAMLike {
   def doAction[M <: SAMModel](action: SAMAction[M]): Unit = {}
 
   def addObserver[M <: SAMModel](observer: SAMObserver[M]): Unit = {}
-
-  //  def addModelObserver[A](extractor: Any => A, observer: Observer[Any]): Unit = {}
 }
 
 
@@ -47,12 +42,7 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
         val flag = state.getObserveFlag(nextModel)
         SAM.debug(s"Observer flag: ${flag}")
 
-        observers.foreach { o =>
-          if ((o.samObserveMask & flag) != 0) {
-            SAM.debug(s"Refreshing: ${o}")
-            o.refresh(nextModel)
-          }
-        }
+        notifyObservers(flag, nextModel)
 
         val (nextState, nextAction) = state.render(nextModel)
         SAM.debug(s"nextState: ${nextState}")
@@ -75,34 +65,27 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
     case _ => // do nothing
   }
 
-  //  private[this] val observables: mutable.Map[M => Any, Observable[Any]] = mutable.Map.empty
-  //
-  //  override def addModelObserver[A](extractor: Any => A, observer: Observer[Any]): Unit = extractor match {
-  //    case f: (M => A) => addModelObserverImpl(f, observer)
-  //    case _ => //do nothing
-  //  }
-  //
-  //  def addModelObserverImpl[A](extractor: M => A, observer: Observer[Any]): Unit = {
-  //    observables.get(extractor) match {
-  //      case Some(obs) => obs.addObserver(observer)
-  //      case None =>
-  //        val obs = new Observable[Any] {}
-  //        obs.addObserver(observer)
-  //        observables += (extractor -> obs)
-  //    }
-  //  }
+  private[this] def notifyObservers(flag: Int, model: M): Unit = observers.foreach { o =>
+    if ((o.samObserveMask & flag) != 0) {
+      SAM.debug(s"Refreshing: ${o}")
+      o.refresh(model)
+    }
+  }
 
   override def initialize(): Unit = {
     state.view.initialize()
-//    state.initialize(observables.toMap)
+    state.initialize()
+    notifyObservers(-1, state.model) // -1: all bits on
   }
 }
 
 object SAM {
 
-  private[this] final val VERBOSE_LOG_ENABLED: Boolean = false
+  private[this] var verboseLogEnabled: Boolean = false
 
-  protected def debug(message: String): Unit = if (VERBOSE_LOG_ENABLED) println(message)
+  def setDebugLog(enabled: Boolean): Unit = verboseLogEnabled = enabled
+
+  protected def debug(message: String): Unit = if (verboseLogEnabled) println(message)
 
   private[this] var samImpl: SAMLike = new SAMLike {}
 
@@ -119,12 +102,6 @@ object SAM {
     samImpl.initialize()
     debug("SAM Debug mode enabled.")
   }
-
-//  @deprecated
-//  def addModelObserver[A](extractor: Any => A, observer: Observer[Any]): Unit = {
-//    samImpl.addModelObserver(extractor, observer)
-//  }
-
 
   def addObserver[M <: SAMModel](observer: SAMObserver[M]): Unit = {
     samImpl.addObserver(observer)

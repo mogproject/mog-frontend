@@ -10,6 +10,10 @@ package object frontend {
   type SAMState[M <: SAMModel] = com.mogproject.mogami.frontend.sam.SAMState[M]
   type SAMView = com.mogproject.mogami.frontend.sam.SAMView
 
+  type BasePlaygroundModel = com.mogproject.mogami.frontend.model.BasePlaygroundModel
+  type SAMObserver[M <: SAMModel] = com.mogproject.mogami.frontend.sam.SAMObserver[M]
+  val ObserveFlag = com.mogproject.mogami.frontend.state.ObserveFlag
+
   type Coord = com.mogproject.mogami.frontend.view.coordinate.Coord
   val Coord = com.mogproject.mogami.frontend.view.coordinate.Coord
 

@@ -1,7 +1,5 @@
 package com.mogproject.mogami.frontend.sam
 
-import com.mogproject.mogami.frontend.view.Observable
-
 /**
   *
   */
