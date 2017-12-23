@@ -108,7 +108,7 @@ sealed abstract class Mode(val modeType: ModeType,
     case EditMode(_, _, _, h) => h
   }
 
-  def getBoxPieces: Map[Ptype, Int] = this match {
+  lazy val getBoxPieces: Map[Ptype, Int] = this match {
     case EditMode(_, _, b, h) =>
       val a = b.values.map(_.ptype.demoted).foldLeft(Map.empty[Ptype, Int]) { case (m, pt) => MapUtil.incrementMap(m, pt) }
       val used = h.foldLeft(a) { case (m, (h, n)) => m.updated(h.ptype, m.getOrElse(h.ptype, 0) + n) }
@@ -142,6 +142,10 @@ sealed abstract class Mode(val modeType: ModeType,
 
   def getLastMove: Option[Move] = getGameControl.flatMap(_.getDisplayingLastMove)
 
+  def isHandicapped: Boolean = {
+    val bp = getBoxPieces.filter(_._2 > 0)
+    bp.nonEmpty && !bp.contains(KING)
+  }
 
   //
   // Setters

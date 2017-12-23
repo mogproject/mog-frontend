@@ -37,6 +37,7 @@ trait ObserveFlagLike {
   final val GAME_INFO = 0x00200000
   final val GAME_COMMENT = 0x00400000
   final val GAME_POSITION = 0x00800000
+  final val GAME_HANDICAP = 0x01000000
 
   //
   // Cursor
@@ -102,6 +103,8 @@ object ObserveFlag extends ObserveFlagLike {
         case (EditMode(_, t1, b1, h1), EditMode(_, t2, b2, h2)) if t1 != t2 || b1 != b2 || h1 != h2 => ret |= GAME_BRANCH
         case _ =>
       }
+
+      if (a.isHandicapped != b.isHandicapped) ret |= GAME_HANDICAP
     }
 
     //

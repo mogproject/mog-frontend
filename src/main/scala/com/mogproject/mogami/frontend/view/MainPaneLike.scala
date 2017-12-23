@@ -211,7 +211,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   //
   override val samObserveMask: Int = {
     import ObserveFlag._
-    val modes = MODE_FROM_EDIT | MODE_TO_EDIT | GAME_BRANCH | GAME_INFO | GAME_POSITION
+    val modes = MODE_FROM_EDIT | MODE_TO_EDIT | GAME_BRANCH | GAME_INFO | GAME_POSITION | GAME_HANDICAP
     val confs = CONF_LAYOUT | CONF_NUM_AREAS | CONF_FLIP_TYPE | CONF_PIECE_WIDTH | CONF_PIECE_FACE | CONF_MSG_LANG | CONF_RCD_LANG
     val cursors = CURSOR_ACTIVE | CURSOR_SELECT | CURSOR_FLASH
     modes | confs | cursors
@@ -245,8 +245,8 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     if (check(CONF_FLIP_TYPE | CONF_RCD_LANG)) updateSVGArea(_.board.drawIndexes(config.recordLang == Japanese))
 
     // 5. Player Names
-    if (check(GAME_INFO | CONF_MSG_LANG)) {
-      val names = PlayerUtil.getCompletePlayerNames(model.mode.getGameInfo, config.messageLang, gc.exists(_.isHandicapped))
+    if (check(GAME_INFO | CONF_MSG_LANG | GAME_HANDICAP)) {
+      val names = PlayerUtil.getCompletePlayerNames(model.mode.getGameInfo, config.messageLang, model.mode.isHandicapped)
       updateSVGArea(_.player.drawNames(names))
     }
   }

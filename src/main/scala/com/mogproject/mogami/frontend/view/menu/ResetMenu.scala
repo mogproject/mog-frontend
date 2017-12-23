@@ -20,7 +20,6 @@ class ResetMenu extends AccordionMenu {
   private[this] lazy val editResetButton = new EditResetButton
 
   override lazy val content: JsDom.TypedTag[Div] = div(
-    label("Analyze for Checkmate"),
     editResetButton.element
   )
 }
