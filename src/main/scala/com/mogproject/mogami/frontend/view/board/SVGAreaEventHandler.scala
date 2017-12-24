@@ -63,7 +63,6 @@ trait SVGAreaEventHandler {
   }
 
   private[this] def mouseDown(evt: MouseEvent): Unit = if (isValidMouseEvent(evt)) {
-    println("mouseStart")
     evt.preventDefault()
     PlaygroundSAM.doAction(BoardCursorEventAction(MouseDownEvent(areaId, getCursor(evt.clientX, evt.clientY))))
     registerHoldEvent()
