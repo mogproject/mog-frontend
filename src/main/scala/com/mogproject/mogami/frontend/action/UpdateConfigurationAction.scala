@@ -23,6 +23,6 @@ case class UpdateConfigurationAction(f: BasePlaygroundConfiguration => BasePlayg
       Some(config.recordLang)
     ).save()
 
-    Some(model.copy(newConfig = config))
+    Some(model.copy(newConfig = config, newSelectedCursor = None))
   }
 }
