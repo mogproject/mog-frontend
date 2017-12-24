@@ -47,7 +47,7 @@ case class BasePlaygroundConfiguration(layout: SVGAreaLayout = SVGStandardLayout
   }
 
   def updateScreenOrientation(): BasePlaygroundConfiguration = {
-    this.copy(deviceType = DeviceType(deviceType.isMobile, BasePlaygroundConfiguration.getIsLandscape), pieceWidth = None)
+    this.copy(deviceType = DeviceType(deviceType.isMobile, BasePlaygroundConfiguration.getIsLandscape))
   }
 
   def collapseByDefault: Boolean = {
@@ -134,9 +134,11 @@ object BasePlaygroundConfiguration {
 
   def getMaxSVGAreaSize(deviceType: DeviceType, pieceWidth: Int, layout: SVGAreaLayout, numAreas: Int): Int = {
     val aw = getSVGAreaSize(deviceType, MAX_PIECE_WIDTH, layout, numAreas)
-    if (deviceType.isMobile) {
-      val maxAreaSize = math.min(getClientWidth - 10, (getClientHeight - deviceType.isLandscape.fold(76, 60)) * 400 / 576).toInt
-      math.min(maxAreaSize, aw)
+
+    if (deviceType.isLandscape) {
+      val effectiveHeight = math.min(getClientHeight, getClientWidth) - 76
+      val w = effectiveHeight * layout.viewBoxBottomRight.x / layout.viewBoxBottomRight.y
+      math.min(aw, (w * 2).toInt)
     } else {
       aw
     }
