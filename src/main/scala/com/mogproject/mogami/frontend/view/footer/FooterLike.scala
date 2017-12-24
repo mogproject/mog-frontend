@@ -10,11 +10,8 @@ import scalatags.JsDom.all._
   *
   */
 trait FooterLike extends WebComponent {
-  def isDevMode: Boolean
-
   override lazy val element: Div = div(
     hr(),
-    isDevMode.fold("[Dev Mode]", ""),
     small(p(cls := "footer-text",
       "Shogi Playground © 2017 ",
       a(href := "https://mogproject.com", target := "_blank", "mogproject"),

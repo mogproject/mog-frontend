@@ -40,7 +40,7 @@ object App extends JSApp {
     val model = TestModel(mode, args.config)
 
     // create view
-    val view = TestView(args.config.deviceType.isMobile, dom.document.getElementById("app"))
+    val view = TestView(args.config.deviceType.isMobile, args.config.isDev, args.config.isDebug, dom.document.getElementById("app"))
 
     // handle special actions
     args.action match {

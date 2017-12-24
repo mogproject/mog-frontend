@@ -9,16 +9,16 @@ import org.scalajs.dom.Element
   */
 case class MainPane(isMobile: Boolean, override val getSite: () => PlaygroundSite) extends MainPaneLike
 
-case class Footer(isDevMode: Boolean = true) extends FooterLike
+case class Footer(isDev: Boolean, isDebug: Boolean) extends FooterLike
 
-case class TestSite(isMobile: Boolean) extends PlaygroundSite {
+case class TestSite(isMobile: Boolean, isDev: Boolean, isDebug: Boolean) extends PlaygroundSite {
   override lazy val mainPane: MainPaneLike = MainPane(isMobile, () => this)
 
   override lazy val navBar: NavBar = NavBar(isMobile)
 
-  override lazy val footer: FooterLike = Footer()
+  override lazy val footer: FooterLike = Footer(isDev, isDebug)
 }
 
-case class TestView(isMobile: Boolean, rootElem: Element) extends BasePlaygroundView {
-  override lazy val website: PlaygroundSite = TestSite(isMobile)
+case class TestView(isMobile: Boolean, isDev: Boolean, isDebug: Boolean, rootElem: Element) extends BasePlaygroundView {
+  override lazy val website: PlaygroundSite = TestSite(isMobile, isDev, isDebug)
 }
