@@ -43,6 +43,10 @@ body {
   /* scrolling */
   -webkit-overflow-scrolling: touch;
 }
+noscript div {
+  margin-left: 40px;
+  width: 80%;
+}
 
 div {
   position: relative;
