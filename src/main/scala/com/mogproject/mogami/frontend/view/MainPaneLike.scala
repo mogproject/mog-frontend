@@ -276,11 +276,11 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     }
 
     // 12. Flash Cursor
-    if ((flag & CURSOR_FLASH) != 0) model.flashedCursor.foreach { c => updateSVGArea(_.flashCursor(c)) }
+    if (flag != -1 && isFlagUpdated(flag, CURSOR_FLASH)) model.flashedCursor.foreach { c => updateSVGArea(_.flashCursor(c)) }
 
 
     // 13. Move Effect
-    if ((flag & GAME_JUST_MOVED) != 0) {
+    if (flag != -1 &&isFlagUpdated(flag, GAME_JUST_MOVED)) {
       mode.getLastMove.foreach { move =>
         if (config.soundEffectEnabled) playClickSound()
         if (config.visualEffectEnabled) {
@@ -291,6 +291,6 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     }
 
     // 14. Move Forward/Backward Effect
-    if ((flag & (GAME_NEXT_POS | GAME_PREV_POS)) != 0 && model.selectedCursor.isDefined) updateSVGArea(_.board.effect.forwardEffector.start((flag & GAME_NEXT_POS) != 0))
+    if (flag != -1 &&isFlagUpdated(flag, GAME_NEXT_POS | GAME_PREV_POS) && model.selectedCursor.isDefined) updateSVGArea(_.board.effect.forwardEffector.start((flag & GAME_NEXT_POS) != 0))
   }
 }
