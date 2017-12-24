@@ -108,12 +108,13 @@ sealed abstract class Mode(val modeType: ModeType,
     case EditMode(_, _, _, h) => h
   }
 
-  lazy val getBoxPieces: Map[Ptype, Int] = this match {
-    case EditMode(_, _, b, h) =>
-      val a = b.values.map(_.ptype.demoted).foldLeft(Map.empty[Ptype, Int]) { case (m, pt) => MapUtil.incrementMap(m, pt) }
-      val used = h.foldLeft(a) { case (m, (h, n)) => m.updated(h.ptype, m.getOrElse(h.ptype, 0) + n) }
-      MapUtil.mergeMaps(State.capacity, used)(_ - _, 0).mapValues(math.max(0, _))
-    case _ => Map.empty
+  lazy val getBoxPieces: Map[Ptype, Int] = {
+    val b = getBoardPieces
+    val h = getHandPieces
+
+    val a = b.values.map(_.ptype.demoted).foldLeft(Map.empty[Ptype, Int]) { case (m, pt) => MapUtil.incrementMap(m, pt) }
+    val used = h.foldLeft(a) { case (m, (h, n)) => m.updated(h.ptype, m.getOrElse(h.ptype, 0) + n) }
+    MapUtil.mergeMaps(State.capacity, used)(_ - _, 0).mapValues(math.max(0, _))
   }
 
   def getGameControl: Option[GameControl] = this match {
