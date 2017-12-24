@@ -3,8 +3,9 @@ package com.mogproject.mogami.frontend.view.control
 
 import com.mogproject.mogami.frontend.action.{OpenCommentDialogAction, UpdateGameControlAction}
 import com.mogproject.mogami.frontend._
+import com.mogproject.mogami.frontend.view.button.SingleButton
 import com.mogproject.mogami.util.Implicits._
-import org.scalajs.dom.html.{Button, Div, TextArea}
+import org.scalajs.dom.html.{Div, TextArea}
 
 import scalatags.JsDom.all._
 
@@ -30,49 +31,45 @@ case class CommentArea(isDisplayOnly: Boolean, isModal: Boolean, text: String = 
       onclick := { () => PlaygroundSAM.doAction(OpenCommentDialogAction) }
     } else {
       onfocus := { () =>
-        textClearButton.disabled = false
-        textUpdateButton.disabled = false
+        textClearButton.enableElement()
+        textUpdateButton.enableElement()
       }
     },
     text
   ).render
 
-  lazy val textClearButton: Button = button(
-    tpe := "button",
-    cls := "btn btn-default btn-block",
-    data("toggle") := "tooltip",
-    data("placement") := "top",
-    data("original-title") := s"Clear this comment",
-    data("dismiss") := "modal",
-    onclick := { () =>
+  lazy val textClearButton: SingleButton = SingleButton(
+    Map(English -> "Clear".render),
+    clickAction = Some { () =>
       textCommentInput.value = ""
-      PlaygroundSAM.doAction(getAction(""))
+      doAction(getAction(""))
       if (!isModal) {
-        textClearButton.disabled = true
-        textUpdateButton.disabled = true
+        textClearButton.disableElement()
+        textUpdateButton.disableElement()
         displayCommentInputTooltip("Cleared!")
       }
     },
-    "Clear"
-  ).render
+    tooltip = Map(English -> "Clear this comment"),
+    tooltipPlacement = "top",
+    isBlockButton = true,
+    dismissModal = true
+  )
 
-  lazy val textUpdateButton: Button = button(
-    tpe := "button",
-    cls := "btn btn-default btn-block",
-    data("toggle") := "tooltip",
-    data("placement") := "top",
-    data("original-title") := s"Update this comment",
-    data("dismiss") := "modal",
-    onclick := { () =>
+  lazy val textUpdateButton: SingleButton = SingleButton(
+    Map(English -> "Update".render),
+    clickAction = Some { () =>
       val text = textCommentInput.value
       PlaygroundSAM.doAction(getAction(text))
       if (!isModal) {
-        textUpdateButton.disabled = true
+        textUpdateButton.disableElement()
         displayCommentInputTooltip("Updated!")
       }
     },
-    "Update"
-  ).render
+    tooltip = Map(English -> "Update this comment"),
+    tooltipPlacement = "top",
+    isBlockButton = true,
+    dismissModal = true
+  )
 
   // Layout
   override lazy val element: Div = div(
@@ -81,8 +78,8 @@ case class CommentArea(isDisplayOnly: Boolean, isModal: Boolean, text: String = 
     if (isDisplayOnly) "" else div(
       cls := "row",
       marginTop := 3,
-      div(cls := "col-xs-4", textClearButton),
-      div(cls := "col-xs-offset-4 col-xs-4", textUpdateButton)
+      div(cls := "col-xs-4", textClearButton.element),
+      div(cls := "col-xs-offset-4 col-xs-4", textUpdateButton.element)
     )
   ).render
 
@@ -112,7 +109,7 @@ case class CommentArea(isDisplayOnly: Boolean, isModal: Boolean, text: String = 
       show()
       val comment = model.mode.getGameControl.flatMap(_.getComment).getOrElse("")
       textCommentInput.value = comment
-      if (!isDisplayOnly) textClearButton.disabled = comment.isEmpty
+      if (!isDisplayOnly) textClearButton.setDisabled(comment.isEmpty)
     }
   }
 }

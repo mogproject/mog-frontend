@@ -21,8 +21,8 @@ case class CommentDialog(messageLang: Language, text: String) extends ModalLike 
 
   override val modalFooter: ElemType = div(footerDefinition,
     div(cls := "row",
-      div(cls := "col-xs-4", commentButton.textClearButton),
-      div(cls := "col-xs-offset-4 col-xs-4", commentButton.textUpdateButton)
+      div(cls := "col-xs-4", commentButton.textClearButton.element),
+      div(cls := "col-xs-offset-4 col-xs-4", commentButton.textUpdateButton.element)
     )
   )
 
