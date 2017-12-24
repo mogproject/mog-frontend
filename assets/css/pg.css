@@ -2,6 +2,10 @@
  * Nav
  */
 
+.mode-select {
+  width: 48px;
+}
+
 .nav-bg-play {
   background: #f8f8f8;
 }
