@@ -194,7 +194,10 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   def collapseSideBarRight(): Unit = sideBarRight.foreach(_.collapseSideBar())
 
   def playClickSound(): Unit = {
-    clickSound.pause()
+    val isPlaying = clickSound.currentTime > 0 && !clickSound.paused && !clickSound.ended && (clickSound.readyState.toString.toInt > 2)
+    if (isPlaying) {
+      clickSound.pause()
+    }
     clickSound.currentTime = 0
     clickSound.play()
   }
