@@ -152,7 +152,7 @@ case class ControlBar(barType: ControlBarType) extends WebComponent with SAMObse
   //
   override val samObserveMask: Int = {
     import ObserveFlag._
-    GAME_BRANCH | GAME_COMMENT | GAME_POSITION | CONF_RCD_LANG | MODE_EDIT
+    GAME_BRANCH | GAME_COMMENT | GAME_POSITION | GAME_BRANCH_CHANGED | CONF_RCD_LANG | MODE_EDIT
   }
 
   override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
@@ -162,7 +162,7 @@ case class ControlBar(barType: ControlBarType) extends WebComponent with SAMObse
       case Some(gc) =>
         show()
 
-        if ((flag & (GAME_BRANCH | GAME_COMMENT | CONF_RCD_LANG | MODE_EDIT)) != 0) {
+        if ((flag & (GAME_BRANCH | GAME_COMMENT | GAME_BRANCH_CHANGED | CONF_RCD_LANG | MODE_EDIT)) != 0) {
           recordSelector.innerHTML = createRecordContent(gc.game, gc.displayBranchNo, model.config.recordLang)
         }
 

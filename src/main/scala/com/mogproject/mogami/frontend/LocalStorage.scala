@@ -25,6 +25,7 @@ case class LocalStorage(pieceWidth: Option[Int] = None,
       case Some(SVGStandardLayout) => setItem("layout", "s")
       case Some(SVGCompactLayout) => setItem("layout", "c")
       case Some(SVGWideLayout) => setItem("layout", "w")
+      case None => // do nothing
     }
     pieceFace.foreach(x => setItem("p", x.faceId))
     doubleBoardMode.foreach(x => setItem("double", x))

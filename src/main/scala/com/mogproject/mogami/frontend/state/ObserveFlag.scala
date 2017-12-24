@@ -10,44 +10,45 @@ trait ObserveFlagLike {
   //
   // Configuration
   //
-  final val CONF = 0x00000001
+  final val CONF = 1 << 0
 
-  final val CONF_MSG_LANG = 0x00000002
-  final val CONF_RCD_LANG = 0x00000004
+  final val CONF_MSG_LANG = 1 << 1
+  final val CONF_RCD_LANG = 1 << 2
 
-  final val CONF_DEVICE = 0x00000010
-  final val CONF_LAYOUT = 0x00000020
-  final val CONF_NUM_AREAS = 0x00000040
-  final val CONF_FLIP_TYPE = 0x00000080
-  final val CONF_PIECE_WIDTH = 0x00000100
-  final val CONF_PIECE_FACE = 0x00000200
-  final val CONF_NEW_BRANCH = 0x00000400
+  final val CONF_DEVICE = 1 << 4
+  final val CONF_LAYOUT = 1 << 5
+  final val CONF_NUM_AREAS = 1 << 6
+  final val CONF_FLIP_TYPE = 1 << 7
+  final val CONF_PIECE_WIDTH = 1 << 8
+  final val CONF_PIECE_FACE = 1 << 9
+  final val CONF_NEW_BRANCH = 1 << 10
 
-  final val CONF_DEV = 0x00000800
-  final val CONF_DEBUG = 0x00001000
+  final val CONF_DEV = 1 << 11
+  final val CONF_DEBUG = 1 << 12
 
   //
   // Mode
   //
-  final val MODE_TYPE = 0x00010000
-  final val MODE_EDIT = 0x00020000
+  final val MODE_TYPE = 1 << 16
+  final val MODE_EDIT = 1 << 17
 
-  final val GAME_BRANCH = 0x00100000 // Includes Trunk. Check {turn, board, hand} in Edit Mode
-  final val GAME_INFO = 0x00200000
-  final val GAME_COMMENT = 0x00400000
-  final val GAME_POSITION = 0x00800000
-  final val GAME_INDICATOR = 0x01000000
-  final val GAME_HANDICAP = 0x02000000
-  final val GAME_JUST_MOVED = 0x04000000
-  final val GAME_NEXT_POS = 0x08000000
-  final val GAME_PREV_POS = 0x10000000
+  final val GAME_BRANCH = 1 << 18 // Includes Trunk. Check {turn, board, hand} in Edit Mode
+  final val GAME_INFO = 1 << 19
+  final val GAME_COMMENT = 1 << 20
+  final val GAME_POSITION = 1 << 21
+  final val GAME_INDICATOR = 1 << 22
+  final val GAME_HANDICAP = 1 << 23
+  final val GAME_JUST_MOVED = 1 << 24
+  final val GAME_NEXT_POS = 1 << 25
+  final val GAME_PREV_POS = 1 << 26
+  final val GAME_BRANCH_CHANGED = 1 << 27
 
   //
   // Cursor
   //
-  final val CURSOR_ACTIVE = 0x20000000
-  final val CURSOR_SELECT = 0x40000000
-  final val CURSOR_FLASH = 0x80000000
+  final val CURSOR_ACTIVE = 1 << 29
+  final val CURSOR_SELECT = 1 << 30
+  final val CURSOR_FLASH = 1 << 31
 
 }
 
@@ -96,7 +97,11 @@ object ObserveFlag extends ObserveFlagLike {
       (a.getGameControl, b.getGameControl) match {
         case (Some(g), Some(h)) =>
           if (g.game.trunk != h.game.trunk || g.game.branches != h.game.branches) ret |= GAME_BRANCH
-          if (g.displayBranchNo != h.displayBranchNo || g.displayPosition != h.displayPosition) ret |= GAME_POSITION
+          if (g.displayBranchNo != h.displayBranchNo) {
+            ret |= GAME_POSITION
+            ret |= GAME_BRANCH_CHANGED
+          }
+          if (g.displayPosition != h.displayPosition) ret |= GAME_POSITION
           if (g.game.comments != h.game.comments) ret |= GAME_COMMENT
         case _ =>
       }
