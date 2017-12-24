@@ -81,11 +81,11 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
 
 object SAM {
 
-  private[this] var verboseLogEnabled: Boolean = false
+//  private[this] var verboseLogEnabled: Boolean = false
 
-  def setDebugLog(enabled: Boolean): Unit = verboseLogEnabled = enabled
+//  def setDebugLog(enabled: Boolean): Unit = verboseLogEnabled = enabled
 
-  def debug(message: String): Unit = if (verboseLogEnabled) println(message)
+//  def debug(message: String): Unit = if (verboseLogEnabled) println(message)
 
   private[this] var samImpl: SAMLike = new SAMLike {}
 
@@ -100,7 +100,7 @@ object SAM {
   def initialize[M <: SAMModel](state: SAMState[M]): Unit = {
     samImpl = new SAM(state)
     samImpl.initialize()
-    debug("SAM Debug mode enabled.")
+//    debug("SAM Debug mode enabled.")
   }
 
   def addObserver[M <: SAMModel](observer: SAMObserver[M]): Unit = {

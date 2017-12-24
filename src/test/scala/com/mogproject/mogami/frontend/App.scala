@@ -22,9 +22,6 @@ object App extends JSApp {
       .loadLocalStorage()
       .parseQueryString(dom.window.location.search)
 
-    // set debug log
-    SAM.setDebugLog(args.config.isDebug)
-
     // load game
     val game = createGameFromArgs(args)
 
@@ -54,6 +51,10 @@ object App extends JSApp {
         // initialize state
         PlaygroundSAM.initialize(TestModel.adapter)
         SAM.initialize(TestState(model, view))
+
+        // show debug message
+        if (args.config.isDebug) println("Debug Log enabled.")
+        if (args.config.isDev) println("Dev Mode enabled.")
     }
   }
 

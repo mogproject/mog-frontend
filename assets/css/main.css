@@ -445,3 +445,21 @@ ul {
   padding-top: 8px;
   padding-bottom: 8px;
 }
+
+/*
+ * Debug Log
+ */
+small .panel {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+small div .panel-heading {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+small div .panel-body {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
