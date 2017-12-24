@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view.menu
 
-import com.mogproject.mogami.frontend.ArgumentsBuilder
+import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.model.{BasePlaygroundModel, PlayModeType, ViewModeType}
 import com.mogproject.mogami.frontend.view.share._
 import org.scalajs.dom.html.Div
@@ -11,7 +11,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class ShareMenu extends AccordionMenu {
+class ShareMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
   override lazy val ident: String = "Share"
   override lazy val title: String = ident
   override lazy val icon: String = "share"
@@ -35,7 +35,15 @@ class ShareMenu extends AccordionMenu {
     notesViewButton.element
   )
 
-  def refresh(model: BasePlaygroundModel): Unit = {
+  //
+  // Observer
+  //
+  override val samObserveMask: Int = {
+    import ObserveFlag._
+    GAME_BRANCH | GAME_POSITION | CONF_FLIP_TYPE
+  }
+
+  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
     model.mode.getGameControl.foreach { gc =>
       val builder = ArgumentsBuilder(gc.game, gc.gamePosition, model.config)
       recordCopyButton.updateValue(builder.toRecordUrl)
@@ -45,4 +53,5 @@ class ShareMenu extends AccordionMenu {
       notesViewButton.updateValue(builder.toNotesViewUrl)
     }
   }
+
 }

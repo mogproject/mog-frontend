@@ -157,10 +157,10 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
 //    view.renderControlBars(newModel.mode.getGameControl, newModel.config.recordLang)
 //  }
 
-  private[this] def renderGameControl(newModel: M): Unit = {
-//    view.renderComment(newModel.mode.modeType, newModel.mode.getGameControl.flatMap(_.getComment).getOrElse(""))
-    view.website.analyzeMenu.pointCountButton.clearMessage()
-  }
+//  private[this] def renderGameControl(newModel: M): Unit = {
+////    view.renderComment(newModel.mode.modeType, newModel.mode.getGameControl.flatMap(_.getComment).getOrElse(""))
+//    view.website.analyzeMenu.pointCountButton.clearMessage()
+//  }
 
 //  private[this] def renderBranchArea(newModel: M): Unit = {
 //    view.renderBranchArea(newModel.mode.getGameControl, newModel.config.recordLang, newModel.mode.modeType, newModel.config.newBranchMode)
@@ -174,9 +174,9 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
 //    view.updateConfigMenu(newModel.config)
 //  }
 
-  private[this] def renderShareUrls(newModel: M): Unit = {
-    view.website.shareMenu.refresh(newModel)
-  }
+//  private[this] def renderShareUrls(newModel: M): Unit = {
+//    view.website.shareMenu.refresh(newModel)
+//  }
 
 //  private[this] def renderActiveCursor(newModel: M): Unit = {
 //    view.renderActiveCursor(newModel.activeCursor)
