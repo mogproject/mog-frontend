@@ -96,7 +96,7 @@ object ObserveFlag extends ObserveFlagLike {
       (a.getGameControl, b.getGameControl) match {
         case (Some(g), Some(h)) =>
           if (g.game.trunk != h.game.trunk || g.game.branches != h.game.branches) ret |= GAME_BRANCH
-          if (g.gamePosition != h.gamePosition) ret |= GAME_POSITION
+          if (g.displayBranchNo != h.displayBranchNo || g.displayPosition != h.displayPosition) ret |= GAME_POSITION
           if (g.game.comments != h.game.comments) ret |= GAME_COMMENT
         case _ =>
       }
