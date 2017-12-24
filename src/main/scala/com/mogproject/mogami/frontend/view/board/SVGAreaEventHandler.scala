@@ -81,6 +81,11 @@ trait SVGAreaEventHandler {
     if (!getCursor(evt.clientX, evt.clientY).exists(_.isBoard)) clearHoldEvent()
   }
 
+  private[this] def touchMove(evt: TouchEvent): Unit = if (isValidTouchEvent(evt)) {
+    evt.preventDefault()
+    PlaygroundSAM.doAction(BoardCursorEventAction(MouseMoveEvent(areaId, getCursor(evt.changedTouches(0).clientX, evt.changedTouches(0).clientY))))
+  }
+
   private[this] def touchStart(evt: TouchEvent): Unit = if (isValidTouchEvent(evt)) {
     evt.preventDefault()
     PlaygroundSAM.doAction(BoardCursorEventAction(MouseDownEvent(areaId, getCursor(evt.changedTouches(0).clientX, evt.changedTouches(0).clientY))))
@@ -101,6 +106,7 @@ trait SVGAreaEventHandler {
 
   def registerEvents(elem: HTMLElement): Unit = {
     if (hasTouchEvent) {
+      elem.addEventListener("touchmove", touchMove, useCapture = false)
       elem.addEventListener("touchstart", touchStart, useCapture = false)
       elem.addEventListener("touchend", touchEnd, useCapture = false)
       elem.addEventListener("touchcancel", touchCancel, useCapture = false)
