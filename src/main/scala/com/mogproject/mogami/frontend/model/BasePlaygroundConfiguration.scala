@@ -138,7 +138,16 @@ object BasePlaygroundConfiguration {
     if (deviceType.isLandscape) {
       val effectiveHeight = math.min(getClientHeight, getClientWidth) - 76
       val w = effectiveHeight * layout.viewBoxBottomRight.x / layout.viewBoxBottomRight.y
+
       math.min(aw, (w * 2).toInt)
+    } else if (deviceType.isMobile) {
+      val w = getClientWidth
+      val h = getClientHeight
+      val effectiveWidth = math.min(w, h) - 10
+      val effectiveHeight = math.max(w, h) - 60
+      val ww = effectiveHeight * layout.viewBoxBottomRight.x / layout.viewBoxBottomRight.y
+
+      math.min(effectiveWidth, ww).toInt
     } else {
       aw
     }
