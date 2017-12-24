@@ -18,11 +18,11 @@ trait SVGAreaEventHandler {
   //
   // constants
   protected val holdInterval: Double = 1000 // ms
-//  private[this] val touchEndInterval: Double = 350 // ms
+  private[this] val touchEndInterval: Double = 50 // ms
 
   // variables
   private[this] var activeHoldEvent: Option[Int] = None
-//  private[this] var lastTouchEnd: Double = -touchEndInterval
+  private[this] var lastTouchEnd: Double = -touchEndInterval
 
   lazy val hasTouchEvent: Boolean = dom.window.hasOwnProperty("ontouchstart")
 
@@ -47,7 +47,7 @@ trait SVGAreaEventHandler {
 
   private[this] def isValidMouseEvent(evt: MouseEvent): Boolean = evt.button == 0
 
-  private[this] def isValidTouchEvent(evt: TouchEvent): Boolean = evt.changedTouches.length == 1  // && lastTouchEnd < evt.timeStamp - touchEndInterval
+  private[this] def isValidTouchEvent(evt: TouchEvent): Boolean = evt.changedTouches.length == 1 && lastTouchEnd < evt.timeStamp - touchEndInterval
 
   private[this] def registerHoldEvent(): Unit = {
     clearHoldEvent() // prevent double registrations
@@ -89,7 +89,7 @@ trait SVGAreaEventHandler {
 
   private[this] def touchEnd(evt: TouchEvent): Unit = {
     evt.preventDefault()
-//    lastTouchEnd = evt.timeStamp
+    lastTouchEnd = evt.timeStamp
     PlaygroundSAM.doAction(BoardCursorEventAction(MouseUpEvent(getCursor(evt.changedTouches(0).clientX, evt.changedTouches(0).clientY))))
     clearHoldEvent()
   }
