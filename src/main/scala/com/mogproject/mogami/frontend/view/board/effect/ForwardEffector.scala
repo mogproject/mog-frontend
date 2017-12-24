@@ -18,18 +18,18 @@ case class ForwardEffector(target: SVGBoard) extends ForegroundEffectorLike[Bool
   override def autoDestruct: Option[Int] = Some(300)
 
   override def generateElements(x: Boolean): Seq[JsDom.TypedTag[SVGElement]] = {
-    val sign = x.fold(1, -1)
+    val rectX = offset.x + MARGIN_SIZE + pieceWidth * x.fold(6, 1)
+    val rectY = offset.y + MARGIN_SIZE + pieceHeight * 3
 
-    val rectX = offset.x + MARGIN_SIZE + pieceWidth * 3 + sign * pieceWidth * 2
-    val rectY = offset.y + MARGIN_SIZE + pieceHeight * 2
+    val r = Rect(Coord(rectX, rectY), pieceWidth * 2, pieceHeight * 3).shrink(-60)
+    val d = pieceWidth * 4 / 5
 
-    val p1 = Coord(rectX + (15 - sign * 7) * pieceWidth / 10, rectY + pieceHeight * 5 / 4)
-    val p2 = Coord(rectX + (15 - sign * 7) * pieceWidth / 10, rectY + pieceHeight * 15 / 4)
-    val p3 = Coord(rectX + (15 + sign * 7) * pieceWidth / 10, rectY + pieceHeight * 5 / 2)
+    val p1 = Coord(x.fold(r.left + d, r.right - d), r.top + d)
+    val p2 = Coord(p1.x, r.bottom - d)
+    val p3 = Coord(x.fold(r.right - d, r.left + d), r.center.y)
 
-    val r = Rect(Coord(rectX, rectY), pieceWidth * 3, pieceHeight * 5)
     Seq(
-      r.toSVGRect(cls := "board-forward-line", svgAttrs.rx := 100, svgAttrs.ry := 100),
+      r.toSVGRect(cls := "board-forward-line", svgAttrs.rx := 60, svgAttrs.ry := 60),
       p1.toSVGPolygon(Seq(p2, p3), cls := "board-forward-triangle")
     )
   }
