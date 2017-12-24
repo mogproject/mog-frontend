@@ -18,6 +18,8 @@ trait EffectorLike[A, T <: EffectorTarget] {
 
   private[this] var currentElements: Seq[SVGElement] = Seq.empty
 
+  private[this] var currentCallback: () => Unit = () => {}
+
   // public methods
   def target: T
 
@@ -30,8 +32,11 @@ trait EffectorLike[A, T <: EffectorTarget] {
     */
   def autoDestruct: Option[Int] = None
 
-  def start(x: A): Unit = {
+  def start(x: A, callback: () => Unit = { () => }): Unit = {
     stop()
+
+    // set callback
+    currentCallback = callback
 
     // render SVG tags
     val svgElems = generateElements(x).map(_.render).toList // stabilize elements (to avoid being a stream)
@@ -47,10 +52,11 @@ trait EffectorLike[A, T <: EffectorTarget] {
     svgElems.foreach(startAnimation)
 
     // set self-destruction
-    autoDestruct.foreach(n => dom.window.setTimeout(() => stop(), n))
+    autoDestruct.foreach(n => dom.window.setTimeout({ () => stop() }, n))
   }
 
   def stop(): Unit = {
+    currentCallback()
     currentElements.foreach(WebComponent.removeElement)
     currentElements = Seq.empty
     currentValue = None
@@ -59,7 +65,7 @@ trait EffectorLike[A, T <: EffectorTarget] {
   /**
     * Re-evaluate the 'start' function with a current value
     */
-  def restart(): Unit = currentValue.foreach(start)
+  def restart(): Unit = currentValue.foreach(start(_))
 
   private[this] def startAnimation(parentElem: SVGElement): Unit = {
     for {

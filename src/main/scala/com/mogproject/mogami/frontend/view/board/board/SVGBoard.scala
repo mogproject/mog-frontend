@@ -63,10 +63,7 @@ case class SVGBoard(layout: SVGBoardLayout) extends SVGBoardPieceManager with SV
 
   def startPromotionEffect(square: Square, oldPiece: Piece, pieceFace: PieceFace): Unit = {
     hidePiece(square)
-    effect.pieceFlipEffector.start(PieceFlipAttribute(square, oldPiece, oldPiece.promoted, pieceFace))
-    dom.window.setTimeout(() => {
-      effect.pieceFlipEffector.stop(); showPiece(square)
-    }, 600)
+    effect.pieceFlipEffector.start(PieceFlipAttribute(square, oldPiece, oldPiece.promoted, pieceFace), () => showPiece(square))
   }
 
 
