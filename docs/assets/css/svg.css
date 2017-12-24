@@ -129,8 +129,8 @@
 .board-forward-line {
   fill: none;
   stroke: #337ab7;
-  stroke-width: 100px;
-  opacity: 0.2;
+  stroke-width: 30px;
+  opacity: 0.1;
 }
 
 .board-forward-triangle {
