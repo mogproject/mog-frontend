@@ -1,10 +1,9 @@
 package com.mogproject.mogami.frontend.state
 
 import com.mogproject.mogami._
-import com.mogproject.mogami.frontend.model.board.cursor.Cursor
 import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.frontend.sam.{SAMAction, SAMState}
-import com.mogproject.mogami.frontend.view.{BasePlaygroundView, Observable}
+import com.mogproject.mogami.frontend.view.BasePlaygroundView
 
 /**
   *
@@ -154,9 +153,9 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
 //    view.renderBoxPieces(newModel.mode.getBoxPieces, newModel.config.pieceFace)
 //  }
 
-  private[this] def renderControlBars(newModel: M): Unit = {
-    view.renderControlBars(newModel.mode.getGameControl, newModel.config.recordLang)
-  }
+//  private[this] def renderControlBars(newModel: M): Unit = {
+//    view.renderControlBars(newModel.mode.getGameControl, newModel.config.recordLang)
+//  }
 
   private[this] def renderGameControl(newModel: M): Unit = {
     view.renderComment(newModel.mode.modeType, newModel.mode.getGameControl.flatMap(_.getComment).getOrElse(""))
@@ -179,19 +178,19 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
     view.website.shareMenu.refresh(newModel)
   }
 
-  private[this] def renderActiveCursor(newModel: M): Unit = {
-    view.renderActiveCursor(newModel.activeCursor)
-  }
+//  private[this] def renderActiveCursor(newModel: M): Unit = {
+//    view.renderActiveCursor(newModel.activeCursor)
+//  }
 
-  private[this] def renderSelectedCursor(newModel: M): Unit = {
-    val legalMoves = for {
-      (_, c) <- newModel.selectedCursor.toSet if newModel.config.visualEffectEnabled && !c.isBox
-      from = c.moveFrom
-      lm <- newModel.mode.getLegalMoves(from)
-    } yield lm
-    view.renderSelectedCursor(newModel.selectedCursor.map(_._2), newModel.config.visualEffectEnabled, legalMoves)
-  }
-
+//  private[this] def renderSelectedCursor(newModel: M): Unit = {
+//    val legalMoves = for {
+//      (_, c) <- newModel.selectedCursor.toSet if newModel.config.visualEffectEnabled && !c.isBox
+//      from = c.moveFrom
+//      lm <- newModel.mode.getLegalMoves(from)
+//    } yield lm
+//    view.renderSelectedCursor(newModel.selectedCursor.map(_._2), newModel.config.visualEffectEnabled, legalMoves)
+//  }
+//
   //  private[this] def renderAnalyzeResult(newModel: M): Unit = {
   //    newModel.analyzeResult.foreach(r => view.renderAnalyzeResult(r, newModel.config.recordLang))
   //  }
@@ -224,8 +223,8 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
   //    }
   //  }
 
-  private[this] def renderMove(newModel: M): Unit = {
-    if (newModel.mode.isViewMode) view.renderForward(true)
-    newModel.mode.getLastMove.foreach(view.renderMoveEffect(_, newModel.config.pieceFace, newModel.config.visualEffectEnabled, newModel.config.soundEffectEnabled))
-  }
+//  private[this] def renderMove(newModel: M): Unit = {
+//    if (newModel.mode.isViewMode) view.renderForward(true)
+//    newModel.mode.getLastMove.foreach(view.renderMoveEffect(_, newModel.config.pieceFace, newModel.config.visualEffectEnabled, newModel.config.soundEffectEnabled))
+//  }
 }

@@ -4,7 +4,7 @@ package com.mogproject.mogami.frontend.view.control
 import com.mogproject.mogami.core.move.{DeclareWin, SpecialMove}
 import com.mogproject.mogami._
 import com.mogproject.mogami.frontend.action.{PlaygroundAction, UpdateGameControlAction}
-import com.mogproject.mogami.frontend.model.{English, GameControl, Japanese, Language}
+import com.mogproject.mogami.frontend.model.{English, Japanese, Language}
 import com.mogproject.mogami.frontend.view.button.SingleButton
 import com.mogproject.mogami.frontend.view.control.ControlBarType.ControlBarType
 import com.mogproject.mogami.frontend._
@@ -16,7 +16,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-case class ControlBar(barType: ControlBarType) extends WebComponent {
+case class ControlBar(barType: ControlBarType) extends WebComponent with SAMObserver[BasePlaygroundModel] {
 
   private[this] val LONG_LIST_SIZE = 29
 
@@ -148,13 +148,24 @@ case class ControlBar(barType: ControlBarType) extends WebComponent {
   }
 
   //
-  // Actions
+  // Observer
   //
-  def refresh(gameControl: Option[GameControl], recordLang: Language): Unit = {
-    gameControl match {
+  override val samObserveMask: Int = {
+    import ObserveFlag._
+    GAME_BRANCH | GAME_COMMENT | GAME_POSITION | CONF_RCD_LANG
+  }
+
+  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+    import ObserveFlag._
+
+    model.mode.getGameControl match {
       case Some(gc) =>
         show()
-        recordSelector.innerHTML = createRecordContent(gc.game, gc.displayBranchNo, recordLang)
+
+        if ((flag & (GAME_BRANCH | GAME_COMMENT | CONF_RCD_LANG)) != 0) {
+          recordSelector.innerHTML = createRecordContent(gc.game, gc.displayBranchNo, model.config.recordLang)
+        }
+
         recordSelector.selectedIndex = gc.displayPosition
 
         if (barType != ControlBarType.LongList) {

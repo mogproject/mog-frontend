@@ -102,43 +102,43 @@ trait BasePlaygroundView extends SAMView {
 //    mainPane.updateSVGArea(_.box.drawPieces(pieces, pieceFace, keepLastMove = false))
 //  }
 
-  def renderActiveCursor(activeCursor: Option[(Int, Cursor)]): Unit = {
-    // clear current active cursor
-    mainPane.updateSVGArea(_.clearActiveCursor())
-
-    // draw new cursor
-    activeCursor match {
-      case Some((n, c)) => mainPane.updateSVGArea(n, _.drawCursor(c))
-      case None => // do nothing
-    }
-  }
-
-  def renderSelectedCursor(selectedCursor: Option[Cursor], effectEnabled: Boolean, legalMoves: Set[Square]): Unit = {
-    // clear current selected cursor
-    mainPane.updateSVGArea(_.unselect())
-
-    // draw new cursor
-    selectedCursor.foreach { c => mainPane.updateSVGArea(_.select(c, effectEnabled, legalMoves)) }
-  }
-
-  def renderMoveEffect(move: Move, pieceFace: PieceFace, visualEffectEnabled: Boolean, soundEffectEnabled: Boolean): Unit = {
-    if (soundEffectEnabled) mainPane.playClickSound()
-    if (visualEffectEnabled) {
-      mainPane.updateSVGArea(a => a.board.effect.moveEffector.start(a.board.getRect(move.to)))
-      if (move.promote) mainPane.updateSVGArea(_.board.startPromotionEffect(move.to, move.oldPiece, pieceFace))
-    }
-  }
-
-  def renderForward(isForward: Boolean): Unit = {
-    mainPane.updateSVGArea(_.board.effect.forwardEffector.start(isForward))
-  }
+//  def renderActiveCursor(activeCursor: Option[(Int, Cursor)]): Unit = {
+//    // clear current active cursor
+//    mainPane.updateSVGArea(_.clearActiveCursor())
+//
+//    // draw new cursor
+//    activeCursor match {
+//      case Some((n, c)) => mainPane.updateSVGArea(n, _.drawCursor(c))
+//      case None => // do nothing
+//    }
+//  }
+//
+//  def renderSelectedCursor(selectedCursor: Option[Cursor], effectEnabled: Boolean, legalMoves: Set[Square]): Unit = {
+//    // clear current selected cursor
+//    mainPane.updateSVGArea(_.unselect())
+//
+//    // draw new cursor
+//    selectedCursor.foreach { c => mainPane.updateSVGArea(_.select(c, effectEnabled, legalMoves)) }
+//  }
+//
+//  def renderMoveEffect(move: Move, pieceFace: PieceFace, visualEffectEnabled: Boolean, soundEffectEnabled: Boolean): Unit = {
+//    if (soundEffectEnabled) mainPane.playClickSound()
+//    if (visualEffectEnabled) {
+//      mainPane.updateSVGArea(a => a.board.effect.moveEffector.start(a.board.getRect(move.to)))
+//      if (move.promote) mainPane.updateSVGArea(_.board.startPromotionEffect(move.to, move.oldPiece, pieceFace))
+//    }
+//  }
+//
+//  def renderForward(isForward: Boolean): Unit = {
+//    mainPane.updateSVGArea(_.board.effect.forwardEffector.start(isForward))
+//  }
 
   //
   // Controls
   //
-  def renderControlBars(gameControl: Option[GameControl], recordLang: Language): Unit = {
-    mainPane.updateControlBars(_.refresh(gameControl, recordLang))
-  }
+//  def renderControlBars(gameControl: Option[GameControl], recordLang: Language): Unit = {
+//    mainPane.updateControlBars(_.refresh(gameControl, recordLang))
+//  }
 
   def renderComment(modeType: ModeType, comment: String): Unit = {
     mainPane.updateComment(modeType, comment)
