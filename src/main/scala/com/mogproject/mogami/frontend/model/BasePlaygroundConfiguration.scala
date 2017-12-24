@@ -133,7 +133,7 @@ object BasePlaygroundConfiguration {
   }
 
   def getMaxSVGAreaSize(deviceType: DeviceType, pieceWidth: Int, layout: SVGAreaLayout, numAreas: Int): Int = {
-    val aw = getSVGAreaSize(deviceType, MAX_PIECE_WIDTH, layout, numAreas)
+    val aw = getSVGAreaSize(deviceType, pieceWidth, layout, numAreas)
 
     if (deviceType.isLandscape) {
       val effectiveHeight = math.min(getClientHeight, getClientWidth) - 76
@@ -144,10 +144,10 @@ object BasePlaygroundConfiguration {
       val w = getClientWidth
       val h = getClientHeight
       val effectiveWidth = math.min(w, h) - 10
-      val effectiveHeight = math.max(w, h) - 60
+      val effectiveHeight = math.max(w, h) - 60 - 100 // menu/comment margin: 100px
       val ww = effectiveHeight * layout.viewBoxBottomRight.x / layout.viewBoxBottomRight.y
 
-      math.min(effectiveWidth, ww).toInt
+      math.min(aw, math.min(effectiveWidth, ww).toInt)
     } else {
       aw
     }
