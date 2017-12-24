@@ -42,7 +42,9 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
 
   private[this] val svgAreas: mutable.ListBuffer[SVGArea] = mutable.ListBuffer.empty
 
-  private[this] var controlBar: Option[ControlBar] = None
+  private[this] val controlBar: ControlBar = ControlBar(isMobile.fold(ControlBarType.Small, ControlBarType.Normal))
+
+  //  private[this] var controlBar: Option[ControlBar] = None
 
   private[this] val commentArea: CommentArea = CommentArea(isDisplayOnly = isMobile, isModal = false)
 
@@ -99,8 +101,8 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   }
 
   private[this] def createPCPortraitMain: TypedTag[Div] = {
-    controlBar.foreach(_.terminate())
-    controlBar = Some(ControlBar(ControlBarType.Normal))
+    //    controlBar.foreach(_.terminate())
+    //    controlBar = Some(ControlBar(ControlBarType.Normal))
 
     div(cls := "container-fluid",
       div(
@@ -115,14 +117,14 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
           div(svgAreas.head.element)
         }
       ),
-      controlBar.get.element,
+      controlBar.element,
       commentArea.element
     )
   }
 
   private[this] def createMobilePortraitMain: TypedTag[Div] = {
-    controlBar.foreach(_.terminate())
-    controlBar = Some(ControlBar(ControlBarType.Small))
+    //    controlBar.foreach(_.terminate())
+    //    controlBar = Some(ControlBar(ControlBarType.Small))
 
     div(
       div(cls := "container-fluid",
@@ -131,22 +133,22 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
           cls := "main-area-mobile-portrait",
           svgAreas.head.element
         ),
-        controlBar.get.element,
+        controlBar.element,
         commentArea.element
       )
     )
   }
 
   private[this] def createMobileLandscapeMain: TypedTag[Div] = {
-    controlBar.foreach(_.terminate())
-    controlBar = (svgAreas.size == 1).option(ControlBar(ControlBarType.Small))
+    //    controlBar.foreach(_.terminate())
+    //    controlBar = (svgAreas.size == 1).option(ControlBar(ControlBarType.Small))
 
     div(cls := "container-fluid",
       div(
         id := "main-area",
         div(cls := "row",
           div(cls := "col-xs-6", svgAreas.head.element),
-          div(cls := "col-xs-6", (svgAreas.size > 1).fold(svgAreas(1).element, controlBar.map(_.element).toSeq :+ commentArea.element))
+          div(cls := "col-xs-6", (svgAreas.size > 1).fold(svgAreas(1).element, (svgAreas.size == 1).option(controlBar.element).toSeq :+ commentArea.element))
         )
       )
     )
@@ -176,10 +178,10 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
 
   def getFirstSVGArea: SVGArea = svgAreas.head
 
-  def updateControlBars(f: ControlBar => Unit): Unit = {
-    controlBar.foreach(f)
-    sideBarLeft.foreach(sb => f(sb.controlBar))
-  }
+  //  def updateControlBars(f: ControlBar => Unit): Unit = {
+  //    controlBar.foreach(f)
+  //    sideBarLeft.foreach(sb => f(sb.controlBar))
+  //  }
 
   def updateComment(modeType: ModeType, comment: String): Unit = commentArea.refresh(modeType, comment)
 
@@ -260,17 +262,19 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     // 7. Box
     if (check(MODE_EDIT)) updateSVGArea(mode.boxAvailable.fold(_.showBox(), _.hideBox()))
 
-    // 8. Board/Hand/Box Pieces / Last Move
+    // 8. Board/Hand/Box Pieces
     if (check(GAME_BRANCH | GAME_POSITION | CONF_PIECE_FACE)) {
       updateSVGArea { area =>
         area.board.drawPieces(mode.getBoardPieces, config.pieceFace)
         area.hand.drawPieces(mode.getHandPieces, config.pieceFace)
-        area.drawLastMove(mode.getLastMove)
         if (mode.isEditMode) area.box.drawPieces(mode.getBoxPieces, config.pieceFace)
       }
     }
 
-    // 9. Active Cursor
+    // 9. Last Move
+    if (check(GAME_BRANCH | GAME_POSITION | MODE_EDIT | CONF_FLIP_TYPE)) updateSVGArea(_.drawLastMove(mode.getLastMove))
+
+    // 10. Active Cursor
     if ((flag & CURSOR_ACTIVE) != 0) {
       // clear current active cursor
       updateSVGArea(_.clearActiveCursor())
@@ -282,7 +286,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
       }
     }
 
-    // 10. Selected Cursor
+    // 11. Selected Cursor
     if ((!mode.isViewMode || model.selectedCursor.isEmpty) && (flag & CURSOR_SELECT) != 0) {
       val legalMoves = for {
         (_, c) <- model.selectedCursor.toSet if config.visualEffectEnabled && !c.isBox
@@ -297,11 +301,11 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
       model.selectedCursor.map(_._2).foreach { c => updateSVGArea(_.select(c, config.visualEffectEnabled, legalMoves)) }
     }
 
-    // 11. Flash Cursor
+    // 12. Flash Cursor
     if ((flag & CURSOR_FLASH) != 0) model.flashedCursor.foreach { c => updateSVGArea(_.flashCursor(c)) }
 
 
-    // 12. Move Effect
+    // 13. Move Effect
     if ((flag & GAME_JUST_MOVED) != 0) {
       mode.getLastMove.foreach { move =>
         if (config.soundEffectEnabled) playClickSound()
@@ -312,7 +316,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
       }
     }
 
-    // 13. Move Forward/Backward Effect
+    // 14. Move Forward/Backward Effect
     if ((flag & (GAME_NEXT_POS | GAME_PREV_POS)) != 0 && model.selectedCursor.isDefined) updateSVGArea(_.board.effect.forwardEffector.start((flag & GAME_NEXT_POS) != 0))
   }
 }
