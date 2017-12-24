@@ -86,7 +86,9 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   private[this] def renderSVGAreas(deviceType: DeviceType, numAreas: Int, pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
     svgAreas.foreach(_.terminate())
     svgAreas.clear()
-    svgAreas ++= (0 until numAreas).map(n => SVGArea(n, layout))
+
+    val maxNumAreas = (deviceType == DeviceType.MobilePortrait).fold(1, 2)
+    svgAreas ++= (0 until math.min(maxNumAreas, numAreas)).map(n => SVGArea(n, layout))
 
     val node = deviceType match {
       case DeviceType.MobileLandscape => createMobileLandscapeMain
@@ -138,8 +140,9 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
         id := "main-area",
         div(cls := "row",
           div(cls := "col-xs-6", svgAreas.head.element),
-          div(cls := "col-xs-6 main-second", (svgAreas.size > 1).fold(svgAreas(1).element, (svgAreas.size == 1).option(controlBar.element).toSeq :+ commentArea.element))
-        )
+          div(cls := "col-xs-6 main-second", (svgAreas.size > 1).fold(svgAreas(1).element, commentArea.element))
+        ),
+        controlBar.element
       )
     )
   }
@@ -214,10 +217,11 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
 
     // 3. Flip
     if (check(CONF_FLIP_TYPE)) {
-      config.flipType match {
-        case FlipDisabled => updateSVGArea(_.setFlip(false))
-        case FlipEnabled => updateSVGArea(_.setFlip(true))
-        case DoubleBoard => Seq(0, 1).foreach { n => updateSVGArea(n, _.setFlip(n == 1)) }
+      (config.flipType, config.deviceType) match {
+        case (FlipDisabled, _) => updateSVGArea(_.setFlip(false))
+        case (FlipEnabled, _) => updateSVGArea(_.setFlip(true))
+        case (DoubleBoard, DeviceType.MobilePortrait) => updateSVGArea(_.setFlip(false))
+        case (DoubleBoard, _) => Seq(0, 1).foreach { n => updateSVGArea(n, _.setFlip(n == 1)) }
       }
     }
 
@@ -280,7 +284,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
 
 
     // 13. Move Effect
-    if (flag != -1 &&isFlagUpdated(flag, GAME_JUST_MOVED)) {
+    if (flag != -1 && isFlagUpdated(flag, GAME_JUST_MOVED)) {
       mode.getLastMove.foreach { move =>
         if (config.soundEffectEnabled) playClickSound()
         if (config.visualEffectEnabled) {
@@ -291,6 +295,6 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     }
 
     // 14. Move Forward/Backward Effect
-    if (flag != -1 &&isFlagUpdated(flag, GAME_NEXT_POS | GAME_PREV_POS) && model.selectedCursor.isDefined) updateSVGArea(_.board.effect.forwardEffector.start((flag & GAME_NEXT_POS) != 0))
+    if (flag != -1 && isFlagUpdated(flag, GAME_NEXT_POS | GAME_PREV_POS) && model.selectedCursor.isDefined) updateSVGArea(_.board.effect.forwardEffector.start((flag & GAME_NEXT_POS) != 0))
   }
 }

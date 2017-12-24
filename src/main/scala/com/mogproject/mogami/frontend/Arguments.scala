@@ -117,7 +117,7 @@ case class Arguments(sfen: Option[String] = None,
           f(sofar, xs)
       }
       case x :: xs =>
-        println(s"Unknown parameter: ${x}")
+        if (x.exists(_.nonEmpty)) println(s"Unknown parameter: ${x}")
         f(sofar, xs)
       case Nil => sofar
     }
