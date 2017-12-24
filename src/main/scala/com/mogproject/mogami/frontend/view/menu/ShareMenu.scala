@@ -38,12 +38,14 @@ class ShareMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
   //
   // Observer
   //
-  override val samObserveMask: Int = {
+  override val samObserveMask: Int = super.samObserveMask | {
     import ObserveFlag._
     GAME_BRANCH | GAME_POSITION | CONF_FLIP_TYPE
   }
 
   override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+    super.refresh(model, flag)
+
     model.mode.getGameControl.foreach { gc =>
       val builder = ArgumentsBuilder(gc.game, gc.gamePosition, model.config)
       recordCopyButton.updateValue(builder.toRecordUrl)

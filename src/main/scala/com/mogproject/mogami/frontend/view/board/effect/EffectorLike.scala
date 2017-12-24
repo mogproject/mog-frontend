@@ -57,6 +57,7 @@ trait EffectorLike[A, T <: EffectorTarget] {
 
   def stop(): Unit = {
     currentCallback()
+    currentCallback = () => {}
     currentElements.foreach(WebComponent.removeElement)
     currentElements = Seq.empty
     currentValue = None

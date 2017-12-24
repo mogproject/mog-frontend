@@ -19,6 +19,8 @@ case class PieceFlipAttribute(square: Square, fromPiece: Piece, toPiece: Piece, 
   */
 case class PieceFlipEffector(target: SVGBoard) extends BackgroundEffectorLike[PieceFlipAttribute, SVGBoard] {
 
+  override def autoDestruct: Option[Int] = Some(600)
+
   private[this] def generateTransformElem(transformType: String, values: String) = {
     animateTransform(
       svgAttrs.attributeName := "transform",
