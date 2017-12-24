@@ -26,6 +26,8 @@ class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
   private[this] lazy val boardSizeSelector = DropdownSelector[Option[Int]]("Board Size", Vector(
     None -> "Automatic",
     Some(15) -> "15 - Extra Small",
+    Some(20) -> "20",
+    Some(25) -> "25",
     Some(30) -> "30 - Small",
     Some(40) -> "40 - Medium",
     Some(50) -> "50 - Large",
