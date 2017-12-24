@@ -41,9 +41,11 @@ case class CommentArea(isDisplayOnly: Boolean, isModal: Boolean, text: String = 
   lazy val textClearButton: SingleButton = SingleButton(
     Map(English -> "Clear".render),
     clickAction = Some { () =>
-      textCommentInput.value = ""
-      doAction(getAction(""))
-      if (!isModal) {
+      if (isModal) {
+        doAction(getAction(""), 1)
+      } else {
+        textCommentInput.value = ""
+        doAction(getAction(""))
         textClearButton.disableElement()
         textUpdateButton.disableElement()
         displayCommentInputTooltip("Cleared!")
@@ -59,8 +61,10 @@ case class CommentArea(isDisplayOnly: Boolean, isModal: Boolean, text: String = 
     Map(English -> "Update".render),
     clickAction = Some { () =>
       val text = textCommentInput.value
-      PlaygroundSAM.doAction(getAction(text))
-      if (!isModal) {
+      if (isModal) {
+        doAction(getAction(text), 1)
+      } else {
+        doAction(getAction(text))
         textUpdateButton.disableElement()
         displayCommentInputTooltip("Updated!")
       }
