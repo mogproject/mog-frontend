@@ -2,7 +2,6 @@ package com.mogproject.mogami.frontend.view.sidebar
 
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend._
-import com.mogproject.mogami.frontend.model.{EditModeType, ModeType}
 import com.mogproject.mogami.frontend.view.branch.BranchArea
 import com.mogproject.mogami.frontend.view.control.{ControlBar, ControlBarType}
 import org.scalajs.dom.html.{Div, Heading}

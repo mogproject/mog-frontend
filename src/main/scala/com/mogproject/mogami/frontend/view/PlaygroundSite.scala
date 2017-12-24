@@ -1,6 +1,5 @@
 package com.mogproject.mogami.frontend.view
 
-import com.mogproject.mogami.frontend.model.{GameControl, Language, ModeType}
 import com.mogproject.mogami.frontend.view.footer.FooterLike
 import com.mogproject.mogami.frontend.view.menu._
 import com.mogproject.mogami.frontend.view.modal.MenuDialog
@@ -48,14 +47,5 @@ trait PlaygroundSite extends WebComponent {
       footer.element
     )
   ).render
-
-
-//  def updateBranchArea(gameControl: Option[GameControl], recordLang: Language, modeType: ModeType, newBranchMode: Boolean): Unit = {
-//    if (isMobile) {
-//      branchMenu.branchArea.refresh(gameControl, recordLang, modeType, newBranchMode)
-//    } else {
-//      mainPane.updateBranchArea(gameControl, recordLang, modeType, newBranchMode)
-//    }
-//  }
 
 }

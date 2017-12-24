@@ -178,21 +178,6 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
 
   def getFirstSVGArea: SVGArea = svgAreas.head
 
-  //  def updateControlBars(f: ControlBar => Unit): Unit = {
-  //    controlBar.foreach(f)
-  //    sideBarLeft.foreach(sb => f(sb.controlBar))
-  //  }
-
-//  def updateComment(modeType: ModeType, comment: String): Unit = commentArea.refresh(modeType, comment)
-
-//  def updateBranchArea(gameControl: Option[GameControl], recordLang: Language, modeType: ModeType, newBranchMode: Boolean): Unit = {
-//    sideBarLeft.foreach(_.branchArea.refresh(gameControl, recordLang, modeType, newBranchMode))
-//  }
-
-//  def updateModeType(modeType: ModeType): Unit = {
-//    sideBarLeft.foreach(_.refresh(modeType))
-//  }
-
   def collapseSideBarRight(): Unit = sideBarRight.foreach(_.collapseSideBar())
 
   def playClickSound(): Unit = {

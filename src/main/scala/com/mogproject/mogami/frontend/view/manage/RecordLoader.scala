@@ -5,7 +5,7 @@ import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.action.dialog.MenuDialogAction
 import com.mogproject.mogami.frontend.action.game.LoadGameAction
 import com.mogproject.mogami.frontend.model.io.{CSA, KI2, KIF, RecordFormat}
-import com.mogproject.mogami.core.state.StateCache.Implicits._ // todo: fixme
+import com.mogproject.mogami.core.state.StateCache.Implicits.DefaultStateCache // todo: consider clear cache
 
 import scala.util.{Failure, Success, Try}
 

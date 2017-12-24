@@ -151,18 +151,9 @@ case class SVGArea(areaId: Int, layout: SVGAreaLayout) extends WebComponent with
 
   def hideBox(): Unit = WebComponent.hideElement(svgBox)
 
-  def getImageBase64: String = {
-    // todo: impl
-    ""
-  }
-
   //
   // Event
   //
   registerEvents(svgDiv)
-
-  //
-  // Initialization
-  //
 
 }

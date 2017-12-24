@@ -1,18 +1,13 @@
 package com.mogproject.mogami.frontend.view
 
 import com.mogproject.mogami._
-import com.mogproject.mogami.core.Player.{BLACK, WHITE}
-import com.mogproject.mogami.core.state.State.{BoardType, HandType}
 import com.mogproject.mogami.core.state.StateCache
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.action.{ChangeModeAction, UpdateConfigurationAction, UpdateGameControlAction}
 import com.mogproject.mogami.frontend.api.Clipboard
 import com.mogproject.mogami.frontend.api.Clipboard.Event
 import com.mogproject.mogami.frontend.model.analyze._
-import com.mogproject.mogami.frontend.model.board._
-import com.mogproject.mogami.frontend.model.board.cursor.Cursor
 import com.mogproject.mogami.frontend.sam.{PlaygroundSAM, SAMView}
-import com.mogproject.mogami.frontend.view.board.SVGAreaLayout
 import com.mogproject.mogami.frontend.view.menu.MenuPane
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.model.{AnalyzeResultMessage, BasePlaygroundConfiguration, GameControl, Message, ModeType}
@@ -50,115 +45,6 @@ trait BasePlaygroundView extends SAMView {
     cp.on("error", (e: Event) => Tooltip.display(e.trigger, "Failed!"))
 
   }
-
-//  def renderLayout(deviceType: DeviceType, numAreas: Int, pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
-//    mainPane.renderSVGAreas(deviceType, numAreas, pieceWidth, layout)
-//  }
-//
-//  def renderSize(deviceType: DeviceType, pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
-//    mainPane.resizeSVGAreas(deviceType, pieceWidth, layout)
-//  }
-//
-//  def renderIndex(useJapanese: Boolean = false): Unit = {
-//    mainPane.updateSVGArea(_.board.drawIndexes(useJapanese))
-//  }
-//
-//  def renderFlip(flipType: FlipType): Unit = {
-//    flipType match {
-//      case FlipDisabled => mainPane.updateSVGArea(_.setFlip(false))
-//      case FlipEnabled => mainPane.updateSVGArea(_.setFlip(true))
-//      case DoubleBoard => Seq(0, 1).foreach { n => mainPane.updateSVGArea(n, _.setFlip(n == 1)) }
-//    }
-//  }
-//
-//  def renderPlayerNames(playerNames: Map[Player, String], messageLang: Language, isHandicapped: Boolean): Unit = {
-//    mainPane.updateSVGArea(_.player.drawNames(
-//      playerNames.getOrElse(BLACK, PlayerUtil.getDefaultPlayerName(BLACK, messageLang, isHandicapped)),
-//      playerNames.getOrElse(WHITE, PlayerUtil.getDefaultPlayerName(WHITE, messageLang, isHandicapped))
-//    ))
-//  }
-//
-//  def renderIndicators(indicators: Map[Player, BoardIndicator]): Unit = {
-//    mainPane.updateSVGArea(_.player.drawIndicators(indicators.get(BLACK), indicators.get(WHITE)))
-//  }
-//
-//  def renderBox(enabled: Boolean): Unit = {
-//    mainPane.updateSVGArea(enabled.fold(_.showBox(), _.hideBox()))
-//  }
-//
-//  def renderBoardPieces(board: BoardType, pieceFace: PieceFace): Unit = {
-//    mainPane.updateSVGArea(_.board.drawPieces(board, pieceFace, keepLastMove = false))
-//  }
-//
-//  def renderHandPieces(hand: HandType, pieceFace: PieceFace): Unit = {
-//    mainPane.updateSVGArea(_.hand.drawPieces(hand, pieceFace, keepLastMove = false))
-//  }
-//
-//  def renderLastMove(lastMove: Option[Move]): Unit = {
-//    mainPane.updateSVGArea(_.drawLastMove(lastMove))
-//  }
-//
-//  def renderBoxPieces(pieces: Map[Ptype, Int], pieceFace: PieceFace): Unit = {
-//    mainPane.updateSVGArea(_.box.drawPieces(pieces, pieceFace, keepLastMove = false))
-//  }
-
-//  def renderActiveCursor(activeCursor: Option[(Int, Cursor)]): Unit = {
-//    // clear current active cursor
-//    mainPane.updateSVGArea(_.clearActiveCursor())
-//
-//    // draw new cursor
-//    activeCursor match {
-//      case Some((n, c)) => mainPane.updateSVGArea(n, _.drawCursor(c))
-//      case None => // do nothing
-//    }
-//  }
-//
-//  def renderSelectedCursor(selectedCursor: Option[Cursor], effectEnabled: Boolean, legalMoves: Set[Square]): Unit = {
-//    // clear current selected cursor
-//    mainPane.updateSVGArea(_.unselect())
-//
-//    // draw new cursor
-//    selectedCursor.foreach { c => mainPane.updateSVGArea(_.select(c, effectEnabled, legalMoves)) }
-//  }
-//
-//  def renderMoveEffect(move: Move, pieceFace: PieceFace, visualEffectEnabled: Boolean, soundEffectEnabled: Boolean): Unit = {
-//    if (soundEffectEnabled) mainPane.playClickSound()
-//    if (visualEffectEnabled) {
-//      mainPane.updateSVGArea(a => a.board.effect.moveEffector.start(a.board.getRect(move.to)))
-//      if (move.promote) mainPane.updateSVGArea(_.board.startPromotionEffect(move.to, move.oldPiece, pieceFace))
-//    }
-//  }
-//
-//  def renderForward(isForward: Boolean): Unit = {
-//    mainPane.updateSVGArea(_.board.effect.forwardEffector.start(isForward))
-//  }
-
-  //
-  // Controls
-  //
-//  def renderControlBars(gameControl: Option[GameControl], recordLang: Language): Unit = {
-//    mainPane.updateControlBars(_.refresh(gameControl, recordLang))
-//  }
-
-//  def renderComment(modeType: ModeType, comment: String): Unit = {
-//    mainPane.updateComment(modeType, comment)
-//  }
-
-//  def renderBranchArea(gameControl: Option[GameControl], recordLang: Language, modeType: ModeType, newBranchMode: Boolean): Unit = {
-//    website.updateBranchArea(gameControl, recordLang, modeType, newBranchMode)
-//  }
-
-  //
-  // Menu
-  //
-//  def updateModeType(modeType: ModeType): Unit = {
-//    menuPane.accordions.foreach(_.refresh(modeType))
-////    mainPane.updateModeType(modeType)
-//  }
-
-//  def updateConfigMenu(config: BasePlaygroundConfiguration): Unit = {
-//    website.settingMenu.refresh(config)
-//  }
 
   def renderAnalyzeResult(result: AnalyzeResult, recordLang: Language): Unit = result match {
     case CheckmateAnalyzeResult(r) => renderCheckmateAnalyzeResult(r, recordLang)
