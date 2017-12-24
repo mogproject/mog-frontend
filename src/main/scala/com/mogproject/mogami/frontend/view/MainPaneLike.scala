@@ -147,15 +147,17 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   private[this] def resizeSVGAreas(deviceType: DeviceType, pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
     dom.document.getElementById("main-area") match {
       case e: HTMLElement =>
+        val k = deviceType.isLandscape.fold(2, 1)
+
         pieceWidth match {
           case Some(pw) =>
-            val w = BasePlaygroundConfiguration.getSVGAreaSize(deviceType, pw, layout, svgAreas.size)
+            val w = k * BasePlaygroundConfiguration.getSVGAreaSize(deviceType, pw, layout, svgAreas.size)
             e.style.maxWidth = w.px
             e.style.minWidth = BasePlaygroundConfiguration.getSVGAreaSize(deviceType, BasePlaygroundConfiguration.MIN_PIECE_WIDTH, layout, svgAreas.size).px
             e.style.width = w.px
           case None =>
-            e.style.maxWidth = BasePlaygroundConfiguration.getMaxSVGAreaSize(deviceType, BasePlaygroundConfiguration.MAX_PIECE_WIDTH, layout, svgAreas.size).px
-            e.style.minWidth = BasePlaygroundConfiguration.getSVGAreaSize(deviceType, BasePlaygroundConfiguration.MIN_PIECE_WIDTH, layout, svgAreas.size).px
+            e.style.maxWidth = (k * BasePlaygroundConfiguration.getMaxSVGAreaSize(deviceType, BasePlaygroundConfiguration.MAX_PIECE_WIDTH, layout, svgAreas.size)).px
+            e.style.minWidth = (k * BasePlaygroundConfiguration.getSVGAreaSize(deviceType, BasePlaygroundConfiguration.MIN_PIECE_WIDTH, layout, svgAreas.size)).px
             e.style.width = 100.pct
         }
       case _ =>
