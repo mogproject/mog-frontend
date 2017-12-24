@@ -23,7 +23,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
 
   private[this] def renderImpl(newModel: M, renderAll: Boolean): (BasePlaygroundState[M, V], Option[SAMAction[M]]) = {
     // process flashed cursor
-    newModel.flashedCursor.foreach(cursor => view.mainPane.updateSVGArea(_.flashCursor(cursor)))
+    newModel.flashedCursor.foreach(cursor => view.mainPane.flashCursor(cursor))
 
     // process message box
     newModel.messageBox.foreach {

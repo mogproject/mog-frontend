@@ -2,6 +2,7 @@ package com.mogproject.mogami.frontend.view
 
 import com.mogproject.mogami.frontend.model.DeviceType.DeviceType
 import com.mogproject.mogami.frontend._
+import com.mogproject.mogami.frontend.model.board.cursor.Cursor
 import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipDisabled, FlipEnabled}
 import com.mogproject.mogami.frontend.util.PlayerUtil
 import com.mogproject.mogami.util.Implicits._
@@ -44,8 +45,6 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
 
   private[this] val controlBar: ControlBar = ControlBar(isMobile.fold(ControlBarType.Small, ControlBarType.Normal))
 
-  //  private[this] var controlBar: Option[ControlBar] = None
-
   private[this] val commentArea: CommentArea = CommentArea(isDisplayOnly = isMobile, isModal = false)
 
   private[this] val mainArea = div().render
@@ -84,7 +83,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     *
     * @param layout area layout
     */
-  def renderSVGAreas(deviceType: DeviceType, numAreas: Int, pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
+  private[this] def renderSVGAreas(deviceType: DeviceType, numAreas: Int, pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
     svgAreas.foreach(_.terminate())
     svgAreas.clear()
     svgAreas ++= (0 until numAreas).map(n => SVGArea(n, layout))
@@ -101,9 +100,6 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   }
 
   private[this] def createPCPortraitMain: TypedTag[Div] = {
-    //    controlBar.foreach(_.terminate())
-    //    controlBar = Some(ControlBar(ControlBarType.Normal))
-
     div(cls := "container-fluid",
       div(
         id := "main-area",
@@ -123,9 +119,6 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   }
 
   private[this] def createMobilePortraitMain: TypedTag[Div] = {
-    //    controlBar.foreach(_.terminate())
-    //    controlBar = Some(ControlBar(ControlBarType.Small))
-
     div(
       div(cls := "container-fluid",
         div(
@@ -140,9 +133,6 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   }
 
   private[this] def createMobileLandscapeMain: TypedTag[Div] = {
-    //    controlBar.foreach(_.terminate())
-    //    controlBar = (svgAreas.size == 1).option(ControlBar(ControlBarType.Small))
-
     div(cls := "container-fluid",
       div(
         id := "main-area",
@@ -154,7 +144,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     )
   }
 
-  def resizeSVGAreas(deviceType: DeviceType, pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
+  private[this] def resizeSVGAreas(deviceType: DeviceType, pieceWidth: Option[Int], layout: SVGAreaLayout): Unit = {
     dom.document.getElementById("main-area") match {
       case e: HTMLElement =>
         pieceWidth match {
@@ -172,13 +162,13 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     }
   }
 
-  def updateSVGArea(f: SVGArea => Unit): Unit = svgAreas.foreach(f)
+  private[this] def updateSVGArea(f: SVGArea => Unit): Unit = svgAreas.foreach(f)
 
-  def updateSVGArea(areaId: Int, f: SVGArea => Unit): Unit = f(svgAreas(areaId))
+  private[this] def updateSVGArea(areaId: Int, f: SVGArea => Unit): Unit = f(svgAreas(areaId))
 
-  def getFirstSVGArea: SVGArea = svgAreas.head
-
-  def collapseSideBarRight(): Unit = sideBarRight.foreach(_.collapseSideBar())
+  def flashCursor(cursor: Cursor): Unit = {
+    updateSVGArea(_.flashCursor(cursor))
+  }
 
   def playClickSound(): Unit = {
     val isPlaying = clickSound.currentTime > 0 && !clickSound.paused && !clickSound.ended && (clickSound.readyState.toString.toInt > 2)
