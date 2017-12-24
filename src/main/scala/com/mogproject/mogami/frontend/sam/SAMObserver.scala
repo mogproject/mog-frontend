@@ -10,9 +10,11 @@ trait SAMObserver[M <: SAMModel] {
   /**
     *
     * @param model model
-    * @param flag -1: all bits on => refresh all
+    * @param flag  -1: all bits on => refresh all
     */
   def refresh(model: M, flag: Int): Unit
+
+  protected def isFlagUpdated(flag: Int, mask: Int): Boolean = (flag & mask) != 0
 
   SAM.addObserver(this)
 

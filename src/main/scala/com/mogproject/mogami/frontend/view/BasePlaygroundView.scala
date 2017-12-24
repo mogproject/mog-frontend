@@ -144,9 +144,9 @@ trait BasePlaygroundView extends SAMView {
 //    mainPane.updateComment(modeType, comment)
 //  }
 
-  def renderBranchArea(gameControl: Option[GameControl], recordLang: Language, modeType: ModeType, newBranchMode: Boolean): Unit = {
-    website.updateBranchArea(gameControl, recordLang, modeType, newBranchMode)
-  }
+//  def renderBranchArea(gameControl: Option[GameControl], recordLang: Language, modeType: ModeType, newBranchMode: Boolean): Unit = {
+//    website.updateBranchArea(gameControl, recordLang, modeType, newBranchMode)
+//  }
 
   //
   // Menu

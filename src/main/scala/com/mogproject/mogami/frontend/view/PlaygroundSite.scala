@@ -50,12 +50,12 @@ trait PlaygroundSite extends WebComponent {
   ).render
 
 
-  def updateBranchArea(gameControl: Option[GameControl], recordLang: Language, modeType: ModeType, newBranchMode: Boolean): Unit = {
-    if (isMobile) {
-      branchMenu.branchArea.refresh(gameControl, recordLang, modeType, newBranchMode)
-    } else {
-      mainPane.updateBranchArea(gameControl, recordLang, modeType, newBranchMode)
-    }
-  }
+//  def updateBranchArea(gameControl: Option[GameControl], recordLang: Language, modeType: ModeType, newBranchMode: Boolean): Unit = {
+//    if (isMobile) {
+//      branchMenu.branchArea.refresh(gameControl, recordLang, modeType, newBranchMode)
+//    } else {
+//      mainPane.updateBranchArea(gameControl, recordLang, modeType, newBranchMode)
+//    }
+//  }
 
 }

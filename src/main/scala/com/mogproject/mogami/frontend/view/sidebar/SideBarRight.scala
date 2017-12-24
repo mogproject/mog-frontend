@@ -1,7 +1,8 @@
 package com.mogproject.mogami.frontend.view.sidebar
 
+import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.menu._
-import com.mogproject.mogami.frontend.view.{Observer, PlaygroundSite, WebComponent}
+import com.mogproject.mogami.frontend.view.Observer
 import org.scalajs.dom.html.{Div, Heading}
 
 import scalatags.JsDom.all._
@@ -9,7 +10,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-trait SideBarRight extends SideBarLike with Observer[AccordionMenu] {
+trait SideBarRight extends SideBarLike with Observer[AccordionMenu] with SAMObserver[BasePlaygroundModel] {
 
   def getMenuPane: MenuPane
 
@@ -56,6 +57,21 @@ trait SideBarRight extends SideBarLike with Observer[AccordionMenu] {
   }
 
   initialize()
+
+  //
+  // Observer
+  //
+  override val samObserveMask: Int = ObserveFlag.CONF_DEVICE
+
+  /**
+    * Collapse this sidebar is the screen is too small
+    *
+    * @param model model
+    * @param flag -1: all bits on => refresh all
+    */
+  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+    if (model.config.collapseByDefault) collapseSideBar()
+  }
 }
 
 object SideBarRight {

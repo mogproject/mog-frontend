@@ -105,9 +105,9 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
   //
   // Rendering functions
   //
-  private[this] def renderScreen(newModel: M): Unit = {
-    if (newModel.config.collapseByDefault) view.mainPane.collapseSideBarRight()
-  }
+//  private[this] def renderScreen(newModel: M): Unit = {
+//    if (newModel.config.collapseByDefault) view.mainPane.collapseSideBarRight()
+//  }
 
 //  private[this] def renderLayout(newModel: M): Unit = {
 //    view.renderLayout(newModel.config.deviceType, newModel.config.flipType.numAreas, newModel.config.pieceWidth, newModel.config.layout)
@@ -162,9 +162,9 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
     view.website.analyzeMenu.pointCountButton.clearMessage()
   }
 
-  private[this] def renderBranchArea(newModel: M): Unit = {
-    view.renderBranchArea(newModel.mode.getGameControl, newModel.config.recordLang, newModel.mode.modeType, newModel.config.newBranchMode)
-  }
+//  private[this] def renderBranchArea(newModel: M): Unit = {
+//    view.renderBranchArea(newModel.mode.getGameControl, newModel.config.recordLang, newModel.mode.modeType, newModel.config.newBranchMode)
+//  }
 
   private[this] def renderModeType(newModel: M): Unit = {
     view.updateModeType(newModel.mode.modeType)

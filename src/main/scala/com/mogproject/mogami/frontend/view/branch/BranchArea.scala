@@ -4,7 +4,7 @@ import com.mogproject.mogami.{BranchNo, Game, Move}
 import com.mogproject.mogami.core.game.Game.GamePosition
 import com.mogproject.mogami.frontend.action.{UpdateConfigurationAction, UpdateGameControlAction}
 import com.mogproject.mogami.frontend.action.dialog.AskDeleteBranchAction
-import com.mogproject.mogami.frontend.model._
+import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.button.{RadioButton, SingleButton}
@@ -19,7 +19,7 @@ import scalatags.JsDom.all._
 /**
   * Branch buttons on Left Sidebar for PC/tablet, or Menu Modal for mobile
   */
-case class BranchArea(isMobile: Boolean) extends WebComponent {
+case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[BasePlaygroundModel] {
 
   /** HTML elements */
   private[this] lazy val changeBranchButton: HTMLSelectElement = select(
@@ -168,15 +168,34 @@ case class BranchArea(isMobile: Boolean) extends WebComponent {
     }
   }
 
-  def refresh(gameControl: Option[GameControl], recordLang: Language, modeType: ModeType, newBranchMode: Boolean): Unit = {
-    gameControl match {
+  //
+  // Observer
+  //
+  override val samObserveMask: Int = {
+    import ObserveFlag._
+    MODE_TYPE | GAME_BRANCH | GAME_POSITION | CONF_NEW_BRANCH | CONF_RCD_LANG
+  }
+
+  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+    import ObserveFlag._
+
+    model.mode.getGameControl match {
       case Some(gc) =>
         show()
-        updateButtons(gc.game, gc.gamePosition, recordLang)
-        newBranchButton.updateValue(newBranchMode)
-        if (modeType == PlayModeType) showEditMenu() else hideEditMenu()
+
+        if (isFlagUpdated(flag, MODE_TYPE | GAME_BRANCH | GAME_POSITION | CONF_RCD_LANG)) {
+          updateButtons(gc.game, gc.gamePosition, model.config.recordLang)
+        }
+        if (isFlagUpdated(flag, CONF_NEW_BRANCH)) {
+          newBranchButton.updateValue(model.config.newBranchMode)
+        }
+        if (isFlagUpdated(flag, MODE_TYPE)) {
+          if (model.mode.modeType == PlayModeType) showEditMenu() else hideEditMenu()
+        }
+
       case None =>
         hide()
     }
   }
+
 }
