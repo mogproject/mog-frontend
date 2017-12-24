@@ -13,7 +13,7 @@ trait PlaygroundSAMLike {
 class PlaygroundSAM[M <: BasePlaygroundModel](adapter: (M, BasePlaygroundModel) => M) extends PlaygroundSAMLike {
 
   override def doAction(action: PlaygroundAction): Unit = {
-    SAM.debug(s"doAction: ${action}")
+//    SAM.debug(s"doAction: ${action}")
 
     SAM.doAction(new SAMAction[M] {
       override def execute(model: M): Option[M] = {
