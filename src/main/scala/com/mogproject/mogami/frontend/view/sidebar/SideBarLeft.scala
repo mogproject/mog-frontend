@@ -1,6 +1,7 @@
 package com.mogproject.mogami.frontend.view.sidebar
 
 import com.mogproject.mogami.util.Implicits._
+import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.model.{EditModeType, ModeType}
 import com.mogproject.mogami.frontend.view.branch.BranchArea
 import com.mogproject.mogami.frontend.view.control.{ControlBar, ControlBarType}
@@ -11,7 +12,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class SideBarLeft extends SideBarLike {
+class SideBarLeft extends SideBarLike with SAMObserver[BasePlaygroundModel] {
 
   override val EXPANDED_WIDTH: Int = SideBarLeft.EXPANDED_WIDTH
 
@@ -62,9 +63,19 @@ class SideBarLeft extends SideBarLike {
     content.style.marginLeft = SideBarLeft.EXPANDED_MARGIN
   }
 
-  def refresh(modeType: ModeType): Unit = {
-    title.innerHTML = (modeType == EditModeType).fold("Edit", "Moves")
-    if (modeType == EditModeType) editHelpArea.show() else editHelpArea.hide()
+  //
+  // Observer
+  //
+  override val samObserveMask: Int = ObserveFlag.MODE_EDIT
+
+  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+    if (model.mode.isEditMode) {
+      title.innerHTML = "Edit"
+      editHelpArea.show()
+    } else {
+      title.innerHTML = "Moves"
+      editHelpArea.hide()
+    }
   }
 }
 

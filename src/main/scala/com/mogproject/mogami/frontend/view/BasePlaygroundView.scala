@@ -140,9 +140,9 @@ trait BasePlaygroundView extends SAMView {
 //    mainPane.updateControlBars(_.refresh(gameControl, recordLang))
 //  }
 
-  def renderComment(modeType: ModeType, comment: String): Unit = {
-    mainPane.updateComment(modeType, comment)
-  }
+//  def renderComment(modeType: ModeType, comment: String): Unit = {
+//    mainPane.updateComment(modeType, comment)
+//  }
 
   def renderBranchArea(gameControl: Option[GameControl], recordLang: Language, modeType: ModeType, newBranchMode: Boolean): Unit = {
     website.updateBranchArea(gameControl, recordLang, modeType, newBranchMode)
@@ -153,7 +153,7 @@ trait BasePlaygroundView extends SAMView {
   //
   def updateModeType(modeType: ModeType): Unit = {
     menuPane.accordions.foreach(_.refresh(modeType))
-    mainPane.updateModeType(modeType)
+//    mainPane.updateModeType(modeType)
   }
 
 //  def updateConfigMenu(config: BasePlaygroundConfiguration): Unit = {

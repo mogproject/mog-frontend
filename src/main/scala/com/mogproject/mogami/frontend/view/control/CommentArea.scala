@@ -12,7 +12,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-case class CommentArea(isDisplayOnly: Boolean, isModal: Boolean, text: String = "") extends WebComponent {
+case class CommentArea(isDisplayOnly: Boolean, isModal: Boolean, text: String = "") extends WebComponent with SAMObserver[BasePlaygroundModel] {
 
   //
   // Elements
@@ -101,11 +101,32 @@ case class CommentArea(isDisplayOnly: Boolean, isModal: Boolean, text: String = 
   //
   // Operations
   //
-  def refresh(modeType: ModeType, comment: String): Unit = {
-    if (modeType == EditModeType) {
+//  def refresh(modeType: ModeType, comment: String): Unit = {
+//    if (modeType == EditModeType) {
+//      hide()
+//    } else {
+//      show()
+//      textCommentInput.value = comment
+//      if (!isDisplayOnly) textClearButton.disabled = comment.isEmpty
+//    }
+//  }
+//
+  //
+
+  //
+  // Observer
+  //
+  override val samObserveMask: Int = {
+    import ObserveFlag._
+    MODE_EDIT | GAME_COMMENT | GAME_POSITION
+  }
+
+  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+    if (model.mode.isEditMode) {
       hide()
     } else {
       show()
+      val comment = model.mode.getGameControl.flatMap(_.getComment).getOrElse("")
       textCommentInput.value = comment
       if (!isDisplayOnly) textClearButton.disabled = comment.isEmpty
     }

@@ -158,7 +158,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
 //  }
 
   private[this] def renderGameControl(newModel: M): Unit = {
-    view.renderComment(newModel.mode.modeType, newModel.mode.getGameControl.flatMap(_.getComment).getOrElse(""))
+//    view.renderComment(newModel.mode.modeType, newModel.mode.getGameControl.flatMap(_.getComment).getOrElse(""))
     view.website.analyzeMenu.pointCountButton.clearMessage()
   }
 
