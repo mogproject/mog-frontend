@@ -151,10 +151,10 @@ trait BasePlaygroundView extends SAMView {
   //
   // Menu
   //
-  def updateModeType(modeType: ModeType): Unit = {
-    menuPane.accordions.foreach(_.refresh(modeType))
-//    mainPane.updateModeType(modeType)
-  }
+//  def updateModeType(modeType: ModeType): Unit = {
+//    menuPane.accordions.foreach(_.refresh(modeType))
+////    mainPane.updateModeType(modeType)
+//  }
 
 //  def updateConfigMenu(config: BasePlaygroundConfiguration): Unit = {
 //    website.settingMenu.refresh(config)

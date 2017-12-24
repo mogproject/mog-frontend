@@ -13,7 +13,7 @@ import org.scalajs.jquery.jQuery
 /**
   *
   */
-trait AccordionMenu extends WebComponent with Observable[AccordionMenu] {
+trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAMObserver[BasePlaygroundModel] {
 
   def ident: String
 
@@ -99,11 +99,15 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] {
     element.removeAttribute("data-original-title")
   }
 
-  def refresh(modeType: ModeType): Unit = {
-    if (visibleMode.contains(modeType)) show() else hide()
-  }
-
   initialize()
 
+  //
+  // Observer
+  //
+  override val samObserveMask: Int = ObserveFlag.MODE_TYPE
+
+  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+    if (visibleMode.contains(model.mode.modeType)) show() else hide()
+  }
 }
 

@@ -166,9 +166,9 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
 //    view.renderBranchArea(newModel.mode.getGameControl, newModel.config.recordLang, newModel.mode.modeType, newModel.config.newBranchMode)
 //  }
 
-  private[this] def renderModeType(newModel: M): Unit = {
-    view.updateModeType(newModel.mode.modeType)
-  }
+//  private[this] def renderModeType(newModel: M): Unit = {
+//    view.updateModeType(newModel.mode.modeType)
+//  }
 
 //  private[this] def renderConfigMenu(newModel: M): Unit = {
 //    view.updateConfigMenu(newModel.config)

@@ -225,7 +225,6 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
     import ObserveFlag._
 
-    lazy val gc = model.mode.getGameControl
     lazy val mode = model.mode
     lazy val config = model.config
     val areaUpdated = (flag & (CONF_LAYOUT | CONF_NUM_AREAS)) != 0
