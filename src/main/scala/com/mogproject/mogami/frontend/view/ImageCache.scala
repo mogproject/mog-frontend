@@ -52,12 +52,9 @@ class ImageCache {
       src := url,
       width := 1,
       height := 1,
-      onloadeddata := { (_: dom.Event) => println("onloadeddata") },
-      onloadstart := { (_: dom.Event) => println("onloadstart") },
       onload := { (_: dom.Event) =>
         processingUrls.remove(url)
         completedUrls.add(url)
-
       }
     ).render
   }

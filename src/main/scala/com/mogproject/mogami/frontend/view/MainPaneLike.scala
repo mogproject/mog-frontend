@@ -258,8 +258,8 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
       // use image cache
       downloadImages(Ptype.constructor.map(model.config.pieceFace.getImagePath), () =>
         updateSVGArea { area =>
-          area.board.drawPieces(mode.getBoardPieces, config.pieceFace)
-          area.hand.drawPieces(mode.getHandPieces, config.pieceFace)
+          area.board.drawPieces(mode.getBoardPieces, config.pieceFace, keepLastMove = true)
+          area.hand.drawPieces(mode.getHandPieces, config.pieceFace, keepLastMove = true)
           if (mode.isEditMode) area.box.drawPieces(mode.getBoxPieces, config.pieceFace)
         })
     }
