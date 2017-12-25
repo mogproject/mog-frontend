@@ -32,7 +32,7 @@ make test
   - Stroke paths: black, 2px
   - Export to a PNG file
 - Cut each piece to 43x48 format
-  - Use this script: `scripts/extract_pieces.sh`
-  - `extract_pieces.sh <large_image>.png
+  - Use ImageMagik and this script: `scripts/extract_pieces.sh`
+  - Usage: `extract_pieces.sh <large_image>.png`
 - Use www.aconvert.com to convert PNG files to SVG
 
