@@ -36,7 +36,7 @@ case class ResignButton(isSmall: Boolean, confirm: Boolean) extends WebComponent
   }
 
   def clickActionImpl(): Unit = {
-    doAction(ResignAction)
+    doAction(ResignAction, 100)
   }
 
   override val element: HTMLElement = button.element
