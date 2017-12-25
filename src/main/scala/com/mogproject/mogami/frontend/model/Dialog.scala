@@ -18,5 +18,3 @@ case class EditAlertDialog(message: String) extends Dialog
 case object CommentDialog extends Dialog
 
 case object AskDeleteBranchDialog extends Dialog
-
-case object MenuDialog extends Dialog

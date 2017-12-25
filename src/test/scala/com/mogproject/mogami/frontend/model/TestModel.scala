@@ -10,14 +10,15 @@ case class TestModel(override val mode: Mode,
                      override val activeCursor: Option[(Int, Cursor)] = None,
                      override val selectedCursor: Option[(Int, Cursor)] = None,
                      override val flashedCursor: Option[Cursor] = None,
+                     override val menuDialogOpen: Boolean = false,
                      override val messageBox: Option[Message] = None
-                    ) extends BasePlaygroundModel(mode, config, activeCursor, selectedCursor, flashedCursor, messageBox) {
+                    ) extends BasePlaygroundModel(mode, config, activeCursor, selectedCursor, flashedCursor, menuDialogOpen, messageBox) {
 
 }
 
 // todo: TestModel(baseModel: BasePlaygroundModel)
 object TestModel {
   def adapter(m: TestModel, bm: BasePlaygroundModel): TestModel = {
-    TestModel(bm.mode, bm.config, bm.activeCursor, bm.selectedCursor, bm.flashedCursor, bm.messageBox)
+    TestModel(bm.mode, bm.config, bm.activeCursor, bm.selectedCursor, bm.flashedCursor, bm.menuDialogOpen, bm.messageBox)
   }
 }

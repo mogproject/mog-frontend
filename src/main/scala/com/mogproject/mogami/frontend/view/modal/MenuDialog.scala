@@ -1,5 +1,6 @@
 package com.mogproject.mogami.frontend.view.modal
 
+import com.mogproject.mogami.frontend.action.dialog.MenuDialogAction
 import com.mogproject.mogami.frontend.{BootstrapJQuery, _}
 import com.mogproject.mogami.frontend.view.menu.MenuPane
 import org.scalajs.dom
@@ -10,7 +11,7 @@ import scalatags.JsDom.all._
 /**
   * Menu dialog
   */
-case class MenuDialog(menuPane: MenuPane) extends ModalLike {
+case class MenuDialog(menuPane: MenuPane) extends ModalLike with SAMObserver[BasePlaygroundModel] {
 
   // todo: change w/ lang?
   override val title: String = "Menu"
@@ -36,6 +37,9 @@ case class MenuDialog(menuPane: MenuPane) extends ModalLike {
 
       // Reset scroll
       dom.window.scrollTo(0, 0)
+
+      // Report to the model
+      PlaygroundSAM.doAction(MenuDialogAction(false))
     })
 
     val ret = e.asInstanceOf[BootstrapJQuery]
@@ -51,4 +55,15 @@ case class MenuDialog(menuPane: MenuPane) extends ModalLike {
     dialogElem.foreach(_.modal("hide"))
   }
 
+  //
+  // Observer
+  //
+  override val samObserveMask: Int = ObserveFlag.MENU_DIALOG
+
+  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+    println("refresh!: " + model.menuDialogOpen)
+    if (model.menuDialogOpen) show() else hide()
+  }
+
+//  println("activated")
 }

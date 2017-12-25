@@ -34,7 +34,7 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
 //    SAM.debug(s"doAction: ${action}")
 
     val result: Option[M] = action.execute(state.model)
-//    SAM.debug(s"result: ${result}")
+//    println(s"result: ${result}")
 
     result match {
       case Some(nextModel) =>

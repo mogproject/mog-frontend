@@ -11,6 +11,7 @@ class BasePlaygroundModel(val mode: Mode,
                           val activeCursor: Option[(Int, Cursor)] = None,
                           val selectedCursor: Option[(Int, Cursor)] = None,
                           val flashedCursor: Option[Cursor] = None,
+                          val menuDialogOpen: Boolean = false,
                           val messageBox: Option[Message]
                          ) extends SAMModel {
   def copy(newMode: Mode = mode,
@@ -18,7 +19,8 @@ class BasePlaygroundModel(val mode: Mode,
            newActiveCursor: Option[(Int, Cursor)] = activeCursor,
            newSelectedCursor: Option[(Int, Cursor)] = selectedCursor,
            newFlashedCursor: Option[Cursor] = flashedCursor,
+           newMenuDialogOpen: Boolean = menuDialogOpen,
            newMessageBox: Option[Message] = messageBox): BasePlaygroundModel = {
-    new BasePlaygroundModel(newMode, newConfig, newActiveCursor, newSelectedCursor, newFlashedCursor, newMessageBox)
+    new BasePlaygroundModel(newMode, newConfig, newActiveCursor, newSelectedCursor, newFlashedCursor, newMenuDialogOpen, newMessageBox)
   }
 }

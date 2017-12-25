@@ -45,8 +45,6 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
           view.showCommentDialog(newModel.config.messageLang, comment)
         case AskDeleteBranchDialog =>
           newModel.mode.getGameControl.foreach { gc => view.askDeleteBranch(newModel.config.messageLang, gc.displayBranchNo) }
-        case MenuDialog =>
-          if (open) view.showMenuDialog(newModel.config.messageLang) else view.hideMenuDialog()
       }
     }
 
@@ -55,12 +53,5 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
 
   override def initialize(): Unit = {
     renderImpl(model, renderAll = true)
-  }
-
-  //
-  // Utilities
-  //
-  private[this] def isUpdated[A](newModel: M, fs: (M => A)*): Boolean = {
-    fs.exists(f => f(model) != f(newModel))
   }
 }

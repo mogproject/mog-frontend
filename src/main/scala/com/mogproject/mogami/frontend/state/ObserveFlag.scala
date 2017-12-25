@@ -44,6 +44,11 @@ trait ObserveFlagLike {
   final val GAME_BRANCH_CHANGED = 1 << 27
 
   //
+  // Menu Dialog (Open/Closed)
+  //
+  final val MENU_DIALOG = 1 << 28
+
+  //
   // Cursor
   //
   final val CURSOR_ACTIVE = 1 << 29
@@ -125,6 +130,11 @@ object ObserveFlag extends ObserveFlagLike {
     if (oldModel.activeCursor != newModel.activeCursor) ret |= CURSOR_ACTIVE
     if (oldModel.selectedCursor != newModel.selectedCursor) ret |= CURSOR_SELECT
     if (newModel.flashedCursor.isDefined) ret |= CURSOR_FLASH
+
+    //
+    // Menu dialog updates
+    //
+    if (oldModel.menuDialogOpen != newModel.menuDialogOpen) ret |= MENU_DIALOG
 
     ret
   }

@@ -39,13 +39,19 @@ trait PlaygroundSite extends WebComponent {
 
   def footer: FooterLike
 
-  override def element: Element = div(
-    div(cls := "navbar", tag("nav")(cls := navBar.classNames, navBar.element)),
-    div(cls := "container-fluid",
-      isMobile.fold(Seq(position := position.fixed.v, width := "100%", padding := 0), ""),
-      mainPane.element,
-      footer.element
-    )
-  ).render
+  override def element: Element = {
+    val elem = div(
+      div(cls := "navbar", tag("nav")(cls := navBar.classNames, navBar.element)),
+      div(cls := "container-fluid",
+        isMobile.fold(Seq(position := position.fixed.v, width := "100%", padding := 0), ""),
+        mainPane.element,
+        footer.element
+      )
+    ).render
+
+    if (isMobile) menuDialog // activate here
+    elem
+  }
+
 
 }
