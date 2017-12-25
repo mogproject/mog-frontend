@@ -173,28 +173,31 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
   //
   override val samObserveMask: Int = {
     import ObserveFlag._
-    MODE_TYPE | GAME_BRANCH | GAME_POSITION | CONF_NEW_BRANCH | CONF_RCD_LANG
+    MODE_TYPE | GAME_BRANCH | GAME_POSITION | CONF_NEW_BRANCH | CONF_RCD_LANG | MENU_DIALOG
   }
 
   override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
     import ObserveFlag._
 
-    model.mode.getGameControl match {
-      case Some(gc) =>
-        show()
+    /** Do not update if the menu dialog is hidden. */
+    if (!model.config.deviceType.isMobile || !model.menuDialogOpen) {
+      model.mode.getGameControl match {
+        case Some(gc) =>
+          show()
 
-        if (isFlagUpdated(flag, MODE_TYPE | GAME_BRANCH | GAME_POSITION | CONF_RCD_LANG)) {
-          updateButtons(gc.game, gc.gamePosition, model.config.recordLang)
-        }
-        if (isFlagUpdated(flag, CONF_NEW_BRANCH)) {
-          newBranchButton.updateValue(model.config.newBranchMode)
-        }
-        if (isFlagUpdated(flag, MODE_TYPE)) {
-          if (model.mode.modeType == PlayModeType) showEditMenu() else hideEditMenu()
-        }
+          if (isFlagUpdated(flag, MODE_TYPE | GAME_BRANCH | GAME_POSITION | CONF_RCD_LANG)) {
+            updateButtons(gc.game, gc.gamePosition, model.config.recordLang)
+          }
+          if (isFlagUpdated(flag, CONF_NEW_BRANCH)) {
+            newBranchButton.updateValue(model.config.newBranchMode)
+          }
+          if (isFlagUpdated(flag, MODE_TYPE)) {
+            if (model.mode.modeType == PlayModeType) showEditMenu() else hideEditMenu()
+          }
 
-      case None =>
-        hide()
+        case None =>
+          hide()
+      }
     }
   }
 

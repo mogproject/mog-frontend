@@ -40,19 +40,23 @@ class ShareMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
   //
   override val samObserveMask: Int = super.samObserveMask | {
     import ObserveFlag._
-    GAME_BRANCH | GAME_POSITION | CONF_FLIP_TYPE
+    GAME_BRANCH | GAME_POSITION | CONF_FLIP_TYPE | MENU_DIALOG
   }
 
   override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
-    super.refresh(model, flag)
 
-    model.mode.getGameControl.foreach { gc =>
-      val builder = ArgumentsBuilder(gc.game, gc.gamePosition, model.config)
-      recordCopyButton.updateValue(builder.toRecordUrl)
-      snapshotCopyButton.updateValue(builder.toSnapshotUrl)
-      imageLinkButton.updateValue(builder.toImageLinkUrl)
-      sfenStringCopyButton.updateValue(gc.game.toSfenString)
-      notesViewButton.updateValue(builder.toNotesViewUrl)
+    /** Do not update if the menu dialog is hidden. */
+    if (!model.config.deviceType.isMobile || model.menuDialogOpen) {
+      super.refresh(model, flag)
+
+      model.mode.getGameControl.foreach { gc =>
+        val builder = ArgumentsBuilder(gc.game, gc.gamePosition, model.config)
+        recordCopyButton.updateValue(builder.toRecordUrl)
+        snapshotCopyButton.updateValue(builder.toSnapshotUrl)
+        imageLinkButton.updateValue(builder.toImageLinkUrl)
+        sfenStringCopyButton.updateValue(gc.game.toSfenString)
+        notesViewButton.updateValue(builder.toNotesViewUrl)
+      }
     }
   }
 
