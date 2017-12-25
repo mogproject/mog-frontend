@@ -2,6 +2,7 @@ package com.mogproject.mogami.frontend.view.modal
 
 import com.mogproject.mogami.frontend.{BootstrapJQuery, _}
 import com.mogproject.mogami.frontend.view.control.CommentArea
+import org.scalajs.jquery.JQuery
 
 import scalatags.JsDom.all._
 
@@ -10,21 +11,24 @@ import scalatags.JsDom.all._
   */
 case class CommentDialog(messageLang: Language, text: String) extends ModalLike {
 
-  private[this] lazy val commentButton = CommentArea(isDisplayOnly = false, isModal = true, text = text)
+  private[this] val commentArea = CommentArea(isDisplayOnly = false, isModal = true, text = text)
 
   override val title: String = messageLang match {
     case Japanese => "コメント"
     case English => "Comment"
   }
 
-  override val modalBody: ElemType = div(bodyDefinition, commentButton.textCommentInput)
+  override val modalBody: ElemType = div(bodyDefinition, commentArea.textCommentInput)
 
   override val modalFooter: ElemType = div(footerDefinition,
     div(cls := "row",
-      div(cls := "col-xs-4", commentButton.textClearButton.element),
-      div(cls := "col-xs-offset-4 col-xs-4", commentButton.textUpdateButton.element)
+      div(cls := "col-xs-4", commentArea.textClearButton.element),
+      div(cls := "col-xs-offset-4 col-xs-4", commentArea.textUpdateButton.element)
     )
   )
 
+  override def initialize(dialog: JQuery): Unit = {
+    commentArea.refreshButtonDisabled()
+  }
 }
 

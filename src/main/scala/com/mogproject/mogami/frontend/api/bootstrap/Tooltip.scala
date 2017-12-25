@@ -15,7 +15,7 @@ object Tooltip {
 
   def enableHoverToolTip(elem: HTMLElement): Unit = enableHoverToolTip(jQuery(elem))
 
-  def enableHoverToolTip(elems: Seq[HTMLElement]): Unit = elems.foreach(e => enableHoverToolTip(jQuery(e)))
+  def enableHoverToolTip(elems: Seq[HTMLElement]): Unit = elems.foreach(enableHoverToolTip)
 
   def enableHoverToolTip(jQuery: JQuery): Unit = {
     jQuery.asInstanceOf[BootstrapJQuery].tooltip {
@@ -24,6 +24,12 @@ object Tooltip {
       r.asInstanceOf[TooltipOptions]
     }
   }
+
+  def hideToolTip(jQuery: JQuery): Unit = jQuery.asInstanceOf[BootstrapJQuery].tooltip("hide")
+
+  def hideToolTip(elem: HTMLElement): Unit = hideToolTip(jQuery(elem))
+
+  def hideToolTip(elems: Seq[HTMLElement]): Unit = elems.foreach(hideToolTip)
 
   def hideAllToolTip(): Unit = {
     jQuery("""[data-toggle="tooltip"]""").asInstanceOf[BootstrapJQuery].tooltip("hide")

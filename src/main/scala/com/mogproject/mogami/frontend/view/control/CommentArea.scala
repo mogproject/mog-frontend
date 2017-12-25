@@ -24,9 +24,7 @@ case class CommentArea(isDisplayOnly: Boolean, isModal: Boolean, text: String = 
     data("toggle") := "tooltip",
     data("trigger") := "manual",
     data("placement") := "top",
-    if (isDisplayOnly) {
-      readonly := true
-    } else "",
+    isDisplayOnly.option(readonly := true),
     if (isDisplayOnly) {
       onclick := { () => PlaygroundSAM.doAction(OpenCommentDialogAction) }
     } else {
@@ -40,17 +38,7 @@ case class CommentArea(isDisplayOnly: Boolean, isModal: Boolean, text: String = 
 
   lazy val textClearButton: SingleButton = SingleButton(
     Map(English -> "Clear".render),
-    clickAction = Some { () =>
-      if (isModal) {
-        doAction(getAction(""), 1)
-      } else {
-        textCommentInput.value = ""
-        doAction(getAction(""))
-        textClearButton.disableElement()
-        textUpdateButton.disableElement()
-        displayCommentInputTooltip("Cleared!")
-      }
-    },
+    clickAction = Some { () => clickAction("") },
     tooltip = isModal.fold(Map.empty, Map(English -> "Clear this comment")),
     tooltipPlacement = "top",
     isBlockButton = true,
@@ -59,16 +47,7 @@ case class CommentArea(isDisplayOnly: Boolean, isModal: Boolean, text: String = 
 
   lazy val textUpdateButton: SingleButton = SingleButton(
     Map(English -> "Update".render),
-    clickAction = Some { () =>
-      val text = textCommentInput.value
-      if (isModal) {
-        doAction(getAction(text), 1)
-      } else {
-        doAction(getAction(text))
-        textUpdateButton.disableElement()
-        displayCommentInputTooltip("Updated!")
-      }
-    },
+    clickAction = Some { () => clickAction(textCommentInput.value) },
     tooltip = isModal.fold(Map.empty, Map(English -> "Update this comment")),
     tooltipPlacement = "top",
     isBlockButton = true,
@@ -87,15 +66,31 @@ case class CommentArea(isDisplayOnly: Boolean, isModal: Boolean, text: String = 
     )
   ).render
 
-  private[this] def getAction(text: String): UpdateGameControlAction = {
-    UpdateGameControlAction(gc => gc.copy(game = gc.game.updateComment(gc.gamePosition, text).getOrElse(gc.game)))
+  private[this] def clickAction(text: String): Unit = {
+    val act = UpdateGameControlAction(gc => gc.copy(game = gc.game.updateComment(gc.gamePosition, text).getOrElse(gc.game)))
+
+    if (isModal) {
+      doAction(act, 1)
+      /** @note Tooltip does not work on read-only elements */
+    } else {
+      doAction(act)
+      displayCommentInputTooltip(text.isEmpty)
+      refreshButtonDisabled()
+    }
   }
 
   //
   // Tooltip
   //
-  def displayCommentInputTooltip(message: String): Unit = {
-    Tooltip.display(textCommentInput, message, 2000)
+  def displayCommentInputTooltip(isClear: Boolean): Unit = {
+    Tooltip.display(textCommentInput, isClear.fold("Cleared!", "Updated!"), 2000)
+  }
+
+  def refreshButtonDisabled(): Unit = {
+    Tooltip.hideToolTip(textClearButton.element)
+    Tooltip.hideToolTip(textUpdateButton.element)
+    textClearButton.setDisabled(textCommentInput.value.isEmpty)
+    textUpdateButton.disableElement()
   }
 
   //
@@ -113,7 +108,7 @@ case class CommentArea(isDisplayOnly: Boolean, isModal: Boolean, text: String = 
       show()
       val comment = model.mode.getGameControl.flatMap(_.getComment).getOrElse("")
       textCommentInput.value = comment
-      if (!isDisplayOnly) textClearButton.setDisabled(comment.isEmpty)
+      refreshButtonDisabled()
     }
   }
 }
