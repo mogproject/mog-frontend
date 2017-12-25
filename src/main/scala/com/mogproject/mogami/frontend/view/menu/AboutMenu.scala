@@ -19,7 +19,18 @@ class AboutMenu extends AccordionMenu {
       " This mobile-friendly website enables you to manage, analyze, and share shogi games as well as mate problems."),
     p("If you have any questions, trouble, or suggestion, please tell the ",
       a(href := "https://twitter.com/mogproject", target := "_blank", "author"),
-      ". Your voice matters.")
+      ". Your voice matters."),
+    br(),
+    label("Special Thanks:"),
+    li(
+      marginLeft := 20.px,
+      ul(
+        "Piece Graphics - ",
+        a(href := "http://shineleckoma.web.fc2.com/", target := "_blank", "shinelecoma"),
+        br(),
+        small("License: ", a(href := "https://creativecommons.org/licenses/by-nc/2.1/jp/deed.en", target := "_blank", "Attribution-NonCommercial 2.1 Japan (CC BY-NC 2.1 JP)"))
+      )
+    )
   )
   override lazy val visibleMode = Set(PlayModeType, ViewModeType, EditModeType)
 }

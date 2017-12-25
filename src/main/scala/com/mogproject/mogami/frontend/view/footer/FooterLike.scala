@@ -32,12 +32,8 @@ trait FooterLike extends WebComponent {
   ).render
 
   def initialize(): Unit = {
-    if (isDebug) DebugConsole.replaceConsoleLog()
-
     // take over console.log function
-//    org.scalajs.dom.console = (message: js.Any) => {
-//      debugWindow.innerHTML += "[" + new Date().toISOString() + "] " + message
-//    }
+    if (isDebug) DebugConsole.replaceConsoleLog()
   }
 
   initialize()
