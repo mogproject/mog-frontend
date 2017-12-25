@@ -16,8 +16,10 @@ case object JapaneseOneCharFace extends PieceFace("jp1", "Japanese 1")
 
 case object JapaneseOneCharGraphicalFace extends PieceFace("jp2", "Japanese 2")
 
+case object WesternOneCharFace extends PieceFace("en1", "Western 1")
+
 object PieceFace {
   def parseString(s: String): Option[PieceFace] = all.find(_.faceId == s)
 
-  val all = Seq(JapaneseOneCharFace, JapaneseOneCharGraphicalFace)
+  val all = Seq(JapaneseOneCharFace, JapaneseOneCharGraphicalFace, WesternOneCharFace)
 }
