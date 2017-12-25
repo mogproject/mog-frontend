@@ -1,9 +1,7 @@
 package com.mogproject.mogami.frontend.view.modal
 
 import com.mogproject.mogami.frontend._
-import com.mogproject.mogami.frontend.view.event.EventManageable
 import org.scalajs.dom.html.Element
-import org.scalajs.jquery.JQuery
 
 import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
@@ -11,7 +9,7 @@ import scalatags.JsDom.all._
 /**
   * Yes-no dialog
   */
-case class YesNoDialog(lang: Language, message: TypedTag[Element], callback: () => Unit) extends EventManageable with ModalLike {
+case class YesNoDialog(lang: Language, message: TypedTag[Element], callback: () => Unit) extends ModalLike {
 
   //
   // yes no specific
@@ -25,10 +23,6 @@ case class YesNoDialog(lang: Language, message: TypedTag[Element], callback: () 
     case Japanese => "いいえ"
     case English => "No"
   }
-
-  private[this] val yesButton = button(
-    tpe := "button", cls := "btn btn-primary btn-block", dismiss, yes
-  ).render
 
   //
   // modal traits
@@ -48,13 +42,9 @@ case class YesNoDialog(lang: Language, message: TypedTag[Element], callback: () 
         button(tpe := "button", cls := "btn btn-default btn-block", dismiss, no)
       ),
       div(cls := "col-xs-4 col-md-3",
-        yesButton
+        button(tpe := "button", cls := "btn btn-primary btn-block", onclick := callback, dismiss, yes)
       )
     )
   )
-
-  override def initialize(dialog: JQuery): Unit = {
-    setModalClickEvent(yesButton, dialog, callback)
-  }
 
 }
