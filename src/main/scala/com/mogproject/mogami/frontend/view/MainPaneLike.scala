@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.view
 
 import com.mogproject.mogami.frontend.model.DeviceType.DeviceType
 import com.mogproject.mogami.frontend._
-import com.mogproject.mogami.frontend.model.board.cursor.Cursor
+import com.mogproject.mogami.frontend.model.board.cursor.{BoardCursor, Cursor}
 import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipDisabled, FlipEnabled}
 import com.mogproject.mogami.frontend.util.PlayerUtil
 import com.mogproject.mogami.util.Implicits._
@@ -286,9 +286,11 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     // 13. Move Effect
     if (flag != -1 && isFlagUpdated(flag, GAME_JUST_MOVED)) {
       mode.getLastMove.foreach { move =>
+        if (!model.flashedCursor.flatMap(_.board).contains(move.to)) updateSVGArea(_.flashCursor(BoardCursor(move.to)))
+
         if (config.soundEffectEnabled) playClickSound()
         if (config.visualEffectEnabled) {
-          updateSVGArea(a => a.board.effect.moveEffector.start(a.board.getRect(move.to)))
+//          updateSVGArea(a => a.board.effect.moveEffector.start(a.board.getRect(move.to)))
           if (move.promote) updateSVGArea(_.board.startPromotionEffect(move.to, move.oldPiece, config.pieceFace))
         }
       }

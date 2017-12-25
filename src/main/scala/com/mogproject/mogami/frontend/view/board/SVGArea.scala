@@ -88,20 +88,20 @@ case class SVGArea(areaId: Int, layout: SVGAreaLayout) extends WebComponent with
         val r = board.getRect(sq)
         board.effect.selectedEffector.start(r)
         if (effectEnabled) {
-          board.effect.selectingEffector.start(r)
+//          board.effect.selectingEffector.start(r)
           board.effect.legalMoveEffector.start(legalMoves.toSeq)
         }
       case HandCursor(h) =>
         val r = hand.getRect(h)
         hand.effect.selectedEffector.start(r)
         if (effectEnabled) {
-          hand.effect.selectingEffector.start(r)
+//          hand.effect.selectingEffector.start(r)
           board.effect.legalMoveEffector.start(legalMoves.toSeq)
         }
       case BoxCursor(pt) =>
         val r = box.getPieceRect(pt)
         box.effect.selectedEffector.start(r)
-        if (effectEnabled) box.effect.selectingEffector.start(r)
+//        if (effectEnabled) box.effect.selectingEffector.start(r)
       case _ =>
     }
   }
