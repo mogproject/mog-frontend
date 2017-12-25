@@ -23,16 +23,12 @@ case class PromotionDialog(messageLang: Language,
   // promotion specific
   //
   private[this] val BUTTON_HEIGHT: Int = 80
-  private[this] val buttonUnpromote = PieceFaceButton(pieceFace, pieceSize, rawMove.oldPtype, rotate, height := BUTTON_HEIGHT.px)
-  private[this] val buttonPromote = PieceFaceButton(pieceFace, pieceSize, rawMove.oldPtype.promoted, rotate, height := BUTTON_HEIGHT.px)
+  private[this] val buttonUnpromote = PieceFaceButton(pieceFace, pieceSize, rawMove.oldPtype, rotate, height := BUTTON_HEIGHT.px, data("dismiss") := "modal", onclick := {() => PlaygroundSAM.doAction(MakeMoveAction(rawMove))})
+  private[this] val buttonPromote = PieceFaceButton(pieceFace, pieceSize, rawMove.oldPtype.promoted, rotate, height := BUTTON_HEIGHT.px, data("dismiss") := "modal", onclick := {() => PlaygroundSAM.doAction(MakeMoveAction(rawMove.copy(newPtype = rawMove.newPtype.promoted, promote = true)))})
 
   //
   // modal traits
   //
-  override def displayCloseButton: Boolean = false
-
-  override def isStatic: Boolean = true
-
   override val title: String = messageLang match {
     case Japanese => "成りますか?"
     case English => "Do you want to promote?"
@@ -47,8 +43,8 @@ case class PromotionDialog(messageLang: Language,
     )
   )
 
-  override def initialize(dialog: JQuery): Unit = {
-    setModalClickEvent(buttonUnpromote.element, dialog, () => PlaygroundSAM.doAction(MakeMoveAction(rawMove)))
-    setModalClickEvent(buttonPromote.element, dialog, () => PlaygroundSAM.doAction(MakeMoveAction(rawMove.copy(newPtype = rawMove.newPtype.promoted, promote = true))))
-  }
+//  override def initialize(dialog: JQuery): Unit = {
+//    setModalClickEvent(buttonUnpromote.element, dialog, () => PlaygroundSAM.doAction(MakeMoveAction(rawMove)))
+//    setModalClickEvent(buttonPromote.element, dialog, () => PlaygroundSAM.doAction(MakeMoveAction(rawMove.copy(newPtype = rawMove.newPtype.promoted, promote = true))))
+//  }
 }

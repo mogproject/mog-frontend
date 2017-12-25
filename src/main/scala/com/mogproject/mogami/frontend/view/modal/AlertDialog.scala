@@ -11,8 +11,6 @@ import scalatags.JsDom.all._
   */
 case class AlertDialog(messageLang: Language, message: TypedTag[Element]) extends ModalLike {
 
-  override def displayCloseButton: Boolean = false
-
   override val title: String = messageLang match {
     case Japanese => "確認"
     case English => "Confirmation"

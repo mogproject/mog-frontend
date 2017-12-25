@@ -112,7 +112,7 @@ trait EventManageable {
   def setModalClickEvent(elem: Element, modal: JQuery, f: () => Unit): Unit = {
     setClickEvent(elem, () => {
       f()
-      modal.asInstanceOf[BootstrapJQuery].modal("hide")
+//      modal.asInstanceOf[BootstrapJQuery].modal("hide")
     })
   }
 

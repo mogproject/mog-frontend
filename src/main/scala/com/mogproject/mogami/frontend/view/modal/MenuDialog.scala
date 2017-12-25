@@ -12,10 +12,6 @@ import scalatags.JsDom.all._
   */
 case class MenuDialog(menuPane: MenuPane) extends ModalLike {
 
-  override def isStatic: Boolean = false
-
-  override def displayCloseButton: Boolean = true
-
   // todo: change w/ lang?
   override val title: String = "Menu"
 

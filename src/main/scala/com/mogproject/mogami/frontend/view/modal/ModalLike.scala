@@ -29,9 +29,9 @@ trait ModalLike {
 
   def modalFooter: ElemType
 
-  def displayCloseButton: Boolean = true
-
   def isStatic: Boolean = false
+
+  private[this] def displayCloseButton: Boolean = !isStatic
 
   def initialize(dialog: JQuery): Unit = {}
 

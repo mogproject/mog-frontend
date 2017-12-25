@@ -33,8 +33,6 @@ case class YesNoDialog(lang: Language, message: TypedTag[Element], callback: () 
   //
   // modal traits
   //
-  override def displayCloseButton: Boolean = false
-
   override def isStatic: Boolean = true
 
   override val title: String = lang match {
