@@ -111,7 +111,7 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
     */
   private[this] def executeMouseUp(model: BasePlaygroundModel, cursor: Option[Cursor]): Option[BasePlaygroundModel] = {
     (model.selectedCursor, cursor) match {
-      case (Some((_, selected)), Some(released)) if selected != released =>
+      case (Some((areaId, selected)), Some(released)) if selected != released =>
         val cursor = if (selected.isHand || model.mode.isEditMode) {
           Some(released) // no adjustment for hand pieces or in Edit Mode
         } else {
@@ -122,7 +122,7 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
             sq <- adjustMovement(p, from, to)
           } yield BoardCursor(sq)
         }
-        executeMouseDown(model, 0, cursor) // areaId does not matter
+        executeMouseDown(model, areaId, cursor)
       case _ => None
     }
   }
