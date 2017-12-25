@@ -45,7 +45,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
 
   private[this] val controlBar: ControlBar = ControlBar(isMobile.fold(ControlBarType.Small, ControlBarType.Normal))
 
-  private[this] val commentArea: CommentArea = CommentArea(isDisplayOnly = isMobile, isModal = false)
+  private[this] val commentArea: CommentArea = CommentArea(isDisplayOnly = isMobile)
 
   private[this] val mainArea = div().render
 

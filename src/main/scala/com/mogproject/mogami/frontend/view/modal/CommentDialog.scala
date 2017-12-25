@@ -1,7 +1,7 @@
 package com.mogproject.mogami.frontend.view.modal
 
 import com.mogproject.mogami.frontend.{BootstrapJQuery, _}
-import com.mogproject.mogami.frontend.view.control.CommentArea
+import com.mogproject.mogami.frontend.view.control.CommentComponent
 import org.scalajs.jquery.JQuery
 
 import scalatags.JsDom.all._
@@ -11,7 +11,7 @@ import scalatags.JsDom.all._
   */
 case class CommentDialog(messageLang: Language, text: String) extends ModalLike {
 
-  private[this] val commentArea = CommentArea(isDisplayOnly = false, isModal = true, text = text)
+  private[this] val commentArea = CommentComponent(isDisplayOnly = false, isModal = true, text = text)
 
   override val title: String = messageLang match {
     case Japanese => "コメント"
