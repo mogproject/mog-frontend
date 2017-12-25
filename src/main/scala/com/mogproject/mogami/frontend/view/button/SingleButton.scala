@@ -57,7 +57,7 @@ case class SingleButton(
       case None => // do nothing
     }
     tooltip.get(lang) match {
-      case Some(txt) => btn.setAttribute(data("original-title").name, txt)
+      case Some(txt) => if (!dismissModal) btn.setAttribute(data("original-title").name, txt)
       case None => // do nothing
     }
   }
