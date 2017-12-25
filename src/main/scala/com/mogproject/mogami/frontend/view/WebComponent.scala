@@ -5,6 +5,7 @@ import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 import org.scalajs.dom
 import org.scalajs.dom.raw.{HTMLElement, SVGElement}
 import org.scalajs.dom.{Element, Node}
+import org.scalajs.jquery.jQuery
 
 import scalatags.JsDom.all._
 
@@ -58,11 +59,11 @@ trait WebComponent {
 }
 
 object WebComponent {
-  def removeElement(elem: Node): Unit = elem.parentNode.removeChild(elem)
+  def removeElement(elem: Node): Unit = jQuery(elem).remove()
 
   def removeElements(elems: Iterable[Node]): Unit = elems.foreach(removeElement)
 
-  def removeAllChildElements(elem: Node): Unit = while (elem.hasChildNodes()) elem.removeChild(elem.firstChild)
+  def removeAllChildElements(elem: Node): Unit = jQuery(elem).empty()
 
   def showElement(elem: Element): Unit = elem match {
     case e: HTMLElement => e.style.display = display.block.v

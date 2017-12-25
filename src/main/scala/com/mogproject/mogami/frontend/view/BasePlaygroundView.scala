@@ -2,7 +2,6 @@ package com.mogproject.mogami.frontend.view
 
 import com.mogproject.mogami._
 import com.mogproject.mogami.core.state.StateCache
-import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.action.{ChangeModeAction, UpdateConfigurationAction, UpdateGameControlAction}
 import com.mogproject.mogami.frontend.api.Clipboard
 import com.mogproject.mogami.frontend.api.Clipboard.Event
@@ -10,8 +9,7 @@ import com.mogproject.mogami.frontend.model.analyze._
 import com.mogproject.mogami.frontend.sam.{PlaygroundSAM, SAMView}
 import com.mogproject.mogami.frontend.view.menu.MenuPane
 import com.mogproject.mogami.frontend._
-import com.mogproject.mogami.frontend.model.{AnalyzeResultMessage, BasePlaygroundConfiguration, GameControl, Message, ModeType}
-import com.mogproject.mogami.frontend.util.PlayerUtil
+import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, GameControl}
 import com.mogproject.mogami.frontend.view.board.canvas.CanvasBoard
 import com.mogproject.mogami.frontend.view.modal._
 import org.scalajs.dom

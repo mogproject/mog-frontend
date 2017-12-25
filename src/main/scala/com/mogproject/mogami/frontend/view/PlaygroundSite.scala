@@ -52,6 +52,4 @@ trait PlaygroundSite extends WebComponent {
     if (isMobile) menuDialog // activate here
     elem
   }
-
-
 }

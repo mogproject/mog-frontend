@@ -1,5 +1,6 @@
 package com.mogproject.mogami.frontend.view
 
+import com.mogproject.mogami.core.Ptype
 import com.mogproject.mogami.frontend.model.DeviceType.DeviceType
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.model.board.cursor.{BoardCursor, Cursor}
@@ -9,6 +10,7 @@ import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.view.board.{SVGArea, SVGAreaLayout}
 import com.mogproject.mogami.frontend.view.control.{CommentArea, ControlBar, ControlBarType}
 import com.mogproject.mogami.frontend.view.menu.MenuPane
+import com.mogproject.mogami.frontend.view.modal.AlertDialog
 import com.mogproject.mogami.frontend.view.sidebar.{SideBarLeft, SideBarLike, SideBarRight}
 import org.scalajs.dom
 import org.scalajs.dom.Element
@@ -26,6 +28,8 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   def isMobile: Boolean
 
   def getSite: () => PlaygroundSite
+
+  lazy val imageCache: ImageCache = new ImageCache
 
   //
   // Utility
@@ -182,6 +186,15 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     clickSound.play()
   }
 
+  //
+  // Image cache
+  //
+  def downloadImages(urls: Seq[String], callback: () => Unit): Unit = {
+    imageCache.download(urls, callback, failedUrls => {
+      AlertDialog(English, p("Failed to download image(s):", br(), pre(failedUrls.map(u => Seq(StringFrag(u), br()))))).show()
+    })
+  }
+
   def initialize(): Unit = {
     sidebars.foreach(_.addObserver(this))
     if (isMobile) widenMainPane() else recenterMainPane()
@@ -242,11 +255,13 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
 
     // 8. Board/Hand/Box Pieces
     if (check(GAME_BRANCH | GAME_POSITION | CONF_PIECE_FACE)) {
-      updateSVGArea { area =>
-        area.board.drawPieces(mode.getBoardPieces, config.pieceFace)
-        area.hand.drawPieces(mode.getHandPieces, config.pieceFace)
-        if (mode.isEditMode) area.box.drawPieces(mode.getBoxPieces, config.pieceFace)
-      }
+      // use image cache
+      downloadImages(Ptype.constructor.map(model.config.pieceFace.getImagePath), () =>
+        updateSVGArea { area =>
+          area.board.drawPieces(mode.getBoardPieces, config.pieceFace)
+          area.hand.drawPieces(mode.getHandPieces, config.pieceFace)
+          if (mode.isEditMode) area.box.drawPieces(mode.getBoxPieces, config.pieceFace)
+        })
     }
 
     // 9. Last Move
@@ -290,7 +305,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
 
         if (config.soundEffectEnabled) playClickSound()
         if (config.visualEffectEnabled) {
-//          updateSVGArea(a => a.board.effect.moveEffector.start(a.board.getRect(move.to)))
+          //          updateSVGArea(a => a.board.effect.moveEffector.start(a.board.getRect(move.to)))
           if (move.promote) updateSVGArea(_.board.startPromotionEffect(move.to, move.oldPiece, config.pieceFace))
         }
       }
