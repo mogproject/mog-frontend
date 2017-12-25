@@ -51,7 +51,7 @@ case class CommentArea(isDisplayOnly: Boolean, isModal: Boolean, text: String = 
         displayCommentInputTooltip("Cleared!")
       }
     },
-    tooltip = Map(English -> "Clear this comment"),
+    tooltip = isModal.fold(Map.empty, Map(English -> "Clear this comment")),
     tooltipPlacement = "top",
     isBlockButton = true,
     dismissModal = true
@@ -69,7 +69,7 @@ case class CommentArea(isDisplayOnly: Boolean, isModal: Boolean, text: String = 
         displayCommentInputTooltip("Updated!")
       }
     },
-    tooltip = Map(English -> "Update this comment"),
+    tooltip = isModal.fold(Map.empty, Map(English -> "Update this comment")),
     tooltipPlacement = "top",
     isBlockButton = true,
     dismissModal = true

@@ -29,7 +29,7 @@ case class SingleButton(
   private[this] val btn: Button = button(
     cls := (("btn" +: buttonClass) ++ isBlockButton.option("btn-block")).mkString(" "),
     buttonWidth.map(width := _),
-    (tooltip.nonEmpty && !dismissModal).option(Seq(data("toggle") := "tooltip", data("placement") := tooltipPlacement)),
+    tooltip.nonEmpty.option(Seq(data("toggle") := "tooltip", data("placement") := tooltipPlacement)),
     dismissModal.option(data("dismiss") := "modal")
   ).render
 
@@ -57,7 +57,7 @@ case class SingleButton(
       case None => // do nothing
     }
     tooltip.get(lang) match {
-      case Some(txt) => if (!dismissModal) btn.setAttribute(data("original-title").name, txt)
+      case Some(txt) => btn.setAttribute(data("original-title").name, txt)
       case None => // do nothing
     }
   }
