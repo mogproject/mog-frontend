@@ -41,11 +41,13 @@ class ImageCache {
   }
 
   private[this] def createImageElement(url: String): SVGImageElement = {
-    val elem = svgTags.image(svgAttrs.xLinkHref := url, svgAttrs.width := 1, svgAttrs.height := 1).render
+    val elem: SVGImageElement = svgTags.image(svgAttrs.width := 1, svgAttrs.height := 1).render
     elem.onload = { _: dom.Event =>
       processingUrls.remove(url)
       completedUrls.add(url)
     }
+    // must be after setting onload event for mobile Safari
+    elem.href.baseVal = url
     elem
   }
 
