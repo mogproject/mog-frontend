@@ -1,12 +1,11 @@
 package com.mogproject.mogami.frontend.view
 
 import org.scalajs.dom
-import org.scalajs.dom.raw.SVGImageElement
+import org.scalajs.dom.raw.HTMLImageElement
 
 import scala.collection.mutable
 import scala.scalajs.js.Date
 import scalatags.JsDom.all._
-import scalatags.JsDom.{svgAttrs, svgTags}
 
 /**
   * todo: Use BLOB cache
@@ -15,6 +14,8 @@ class ImageCache {
   private[this] val completedUrls: mutable.Set[String] = mutable.Set.empty
 
   private[this] val processingUrls: mutable.Set[String] = mutable.Set.empty
+
+  private[this] final val CHECK_INTERVAL = 100
 
   /**
     * Blocking download method
@@ -25,33 +26,43 @@ class ImageCache {
     * @param timeout   in milliseconds
     */
   def download(urls: Seq[String], onSuccess: () => Unit, onFailure: Seq[String] => Unit, timeout: Int = 10000): Unit = {
+    processingUrls.clear()
+
     // create SVG Image objects
     val requests = urls.filter(!completedUrls.contains(_)).map { url => url -> createImageElement(url) }.toMap
 
     if (requests.isEmpty) {
       onSuccess()
     } else {
-      // add urls to the queue
-      processingUrls.clear()
-      processingUrls ++= requests.keySet
-
       // call recursive function
       downloadRec(requests, onSuccess, onFailure, new Date().getTime() + timeout)
     }
   }
 
-  private[this] def createImageElement(url: String): SVGImageElement = {
-    val elem: SVGImageElement = svgTags.image(svgAttrs.width := 1, svgAttrs.height := 1).render
-    elem.onload = { _: dom.Event =>
-      processingUrls.remove(url)
-      completedUrls.add(url)
-    }
-    // must be after setting onload event for mobile Safari
-    elem.href.baseVal = url
-    elem
+  /**
+    * @note SVGImageElement does NOT fire `onload` events on Safari. Use HTMLImageElement instead.
+    *
+    * @param url
+    * @return
+    */
+  private[this] def createImageElement(url: String): HTMLImageElement = {
+    processingUrls.add(url)
+
+    img(
+      src := url,
+      width := 1,
+      height := 1,
+      onloadeddata := { (_: dom.Event) => println("onloadeddata") },
+      onloadstart := { (_: dom.Event) => println("onloadstart") },
+      onload := { (_: dom.Event) =>
+        processingUrls.remove(url)
+        completedUrls.add(url)
+
+      }
+    ).render
   }
 
-  private[this] def downloadRec(requests: Map[String, SVGImageElement], onSuccess: () => Unit, onFailure: Seq[String] => Unit, timeLimit: Double): Unit = {
+  private[this] def downloadRec(requests: Map[String, HTMLImageElement], onSuccess: () => Unit, onFailure: Seq[String] => Unit, timeLimit: Double): Unit = {
     val processing: Set[String] = processingUrls.toSet
 
     // remove temporary elements
@@ -67,7 +78,7 @@ class ImageCache {
       onFailure(requests.keys.toSeq.sorted)
     } else {
       // continue
-      dom.window.setTimeout(() => downloadRec(requests.filterKeys(processing.contains), onSuccess, onFailure, timeLimit), 100)
+      dom.window.setTimeout(() => downloadRec(requests.filterKeys(processing.contains), onSuccess, onFailure, timeLimit), CHECK_INTERVAL)
     }
   }
 
