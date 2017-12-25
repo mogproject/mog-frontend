@@ -21,15 +21,14 @@ class AboutMenu extends AccordionMenu {
       a(href := "https://twitter.com/mogproject", target := "_blank", "author"),
       ". Your voice matters."),
     br(),
-    label("Special Thanks:"),
-    li(
-      marginLeft := 20.px,
-      ul(
-        "Piece Graphics - ",
-        a(href := "http://shineleckoma.web.fc2.com/", target := "_blank", "shinelecoma"),
-        br(),
-        small("License: ", a(href := "https://creativecommons.org/licenses/by-nc/2.1/jp/deed.en", target := "_blank", "Attribution-NonCommercial 2.1 Japan (CC BY-NC 2.1 JP)"))
-      )
+    label("Special Thanks"),
+    p(
+      "Piece Graphics - ",
+      a(href := "http://shineleckoma.web.fc2.com/", target := "_blank", "shinelecoma")
+    ),
+    p(
+      "Piece Fotns - ",
+      a(href := "https://github.com/cyrealtype/Lora-Cyrillic", target := "_blank", "Lora Fonts")
     )
   )
   override lazy val visibleMode = Set(PlayModeType, ViewModeType, EditModeType)
