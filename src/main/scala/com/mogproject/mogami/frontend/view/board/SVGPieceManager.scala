@@ -69,16 +69,18 @@ trait SVGPieceManager[Key, Value] {
     resetPieceEffect(keepLastMove)
 
     // get diffs
+    val faceChanged = currentPieceFace != pieceFace
+
     val nextPieces = pieces.toSet.filter(kv => shouldDrawPiece(kv._2))
 
     val (xs, ys) = (currentPieces.toSet, nextPieces)
 
-    val removedPieces = xs -- ys
-    val newPieces = ys -- xs
+    val removedPieces = faceChanged.fold(xs, xs -- ys)
+    val newPieces = faceChanged.fold(ys, ys -- xs)
 
     // clear old pieces
     removedPieces.foreach { case (k, _) =>
-      if (shouldRemoveSameKey || !newPieces.exists(_._1 == k)) WebComponent.removeElement(pieceMap(k)._1)
+      if (faceChanged || shouldRemoveSameKey || !newPieces.exists(_._1 == k)) WebComponent.removeElement(pieceMap(k)._1)
       pieceMap(k)._2.foreach(WebComponent.removeElement)
     }
 
@@ -88,7 +90,11 @@ trait SVGPieceManager[Key, Value] {
 
     // render and materialize
     val newPieceMap = newPieces.map { case (k, v) =>
-      val elem1 = if (!shouldRemoveSameKey && removedPieces.exists(_._1 == k)) pieceMap(k)._1 else materializeForeground(generatePieceElement(k, v, pieceFace).render)
+      val elem1 = if (!faceChanged && !shouldRemoveSameKey && removedPieces.exists(_._1 == k)) {
+        pieceMap(k)._1
+      } else {
+        materializeForeground(generatePieceElement(k, v, pieceFace).render)
+      }
       val elem2 = shouldDrawNumber(v).option(materializeForeground(generateNumberElement(k, v).render))
       k -> (elem1, elem2)
     }

@@ -40,9 +40,9 @@ class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
     SVGWideLayout -> "Wide"
   ), v => _.copy(layout = v))
 
-  private[this] lazy val pieceFaceSelector = DropdownSelector[PieceFace]("Piece Graphic", Vector(
-    JapaneseOneCharFace -> "Japanese 1"
-  ), v => _.copy(pieceFace = v))
+  private[this] lazy val pieceFaceSelector = DropdownSelector[PieceFace](
+    "Piece Graphic", PieceFace.all.map(p => p -> p.displayName).toVector, v => _.copy(pieceFace = v)
+  )
 
   private[this] lazy val doubleBoardSelector = BooleanSelector("Double Board Mode", v => _.copy(flipType = v.fold(DoubleBoard, FlipDisabled)))
   private[this] lazy val visualEffectSelector = BooleanSelector("Visual Effects", v => _.copy(visualEffectEnabled = v))

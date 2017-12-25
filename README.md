@@ -22,7 +22,17 @@ make test
 
 - Download bitmap images from http://shineleckoma.web.fc2.com/
   - License: Creative Commons
+- Work on Gimp
+  - Add alpha channel
+  - Manually define polygonal paths for pieces
+  - Set all paths visible and merge them
+  - Create selection from merged paths, invert, and delete the selection
+  - Expand canvas size
+    - Width: 344 -> 430, Height: 288 -> 336, Offset: (43, 48)
+  - Stroke paths: black, 2px
+  - Export to a PNG file
 - Cut each piece to 43x48 format
-- Add alpha channel and save as PNG images (manual adjustment required)
+  - Use this script: `scripts/extract_pieces.sh`
+  - `extract_pieces.sh <large_image>.png
 - Use www.aconvert.com to convert PNG files to SVG
 
