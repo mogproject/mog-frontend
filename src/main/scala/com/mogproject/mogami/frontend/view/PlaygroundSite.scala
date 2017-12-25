@@ -29,7 +29,7 @@ trait PlaygroundSite extends WebComponent {
   val gameHelpMenu = new GameHelpMenu
   val aboutMenu = new AboutMenu
 
-  lazy val menuPane: MenuPane = if (isMobile) {
+  val menuPane: MenuPane = if (isMobile) {
     MenuPane(Seq(shareMenu, manageMenu, actionMenu, branchMenu, analyzeMenu, resetMenu, settingMenu, gameHelpMenu, aboutMenu))
   } else {
     MenuPane(Seq(shareMenu, manageMenu, analyzeMenu, resetMenu, settingMenu, gameHelpMenu, aboutMenu))
