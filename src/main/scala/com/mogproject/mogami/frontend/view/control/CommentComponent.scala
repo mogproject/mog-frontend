@@ -60,6 +60,7 @@ case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: Stri
     if (isModal) {
       dom.window.setTimeout(() => PlaygroundSAM.doAction(act), 1)
     } else {
+      if (text.isEmpty) textCommentInput.value = "" // necessary: there might be unsaved text
       PlaygroundSAM.doAction(act)
       displayCommentInputTooltip(text.isEmpty)
       refreshButtonDisabled()

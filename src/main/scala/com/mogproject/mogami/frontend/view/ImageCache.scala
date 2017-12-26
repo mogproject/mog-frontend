@@ -50,8 +50,8 @@ class ImageCache {
 
     img(
       src := url,
-      width := 1,
-      height := 1,
+      width := 1.px,
+      height := 1.px,
       onload := { (_: dom.Event) =>
         processingUrls.remove(url)
         completedUrls.add(url)

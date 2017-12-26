@@ -45,10 +45,10 @@ trait CanvasRenderer {
   }
 
   def renderImage(rect: Rect, url: String): Unit = {
-    val image = img(src := url).render
+    val image = img(src := url, width := 1.px, height := 1.px).render
     processingImages.add(image)
     image.onload = { _: dom.Event =>
-      ctx.drawImage(img(src := url).render, rect.left, rect.top, rect.width, rect.height)
+      ctx.drawImage(image, rect.left, rect.top, rect.width, rect.height)
       processingImages.remove(image)
     }
   }
