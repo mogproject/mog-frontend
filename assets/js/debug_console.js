@@ -1,7 +1,7 @@
 //
 // Replace the function console.log with this original function.
 //
-replaceConsoleLog = function() {
+(function() {
 
   printLog = function() {
     var now = new Date().toISOString();
@@ -28,4 +28,6 @@ replaceConsoleLog = function() {
 
   console.error_orig = console.error;
   console.error = function() { printLog('ERROR', arguments, console.error_orig); };
-};
+
+  console.log("Debug Log enabled.")
+})();

@@ -20,10 +20,10 @@ clean:
 	rm -rf ~/.sbt/0.13/staging/*/mog-* && ${SBT} clean
 
 local:
-	${OPEN} http://localhost:${DEV_PORT}/index-dev.html?debug=true
+	${OPEN} http://localhost:${DEV_PORT}/index-dev-debug.html?debug=true
 
 local_mobile:
-	${OPEN} http://localhost:${DEV_PORT}/index-dev.html?device=1
+	${OPEN} http://localhost:${DEV_PORT}/index-dev-debug.html?device=1
 
 server:
 	python -m 'http.server' ${DEV_PORT}
