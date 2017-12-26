@@ -3,14 +3,12 @@ package com.mogproject.mogami.frontend
 import com.mogproject.mogami._
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.core.state.StateCache.Implicits._
-import com.mogproject.mogami.frontend.api.DebugConsole
 import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.frontend.state.TestState
 import com.mogproject.mogami.frontend.view.TestView
 import com.mogproject.mogami.frontend.view.board.{SVGCompactLayout, SVGStandardLayout}
 import org.scalajs.dom
 import org.scalajs.dom.html.Div
-import org.scalajs.dom.raw.HTMLElement
 
 import scala.scalajs.js.JSApp
 import scala.util.{Failure, Success, Try}
@@ -26,17 +24,7 @@ object App extends JSApp {
     val args = Arguments()
       .loadLocalStorage()
       .parseQueryString(dom.window.location.search)
-
-    // set debug
-    if (args.config.isDebug) {
-      // take over console.log function
-      DebugConsole.replaceConsoleLog()
-
-      // show debug message
-      dom.document.getElementById("debugWindow").asInstanceOf[HTMLElement].style.display = scalatags.JsDom.all.display.block.v
-      println("Debug Log enabled.")
-      if (args.config.isDev) println("Dev Mode enabled.")
-    }
+    if (args.config.isDebug) println(s"Parsed arguments.")
 
     // load game
     val game = createGameFromArgs(args)
@@ -73,7 +61,7 @@ object App extends JSApp {
         // hide loading message and show the main contents
         if (args.config.isDebug) println("Finished initialization.")
         rootElem.style.display = scalatags.JsDom.all.display.block.v
-        dom.window.setTimeout(() => dom.document.getElementById("messageWindow").textContent = "", 100)
+        dom.document.getElementById("messageWindow").textContent = ""
     }
   }
 
