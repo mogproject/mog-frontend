@@ -24,7 +24,7 @@ trait BasePlaygroundView extends SAMView {
 
   def rootElem: Element
 
-  def website: PlaygroundSite
+  def website: PlaygroundSiteLike
 
   def mainPane: MainPaneLike = website.mainPane
 

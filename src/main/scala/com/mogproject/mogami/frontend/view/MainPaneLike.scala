@@ -29,7 +29,7 @@ import scalatags.JsDom.all._
 trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObserver[BasePlaygroundModel] {
   def isMobile: Boolean
 
-  def getSite: () => PlaygroundSite
+  def getSite: () => PlaygroundSiteLike
 
   lazy val imageCache: ImageCache = new ImageCache
 

@@ -12,7 +12,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-trait PlaygroundSite extends WebComponent {
+trait PlaygroundSiteLike extends WebComponent {
   def isMobile: Boolean
 
   def navBar: NavBarLike

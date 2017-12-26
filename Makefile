@@ -8,7 +8,7 @@ DEV_PORT = 8001
 COPY_PROD = cp -f target/scala-2.12/mog-frontend-test-opt.js ${PROD_ASS}/js/ && cp -rf ${TEST_ASS}/* ${PROD_ASS}/
 
 build:
-	${SBT} fastOptJS
+	${SBT} test:fastOptJS
 
 test:
 	${SBT} test
