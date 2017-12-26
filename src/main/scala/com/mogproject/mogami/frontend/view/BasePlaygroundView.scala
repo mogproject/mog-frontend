@@ -32,6 +32,7 @@ trait BasePlaygroundView extends SAMView {
 
   override def initialize(): Unit = {
     // create elements
+    WebComponent.removeAllChildElements(rootElem)
     rootElem.appendChild(website.element)
 
     // add rotation detection

@@ -1,16 +1,15 @@
 package com.mogproject.mogami.frontend.api.google
 
+import com.mogproject.mogami.frontend.Settings
 import gapi.client.urlshortener.Response
+import org.scalajs.dom
 
 import scala.scalajs.js
 
 /**
   *
   */
-case class URLShortener(
-                         baseUrl: String = "https://play.mogproject.com/",
-                         apiKey: String = "AIzaSyD5UJMg2z6OHFo-AnQPJLK0oV8tf6BH6Nc" // todo: application.conf
-                       ) {
+case class URLShortener(baseUrl: String, apiKey: String) {
   private[this] var initialized: Option[Thenable] = None
 
   private[this] def getClient: Option[Thenable] = {
@@ -23,7 +22,10 @@ case class URLShortener(
 
   private[this] def initialize(): Option[Thenable] = {
     // check if Google API client is ready
-    if (js.isUndefined(gapi) || js.isUndefined(gapi.client)) {
+    if (apiKey.isEmpty) {
+      dom.console.warn("Google API Key is not set.")
+      None
+    } else if (js.isUndefined(gapi) || js.isUndefined(gapi.client)) {
       // not yet loaded
       None
     } else {
@@ -57,7 +59,7 @@ case class URLShortener(
 }
 
 object URLShortener {
-  private[this] lazy val impl = URLShortener()
+  private[this] lazy val impl = URLShortener(Settings.url.baseUrl, Settings.api.google.URLShortener.apiKey)
 
   def makeShortenedURL(longUrl: String, callback: String => Unit, failure: String => Unit): Unit = impl.makeShortenedURL(longUrl, callback, failure)
 }

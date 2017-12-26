@@ -6,7 +6,6 @@ import com.mogproject.mogami.frontend.view.action.ResignButton
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.view.button.SingleButton
 import org.scalajs.dom.Element
-import org.scalajs.dom.html.Div
 
 import scalatags.JsDom.all._
 
@@ -53,8 +52,5 @@ trait NavBarLike extends WebComponent {
     )
   ).render
 
-  override lazy val element: Div = div(
-    cls := "navbar",
-    navElem
-  ).render
+  override lazy val element = navElem
 }

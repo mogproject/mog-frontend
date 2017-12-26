@@ -3,11 +3,13 @@ package com.mogproject.mogami.frontend
 import com.mogproject.mogami._
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.core.state.StateCache.Implicits._
+import com.mogproject.mogami.frontend.api.DebugConsole
 import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.frontend.state.TestState
 import com.mogproject.mogami.frontend.view.TestView
 import com.mogproject.mogami.frontend.view.board.{SVGCompactLayout, SVGStandardLayout}
 import org.scalajs.dom
+import org.scalajs.dom.raw.HTMLElement
 
 import scala.scalajs.js.JSApp
 import scala.util.{Failure, Success, Try}
@@ -21,6 +23,20 @@ object App extends JSApp {
     val args = Arguments()
       .loadLocalStorage()
       .parseQueryString(dom.window.location.search)
+
+    // set debug
+    if (args.config.isDebug) {
+      dom.document.getElementById("debugLabel").textContent = "Messages"
+      dom.document.getElementById("debugLog").textContent = ""
+
+      // take over console.log function
+      DebugConsole.replaceConsoleLog()
+
+      // show debug message
+      dom.document.getElementById("messageWindow").asInstanceOf[HTMLElement].style.display = scalatags.JsDom.all.display.block.v
+      if (args.config.isDebug) println("Debug Log enabled.")
+      if (args.config.isDev) println("Dev Mode enabled.")
+    }
 
     // load game
     val game = createGameFromArgs(args)
@@ -51,10 +67,6 @@ object App extends JSApp {
         // initialize state
         PlaygroundSAM.initialize(TestModel.adapter)
         SAM.initialize(TestState(model, view))
-
-        // show debug message
-        if (args.config.isDebug) println("Debug Log enabled.")
-        if (args.config.isDev) println("Dev Mode enabled.")
     }
   }
 
