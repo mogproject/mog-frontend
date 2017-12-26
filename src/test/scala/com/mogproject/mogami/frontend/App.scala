@@ -19,6 +19,8 @@ import scala.util.{Failure, Success, Try}
   */
 object App extends JSApp {
   override def main(): Unit = {
+    TestSettings
+
     // get args
     val args = Arguments()
       .loadLocalStorage()

@@ -3,7 +3,7 @@ package com.mogproject.mogami.frontend
 /**
   * Project level settings
   */
-trait Settings {
+object FrontendSettings {
 
   object url {
     val baseUrl = "https://play.mogproject.com/"
@@ -20,28 +20,16 @@ trait Settings {
 
   }
 
-
   object api {
 
     object google {
 
       object URLShortener {
-        val apiKey: String = "" // needs to be overridden
+        var apiKey: String = "" // needs to be overridden
       }
 
     }
 
   }
 
-}
-
-
-object Settings {
-  private[this] var settingsImpl: Settings = new Settings {}
-
-  def setSettings(settings: Settings): Unit = settingsImpl = settings
-
-  def url = settingsImpl.url
-
-  def api = settingsImpl.api
 }
