@@ -54,7 +54,7 @@ class ShareMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
         recordCopyButton.updateValue(builder.toRecordUrl)
         snapshotCopyButton.updateValue(builder.toSnapshotUrl)
         imageLinkButton.updateValue(builder.toImageLinkUrl)
-        sfenStringCopyButton.updateValue(gc.game.toSfenString)
+        sfenStringCopyButton.updateValue(gc.getDisplayingState.toSfenString)
         notesViewButton.updateValue(builder.toNotesViewUrl)
       }
     }
