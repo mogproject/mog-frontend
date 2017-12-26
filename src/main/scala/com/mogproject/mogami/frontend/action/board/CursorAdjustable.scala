@@ -48,7 +48,7 @@ trait CursorAdjustable {
     * 122234445 |-
     *
     */
-  private[this] def categorizeMovement(x: Int, y: Int): Int = {
+  protected[board] def categorizeMovement(x: Int, y: Int): Int = {
     val t = (math.atan2(y, x) + math.Pi) / math.Pi * 4
     val a = math.floor(t).toInt
     a * 2 - (a == t).fold(1, 0)
