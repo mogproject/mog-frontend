@@ -3,6 +3,7 @@ package com.mogproject.mogami.frontend.view
 import com.mogproject.mogami.core.Ptype
 import com.mogproject.mogami.frontend.model.DeviceType.DeviceType
 import com.mogproject.mogami.frontend._
+import com.mogproject.mogami.frontend.api.WebAudioAPISound
 import com.mogproject.mogami.frontend.model.board.cursor.{BoardCursor, Cursor}
 import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipDisabled, FlipEnabled}
 import com.mogproject.mogami.frontend.util.PlayerUtil
@@ -18,6 +19,7 @@ import org.scalajs.dom.html.Div
 import org.scalajs.dom.raw.HTMLElement
 
 import scala.collection.mutable
+import scala.util.{Failure, Success, Try}
 import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
 
@@ -66,7 +68,11 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
 
   private[this] val sidebars: Seq[SideBarLike] = sideBarRight.toSeq ++ sideBarLeft
 
-  private[this] lazy val clickSound = audio(source(src := "assets/mp3/click.mp3", tpe := "audio/wav")).render
+  private[this] val clickSound = {
+    val sound = new WebAudioAPISound("assets/mp3/click")
+    sound.setVolume(100)
+    sound
+  }
 
   override lazy val element: Element = div(
     if (isMobile) {
@@ -76,8 +82,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
         sidebars.map(_.element),
         mainContent
       )
-    },
-    clickSound
+    }
   ).render
 
   /**
@@ -178,12 +183,12 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   }
 
   def playClickSound(): Unit = {
-    val isPlaying = clickSound.currentTime > 0 && !clickSound.paused && !clickSound.ended && (clickSound.readyState.toString.toInt > 2)
-    if (isPlaying) {
-      clickSound.pause()
+    Try {
+      clickSound.play()
+    } match {
+      case Success(_) =>
+      case Failure(e) => println(e)
     }
-    clickSound.currentTime = 0
-    clickSound.play()
   }
 
   //
