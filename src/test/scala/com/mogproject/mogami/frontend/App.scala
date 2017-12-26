@@ -19,6 +19,8 @@ import scala.util.{Failure, Success, Try}
   */
 object App extends JSApp {
   override def main(): Unit = {
+    TestSettings
+
     // get args
     val args = Arguments()
       .loadLocalStorage()
@@ -33,7 +35,7 @@ object App extends JSApp {
       DebugConsole.replaceConsoleLog()
 
       // show debug message
-      dom.document.getElementById("messageWindow").asInstanceOf[HTMLElement].style.display = scalatags.JsDom.all.display.block.v
+      dom.document.getElementById("debugWindow").asInstanceOf[HTMLElement].style.display = scalatags.JsDom.all.display.block.v
       if (args.config.isDebug) println("Debug Log enabled.")
       if (args.config.isDev) println("Dev Mode enabled.")
     }
@@ -54,6 +56,9 @@ object App extends JSApp {
 
     // create view
     val view = TestView(args.config.deviceType.isMobile, args.config.isDev, args.config.isDebug, dom.document.getElementById("app"))
+
+    // hide loading message
+    dom.document.getElementById("messageWindow").textContent = ""
 
     // handle special actions
     args.action match {

@@ -22,14 +22,15 @@
 <script defer type="text/javascript" src="assets/js/ecl_new.js"></script>
 <script type="text/javascript" src="assets/js/debug_console.js"></script>
 <script type="text/javascript" src="assets/js/WebAudioAPISound.js"></script>
-<script async type="text/javascript" src="target/scala-2.12/mog-frontend-test-fastopt.js" onload="com.mogproject.mogami.frontend.App().main();"></script>
-<div id="app" style="position:relative;">
-    <div class="container" style="color:#5e5e5e;">
-        <h3>Shogi Playground</h3>
-        <p>Now Loading...</p>
-    </div>
+<script async type="text/javascript" src="target/scala-2.12/mog-frontend-test-fastopt.js"
+        onload="com.mogproject.mogami.frontend.App().main();"></script>
+
+<div id="app"></div>
+<div id="messageWindow" class="container" style="color:#5e5e5e;">
+    <h3>Shogi Playground</h3>
+    <p>Now Loading...</p>
 </div>
-<small id="messageWindow" style="display:none;position:relative;">
+<small id="debugWindow" style="display:none;">
     <div class="container panel panel-danger">
         <div id="debugLabel" class="panel-heading"></div>
         <div id="debugLog" class="panel-body"></div>
