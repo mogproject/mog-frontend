@@ -43,7 +43,7 @@ trait PlaygroundSiteLike extends WebComponent {
     val elem = div(
       div(cls := "navbar", tag("nav")(cls := navBar.classNames, navBar.element)),
       div(cls := "container-fluid",
-        isMobile.fold(Seq(position := position.fixed.v, width := "100%", padding := 0), ""),
+        isMobile.fold(Seq(width := "100%", padding := 0), ""),
         mainPane.element,
         footer.element
       )
