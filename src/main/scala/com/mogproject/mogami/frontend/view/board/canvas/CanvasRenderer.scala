@@ -48,7 +48,7 @@ trait CanvasRenderer {
     val image = img(src := url).render
     processingImages.add(image)
     image.onload = { _: dom.Event =>
-      ctx.drawImage(img(src := url).render, rect.left, rect.top, rect.width, rect.height)
+      ctx.drawImage(image, rect.left, rect.top, rect.width, rect.height)
       processingImages.remove(image)
     }
   }
