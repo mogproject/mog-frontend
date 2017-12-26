@@ -9,6 +9,7 @@ import com.mogproject.mogami.frontend.state.TestState
 import com.mogproject.mogami.frontend.view.TestView
 import com.mogproject.mogami.frontend.view.board.{SVGCompactLayout, SVGStandardLayout}
 import org.scalajs.dom
+import org.scalajs.dom.html.Div
 import org.scalajs.dom.raw.HTMLElement
 
 import scala.scalajs.js.JSApp
@@ -55,7 +56,9 @@ object App extends JSApp {
     val model = TestModel(mode, args.config)
 
     // create view
-    val view = TestView(args.config.deviceType.isMobile, args.config.isDev, args.config.isDebug, dom.document.getElementById("app"))
+    val rootElem = dom.document.getElementById("app").asInstanceOf[Div]
+    val view = TestView(args.config.deviceType.isMobile, args.config.isDev, args.config.isDebug, rootElem)
+    rootElem.style.display = scalatags.JsDom.all.display.block.v
 
     // hide loading message
     dom.document.getElementById("messageWindow").textContent = ""
