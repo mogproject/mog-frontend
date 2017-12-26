@@ -29,15 +29,12 @@ object App extends JSApp {
 
     // set debug
     if (args.config.isDebug) {
-      dom.document.getElementById("debugLabel").textContent = "Messages"
-      dom.document.getElementById("debugLog").textContent = ""
-
       // take over console.log function
       DebugConsole.replaceConsoleLog()
 
       // show debug message
       dom.document.getElementById("debugWindow").asInstanceOf[HTMLElement].style.display = scalatags.JsDom.all.display.block.v
-      if (args.config.isDebug) println("Debug Log enabled.")
+      println("Debug Log enabled.")
       if (args.config.isDev) println("Dev Mode enabled.")
     }
 
@@ -58,10 +55,6 @@ object App extends JSApp {
     // create view
     val rootElem = dom.document.getElementById("app").asInstanceOf[Div]
     val view = TestView(args.config.deviceType.isMobile, args.config.isDev, args.config.isDebug, rootElem)
-    rootElem.style.display = scalatags.JsDom.all.display.block.v
-
-    // hide loading message
-    dom.document.getElementById("messageWindow").textContent = ""
 
     // handle special actions
     args.action match {
@@ -72,9 +65,15 @@ object App extends JSApp {
         val conf = if (args.config.layout == SVGCompactLayout) args.config.copy(layout = SVGStandardLayout) else args.config
         view.drawAsImage(conf, mode.getGameControl.get)
       case PlayAction =>
+        if (args.config.isDebug) println("Initializing...")
         // initialize state
         PlaygroundSAM.initialize(TestModel.adapter)
         SAM.initialize(TestState(model, view))
+
+        // hide loading message and show the main contents
+        if (args.config.isDebug) println("Finished initialization.")
+        rootElem.style.display = scalatags.JsDom.all.display.block.v
+        dom.document.getElementById("messageWindow").textContent = ""
     }
   }
 
