@@ -73,7 +73,7 @@ object App extends JSApp {
         // hide loading message and show the main contents
         if (args.config.isDebug) println("Finished initialization.")
         rootElem.style.display = scalatags.JsDom.all.display.block.v
-        dom.document.getElementById("messageWindow").textContent = ""
+        dom.window.setTimeout(() => dom.document.getElementById("messageWindow").textContent = "", 100)
     }
   }
 
