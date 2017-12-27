@@ -72,6 +72,10 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
   //
   def getDisplayingState: State = game.getState(gamePosition).get
 
+  def getDisplayingBoard: BoardType = getDisplayingIllegalMove.map(mv => getDisplayingState.makeNextPosition(mv.move)._1).getOrElse(getDisplayingState.board)
+
+  def getDisplayingHand: HandType = getDisplayingIllegalMove.map(mv => getDisplayingState.makeNextPosition(mv.move)._2).getOrElse(getDisplayingState.hand)
+
   /** last status position => cannot move */
   private[this] val finalizedGameStatus = Seq(GameStatus.Mated, GameStatus.Uchifuzume, GameStatus.PerpetualCheck, GameStatus.Drawn)
 

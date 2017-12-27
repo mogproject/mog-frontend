@@ -95,16 +95,16 @@ sealed abstract class Mode(val modeType: ModeType,
   }
 
   def getBoardPieces: BoardType = this match {
-    case PlayMode(gc) => gc.getDisplayingState.board
-    case ViewMode(gc) => gc.getDisplayingState.board
-    case LiveMode(_, gc) => gc.getDisplayingState.board
+    case PlayMode(gc) => gc.getDisplayingBoard
+    case ViewMode(gc) => gc.getDisplayingBoard
+    case LiveMode(_, gc) => gc.getDisplayingBoard
     case EditMode(_, _, b, _) => b
   }
 
   def getHandPieces: HandType = this match {
-    case PlayMode(gc) => gc.getDisplayingState.hand
-    case ViewMode(gc) => gc.getDisplayingState.hand
-    case LiveMode(_, gc) => gc.getDisplayingState.hand
+    case PlayMode(gc) => gc.getDisplayingHand
+    case ViewMode(gc) => gc.getDisplayingHand
+    case LiveMode(_, gc) => gc.getDisplayingHand
     case EditMode(_, _, _, h) => h
   }
 
