@@ -10,6 +10,8 @@ trait EffectorTarget {
 
   protected def thresholdElement: Element
 
+  protected def foremostElement: Element
+
   def materializeBackground[A <: Element](elem: A): A = {
     thresholdElement.parentNode.insertBefore(elem, thresholdElement)
     elem
@@ -20,7 +22,7 @@ trait EffectorTarget {
   }
 
   def materializeForeground[A <: Element](elem: A): A = {
-    thresholdElement.parentNode.appendChild(elem)
+    thresholdElement.parentNode.insertBefore(elem, foremostElement)
     elem
   }
 

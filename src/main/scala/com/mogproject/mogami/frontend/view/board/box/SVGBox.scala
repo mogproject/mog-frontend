@@ -11,7 +11,7 @@ import org.scalajs.dom.raw.SVGElement
 /**
   *
   */
-case class SVGBox(layout: SVGBoxLayout) extends SVGBoxPieceManager with EffectorTarget {
+case class SVGBox(layout: SVGBoxLayout, foremostElement: SVGElement) extends SVGBoxPieceManager with EffectorTarget {
 
   protected def self: SVGBox = this
 
