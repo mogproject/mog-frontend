@@ -81,19 +81,14 @@ sealed abstract class Mode(val modeType: ModeType,
   }
 
   def getIndicators: Map[Player, BoardIndicator] = {
-    val (turn, gs) = this match {
-      case PlayMode(gc) => (gc.getDisplayingState.turn, gc.getDisplayingGameStatus)
-      case ViewMode(gc) => (gc.getDisplayingState.turn, gc.getDisplayingGameStatus)
-      case LiveMode(_, gc) => (gc.getDisplayingState.turn, gc.getDisplayingGameStatus)
-      case EditMode(_, t, _, _) => (t, GameStatus.Playing)
-    }
-    BoardIndicator.fromGameStatus(turn, gs)
+    val status = getGameControl.map(_.getDisplayingGameStatus).getOrElse(GameStatus.Playing)
+    BoardIndicator.fromGameStatus(getTurn, status)
   }
 
   def getTurn: Player = this match {
-    case PlayMode(gc) => gc.getDisplayingState.turn
-    case ViewMode(gc) => gc.getDisplayingState.turn
-    case LiveMode(_, gc) => gc.getDisplayingState.turn
+    case PlayMode(gc) => gc.getDisplayingTurn
+    case ViewMode(gc) => gc.getDisplayingTurn
+    case LiveMode(_, gc) => gc.getDisplayingTurn
     case EditMode(_, t, _, _) => t
   }
 

@@ -72,7 +72,9 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
   //
   def getDisplayingState: State = game.getState(gamePosition).get
 
-  def isIllegalMove: Boolean = getDisplayingIllegalMove.isDefined
+  def isIllegalMove: Boolean = getDisplayingIllegalMove.isDefined && isAdditionalPosition
+
+  def getDisplayingTurn: Player = isIllegalMove.when[Player](!_)(getDisplayingState.turn)
 
   def getDisplayingBoard: BoardType = getDisplayingIllegalMove.map(mv => getDisplayingState.makeNextPosition(mv.move)._1).getOrElse(getDisplayingState.board)
 
@@ -186,7 +188,7 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
     game
       .truncated(GamePosition(effectiveBranchNo, statusPosition))
       .updateBranch(effectiveBranchNo)(b => Some(b.updateFinalAction(Some(specialMove))))
-      .map { g => this.copy(game = g, displayBranchNo = effectiveBranchNo, displayPosition = statusPosition + moveForward.fold(1, 0))}
+      .map { g => this.copy(game = g, displayBranchNo = effectiveBranchNo, displayPosition = statusPosition + moveForward.fold(1, 0)) }
   }
 
   def getRecord(format: RecordFormat): String = format match {
