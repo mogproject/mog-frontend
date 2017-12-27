@@ -128,19 +128,20 @@ case class ControlBar(barType: ControlBarType) extends WebComponent with SAMObse
       }
 
       val suffix = (br.status, recordLang) match {
-        case (GameStatus.Mated, Japanese) => List("詰み")
-        case (GameStatus.Mated, English) => List("Mated")
-        case (GameStatus.Drawn, Japanese) => List("千日手")
-        case (GameStatus.Drawn, English) => List("Drawn")
-        case (GameStatus.PerpetualCheck, Japanese) => List("連続王手の千日手")
-        case (GameStatus.PerpetualCheck, English) => List("Perpetual Check")
-        case (GameStatus.Uchifuzume, Japanese) => List("打ち歩詰め")
-        case (GameStatus.Uchifuzume, English) => List("Uchifuzume")
-        case (GameStatus.Jishogi, Japanese) => List(DeclareWin().toJapaneseNotationString)
-        case (GameStatus.Jishogi, English) => List(DeclareWin().toWesternNotationString)
-        case (GameStatus.IllegallyMoved, Japanese) => br.finalAction.get.toJapaneseNotationString.split("\n").toList.drop(1)
-        case (GameStatus.IllegallyMoved, English) => br.finalAction.get.toWesternNotationString.split("\n").toList.drop(1)
-        case _ => Nil
+        case (GameStatus.Playing, _) => None
+        case (GameStatus.Mated, Japanese) => Some("詰み")
+        case (GameStatus.Mated, English) => Some("Mated")
+        case (GameStatus.Drawn, Japanese) => Some("千日手")
+        case (GameStatus.Drawn, English) => Some("Drawn")
+        case (GameStatus.PerpetualCheck, Japanese) => Some("連続王手の千日手")
+        case (GameStatus.PerpetualCheck, English) => Some("Perpetual Check")
+        case (GameStatus.Uchifuzume, Japanese) => Some("打ち歩詰め")
+        case (GameStatus.Uchifuzume, English) => Some("Uchifuzume")
+        case (GameStatus.Jishogi, Japanese) => Some(DeclareWin().toJapaneseNotationString)
+        case (GameStatus.Jishogi, English) => Some(DeclareWin().toWesternNotationString)
+        case (GameStatus.IllegallyMoved, Japanese) => Some(IllegalMove.kifKeyword)
+        case (GameStatus.IllegallyMoved, English) => Some("Illegal Move")
+        case _ => None
       }
 
       (xs ++ suffix).map(s => option(s)).mkString
