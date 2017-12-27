@@ -18,11 +18,9 @@ trait SVGAreaEventHandler {
   //
   // constants
   protected val holdInterval: Double = 1000 // ms
-//  private[this] val touchEndInterval: Double = 50 // ms // Delete this to improve UX in View Mode
 
   // variables
   private[this] var activeHoldEvent: Option[Int] = None
-//  private[this] var lastTouchEnd: Double = -touchEndInterval
 
   lazy val hasTouchEvent: Boolean = dom.window.hasOwnProperty("ontouchstart")
 
@@ -94,7 +92,6 @@ trait SVGAreaEventHandler {
 
   private[this] def touchEnd(evt: TouchEvent): Unit = {
     evt.preventDefault()
-//    lastTouchEnd = evt.timeStamp
     PlaygroundSAM.doAction(BoardCursorEventAction(MouseUpEvent(getCursor(evt.changedTouches(0).clientX, evt.changedTouches(0).clientY))))
     clearHoldEvent()
   }
