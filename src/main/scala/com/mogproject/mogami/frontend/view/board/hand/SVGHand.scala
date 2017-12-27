@@ -13,7 +13,7 @@ import org.scalajs.dom.svg.RectElement
 /**
   * Hand
   */
-case class SVGHand(layout: SVGHandLayout) extends SVGHandPieceManager with EffectorTarget with Flippable {
+case class SVGHand(layout: SVGHandLayout, foremostElement: SVGElement) extends SVGHandPieceManager with EffectorTarget with Flippable {
 
   protected def self: SVGHand = this
 

@@ -19,7 +19,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-case class SVGPlayer(layout: SVGPlayerLayout) extends EffectorTarget with Flippable {
+case class SVGPlayer(layout: SVGPlayerLayout, foremostElement: SVGElement) extends EffectorTarget with Flippable {
 
   protected def self: SVGPlayer = this
 

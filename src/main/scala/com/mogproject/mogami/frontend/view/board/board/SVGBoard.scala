@@ -15,7 +15,7 @@ import org.scalajs.dom
 /**
   *
   */
-case class SVGBoard(layout: SVGBoardLayout) extends SVGBoardPieceManager with SVGBoardIndexManager with EffectorTarget with Flippable {
+case class SVGBoard(layout: SVGBoardLayout, foremostElement: SVGElement) extends SVGBoardPieceManager with SVGBoardIndexManager with EffectorTarget with Flippable {
 
   import layout._
 

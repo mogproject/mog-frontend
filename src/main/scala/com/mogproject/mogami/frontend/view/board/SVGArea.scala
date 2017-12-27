@@ -7,6 +7,7 @@ import com.mogproject.mogami.frontend.view.board.board.SVGBoard
 import com.mogproject.mogami.frontend.view.board.box.SVGBox
 import com.mogproject.mogami.frontend.view.board.hand.SVGHand
 import com.mogproject.mogami.frontend.view.board.player.SVGPlayer
+import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
 import org.scalajs.dom
 import org.scalajs.dom.Element
 import org.scalajs.dom.html.Div
@@ -21,14 +22,30 @@ import scalatags.JsDom.svgTags.svg
   */
 case class SVGArea(areaId: Int, layout: SVGAreaLayout) extends WebComponent with SVGAreaEventHandler {
 
+  private[this] val boxSize = layout.viewBoxBottomRight.copy(y = layout.box.extendedHeight)
+
+  /**
+    * Transparent foremost rect element for each SVG regions.
+    *
+    * @note `touchend` event will not fire if an SVG element is removed from dom while being touched. To prevent this,
+    *      Create a region-wide rectangle element as foremost in order to manage user interactions.
+    */
+  private[this] val boardForemostElement: SVGRectElement = Rect(Coord(0, 0), layout.viewBoxBottomRight.x, layout.viewBoxBottomRight.y).toSVGRect(
+    svgAttrs.fillOpacity := 0
+  ).render
+
+  private[this] val boxForemostElement: SVGRectElement = Rect(Coord(0, 0), boxSize.x, boxSize.y).toSVGRect(
+    svgAttrs.fillOpacity := 0
+  ).render
+
   // Local variables
-  val board: SVGBoard = SVGBoard(layout.board)
+  val board: SVGBoard = SVGBoard(layout.board, boardForemostElement)
 
-  val hand: SVGHand = SVGHand(layout.hand)
+  val hand: SVGHand = SVGHand(layout.hand, boardForemostElement)
 
-  val player: SVGPlayer = SVGPlayer(layout.player)
+  val player: SVGPlayer = SVGPlayer(layout.player, boardForemostElement)
 
-  val box: SVGBox = SVGBox(layout.box)
+  val box: SVGBox = SVGBox(layout.box, boxForemostElement)
 
   //
   // components
@@ -41,7 +58,8 @@ case class SVGArea(areaId: Int, layout: SVGAreaLayout) extends WebComponent with
     svgAttrs.viewBox := s"0 0 ${layout.viewBoxBottomRight}",
     player.elements,
     board.elements,
-    hand.elements
+    hand.elements,
+    boardForemostElement
   ).render
 
   private[this] val svgBox: Div = div(
@@ -52,8 +70,9 @@ case class SVGArea(areaId: Int, layout: SVGAreaLayout) extends WebComponent with
       svgAttrs.attr("version") := "1.1",
       svgAttrs.width := 100.pct,
       svgAttrs.height := 100.pct,
-      svgAttrs.viewBox := s"0 0 ${layout.viewBoxBottomRight.copy(y = box.layout.extendedHeight)}",
-      box.elements
+      svgAttrs.viewBox := s"0 0 ${boxSize}",
+      box.elements,
+      boxForemostElement
     )
   ).render
 
