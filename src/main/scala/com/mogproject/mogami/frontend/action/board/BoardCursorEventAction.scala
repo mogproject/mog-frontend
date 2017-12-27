@@ -111,6 +111,7 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
     */
   private[this] def executeMouseUp(model: BasePlaygroundModel, cursor: Option[Cursor]): Option[BasePlaygroundModel] = {
     (model.selectedCursor, cursor) match {
+      case _ if model.mode.isViewMode => None // ignore mouse up in View Mode
       case (Some((areaId, selected)), Some(released)) if selected != released =>
         val cursor = if (selected.isHand || model.mode.isEditMode) {
           Some(released) // no adjustment for hand pieces or in Edit Mode
