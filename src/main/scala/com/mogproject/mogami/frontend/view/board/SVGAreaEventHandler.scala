@@ -47,7 +47,19 @@ trait SVGAreaEventHandler {
 
   private[this] def isValidMouseEvent(evt: MouseEvent): Boolean = evt.button == 0
 
-  private[this] def isValidTouchEvent(evt: TouchEvent): Boolean = evt.changedTouches.length == 1 && lastTouchEnd < evt.timeStamp - touchEndInterval
+  private[this] def isValidTouchEvent(evt: TouchEvent): Boolean = {
+    if (evt.changedTouches.length != 1) {
+      println(s"Touch event invalidated: changedTouches.length=${evt.changedTouches}")
+      false
+    } else if (lastTouchEnd < evt.timeStamp - touchEndInterval) {
+      println(s"Touch event invalidated: interval=${evt.timeStamp - lastTouchEnd}")
+      false
+    } else {
+      true
+    }
+
+//    evt.changedTouches.length == 1 && lastTouchEnd < evt.timeStamp - touchEndInterval
+  }
 
   private[this] def registerHoldEvent(): Unit = {
     clearHoldEvent() // prevent double registrations
