@@ -19,15 +19,15 @@ trait PlaygroundSiteLike extends WebComponent {
 
   def mainPane: MainPaneLike
 
-  val shareMenu = new ShareMenu
-  lazy val branchMenu = new BranchMenu
-  val manageMenu = new ManageMenu
-  lazy val actionMenu = new ActionMenu
-  val analyzeMenu = new AnalyzeMenu
-  val resetMenu = new ResetMenu
-  val settingMenu = new SettingMenu
-  val gameHelpMenu = new GameHelpMenu
-  val aboutMenu = new AboutMenu
+  val shareMenu: ShareMenu = new ShareMenu(isMobile)
+  lazy val branchMenu: BranchMenu = new BranchMenu
+  val manageMenu: ManageMenu = new ManageMenu(isMobile)
+  lazy val actionMenu: ActionMenu = new ActionMenu
+  val analyzeMenu: AnalyzeMenu = new AnalyzeMenu(isMobile)
+  val resetMenu: ResetMenu = new ResetMenu
+  val settingMenu: SettingMenu = new SettingMenu
+  val gameHelpMenu: GameHelpMenu = new GameHelpMenu
+  val aboutMenu: AboutMenu = new AboutMenu
 
   val menuPane: MenuPane = if (isMobile) {
     MenuPane(Seq(shareMenu, manageMenu, actionMenu, branchMenu, analyzeMenu, resetMenu, settingMenu, gameHelpMenu, aboutMenu))

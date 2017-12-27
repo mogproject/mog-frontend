@@ -43,7 +43,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
   private[this] lazy val deleteBranchButton = SingleButton(
     Map(English -> isMobile.fold(span("Delete"), span(cls := "glyphicon glyphicon-trash")).render),
     clickAction = Some(() => PlaygroundSAM.doAction(AskDeleteBranchAction)),
-    tooltip = Map(English -> "Delete this branch"),
+    tooltip = isMobile.fold(Map.empty, Map(English -> "Delete this branch")),
     isBlockButton = true
   )
 
@@ -68,7 +68,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
         () => PlaygroundSAM.doAction(UpdateGameControlAction(_.changeDisplayBranch(branchNo).withNextDisplayPosition)),
         0
       )),
-    tooltip = Map(English -> branchNoToString(branchNo)),
+    tooltip = isMobile.fold(Map.empty, Map(English -> branchNoToString(branchNo))),
     tooltipPlacement = tooltipPlacement,
     isBlockButton = true,
     dismissModal = true

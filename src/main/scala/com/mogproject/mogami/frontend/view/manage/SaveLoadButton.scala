@@ -15,7 +15,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class SaveLoadButton extends WebComponent with RecordLoader {
+class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
   // constants
   private[this] final val DEFAULT_FILE_NAME = "record"
 
@@ -66,7 +66,7 @@ class SaveLoadButton extends WebComponent with RecordLoader {
 
   private[this] lazy val textLoadButton: SingleButton = SingleButton(
     Map(English -> "Load".render, Japanese -> "読込".render),
-    tooltip = Map(English -> "Load record from the text area"),
+    tooltip = isMobile.fold(Map.empty, Map(English -> "Load record from the text area")),
     isBlockButton = true,
     clickAction = Some({ () =>
       val text = textLoadInput.value
@@ -84,7 +84,7 @@ class SaveLoadButton extends WebComponent with RecordLoader {
 
   private[this] lazy val textClearButton: SingleButton = SingleButton(
     Map(English -> "Clear".render, Japanese -> "消去".render),
-    tooltip = Map(English -> "Clear the text area"),
+    tooltip = isMobile.fold(Map.empty, Map(English -> "Clear the text area")),
     isBlockButton = true,
     clickAction = Some({ () =>
       displayTextLoadMessage("")
@@ -113,7 +113,7 @@ class SaveLoadButton extends WebComponent with RecordLoader {
 
   private[this] val fileSaveButton: SingleButton = SingleButton(
     Map(English -> "Save".render),
-    tooltip = Map(English -> "Save record as a file"),
+    tooltip = isMobile.fold(Map.empty, Map(English -> "Save record as a file")),
     clickAction = Some({ () => doAction(SaveRecordAction(fileSaveFormat.getValue, getFileName)) })
   )
 

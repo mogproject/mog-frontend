@@ -10,16 +10,16 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class AnalyzeMenu extends AccordionMenu {
+class AnalyzeMenu(isMobile: Boolean) extends AccordionMenu {
 
   override lazy val ident: String = "Analyze"
   override lazy val title: String = ident
   override lazy val icon: String = "education"
   override lazy val visibleMode = Set(PlayModeType, ViewModeType)
 
-  lazy val checkmateButton = new CheckmateButton
+  lazy val checkmateButton = new CheckmateButton(isMobile)
 
-  lazy val pointCountButton = new PointCountButton
+  lazy val pointCountButton = new PointCountButton(isMobile)
 
   override lazy val content: JsDom.TypedTag[Div] = div(
     label("Analyze for Checkmate"),

@@ -8,14 +8,18 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class NotesViewButton extends CopyButtonLike with ViewButtonLike {
+class NotesViewButton(isMobile: Boolean) extends CopyButtonLike with ViewButtonLike {
   override protected val ident = "notes-view"
 
   override protected val labelString = "Notes View"
 
   private[this] def getTargetValue: String = getValue
 
+  private[this] def isMobileOuter: Boolean = isMobile
+
   private[this] lazy val shortenButton = new ShortenButtonLike {
+    override def isMobile: Boolean = isMobileOuter
+
     override def target: String = getTargetValue
 
     override protected def ident: String = "notes-short"

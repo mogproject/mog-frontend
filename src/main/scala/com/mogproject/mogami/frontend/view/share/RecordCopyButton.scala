@@ -8,14 +8,18 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class RecordCopyButton extends CopyButtonLike with WarningLabelLike {
+class RecordCopyButton(isMobile: Boolean) extends CopyButtonLike with WarningLabelLike {
   override protected val ident = "record-copy"
 
   override protected val labelString = "Record URL"
 
   private[this] def getTargetValue: String = getValue
 
+  private[this] def isMobileOuter: Boolean = isMobile
+
   private[this] lazy val shortenButton = new ShortenButtonLike {
+    override def isMobile: Boolean = isMobileOuter
+
     override def target: String = getTargetValue
 
     override protected def ident: String = "record-short"
