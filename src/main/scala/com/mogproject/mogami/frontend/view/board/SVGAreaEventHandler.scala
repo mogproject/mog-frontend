@@ -51,7 +51,7 @@ trait SVGAreaEventHandler {
     if (evt.changedTouches.length != 1) {
       println(s"Touch event invalidated: changedTouches.length=${evt.changedTouches}")
       false
-    } else if (lastTouchEnd < evt.timeStamp - touchEndInterval) {
+    } else if (lastTouchEnd >= evt.timeStamp - touchEndInterval) {
       println(s"Touch event invalidated: interval=${evt.timeStamp - lastTouchEnd}")
       false
     } else {
