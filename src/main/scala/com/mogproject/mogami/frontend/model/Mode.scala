@@ -62,7 +62,10 @@ sealed abstract class Mode(val modeType: ModeType,
     case EditMode(_, _, b, h) => b != mode.getBoardPieces || h != mode.getHandPieces
     case _ =>
       (getGameControl, mode.getGameControl) match {
-        case (Some(a), Some(b)) => a.statusPosition == b.statusPosition + 1
+        case (Some(a), Some(b)) =>
+          a.statusPosition == b.statusPosition + 1 || (a.isIllegalMove
+            && a.displayPosition == a.lastDisplayPosition - 1
+            && a.displayPosition == b.displayPosition + 1)
         case _ => false
       }
   }

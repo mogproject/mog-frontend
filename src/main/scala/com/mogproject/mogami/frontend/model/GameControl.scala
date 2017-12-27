@@ -72,6 +72,8 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
   //
   def getDisplayingState: State = game.getState(gamePosition).get
 
+  def isIllegalMove: Boolean = getDisplayingIllegalMove.isDefined
+
   def getDisplayingBoard: BoardType = getDisplayingIllegalMove.map(mv => getDisplayingState.makeNextPosition(mv.move)._1).getOrElse(getDisplayingState.board)
 
   def getDisplayingHand: HandType = getDisplayingIllegalMove.map(mv => getDisplayingState.makeNextPosition(mv.move)._2).getOrElse(getDisplayingState.hand)
@@ -92,7 +94,7 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
     }
   }
 
-  def getDisplayingIllegalMove: Option[IllegalMove] = (isAdditionalPosition, displayBranch.finalAction) match {
+  lazy val getDisplayingIllegalMove: Option[IllegalMove] = (isAdditionalPosition, displayBranch.finalAction) match {
     case (true, Some(x@IllegalMove(_))) => Some(x)
     case _ => None
   }
