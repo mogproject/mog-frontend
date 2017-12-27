@@ -72,6 +72,14 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
   //
   def getDisplayingState: State = game.getState(gamePosition).get
 
+  def isIllegalMove: Boolean = getDisplayingIllegalMove.isDefined && isAdditionalPosition
+
+  def getDisplayingTurn: Player = isIllegalMove.when[Player](!_)(getDisplayingState.turn)
+
+  def getDisplayingBoard: BoardType = getDisplayingIllegalMove.map(mv => getDisplayingState.makeNextPosition(mv.move)._1).getOrElse(getDisplayingState.board)
+
+  def getDisplayingHand: HandType = getDisplayingIllegalMove.map(mv => getDisplayingState.makeNextPosition(mv.move)._2).getOrElse(getDisplayingState.hand)
+
   /** last status position => cannot move */
   private[this] val finalizedGameStatus = Seq(GameStatus.Mated, GameStatus.Uchifuzume, GameStatus.PerpetualCheck, GameStatus.Drawn)
 
@@ -88,7 +96,7 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
     }
   }
 
-  def getDisplayingIllegalMove: Option[IllegalMove] = (isAdditionalPosition, displayBranch.finalAction) match {
+  lazy val getDisplayingIllegalMove: Option[IllegalMove] = (isAdditionalPosition, displayBranch.finalAction) match {
     case (true, Some(x@IllegalMove(_))) => Some(x)
     case _ => None
   }
@@ -180,7 +188,7 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
     game
       .truncated(GamePosition(effectiveBranchNo, statusPosition))
       .updateBranch(effectiveBranchNo)(b => Some(b.updateFinalAction(Some(specialMove))))
-      .map { g => this.copy(game = g, displayBranchNo = effectiveBranchNo, displayPosition = statusPosition + moveForward.fold(1, 0))}
+      .map { g => this.copy(game = g, displayBranchNo = effectiveBranchNo, displayPosition = statusPosition + moveForward.fold(1, 0)) }
   }
 
   def getRecord(format: RecordFormat): String = format match {

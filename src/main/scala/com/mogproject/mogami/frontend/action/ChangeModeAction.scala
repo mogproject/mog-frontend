@@ -18,8 +18,9 @@ case class ChangeModeAction(newModeType: ModeType, confirmed: Boolean) extends P
 
       // (Play|View) -> Edit (ok)
       case (_, Some(gc), EditModeType) if gc.isInitialState || confirmed =>
-        val st = gc.getDisplayingState
-        Some(model.copy(newMode = EditMode(gc.game.gameInfo, st.turn, st.board, st.hand)))
+        Some(model.copy(
+          newMode = EditMode(gc.game.gameInfo, gc.getDisplayingTurn, gc.getDisplayingBoard, gc.getDisplayingHand))
+        )
 
       // (Play|View) -> Edit (warning)
       case (_, _, EditModeType) =>

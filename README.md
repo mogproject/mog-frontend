@@ -8,6 +8,38 @@ npm install jsdom
 make test
 ```
 
+### Local Testing
+
+- Terminal 1:
+
+```
+sbt
+> ~test:fastOptJS
+```
+
+- Terminal 2:
+
+```
+make server
+```
+
+- Terminal 3:
+
+```
+make local
+```
+
+### Mobile Testing
+
+```
+make publish-commit
+```
+
+- Merge changes into `master` branch on Git (a merge request required)
+- Access to `https://mogproject.github.io/index-debug.html?debug=true` on a mobile device
+
+
+
 # How to Make Piece Image Files
 
 ### Alphabetic Pieces

@@ -29,7 +29,13 @@ server:
 	python -m 'http.server' ${DEV_PORT}
 
 publish: test
-	sbt test:fullOptJS && ${COPY_PROD}
+	${SBT} test:fullOptJS && ${COPY_PROD}
 
-.PHONY: build test console clean local local_mobile server publish
+publish-commit: publish
+	git add . && git commit -m Publish && git push
+
+merge:
+	git checkout master && git pull && git checkout develop && git merge master && git push
+
+.PHONY: build test console clean local local_mobile server publish publish-commit
 

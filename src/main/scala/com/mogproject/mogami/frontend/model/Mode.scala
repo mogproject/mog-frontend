@@ -62,7 +62,10 @@ sealed abstract class Mode(val modeType: ModeType,
     case EditMode(_, _, b, h) => b != mode.getBoardPieces || h != mode.getHandPieces
     case _ =>
       (getGameControl, mode.getGameControl) match {
-        case (Some(a), Some(b)) => a.statusPosition == b.statusPosition + 1
+        case (Some(a), Some(b)) =>
+          a.statusPosition == b.statusPosition + 1 || (a.isIllegalMove
+            && a.displayPosition == a.lastDisplayPosition - 1
+            && a.displayPosition == b.displayPosition + 1)
         case _ => false
       }
   }
@@ -78,33 +81,28 @@ sealed abstract class Mode(val modeType: ModeType,
   }
 
   def getIndicators: Map[Player, BoardIndicator] = {
-    val (turn, gs) = this match {
-      case PlayMode(gc) => (gc.getDisplayingState.turn, gc.getDisplayingGameStatus)
-      case ViewMode(gc) => (gc.getDisplayingState.turn, gc.getDisplayingGameStatus)
-      case LiveMode(_, gc) => (gc.getDisplayingState.turn, gc.getDisplayingGameStatus)
-      case EditMode(_, t, _, _) => (t, GameStatus.Playing)
-    }
-    BoardIndicator.fromGameStatus(turn, gs)
+    val status = getGameControl.map(_.getDisplayingGameStatus).getOrElse(GameStatus.Playing)
+    BoardIndicator.fromGameStatus(getTurn, status)
   }
 
   def getTurn: Player = this match {
-    case PlayMode(gc) => gc.getDisplayingState.turn
-    case ViewMode(gc) => gc.getDisplayingState.turn
-    case LiveMode(_, gc) => gc.getDisplayingState.turn
+    case PlayMode(gc) => gc.getDisplayingTurn
+    case ViewMode(gc) => gc.getDisplayingTurn
+    case LiveMode(_, gc) => gc.getDisplayingTurn
     case EditMode(_, t, _, _) => t
   }
 
   def getBoardPieces: BoardType = this match {
-    case PlayMode(gc) => gc.getDisplayingState.board
-    case ViewMode(gc) => gc.getDisplayingState.board
-    case LiveMode(_, gc) => gc.getDisplayingState.board
+    case PlayMode(gc) => gc.getDisplayingBoard
+    case ViewMode(gc) => gc.getDisplayingBoard
+    case LiveMode(_, gc) => gc.getDisplayingBoard
     case EditMode(_, _, b, _) => b
   }
 
   def getHandPieces: HandType = this match {
-    case PlayMode(gc) => gc.getDisplayingState.hand
-    case ViewMode(gc) => gc.getDisplayingState.hand
-    case LiveMode(_, gc) => gc.getDisplayingState.hand
+    case PlayMode(gc) => gc.getDisplayingHand
+    case ViewMode(gc) => gc.getDisplayingHand
+    case LiveMode(_, gc) => gc.getDisplayingHand
     case EditMode(_, _, _, h) => h
   }
 

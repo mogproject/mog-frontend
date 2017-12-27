@@ -25,8 +25,8 @@ object BoardIndicator {
   def fromGameStatus(turn: Player, gameStatus: GameStatus): Map[Player, BoardIndicator] = {
     gameStatus match {
       case GameStatus.Playing => Map(turn -> IndicatorTurn)
-      case GameStatus.Mated | GameStatus.Resigned | GameStatus.TimedUp | GameStatus.IllegallyMoved => Map(turn -> IndicatorLose, !turn -> IndicatorWin)
-      case GameStatus.PerpetualCheck | GameStatus.Uchifuzume | GameStatus.Jishogi => Map(turn -> IndicatorWin, !turn -> IndicatorLose)
+      case GameStatus.Mated | GameStatus.Resigned | GameStatus.TimedUp => Map(turn -> IndicatorLose, !turn -> IndicatorWin)
+      case GameStatus.PerpetualCheck | GameStatus.Uchifuzume | GameStatus.Jishogi | GameStatus.IllegallyMoved => Map(turn -> IndicatorWin, !turn -> IndicatorLose)
       case GameStatus.Drawn => Map(BLACK -> IndicatorDraw, WHITE -> IndicatorDraw)
       case _ => Map.empty
     }
