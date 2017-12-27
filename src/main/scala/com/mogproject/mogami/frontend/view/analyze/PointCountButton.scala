@@ -14,12 +14,12 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class PointCountButton extends WebComponent with SAMObserver[BasePlaygroundModel] {
+class PointCountButton(isMobile: Boolean) extends WebComponent with SAMObserver[BasePlaygroundModel] {
 
   private[this] val countButton: SingleButton = SingleButton(
     Map(English -> "Count".render),
     clickAction = Some(() => PlaygroundSAM.doAction(CountPointAction)),
-    tooltip = Map(English -> "Count points for this position"),
+    tooltip = isMobile.fold(Map.empty, Map(English -> "Count points for this position")),
     isBlockButton = true
   )
 

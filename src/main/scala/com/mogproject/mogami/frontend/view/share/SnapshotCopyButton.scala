@@ -8,14 +8,18 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class SnapshotCopyButton extends CopyButtonLike {
+class SnapshotCopyButton(isMobile: Boolean) extends CopyButtonLike {
   override protected val ident = "snapshot-copy"
 
   override protected val labelString = "Snapshot URL"
 
   private[this] def getTargetValue: String = getValue
 
+  private[this] def isMobileOuter: Boolean = isMobile
+
   private[this] lazy val shortenButton = new ShortenButtonLike {
+    override def isMobile: Boolean = isMobileOuter
+
     override def target: String = getTargetValue
 
     override protected def ident: String = "snapshot-short"

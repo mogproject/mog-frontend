@@ -1,5 +1,6 @@
 package com.mogproject.mogami.frontend.view.analyze
 
+import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.Move
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.analyze.AnalyzeCheckmateAction
@@ -13,7 +14,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class CheckmateButton extends WebComponent {
+class CheckmateButton(isMobile: Boolean) extends WebComponent {
 
   private[this] final val DEFAULT_TIMEOUT = 5
 
@@ -27,7 +28,7 @@ class CheckmateButton extends WebComponent {
   private[this] lazy val analyzeButton: SingleButton = SingleButton(
     Map(English -> "Analyze".render),
     clickAction = Some(() => clickAction()),
-    tooltip = Map(English -> "Analyze this position for checkmate"),
+    tooltip = isMobile.fold(Map.empty, Map(English -> "Analyze this position for checkmate")),
     isBlockButton = true
   )
 

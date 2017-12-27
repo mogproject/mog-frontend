@@ -43,7 +43,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
   private[this] lazy val deleteBranchButton = SingleButton(
     Map(English -> isMobile.fold(span("Delete"), span(cls := "glyphicon glyphicon-trash")).render),
     clickAction = Some(() => PlaygroundSAM.doAction(AskDeleteBranchAction)),
-    tooltip = Map(English -> "Delete this branch"),
+    tooltip = isMobile.fold(Map.empty, Map(English -> "Delete this branch")),
     isBlockButton = true
   )
 
@@ -68,7 +68,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
         () => PlaygroundSAM.doAction(UpdateGameControlAction(_.changeDisplayBranch(branchNo).withNextDisplayPosition)),
         0
       )),
-    tooltip = Map(English -> branchNoToString(branchNo)),
+    tooltip = isMobile.fold(Map.empty, Map(English -> branchNoToString(branchNo))),
     tooltipPlacement = tooltipPlacement,
     isBlockButton = true,
     dismissModal = true
@@ -180,18 +180,18 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
     import ObserveFlag._
 
     /** Do not update if the menu dialog is hidden. */
-    if (!model.config.deviceType.isMobile || !model.menuDialogOpen) {
+    if (!model.config.deviceType.isMobile || model.menuDialogOpen) {
       model.mode.getGameControl match {
         case Some(gc) =>
           show()
 
-          if (isFlagUpdated(flag, MODE_TYPE | GAME_BRANCH | GAME_POSITION | CONF_RCD_LANG)) {
+          if (model.menuDialogOpen || isFlagUpdated(flag, MODE_TYPE | GAME_BRANCH | GAME_POSITION | CONF_RCD_LANG)) {
             updateButtons(gc.game, gc.gamePosition, model.config.recordLang)
           }
-          if (isFlagUpdated(flag, CONF_NEW_BRANCH)) {
+          if (model.menuDialogOpen || isFlagUpdated(flag, CONF_NEW_BRANCH)) {
             newBranchButton.updateValue(model.config.newBranchMode)
           }
-          if (isFlagUpdated(flag, MODE_TYPE)) {
+          if (model.menuDialogOpen || isFlagUpdated(flag, MODE_TYPE)) {
             if (model.mode.modeType == PlayModeType) showEditMenu() else hideEditMenu()
           }
 

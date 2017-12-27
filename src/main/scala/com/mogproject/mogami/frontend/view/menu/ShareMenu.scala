@@ -11,17 +11,18 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class ShareMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
+class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
+
   override lazy val ident: String = "Share"
   override lazy val title: String = ident
   override lazy val icon: String = "share"
   override lazy val visibleMode = Set(PlayModeType, ViewModeType)
 
-  lazy val recordCopyButton = new RecordCopyButton
-  lazy val snapshotCopyButton = new SnapshotCopyButton
+  lazy val recordCopyButton = new RecordCopyButton(isMobile)
+  lazy val snapshotCopyButton = new SnapshotCopyButton(isMobile)
   lazy val imageLinkButton = new ImageLinkButton
   lazy val sfenStringCopyButton = new SfenStringCopyButton
-  lazy val notesViewButton = new NotesViewButton
+  lazy val notesViewButton = new NotesViewButton(isMobile)
 
   override lazy val content: JsDom.TypedTag[Div] = div(
     recordCopyButton.element,

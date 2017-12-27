@@ -10,13 +10,13 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class ManageMenu extends AccordionMenu {
+class ManageMenu(isMobile: Boolean) extends AccordionMenu {
   override lazy val ident: String = "Manage"
   override lazy val title: String = ident
   override lazy val icon: String = "file"
   override lazy val visibleMode = Set(PlayModeType, ViewModeType)
 
-  lazy val saveLoadButton = new SaveLoadButton
+  lazy val saveLoadButton = new SaveLoadButton(isMobile)
 
   override lazy val content: JsDom.TypedTag[Div] = div(saveLoadButton.element)
 }
