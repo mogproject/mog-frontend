@@ -5,15 +5,15 @@ import com.mogproject.mogami.core.Player.BLACK
 import com.mogproject.mogami.core.Ptype.PAWN
 import com.mogproject.mogami.core.{Piece, Square}
 import com.mogproject.mogami.core.game.{Branch, Game}
-import com.mogproject.mogami.core.move.{IllegalMove, Move, MoveBuilderCsa}
-import com.mogproject.mogami.core.state.StateCache.Implicits.DefaultStateCache
+import com.mogproject.mogami.core.move.{IllegalMove, MoveBuilderCsa}
+import com.mogproject.mogami.core.state.StateCache
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import org.scalatest.{FlatSpec, MustMatchers}
 
 
 class ModeSpec extends FlatSpec with MustMatchers with GeneratorDrivenPropertyChecks {
 
-  "Mode#getBoardPieces" must "work with illegal states" in {
+  "Mode#getBoardPieces" must "work with illegal states" in StateCache.withCache { implicit cache =>
     val tr = Branch()
       .makeMove(MoveBuilderCsa.parseCsaString("+7776FU")).get
       .makeMove(MoveBuilderCsa.parseCsaString("-8384FU")).get
@@ -28,7 +28,7 @@ class ModeSpec extends FlatSpec with MustMatchers with GeneratorDrivenPropertyCh
     PlayMode(GameControl(g, 0, 6)).getBoardPieces.get(Square(2, 6)) mustBe Some(Piece(BLACK, PAWN))
   }
 
-  "Mode#getHandPieces" must "work with illegal states" in {
+  "Mode#getHandPieces" must "work with illegal states" in StateCache.withCache { implicit cache =>
     val tr = Branch()
       .makeMove(MoveBuilderCsa.parseCsaString("+7776FU")).get
       .makeMove(MoveBuilderCsa.parseCsaString("-8384FU")).get

@@ -3,7 +3,7 @@ package com.mogproject.mogami.frontend.action
 import com.mogproject.mogami._
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model._
-import com.mogproject.mogami.core.state.StateCache.Implicits._
+import com.mogproject.mogami.core.state.StateCache.Implicits.DefaultStateCache
 
 import scala.util.{Failure, Success, Try}
 

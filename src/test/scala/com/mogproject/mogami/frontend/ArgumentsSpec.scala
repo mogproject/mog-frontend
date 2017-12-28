@@ -1,6 +1,5 @@
 package com.mogproject.mogami.frontend
 
-import com.mogproject.mogami.core.state.StateCache.Implicits._
 import org.scalatest.prop.GeneratorDrivenPropertyChecks
 import org.scalatest.{FlatSpec, MustMatchers}
 
