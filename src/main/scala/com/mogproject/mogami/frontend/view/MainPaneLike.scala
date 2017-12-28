@@ -259,7 +259,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     if (check(MODE_EDIT)) updateSVGArea(mode.boxAvailable.fold(_.showBox(), _.hideBox()))
 
     // 8. Board/Hand/Box Pieces
-    if (check(GAME_BRANCH | GAME_POSITION | CONF_PIECE_FACE)) {
+    if (check(GAME_BRANCH | GAME_POSITION | CONF_PIECE_FACE | MODE_EDIT)) {
       // use image cache
       downloadImages(Ptype.constructor.map(model.config.pieceFace.getImagePath), () =>
         updateSVGArea { area =>

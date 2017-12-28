@@ -1,10 +1,8 @@
 package com.mogproject.mogami.frontend.view.event
 
-import com.mogproject.mogami.frontend.BootstrapJQuery
 import org.scalajs.dom
-import org.scalajs.dom.raw.{HTMLElement, UIEvent}
+import org.scalajs.dom.raw.UIEvent
 import org.scalajs.dom.{Element, MouseEvent, TouchEvent}
-import org.scalajs.jquery.JQuery
 
 /**
   * todo: refactor with SVGAreaEventHandler
@@ -13,11 +11,9 @@ trait EventManageable {
 
   // constants
   protected val holdInterval: Double = 1000
-  private[this] val touchEndInterval: Double = 350 // ms
 
   // variables
   private[this] var activeHoldEvent: Option[Int] = None
-  private[this] var lastTouchEnd: Double = -touchEndInterval
 
   lazy val hasTouchEvent: Boolean = dom.window.hasOwnProperty("ontouchstart")
 
@@ -30,7 +26,7 @@ trait EventManageable {
     }
   }
 
-  private[this] def isValidMouseEvent(evt: MouseEvent): Boolean = evt.button == 0 && lastTouchEnd < evt.timeStamp - touchEndInterval
+  private[this] def isValidMouseEvent(evt: MouseEvent): Boolean = evt.button == 0
 
   private[this] def nullEvent = withCommonWrapper(preventDefault = false) { _ => }
 
@@ -46,8 +42,7 @@ trait EventManageable {
     * Register 'touchend' event
     */
   def registerTouchEnd(elem: Element, f: TouchEvent => Unit): Unit = if (hasTouchEvent) {
-    val wrapper = withCommonWrapper[TouchEvent]() { evt => lastTouchEnd = evt.timeStamp; f(evt) }
-    elem.addEventListener("touchend", wrapper, useCapture = false)
+    elem.addEventListener("touchend", withCommonWrapper[TouchEvent]()(f), useCapture = false)
   }
 
   /**
@@ -108,13 +103,6 @@ trait EventManageable {
       registerMouseOut(elem)
     }
   }
-
-//  def setModalClickEvent(elem: Element, modal: JQuery, f: () => Unit): Unit = {
-//    setClickEvent(elem, () => {
-//      f()
-////      modal.asInstanceOf[BootstrapJQuery].modal("hide")
-//    })
-//  }
 
   //
   // mouseHoldDown
