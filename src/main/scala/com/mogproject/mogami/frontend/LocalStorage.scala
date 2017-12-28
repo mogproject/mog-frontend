@@ -8,7 +8,7 @@ import scala.util.Try
 /**
   * Manages browser's Local Storage
   */
-case class LocalStorage(pieceWidth: Option[Int] = None,
+case class LocalStorage(pieceWidth: Option[Option[Int]] = None,
                         layout: Option[SVGAreaLayout] = None,
                         pieceFace: Option[PieceFace] = None,
                         doubleBoardMode: Option[Boolean] = None,
@@ -17,7 +17,7 @@ case class LocalStorage(pieceWidth: Option[Int] = None,
                         messageLang: Option[Language] = None,
                         recordLang: Option[Language] = None) {
   def save(): Unit = {
-    pieceWidth match {
+    pieceWidth.foreach {
       case Some(n) => setItem("sz", n)
       case None => clearItem("sz")
     }
@@ -43,7 +43,7 @@ case class LocalStorage(pieceWidth: Option[Int] = None,
 object LocalStorage {
   def load(): LocalStorage = {
     val keys: Seq[(String, String => LocalStorage => LocalStorage)] = Seq(
-      ("sz", s => ls => ls.copy(pieceWidth = Try(s.toInt).toOption)),
+      ("sz", s => ls => ls.copy(pieceWidth = Some(Try(s.toInt).toOption))),
       ("layout", s => ls => ls.copy(layout = parseLayout(s))),
       ("p", s => ls => ls.copy(pieceFace = PieceFace.parseString(s))),
       ("double", s => ls => ls.copy(doubleBoardMode = parseBooleanString(s))),

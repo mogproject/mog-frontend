@@ -59,7 +59,7 @@ case class BasePlaygroundConfiguration(layout: SVGAreaLayout = SVGStandardLayout
   def loadLocalStorage(): BasePlaygroundConfiguration = {
     val ls = LocalStorage.load()
     this.copy(
-      pieceWidth = ls.pieceWidth,
+      pieceWidth = ls.pieceWidth.getOrElse(pieceWidth),
       layout = ls.layout.getOrElse(layout),
       pieceFace = ls.pieceFace.getOrElse(pieceFace),
       flipType = ls.doubleBoardMode.contains(true).fold(DoubleBoard, flipType),
