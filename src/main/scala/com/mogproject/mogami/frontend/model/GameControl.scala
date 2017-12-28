@@ -5,6 +5,7 @@ import com.mogproject.mogami.core.state.State.PromotionFlag
 import com.mogproject.mogami.frontend.model.io.{CSA, KI2, KIF, RecordFormat}
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.{GamePosition, _}
+import org.scalajs.dom
 
 /**
   * Manages a game and its display position.
@@ -70,7 +71,7 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
   //
   // getters
   //
-  def getDisplayingState: State = game.getState(gamePosition).get
+  def getDisplayingState: State = game.getState(gamePosition).getOrElse(throw new RuntimeException(s"Failed to get state: ${gamePosition}"))
 
   def isIllegalMove: Boolean = getDisplayingIllegalMove.isDefined && isAdditionalPosition
 

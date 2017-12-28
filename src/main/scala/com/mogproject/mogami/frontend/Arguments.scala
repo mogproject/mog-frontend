@@ -3,7 +3,7 @@ package com.mogproject.mogami.frontend
 import com.mogproject.mogami._
 import com.mogproject.mogami.core.game.Game.{HistoryHash, Position}
 import com.mogproject.mogami.util.Implicits._
-import com.mogproject.mogami.core.state.StateCache.Implicits._
+import com.mogproject.mogami.core.state.StateCache.Implicits.DefaultStateCache
 import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipEnabled}
 import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.frontend.view.board.{SVGCompactLayout, SVGStandardLayout, SVGWideLayout}

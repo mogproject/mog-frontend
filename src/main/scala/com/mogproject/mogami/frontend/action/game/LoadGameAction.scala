@@ -13,6 +13,16 @@ case class LoadGameAction(game: Game) extends PlaygroundAction {
     // replace empty player names with None's
     val newGame = game.copy(newGameInfo = PlayerUtil.normalizeGameInfo(game.gameInfo))
 
+    // purge unused state hashes
+    if (model.config.isDebug) printStateCacheInfo(game, "Refreshing state hashes. Before: numKeys=")
+    val validHashes = (Set(game) ++ model.mode.getGameControl.map(_.game)).flatMap(_.getStateHashSet)
+    game.stateCache.refresh(validHashes)
+    if (model.config.isDebug) printStateCacheInfo(game, "Refreshed state hashes. After: numKeys=")
+
     Some(model.copy(newMode = ViewMode(GameControl(newGame))))
+  }
+
+  private[this] def printStateCacheInfo(game: Game, message: String):Unit = {
+    println(message + game.stateCache.numKeys)
   }
 }

@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend
 
 import com.mogproject.mogami._
 import com.mogproject.mogami.util.Implicits._
-import com.mogproject.mogami.core.state.StateCache.Implicits._
+import com.mogproject.mogami.core.state.StateCache.Implicits.DefaultStateCache
 import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.frontend.state.TestState
 import com.mogproject.mogami.frontend.view.TestView
