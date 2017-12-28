@@ -53,6 +53,7 @@ class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePl
       model.mode.getGameControl.foreach { gc =>
         val builder = ArgumentsBuilder(gc.game, gc.gamePosition, model.config)
         recordCopyButton.updateValue(builder.toRecordUrl)
+        if (builder.commentOmitted) recordCopyButton.showWarning() else recordCopyButton.hideWarning()
         snapshotCopyButton.updateValue(builder.toSnapshotUrl)
         imageLinkButton.updateValue(builder.toImageLinkUrl)
         sfenStringCopyButton.updateValue(gc.getDisplayingState.toSfenString)
