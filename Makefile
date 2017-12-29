@@ -5,7 +5,8 @@ PROD_RSC = docs
 TEST_ASS = assets
 PROD_ASS = ${PROD_RSC}/assets
 DEV_PORT = 8001
-COPY_PROD = cp -f target/scala-2.12/mog-frontend-test-opt.js ${PROD_ASS}/js/ && cp -rf ${TEST_ASS}/* ${PROD_ASS}/
+TARGET = target/scala-2.12/${APP_NAME}-test-
+COPY_PROD = cp -f ${TARGET}opt.js ${TARGET}opt.js.map  ${PROD_ASS}/js/ && cp -rf ${TEST_ASS}/* ${PROD_ASS}/
 
 build:
 	${SBT} test:fastOptJS
