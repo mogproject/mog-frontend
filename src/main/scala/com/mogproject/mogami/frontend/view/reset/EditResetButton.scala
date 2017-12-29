@@ -12,8 +12,12 @@ import scalatags.JsDom.all._
 /**
   * state, English label, Japanese label
   */
-class EditResetButton extends WebComponent {
-  private[this] val keys = Seq(
+class EditResetButton extends WebComponent with SAMObserver[BasePlaygroundModel] {
+
+  private[this] var initialized: Boolean = false
+
+  /** This can be costly, so delay the initialization */
+  private[this] lazy val keys = Seq(
     (State.HIRATE, "Even", "平手"),
     (State.MATING_BLACK, "Mate (Black)", "詰将棋 (先手)"),
     (State.MATING_WHITE, "Mate (White)", "詰将棋 (後手)"),
@@ -32,7 +36,7 @@ class EditResetButton extends WebComponent {
     (State.HANDICAP_NAKED_KING, "Naked King", "裸玉")
   )
 
-  private[this] val buttons = keys.map { case (st, en, ja) =>
+  private[this] lazy val buttons = keys.map { case (st, en, ja) =>
     SingleButton(
       Map(English -> en.render, Japanese -> ja.render),
       clickAction = Some(() => doAction(EditResetAction(st))),
@@ -41,11 +45,20 @@ class EditResetButton extends WebComponent {
     )
   }
 
-  override val element: Div = div(
-    cls := "row", buttons.map(e => div(cls := "col-xs-6 col-sm-4", e.element))
-  ).render
+  override lazy val element: Div = div(cls := "row").render
 
-  def handleUpdate(model: BasePlaygroundModel, flags: Int): Unit = {
-    if ((flags & 1) != 0) buttons.foreach(_.updateLabel(model.config.messageLang))
+  //
+  // Observer
+  //
+  override val samObserveMask: Int = ObserveFlag.MODE_EDIT | ObserveFlag.CONF_MSG_LANG
+
+  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+    if (model.mode.isEditMode) {
+      if (!initialized) {
+        buttons.foreach(e => element.appendChild(div(cls := "col-xs-6 col-sm-4", e.element).render))
+        initialized = true
+      }
+      buttons.foreach(_.updateLabel(model.config.messageLang))
+    }
   }
 }
