@@ -4,6 +4,8 @@ import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.Move
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.analyze.AnalyzeCheckmateAction
+import com.mogproject.mogami.frontend.action.board.AddMovesAction
+import com.mogproject.mogami.frontend.action.dialog.MenuDialogAction
 import com.mogproject.mogami.frontend.view.button.SingleButton
 import org.scalajs.dom
 import org.scalajs.dom.html.{Div, Input}
@@ -36,6 +38,17 @@ class CheckmateButton(isMobile: Boolean) extends WebComponent {
     cls := "col-xs-8 col-sm-9 text-muted",
     marginTop := 6
   ).render
+
+  private[this] def generateAddMovesButton(moves: Seq[Move]): SingleButton = SingleButton(
+    Map(English -> "Add Moves to Game".render, Japanese -> "手順を棋譜に追記".render),
+    clickAction = Some { () =>
+      doAction(AddMovesAction(moves))
+      displayCheckmateMessage("Moves are added.")
+      doAction(MenuDialogAction(false), 1000) // close menu modal after 1 sec (mobile)
+    },
+    tooltip = isMobile.fold(Map.empty, Map(English -> "Add this solution to the current game recocrd")),
+    isBlockButton = true
+  )
 
   private[this] def validateTimeout(): Int = {
     val n = Try(timeoutInput.value.toInt).getOrElse(DEFAULT_TIMEOUT)
@@ -72,7 +85,7 @@ class CheckmateButton(isMobile: Boolean) extends WebComponent {
   private[this] def clickAction(): Unit = {
     disableAnalyzeButton()
     displayCheckmateMessage("Analyzing...")
-    dom.window.setTimeout(() => PlaygroundSAM.doAction(AnalyzeCheckmateAction(validateTimeout())), 100)
+    dom.window.setTimeout(() => doAction(AnalyzeCheckmateAction(validateTimeout())), 100)
   }
 
   def displayResult(result: Option[Seq[Move]], recordLang: Language): Unit = {
@@ -87,6 +100,7 @@ class CheckmateButton(isMobile: Boolean) extends WebComponent {
           case English => m.toWesternNotationString
         }))
         displayCheckmateMessage(s"Found a checkmate:\n${s.mkString(" ")}")
+        solverMessage.appendChild(generateAddMovesButton(moves).element)
     }
     dom.window.setTimeout(() => enableAnalyzeButton(), 500)
   }
