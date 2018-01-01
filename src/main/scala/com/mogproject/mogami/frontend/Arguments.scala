@@ -4,7 +4,7 @@ import com.mogproject.mogami._
 import com.mogproject.mogami.core.game.Game.{HistoryHash, Position}
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.core.state.StateCache.Implicits.DefaultStateCache
-import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipEnabled}
+import com.mogproject.mogami.frontend.model.board._
 import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.frontend.view.board.{SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
 
@@ -102,6 +102,7 @@ case class Arguments(sfen: Option[String] = None,
       }
       case ("bn" :: s :: Nil) :: xs => f(sofar.copy(gameInfo = sofar.gameInfo.updated('blackName, s)), xs)
       case ("wn" :: s :: Nil) :: xs => f(sofar.copy(gameInfo = sofar.gameInfo.updated('whiteName, s)), xs)
+
       case ("dev" :: s :: Nil) :: xs => s.toLowerCase match {
         case "true" => f(sofar.copy(config = sofar.config.copy(isDev = true)), xs)
         case "false" => f(sofar.copy(config = sofar.config.copy(isDev = false)), xs)
@@ -137,13 +138,16 @@ case class Arguments(sfen: Option[String] = None,
 
 }
 
-case class ArgumentsBuilder(game: Game,
-                            gamePosition: GamePosition = GamePosition(0, 0),
+case class ArgumentsBuilder(gameControl: GameControl,
                             config: BasePlaygroundConfiguration = BasePlaygroundConfiguration()) {
+
+  private[this] lazy val displayingState: State = gameControl.getDisplayingState
 
   private[this] def toGamePosition(branchNo: BranchNo, pos: Position) = (branchNo == 0).fold("", branchNo + ".") + pos
 
-  private[this] lazy val instantGame = Game(Branch(game.getState(gamePosition).get))
+  private[this] lazy val gameParams: Seq[(String, String)] = Seq("u" -> gameControl.game.toUsenString)
+
+  private[this] lazy val instantGameParams: Seq[(String, String)] = Seq("u" -> Game(Branch(displayingState)).toUsenString)
 
   lazy val fullRecordUrl: String = createUrl(recordParams(createFullUrl = true))
 
@@ -157,21 +161,19 @@ case class ArgumentsBuilder(game: Game,
   }
 
   def toSnapshotUrl: String = {
-    createUrl(Seq("u" -> instantGame.toUsenString) ++ game.getComment(gamePosition).map("c0" -> _) ++ gameInfoParams)
+    createUrl(instantGameParams ++ gameControl.getComment.map("c0" -> _) ++ gameInfoParams)
   }
 
   def toImageLinkUrl: String = {
     createUrl(imageActionParams ++ gameParams ++ gameInfoParams ++ positionParams)
   }
 
-  private[this] lazy val gameParams: Seq[(String, String)] = Seq(("u", game.toUsenString))
-
   private[this] lazy val commentParams: Seq[(String, String)] = {
     val comments = mutable.HashMap[HistoryHash, String]()
-    comments ++= game.comments
+    comments ++= gameControl.game.comments
 
     for {
-      (br, n) <- (game.trunk, -1) +: game.branches.zipWithIndex
+      (br, n) <- (gameControl.game.trunk, -1) +: gameControl.game.branches.zipWithIndex
       (h, i) <- br.historyHash.zipWithIndex
       c <- comments.get(h)
     } yield {
@@ -184,12 +186,14 @@ case class ArgumentsBuilder(game: Game,
 
   private[this] def gameInfoParams: Seq[(String, String)] = {
     val params = List(("bn", 'blackName), ("wn", 'whiteName))
-    params.flatMap { case (q, k) => game.gameInfo.tags.get(k).map((q, _)) }
+    params.flatMap { case (q, k) => gameControl.game.gameInfo.tags.get(k).map((q, _)) }
   }
 
   private[this] def positionParams: Seq[(String, String)] = {
-    val prefix = (gamePosition.branch == 0).fold("", s"${gamePosition.branch}.")
-    (gamePosition.branch != 0 || gamePosition.position != game.trunk.offset).option(("move", s"${prefix}${gamePosition.position}")).toSeq
+    val prefix = (gameControl.gamePosition.branch == 0).fold("", s"${gameControl.gamePosition.branch}.")
+    (gameControl.gamePosition.branch != 0 || gameControl.gamePosition.position != gameControl.game.trunk.offset).option(
+      ("move", s"${prefix}${gameControl.displayPosition}")
+    ).toSeq
   }
 
   private[this] def recordParams(createFullUrl: Boolean = false): Seq[(String, String)] =
