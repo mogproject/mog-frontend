@@ -13,7 +13,7 @@ trait FooterLike extends WebComponent {
   override lazy val element: Div = div(
     hr(),
     small(p(cls := "footer-text",
-      "Shogi Playground © 2017 ",
+      s"Shogi Playground © 2017-${FrontendSettings.currentYear} ",
       a(href := FrontendSettings.url.authorSiteUrl, target := "_blank", "mogproject"),
       " - ",
       a(href := FrontendSettings.url.donationUrl, target := "_blank", "Donate me"),
