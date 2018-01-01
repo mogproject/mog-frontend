@@ -5,6 +5,8 @@ package com.mogproject.mogami.frontend
   */
 object FrontendSettings {
 
+  val currentYear = 2018
+
   object url {
     val baseUrl = "https://play.mogproject.com/"
     val authorSiteUrl = "https://mogproject.com"
