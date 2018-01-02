@@ -60,8 +60,8 @@ trait BasePlaygroundView extends SAMView {
   //
   // Dialogs
   //
-  def askPromote(messageLang: Language, pieceFace: PieceFace, pieceSize: Coord, rawMove: Move, rotate: Boolean): Unit = {
-    PromotionDialog(messageLang, pieceFace, pieceSize, rawMove, rotate).show()
+  def askPromote(messageLang: Language, pieceFace: PieceFace, rawMove: Move, rotate: Boolean): Unit = {
+    PromotionDialog(messageLang, pieceFace, rawMove, rotate).show()
   }
 
   def showGameInfoDialog(messageLang: Language, gameInfo: GameInfo, isHandicapped: Boolean): Unit = {

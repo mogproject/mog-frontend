@@ -17,7 +17,7 @@ import scalatags.JsDom.all._
   */
 class EditHelpArea extends WebComponent with SAMObserver[BasePlaygroundModel] {
 
-  final val ATTRIBUTE_BUTTON_HEIGHT: Int = 60
+  final val ATTRIBUTE_BUTTON_HEIGHT: Int = 64
 
   lazy val attributeArea: Div = div().render
 
@@ -50,7 +50,7 @@ class EditHelpArea extends WebComponent with SAMObserver[BasePlaygroundModel] {
 
   def renderAttributes(ptype: Ptype, pieceFace: PieceFace): Unit = {
     def f(promoted: Boolean, rotated: Boolean) = {
-      PieceFaceButton(pieceFace, Coord(1, 1), promoted.fold(ptype.promoted, ptype.demoted), rotated, height := ATTRIBUTE_BUTTON_HEIGHT.px, onclick := { () => doAction(EditAttributeAction(promoted, rotated)) })
+      PieceFaceButton(pieceFace, promoted.fold(ptype.promoted, ptype.demoted), rotated, height := ATTRIBUTE_BUTTON_HEIGHT.px, onclick := { () => doAction(EditAttributeAction(promoted, rotated)) })
     }
 
     def g(rotated: Boolean) = {

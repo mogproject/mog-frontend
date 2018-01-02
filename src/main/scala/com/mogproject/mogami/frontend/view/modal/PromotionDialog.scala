@@ -13,7 +13,6 @@ import scalatags.JsDom.all._
   */
 case class PromotionDialog(messageLang: Language,
                            pieceFace: PieceFace,
-                           pieceSize: Coord,
                            rawMove: Move,
                            rotate: Boolean
                           ) extends ModalLike {
@@ -21,8 +20,8 @@ case class PromotionDialog(messageLang: Language,
   // promotion specific
   //
   private[this] val BUTTON_HEIGHT: Int = 80
-  private[this] val buttonUnpromote = PieceFaceButton(pieceFace, pieceSize, rawMove.oldPtype, rotate, height := BUTTON_HEIGHT.px, dismiss, onclick := {() => PlaygroundSAM.doAction(MakeMoveAction(rawMove))})
-  private[this] val buttonPromote = PieceFaceButton(pieceFace, pieceSize, rawMove.oldPtype.promoted, rotate, height := BUTTON_HEIGHT.px, dismiss, onclick := {() => PlaygroundSAM.doAction(MakeMoveAction(rawMove.copy(newPtype = rawMove.newPtype.promoted, promote = true)))})
+  private[this] val buttonUnpromote = PieceFaceButton(pieceFace, rawMove.oldPtype, rotate, height := BUTTON_HEIGHT.px, dismiss, onclick := {() => PlaygroundSAM.doAction(MakeMoveAction(rawMove))})
+  private[this] val buttonPromote = PieceFaceButton(pieceFace, rawMove.oldPtype.promoted, rotate, height := BUTTON_HEIGHT.px, dismiss, onclick := {() => PlaygroundSAM.doAction(MakeMoveAction(rawMove.copy(newPtype = rawMove.newPtype.promoted, promote = true)))})
 
   //
   // modal traits
