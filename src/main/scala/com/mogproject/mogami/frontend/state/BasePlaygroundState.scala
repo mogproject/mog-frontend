@@ -33,7 +33,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
         newModel.mode.getGameControl.foreach { gc => view.website.manageMenu.saveLoadButton.renderRecord(gc.getRecord(format)) }
       case HandleDialogMessage(dialog, open) => dialog match {
         case PromotionDialog(rawMove, rotate) =>
-          view.askPromote(newModel.config.messageLang, newModel.config.pieceFace, newModel.config.layout.mediumPiece, rawMove, rotate)
+          view.askPromote(newModel.config.messageLang, newModel.config.pieceFace, rawMove, rotate)
         case GameInfoDialog =>
           newModel.mode.getGameControl.foreach { gc => view.showGameInfoDialog(newModel.config.messageLang, gc.game.gameInfo, gc.isHandicapped) }
         case EditWarningDialog =>

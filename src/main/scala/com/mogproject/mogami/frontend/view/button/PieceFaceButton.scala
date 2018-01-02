@@ -2,6 +2,7 @@ package com.mogproject.mogami.frontend.view.button
 
 import com.mogproject.mogami.Ptype
 import com.mogproject.mogami.frontend._
+import com.mogproject.mogami.frontend.view.board.SVGStandardLayout
 import org.scalajs.dom.Element
 
 import scalatags.JsDom.{Modifier, svgAttrs, svgTags}
@@ -10,7 +11,10 @@ import scalatags.JsDom.all._
 /**
   * Piece face button
   */
-case class PieceFaceButton(pieceFace: PieceFace, pieceSize: Coord, ptype: Ptype, rotated: Boolean, modifier: Modifier*) extends WebComponent {
+case class PieceFaceButton(pieceFace: PieceFace, ptype: Ptype, rotated: Boolean, modifier: Modifier*) extends WebComponent {
+
+  final val pieceSize = SVGStandardLayout.mediumPiece
+
   override lazy val element: Element = button(
     tpe := "button",
     cls := "btn btn-default btn-block",
