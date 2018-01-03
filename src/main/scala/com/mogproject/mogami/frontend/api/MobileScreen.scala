@@ -1,7 +1,5 @@
 package com.mogproject.mogami.frontend.api
 
-import org.scalajs.dom
-
 import scala.scalajs.js
 import scala.scalajs.js.UndefOr
 import scala.scalajs.js.annotation.JSGlobal
@@ -25,16 +23,4 @@ sealed class MobileScreen extends js.Object {
 sealed class Orientation extends js.Object {
   @js.native
   def angle: UndefOr[Int] = js.native
-}
-
-object MobileScreen {
-  private[this] def getAngle1: UndefOr[Int] = dom.window.asInstanceOf[MobileWindow].orientation
-
-  private[this] def getAngle2: UndefOr[Int] = dom.window.screen.asInstanceOf[MobileScreen].orientation.flatMap(_.angle)
-
-  /**
-    *
-    * @return true if the orientation is the landscape mode, false if the portrait mode
-    */
-  def isLandscape: Boolean = math.abs(getAngle1.getOrElse(getAngle2.getOrElse(0))) == 90
 }
