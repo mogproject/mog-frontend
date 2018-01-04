@@ -14,7 +14,7 @@ import scalatags.JsDom.all._
 class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
 
   override lazy val ident: String = "Share"
-  override lazy val title: String = ident
+  override lazy val titleLabel: Map[Language, String] = Map(English -> ident, Japanese -> "シェア")
   override lazy val icon: String = "share"
   override lazy val visibleMode = Set(PlayModeType, ViewModeType)
 

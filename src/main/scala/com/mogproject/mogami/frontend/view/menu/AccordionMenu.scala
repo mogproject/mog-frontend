@@ -2,6 +2,7 @@ package com.mogproject.mogami.frontend.view.menu
 
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.Observable
+import com.mogproject.mogami.frontend.view.button.MultiLingualLabel
 import org.scalajs.dom.html.Div
 import com.mogproject.mogami.util.Implicits._
 
@@ -17,7 +18,7 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
 
   def ident: String
 
-  def title: String
+  def titleLabel: Map[Language, String]
 
   def icon: String
 
@@ -40,13 +41,13 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
     )
   ).render
 
-  private[this] val titleElem = span().render
+  private[this] val titleElem = MultiLingualLabel(span(paddingLeft := 20.px).render, titleLabel)
 
   private[this] val titleElemHeading = h4(cls := "panel-title",
     span(
       cls := "accordion-toggle",
       glyph,
-      titleElem
+      titleElem.elem
     )
   ).render
 
@@ -88,14 +89,12 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
   }
 
   def collapseTitle(): Unit = {
-    titleElem.style.paddingLeft = 0.px
-    titleElem.innerHTML = ""
+    titleElem.elem.style.display = display.none.v
     element.setAttribute("data-original-title", (ident == "EditHelp").fold("Help", ident))
   }
 
   def expandTitle(): Unit = {
-    titleElem.style.paddingLeft = 20.px
-    titleElem.innerHTML = " " + title
+    titleElem.elem.style.display = display.inline.v
     element.removeAttribute("data-original-title")
   }
 
