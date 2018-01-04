@@ -1,6 +1,5 @@
 package com.mogproject.mogami.frontend.view.sidebar
 
-import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.branch.BranchArea
 import com.mogproject.mogami.frontend.view.control.{ControlBar, ControlBarType}
@@ -65,14 +64,20 @@ class SideBarLeft extends SideBarLike with SAMObserver[BasePlaygroundModel] {
   //
   // Observer
   //
-  override val samObserveMask: Int = ObserveFlag.MODE_EDIT
+  override val samObserveMask: Int = ObserveFlag.MODE_EDIT | ObserveFlag.CONF_MSG_LANG
 
   override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
     if (model.mode.isEditMode) {
-      title.innerHTML = "Edit"
+      title.innerHTML = model.config.messageLang match {
+        case Japanese => "編集"
+        case _ => "Edit"
+      }
       editHelpArea.show()
     } else {
-      title.innerHTML = "Moves"
+      title.innerHTML = model.config.messageLang match {
+        case Japanese => "棋譜"
+        case _ => "Moves"
+      }
       editHelpArea.hide()
     }
   }

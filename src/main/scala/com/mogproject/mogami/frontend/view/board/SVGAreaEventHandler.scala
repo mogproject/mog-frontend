@@ -2,35 +2,13 @@ package com.mogproject.mogami.frontend.view.board
 
 import com.mogproject.mogami.frontend.action.board.BoardCursorEventAction
 import com.mogproject.mogami.frontend.model.board.cursor._
-import com.mogproject.mogami.frontend.sam.PlaygroundSAM
-import org.scalajs.dom
-import org.scalajs.dom.{MouseEvent, TouchEvent}
-import org.scalajs.dom.raw.HTMLElement
+import com.mogproject.mogami.frontend.view.event.{PointerHoldSensor, PointerMoveSensor}
 
 /**
   * Mouse/mobile event handler
   */
-trait SVGAreaEventHandler {
+trait SVGAreaEventHandler extends PointerMoveSensor with PointerHoldSensor {
   self: SVGArea =>
-
-  //
-  // Variables
-  //
-  // constants
-  protected val holdInterval: Double = 1000 // ms
-
-  // variables
-  private[this] var activeHoldEvent: Option[Int] = None
-
-  lazy val hasTouchEvent: Boolean = dom.window.hasOwnProperty("ontouchstart")
-
-  //
-  // Utility
-  //
-  def clearHoldEvent(): Unit = activeHoldEvent.foreach { handle =>
-    dom.window.clearInterval(handle)
-    activeHoldEvent = None
-  }
 
   /**
     * Convert Mouse position to Cursor
@@ -43,76 +21,14 @@ trait SVGAreaEventHandler {
     Seq(board, hand, player, box).toStream.flatMap(t => t.clientPos2Cursor(clientX, clientY)).headOption
   }
 
-  private[this] def isValidMouseEvent(evt: MouseEvent): Boolean = evt.button == 0
+  override protected def pointerMoveAction(clientX: Double, clientY: Double): Unit = doAction(BoardCursorEventAction(MouseMoveEvent(areaId, getCursor(clientX, clientY))))
 
-  private[this] def isValidTouchEvent(evt: TouchEvent): Boolean = evt.changedTouches.length == 1
+  override protected def pointerDownAction(clientX: Double, clientY: Double): Unit = doAction(BoardCursorEventAction(MouseDownEvent(areaId, getCursor(clientX, clientY))))
 
-  private[this] def registerHoldEvent(): Unit = {
-    clearHoldEvent() // prevent double registrations
-    activeHoldEvent = Some(dom.window.setInterval(() => PlaygroundSAM.doAction(BoardCursorEventAction(MouseHoldEvent)), holdInterval))
-  }
+  override protected def pointerUpAction(clientX: Double, clientY: Double): Unit = doAction(BoardCursorEventAction(MouseUpEvent(getCursor(clientX, clientY))))
 
-  //
-  // Event handlers
-  //
-  private[this] def mouseMove(evt: MouseEvent): Unit = {
-    evt.preventDefault()
-    PlaygroundSAM.doAction(BoardCursorEventAction(MouseMoveEvent(areaId, getCursor(evt.clientX, evt.clientY))))
-  }
-
-  private[this] def mouseDown(evt: MouseEvent): Unit = if (isValidMouseEvent(evt)) {
-    evt.preventDefault()
-    PlaygroundSAM.doAction(BoardCursorEventAction(MouseDownEvent(areaId, getCursor(evt.clientX, evt.clientY))))
-    registerHoldEvent()
-  }
-
-  private[this] def mouseUp(evt: MouseEvent): Unit = if (isValidMouseEvent(evt)) {
-    evt.preventDefault()
-    PlaygroundSAM.doAction(BoardCursorEventAction(MouseUpEvent(getCursor(evt.clientX, evt.clientY))))
-    clearHoldEvent()
-  }
-
-  private[this] def mouseOut(evt: MouseEvent): Unit = {
-    evt.preventDefault()
-
-    // check if the cursor is inside the board
-    if (!getCursor(evt.clientX, evt.clientY).exists(_.isBoard)) clearHoldEvent()
-  }
-
-  private[this] def touchMove(evt: TouchEvent): Unit = if (isValidTouchEvent(evt)) {
-    evt.preventDefault()
-    PlaygroundSAM.doAction(BoardCursorEventAction(MouseMoveEvent(areaId, getCursor(evt.changedTouches(0).clientX, evt.changedTouches(0).clientY))))
-  }
-
-  private[this] def touchStart(evt: TouchEvent): Unit = if (isValidTouchEvent(evt)) {
-    evt.preventDefault()
-    PlaygroundSAM.doAction(BoardCursorEventAction(MouseDownEvent(areaId, getCursor(evt.changedTouches(0).clientX, evt.changedTouches(0).clientY))))
-    registerHoldEvent()
-  }
-
-  private[this] def touchEnd(evt: TouchEvent): Unit = {
-    evt.preventDefault()
-    PlaygroundSAM.doAction(BoardCursorEventAction(MouseUpEvent(getCursor(evt.changedTouches(0).clientX, evt.changedTouches(0).clientY))))
-    clearHoldEvent()
-  }
-
-  private[this] def touchCancel(evt: TouchEvent): Unit = {
-    evt.preventDefault()
-    clearHoldEvent()
-  }
-
-  def registerEvents(elem: HTMLElement): Unit = {
-    if (hasTouchEvent) {
-      elem.addEventListener("touchmove", touchMove, useCapture = false)
-      elem.addEventListener("touchstart", touchStart, useCapture = false)
-      elem.addEventListener("touchend", touchEnd, useCapture = false)
-      elem.addEventListener("touchcancel", touchCancel, useCapture = false)
-    }
-
-    elem.addEventListener("mousemove", mouseMove, useCapture = false)
-    elem.addEventListener("mousedown", mouseDown, useCapture = false)
-    elem.addEventListener("mouseup", mouseUp, useCapture = false)
-    elem.addEventListener("mouseout", mouseOut, useCapture = false)
-
+  override protected def pointerHoldAction(): Boolean = {
+    doAction(BoardCursorEventAction(MouseHoldEvent))
+    true
   }
 }

@@ -1,7 +1,7 @@
 package com.mogproject.mogami.frontend.view.menu
 
-import com.mogproject.mogami.frontend.FrontendSettings
-import com.mogproject.mogami.frontend.model.{EditModeType, PlayModeType, ViewModeType}
+import com.mogproject.mogami.frontend.{FrontendSettings, Language}
+import com.mogproject.mogami.frontend.model._
 import org.scalajs.dom.html.Div
 
 import scalatags.JsDom
@@ -12,7 +12,7 @@ import scalatags.JsDom.all._
   */
 class AboutMenu extends AccordionMenu {
   override lazy val ident: String = "About"
-  override lazy val title: String = "About This Site"
+  override lazy val titleLabel: Map[Language, String] = Map(English -> "About This Site", Japanese -> "このサイトについて")
   override lazy val icon: String = "info-sign"
   override lazy val content: JsDom.TypedTag[Div] = div(
     p(i(""""Run anywhere. Needs NO installation."""")),
