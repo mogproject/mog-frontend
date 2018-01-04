@@ -14,7 +14,7 @@ import scalatags.JsDom.all._
 class ActionMenu extends AccordionMenu {
 
   override lazy val ident: String = "Action"
-  override lazy val titleLabel: Map[Language, String] = Map(English -> ident, Japanese -> "特別な指し手")
+  override lazy val titleLabel: Map[Language, String] = Map(English -> ident, Japanese -> "特殊な指し手")
   override lazy val icon: String = "tower"
   override lazy val visibleMode = Set(PlayModeType)
 

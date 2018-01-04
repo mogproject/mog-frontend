@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.view.menu
 
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.Observable
-import com.mogproject.mogami.frontend.view.button.MultiLingualLabel
+import com.mogproject.mogami.frontend.view.button.{MultiLingualElement, MultiLingualLabel}
 import org.scalajs.dom.html.Div
 import com.mogproject.mogami.util.Implicits._
 
@@ -41,7 +41,7 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
     )
   ).render
 
-  private[this] val titleElem = MultiLingualLabel(span(paddingLeft := 20.px).render, titleLabel)
+  private[this] val titleElem = MultiLingualLabel(titleLabel, paddingLeft := 20.px)
 
   private[this] val titleElemHeading = h4(cls := "panel-title",
     span(
