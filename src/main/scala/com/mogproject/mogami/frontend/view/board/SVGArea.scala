@@ -22,7 +22,7 @@ import scalatags.JsDom.svgTags.svg
   */
 case class SVGArea(areaId: Int, layout: SVGAreaLayout) extends WebComponent with SVGAreaEventHandler {
 
-  private[this] val boxSize = layout.viewBoxBottomRight.copy(y = layout.box.extendedHeight)
+  private[this] lazy val boxSize = layout.viewBoxBottomRight.copy(y = layout.box.extendedHeight)
 
   /**
     * Transparent foremost rect element for each SVG regions.
@@ -30,27 +30,27 @@ case class SVGArea(areaId: Int, layout: SVGAreaLayout) extends WebComponent with
     * @note `touchend` event will not fire if an SVG element is removed from dom while being touched. To prevent this,
     *      Create a region-wide rectangle element as foremost in order to manage user interactions.
     */
-  private[this] val boardForemostElement: SVGRectElement = Rect(Coord(0, 0), layout.viewBoxBottomRight.x, layout.viewBoxBottomRight.y).toSVGRect(
+  private[this] lazy val boardForemostElement: SVGRectElement = Rect(Coord(0, 0), layout.viewBoxBottomRight.x, layout.viewBoxBottomRight.y).toSVGRect(
     svgAttrs.fillOpacity := 0
   ).render
 
-  private[this] val boxForemostElement: SVGRectElement = Rect(Coord(0, 0), boxSize.x, boxSize.y).toSVGRect(
+  private[this] lazy val boxForemostElement: SVGRectElement = Rect(Coord(0, 0), boxSize.x, boxSize.y).toSVGRect(
     svgAttrs.fillOpacity := 0
   ).render
 
   // Local variables
-  val board: SVGBoard = SVGBoard(layout.board, boardForemostElement)
+  lazy val board: SVGBoard = SVGBoard(layout.board, boardForemostElement)
 
-  val hand: SVGHand = SVGHand(layout.hand, boardForemostElement)
+  lazy val hand: SVGHand = SVGHand(layout.hand, boardForemostElement)
 
-  val player: SVGPlayer = SVGPlayer(layout.player, boardForemostElement)
+  lazy val player: SVGPlayer = SVGPlayer(layout.player, boardForemostElement)
 
-  val box: SVGBox = SVGBox(layout.box, boxForemostElement)
+  lazy val box: SVGBox = SVGBox(layout.box, boxForemostElement)
 
   //
   // components
   //
-  protected val svgElement: SVGElement = svg(
+  private[this] lazy val svgElement: SVGElement = svg(
     svgAttrs.xmlns := "http://www.w3.org/2000/svg",
     svgAttrs.attr("version") := "1.1",
     svgAttrs.width := 100.pct,
@@ -62,7 +62,7 @@ case class SVGArea(areaId: Int, layout: SVGAreaLayout) extends WebComponent with
     boardForemostElement
   ).render
 
-  private[this] val svgBox: Div = div(
+  private[this] lazy val svgBox: Div = div(
     display := display.none.v,
     marginTop := (-5).px,
     svg(
@@ -177,6 +177,6 @@ case class SVGArea(areaId: Int, layout: SVGAreaLayout) extends WebComponent with
   //
   // Event
   //
-  registerEvents(svgDiv)
+  override protected def eventTarget: HTMLElement = svgDiv
 
 }
