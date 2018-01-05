@@ -3,11 +3,12 @@ package com.mogproject.mogami.frontend.view.button
 import com.mogproject.mogami.frontend.Language
 import com.mogproject.mogami.frontend.view.tooltip.{HoverTooltipEnabled, TooltipPlacement}
 import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement.TooltipPlacement
+import org.scalajs.dom.raw.HTMLElement
 
 /**
   * Command button with a hover tooltip
   */
-case class HoverCommandButton(label: MultiLingualLike,
+case class HoverCommandButton(label: HTMLElement,
                               clickAction: () => Unit,
                               tooltipMessages: Map[Language, String],
                               placement: TooltipPlacement = TooltipPlacement.Bottom,

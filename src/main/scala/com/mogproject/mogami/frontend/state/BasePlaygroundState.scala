@@ -4,6 +4,7 @@ import com.mogproject.mogami._
 import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.frontend.sam.{SAMAction, SAMState}
 import com.mogproject.mogami.frontend.view.BasePlaygroundView
+import com.mogproject.mogami.frontend.view.i18n.Messages
 
 /**
   *
@@ -22,6 +23,9 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
   override def render(newModel: M): (SAMState[M], Option[SAMAction[M]]) = renderImpl(newModel, renderAll = false)
 
   private[this] def renderImpl(newModel: M, renderAll: Boolean): (BasePlaygroundState[M, V], Option[SAMAction[M]]) = {
+    // update message lang
+    Messages.setLanguage(newModel.config.messageLang)
+
     // process flashed cursor
     newModel.flashedCursor.foreach(cursor => view.mainPane.flashCursor(cursor))
 

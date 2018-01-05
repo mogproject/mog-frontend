@@ -9,7 +9,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class CommandButtonLike(label: MultiLingualLike,
+class CommandButtonLike(label: HTMLElement,
                         clickAction: () => Unit,
                         buttonClass: Seq[String],
                         isBlock: Boolean,
@@ -19,7 +19,7 @@ class CommandButtonLike(label: MultiLingualLike,
     cls := (("btn" +: buttonClass) ++ isBlock.option("btn-block")).mkString(" "),
     onclick := clickAction,
     isDismiss.option(data("dismiss") := "modal"),
-    label.elem
+    label
   ).render
 
   override lazy val element: HTMLElement = btn

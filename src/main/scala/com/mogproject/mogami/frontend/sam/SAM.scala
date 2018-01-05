@@ -46,11 +46,11 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
         val flag = state.getObserveFlag(nextModel)
         //        SAM.debug(s"Observer flag: ${flag}")
 
-        notifyObservers(flag, nextModel)
-
         val (nextState, nextAction) = state.render(nextModel)
         //        SAM.debug(s"nextState: ${nextState}")
         //        SAM.debug(s"nextAction: ${nextAction}")
+
+        notifyObservers(flag, nextModel)
 
         state = nextState
 

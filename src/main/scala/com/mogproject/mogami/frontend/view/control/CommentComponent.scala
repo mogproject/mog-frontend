@@ -3,6 +3,7 @@ package com.mogproject.mogami.frontend.view.control
 import com.mogproject.mogami.frontend.action.{OpenCommentDialogAction, UpdateGameControlAction}
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.button._
+import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
 import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom
@@ -41,7 +42,7 @@ case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: Stri
 
   /** Must be 'val' to initialize the label */
   val textClearButton = HoverCommandButton(
-    MultiLingualLabel("Clear", "削除"),
+    DynamicLabel(_.COMMENT_CLEAR).element,
     () => clickAction(""),
     Map(English -> "Clear this comment", Japanese -> "このコメントを削除"),
     TooltipPlacement.Top,
@@ -50,7 +51,7 @@ case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: Stri
   )
 
   val textUpdateButton = HoverCommandButton(
-    MultiLingualLabel("Update", "更新"),
+    DynamicLabel(_.COMMENT_UPDATE).element,
     () => clickAction(textCommentInput.value),
     Map(English -> "Update this comment", Japanese -> "このコメントを更新"),
     TooltipPlacement.Top,

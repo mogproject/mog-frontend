@@ -5,6 +5,7 @@ import com.mogproject.mogami.frontend.action.analyze.CountPointAction
 import com.mogproject.mogami.frontend.model.English
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.button.{HoverCommandButton, MultiLingualLabel}
+import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom.html.Div
 
@@ -16,7 +17,8 @@ import scalatags.JsDom.all._
 class PointCountButton(isMobile: Boolean) extends WebComponent with SAMObserver[BasePlaygroundModel] {
 
   private[this] val countButton = HoverCommandButton(
-    MultiLingualLabel("Count", "計算"),
+//    MultiLingualLabel("Count", "計算"),
+    DynamicLabel(_.COUNT_POINT).element,
     () => doAction(CountPointAction),
     Map(English -> "Count points for this position", Japanese -> "局面の点数を計算 (持将棋判定用)")
   )
