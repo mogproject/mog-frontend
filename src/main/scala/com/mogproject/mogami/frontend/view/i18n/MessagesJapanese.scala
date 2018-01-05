@@ -6,6 +6,11 @@ import com.mogproject.mogami.State
   * Japanese message definitions
   */
 case object MessagesJapanese extends Messages {
+
+  override val FLIP: String = "反転"
+
+  override val RESIGN: String = "投了"
+
   override val ANALYZE: String = "解析"
 
   override val COUNT_POINT: String = "点数計算"

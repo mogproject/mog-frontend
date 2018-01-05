@@ -6,6 +6,11 @@ import com.mogproject.mogami.State
   * English message definitions
   */
 case object MessagesEnglish extends Messages {
+
+  override val FLIP: String = "Flip"
+
+  override val RESIGN: String = "Resign"
+
   override val ANALYZE: String = "Analyze"
 
   override val COUNT_POINT: String = "Count"

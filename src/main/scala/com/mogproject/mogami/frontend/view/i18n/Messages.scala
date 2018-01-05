@@ -9,6 +9,17 @@ import com.mogproject.mogami.frontend.model.{English, Japanese}
   */
 trait Messages {
   //
+  // Nav
+  //
+  def FLIP: String
+
+
+  //
+  // Action
+  //
+  def RESIGN: String
+
+  //
   // Analyze
   //
   def ANALYZE: String
