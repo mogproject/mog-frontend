@@ -1,12 +1,11 @@
 package com.mogproject.mogami.frontend.view.analyze
 
-import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.Move
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.analyze.AnalyzeCheckmateAction
 import com.mogproject.mogami.frontend.action.board.AddMovesAction
 import com.mogproject.mogami.frontend.action.dialog.MenuDialogAction
-import com.mogproject.mogami.frontend.view.button.SingleButton
+import com.mogproject.mogami.frontend.view.button.{HoverCommandButton, MultiLingualLabel}
 import org.scalajs.dom
 import org.scalajs.dom.html.{Div, Input}
 
@@ -27,11 +26,10 @@ class CheckmateButton(isMobile: Boolean) extends WebComponent {
     value := DEFAULT_TIMEOUT
   ).render
 
-  private[this] lazy val analyzeButton: SingleButton = SingleButton(
-    Map(English -> "Analyze".render),
-    clickAction = Some(() => clickAction()),
-    tooltip = isMobile.fold(Map.empty, Map(English -> "Analyze this position for checkmate")),
-    isBlockButton = true
+  private[this] lazy val analyzeButton = HoverCommandButton(
+    MultiLingualLabel("Analyze", "解析"),
+    () => clickAction(),
+    Map(English -> "Analyze this position for checkmate", Japanese -> "この局面の詰み手順を解析")
   )
 
   private[this] lazy val solverMessage: Div = div(
@@ -39,15 +37,14 @@ class CheckmateButton(isMobile: Boolean) extends WebComponent {
     marginTop := 6
   ).render
 
-  private[this] def generateAddMovesButton(moves: Seq[Move]): SingleButton = SingleButton(
-    Map(English -> "Add Moves to Game".render, Japanese -> "手順を棋譜に追記".render),
-    clickAction = Some { () =>
+  private[this] def generateAddMovesButton(moves: Seq[Move]) = HoverCommandButton(
+    MultiLingualLabel("Add Moves to Game", "手順を棋譜に追記"),
+    { () =>
       doAction(AddMovesAction(moves))
       displayCheckmateMessage("Moves are added.")
       doAction(MenuDialogAction(false), 1000) // close menu modal after 1 sec (mobile)
     },
-    tooltip = isMobile.fold(Map.empty, Map(English -> "Add this solution to the current game recocrd")),
-    isBlockButton = true
+    Map(English -> "Add this solution to the current game record", Japanese -> "この手順を現在の棋譜に追記")
   )
 
   private[this] def validateTimeout(): Int = {
@@ -71,7 +68,7 @@ class CheckmateButton(isMobile: Boolean) extends WebComponent {
       )
     ),
     div(cls := "row",
-      div(cls := "col-xs-4 col-sm-3",
+      div(cls := "col-xs-5 col-sm-3",
         analyzeButton.element
       ),
       solverMessage
@@ -88,13 +85,17 @@ class CheckmateButton(isMobile: Boolean) extends WebComponent {
     dom.window.setTimeout(() => doAction(AnalyzeCheckmateAction(validateTimeout())), 100)
   }
 
-  def displayResult(result: Option[Seq[Move]], recordLang: Language): Unit = {
-    result match {
-      case None =>
+  def displayResult(result: Option[Seq[Move]], messageLang: Language, recordLang: Language): Unit = {
+    (result, messageLang) match {
+      case (None, Japanese) =>
+        displayCheckmateMessage("制限時間内に解析できませんでした。")
+      case (None, _) =>
         displayCheckmateMessage("This position is too difficult to solve.")
-      case Some(Nil) =>
+      case (Some(Nil), Japanese) =>
+        displayCheckmateMessage("詰みはありません。")
+      case (Some(Nil), _) =>
         displayCheckmateMessage("No checkmates.")
-      case Some(moves) =>
+      case (Some(moves), _) =>
         val s = moves.map(m => m.player.toSymbolString() + (recordLang match {
           case Japanese => m.toJapaneseNotationString
           case English => m.toWesternNotationString

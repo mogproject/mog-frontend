@@ -44,13 +44,13 @@ trait BasePlaygroundView extends SAMView {
 
   }
 
-  def renderAnalyzeResult(result: AnalyzeResult, recordLang: Language): Unit = result match {
-    case CheckmateAnalyzeResult(r) => renderCheckmateAnalyzeResult(r, recordLang)
+  def renderAnalyzeResult(result: AnalyzeResult, messageLang: Language, recordLang: Language): Unit = result match {
+    case CheckmateAnalyzeResult(r) => renderCheckmateAnalyzeResult(r, messageLang, recordLang)
     case CountAnalyzeResult(p, k, n) => renderCountAnalyzeResult(p, k, n)
   }
 
-  def renderCheckmateAnalyzeResult(result: Option[Seq[Move]], recordLang: Language): Unit = {
-    website.analyzeMenu.checkmateButton.displayResult(result, recordLang)
+  def renderCheckmateAnalyzeResult(result: Option[Seq[Move]], messageLang: Language, recordLang: Language): Unit = {
+    website.analyzeMenu.checkmateButton.displayResult(result, messageLang, recordLang)
   }
 
   def renderCountAnalyzeResult(point: Int, isKingInPromotionZone: Boolean, numPiecesInPromotionZone: Int): Unit = {

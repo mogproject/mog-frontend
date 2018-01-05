@@ -3,9 +3,8 @@ package com.mogproject.mogami.frontend.view.analyze
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.analyze.CountPointAction
 import com.mogproject.mogami.frontend.model.English
-import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 import com.mogproject.mogami.frontend.view.WebComponent
-import com.mogproject.mogami.frontend.view.button.SingleButton
+import com.mogproject.mogami.frontend.view.button.{HoverCommandButton, MultiLingualLabel}
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom.html.Div
 
@@ -16,11 +15,10 @@ import scalatags.JsDom.all._
   */
 class PointCountButton(isMobile: Boolean) extends WebComponent with SAMObserver[BasePlaygroundModel] {
 
-  private[this] val countButton: SingleButton = SingleButton(
-    Map(English -> "Count".render),
-    clickAction = Some(() => PlaygroundSAM.doAction(CountPointAction)),
-    tooltip = isMobile.fold(Map.empty, Map(English -> "Count points for this position")),
-    isBlockButton = true
+  private[this] val countButton = HoverCommandButton(
+    MultiLingualLabel("Count", "計算"),
+    () => doAction(CountPointAction),
+    Map(English -> "Count points for this position", Japanese -> "局面の点数を計算 (持将棋判定用)")
   )
 
   private[this] lazy val countMessage: Div = div(
@@ -30,7 +28,7 @@ class PointCountButton(isMobile: Boolean) extends WebComponent with SAMObserver[
 
   override lazy val element: Div = div(
     div(cls := "row",
-      div(cls := "col-xs-4 col-sm-3",
+      div(cls := "col-xs-5 col-sm-3",
         countButton.element
       ),
       countMessage

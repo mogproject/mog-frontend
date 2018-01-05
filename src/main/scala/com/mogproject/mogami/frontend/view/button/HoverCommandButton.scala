@@ -1,7 +1,7 @@
 package com.mogproject.mogami.frontend.view.button
 
 import com.mogproject.mogami.frontend.Language
-import com.mogproject.mogami.frontend.view.tooltip.HoverTooltipEnabled
+import com.mogproject.mogami.frontend.view.tooltip.{HoverTooltipEnabled, TooltipPlacement}
 import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement.TooltipPlacement
 
 /**
@@ -10,9 +10,9 @@ import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement.TooltipPlace
 case class HoverCommandButton(label: MultiLingualLike,
                               clickAction: () => Unit,
                               tooltipMessages: Map[Language, String],
-                              placement: TooltipPlacement,
+                              placement: TooltipPlacement = TooltipPlacement.Bottom,
                               buttonClass: Seq[String] = Seq("btn-default"),
-                              isBlock: Boolean = false,
+                              isBlock: Boolean = true,
                               isDismiss: Boolean = false) extends CommandButtonLike(label, clickAction, buttonClass, isBlock, isDismiss) with HoverTooltipEnabled {
 
 }
