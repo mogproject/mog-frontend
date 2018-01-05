@@ -9,14 +9,18 @@ case object MessagesEnglish extends Messages {
 
   override val FLIP: String = "Flip"
 
+  override val COMMENT_CLEAR: String = "Clear"
+  override val COMMENT_CLEAR_TOOLTIP: String = "Clear this comment"
+  override val COMMENT_UPDATE: String = "Update"
+  override val COMMENT_UPDATE_TOOLTIP: String = "Update this comment"
+
   override val RESIGN: String = "Resign"
 
   override val ANALYZE: String = "Analyze"
+  override val ANALYZE_CHECKMATE_TOOLTIP: String = "Analyze this position for checkmate"
 
   override val COUNT_POINT: String = "Count"
-
-  override val COMMENT_CLEAR: String = "Clear"
-  override val COMMENT_UPDATE: String = "Update"
+  override val COUNT_POINT_TOOLTIP: String = "Count points for this position"
 
   override val INITIAL_STATE: Map[State, String] = Map(
     State.HIRATE -> "Even",

@@ -9,14 +9,18 @@ case object MessagesJapanese extends Messages {
 
   override val FLIP: String = "反転"
 
+  override val COMMENT_CLEAR: String = "削除"
+  override val COMMENT_CLEAR_TOOLTIP: String = "このコメントを削除"
+  override val COMMENT_UPDATE: String = "更新"
+  override val COMMENT_UPDATE_TOOLTIP: String = "このコメントを更新"
+
   override val RESIGN: String = "投了"
 
   override val ANALYZE: String = "解析"
+  override val ANALYZE_CHECKMATE_TOOLTIP: String = "この局面の詰み手順を解析"
 
   override val COUNT_POINT: String = "点数計算"
-
-  override val COMMENT_CLEAR: String = "削除"
-  override val COMMENT_UPDATE: String = "更新"
+  override val COUNT_POINT_TOOLTIP: String = "局面の点数を計算 (持将棋判定用)"
 
   override val INITIAL_STATE: Map[State, String] = Map(
     State.HIRATE -> "平手",

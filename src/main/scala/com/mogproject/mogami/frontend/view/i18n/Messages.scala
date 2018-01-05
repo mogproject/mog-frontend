@@ -13,6 +13,13 @@ trait Messages {
   //
   def FLIP: String
 
+  def COMMENT_CLEAR: String
+
+  def COMMENT_CLEAR_TOOLTIP: String
+
+  def COMMENT_UPDATE: String
+
+  def COMMENT_UPDATE_TOOLTIP: String
 
   //
   // Action
@@ -24,12 +31,11 @@ trait Messages {
   //
   def ANALYZE: String
 
+  def ANALYZE_CHECKMATE_TOOLTIP: String
+
   def COUNT_POINT: String
 
-  def COMMENT_CLEAR: String
-
-  def COMMENT_UPDATE: String
-
+  def COUNT_POINT_TOOLTIP: String
 
   //
   // Reset

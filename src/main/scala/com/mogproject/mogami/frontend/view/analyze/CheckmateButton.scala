@@ -5,7 +5,7 @@ import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.analyze.AnalyzeCheckmateAction
 import com.mogproject.mogami.frontend.action.board.AddMovesAction
 import com.mogproject.mogami.frontend.action.dialog.MenuDialogAction
-import com.mogproject.mogami.frontend.view.button.{HoverCommandButton, MultiLingualLabel}
+import com.mogproject.mogami.frontend.view.button.{CommandButtonHoverable, MultiLingualLabel}
 import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
 import org.scalajs.dom
 import org.scalajs.dom.html.{Div, Input}
@@ -27,10 +27,10 @@ class CheckmateButton(isMobile: Boolean) extends WebComponent {
     value := DEFAULT_TIMEOUT
   ).render
 
-  private[this] lazy val analyzeButton = HoverCommandButton(
+  private[this] lazy val analyzeButton = CommandButtonHoverable(
     DynamicLabel(_.ANALYZE).element,
     () => clickAction(),
-    Map(English -> "Analyze this position for checkmate", Japanese -> "この局面の詰み手順を解析")
+    _.ANALYZE_CHECKMATE_TOOLTIP
   )
 
   private[this] lazy val solverMessage: Div = div(
@@ -38,7 +38,7 @@ class CheckmateButton(isMobile: Boolean) extends WebComponent {
     marginTop := 6
   ).render
 
-  private[this] def generateAddMovesButton(moves: Seq[Move]) = HoverCommandButton(
+  private[this] def generateAddMovesButton(moves: Seq[Move]) = CommandButtonHoverable(
     DynamicLabel(_.ANALYZE).element,
 //    MultiLingualLabel("Add Moves to Game", "手順を棋譜に追記"),
     { () =>

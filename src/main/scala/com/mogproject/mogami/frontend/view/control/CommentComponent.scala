@@ -41,21 +41,19 @@ case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: Stri
   private[this] val placeholders: Map[Language, String] = Map(English -> "Comment", Japanese -> "コメント")
 
   /** Must be 'val' to initialize the label */
-  val textClearButton = HoverCommandButton(
+  val textClearButton = CommandButtonHoverable(
     DynamicLabel(_.COMMENT_CLEAR).element,
     () => clickAction(""),
-    Map(English -> "Clear this comment", Japanese -> "このコメントを削除"),
+    _.COMMENT_CLEAR_TOOLTIP,
     TooltipPlacement.Top,
-    isBlock = true,
     isDismiss = true
   )
 
-  val textUpdateButton = HoverCommandButton(
+  val textUpdateButton = CommandButtonHoverable(
     DynamicLabel(_.COMMENT_UPDATE).element,
     () => clickAction(textCommentInput.value),
-    Map(English -> "Update this comment", Japanese -> "このコメントを更新"),
+    _.COMMENT_UPDATE_TOOLTIP,
     TooltipPlacement.Top,
-    isBlock = true,
     isDismiss = true
   )
 
