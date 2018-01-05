@@ -29,7 +29,6 @@ trait DynamicHoverTooltip extends TooltipEnabled with SAMObserver[BasePlayground
     // disable if the browser detects touch features
     if (BrowserInfo.hasTouchEvent) {
       element.removeAttribute("data-toggle")
-      println(s"removing ${this}")
       SAM.removeObserver(this)
     } else {
       Tooltip.enableHoverToolTip(element)
