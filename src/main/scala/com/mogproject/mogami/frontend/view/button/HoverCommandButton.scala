@@ -13,6 +13,6 @@ case class HoverCommandButton(label: MultiLingualLike,
                               placement: TooltipPlacement,
                               buttonClass: Seq[String] = Seq("btn-default"),
                               isBlock: Boolean = false,
-                              isDismiss: Boolean = false) extends CommandButton(label, clickAction, buttonClass, isBlock, isDismiss) with HoverTooltipEnabled {
+                              isDismiss: Boolean = false) extends CommandButtonLike(label, clickAction, buttonClass, isBlock, isDismiss) with HoverTooltipEnabled {
 
 }

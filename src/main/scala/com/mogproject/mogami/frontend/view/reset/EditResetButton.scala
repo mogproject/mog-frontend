@@ -4,7 +4,7 @@ import com.mogproject.mogami.State
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.board.EditResetAction
 import com.mogproject.mogami.frontend.model.BasePlaygroundModel
-import com.mogproject.mogami.frontend.view.button.SingleButton
+import com.mogproject.mogami.frontend.view.button.{CommandButton, MultiLingualLabel, SingleButton}
 import org.scalajs.dom.html.Div
 
 import scalatags.JsDom.all._
@@ -37,11 +37,11 @@ class EditResetButton extends WebComponent with SAMObserver[BasePlaygroundModel]
   )
 
   private[this] lazy val buttons = keys.map { case (st, en, ja) =>
-    SingleButton(
-      Map(English -> en.render, Japanese -> ja.render),
-      clickAction = Some(() => doAction(EditResetAction(st))),
-      isBlockButton = true,
-      dismissModal = true
+    CommandButton(
+      MultiLingualLabel(en, ja),
+      () => doAction(EditResetAction(st)),
+      isBlock = true,
+      isDismiss = true
     )
   }
 
@@ -50,15 +50,15 @@ class EditResetButton extends WebComponent with SAMObserver[BasePlaygroundModel]
   //
   // Observer
   //
-  override val samObserveMask: Int = ObserveFlag.MODE_EDIT | ObserveFlag.CONF_MSG_LANG
+  override val samObserveMask: Int = ObserveFlag.MODE_EDIT
 
   override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
     if (model.mode.isEditMode) {
       if (!initialized) {
         buttons.foreach(e => element.appendChild(div(cls := "col-xs-6 col-sm-4", e.element).render))
+        SAM.notifyObservers(ObserveFlag.CONF_MSG_LANG)
         initialized = true
       }
-      buttons.foreach(_.updateLabel(model.config.messageLang))
     }
   }
 }
