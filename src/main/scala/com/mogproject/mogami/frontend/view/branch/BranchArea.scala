@@ -7,7 +7,8 @@ import com.mogproject.mogami.frontend.action.dialog.AskDeleteBranchAction
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 import com.mogproject.mogami.frontend.view.WebComponent
-import com.mogproject.mogami.frontend.view.button.{MultiLingualLabel, RadioButton, SingleButton}
+import com.mogproject.mogami.frontend.view.button.{RadioButton, SingleButton}
+import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
 import org.scalajs.dom.html.Div
 import org.scalajs.dom.raw.HTMLSelectElement
 import com.mogproject.mogami.util.Implicits._
@@ -94,8 +95,6 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
 
   override lazy val element: Div = isMobile.fold(outputOnMenu, outputCompact).render
 
-  private[this] lazy val branchLabel = MultiLingualLabel(label().render, "Branch", "分岐")
-
   private[this] def outputOnMenu = div(
     div(cls := "row",
       div(cls := "col-xs-6 col-sm-8", label(paddingTop := "6px", "Change Branch")),
@@ -112,7 +111,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
     div(cls := "row",
       marginRight := 12.px,
       marginBottom := 10.px,
-      div(cls := "col-xs-6", branchLabel.elem),
+      div(cls := "col-xs-6", label(DynamicLabel(_.BRANCH).element)),
       div(cls := "col-xs-6", marginTop := (-6).px,
         newBranchButton.element)
     ),

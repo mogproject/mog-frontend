@@ -14,14 +14,37 @@ case object MessagesJapanese extends Messages {
   override val COMMENT_UPDATE: String = "更新"
   override val COMMENT_UPDATE_TOOLTIP: String = "このコメントを更新"
 
+  override val MENU: String = "メニュー"
+
+  override val SHARE: String = "シェア"
+  override val RECORD_URL: String = "棋譜 URL"
+  override val SNAPSHOT_URL: String = "局面 URL"
+  override val SHORTEN_URL: String = "短縮 URL"
+  override val SNAPSHOT_IMAGE: String = "局面画像生成"
+  override val SNAPSHOT_SFEN_STRING: String = "局面 SFEN 文字列"
+  override val NOTES_VIEW: String = "Notes ビュー"
+
+  override val MANAGE: String = "ファイル管理"
+  override val LOAD_FROM_FILE: String = "棋譜ファイルの読み込み"
+  override val LOAD_FROM_TEXT: String = "テキストの読み込み"
+  override val SAVE_TO_FILE_CLIPBOARD: String = "棋譜ファイル / クリップボードへ書き出し"
+
+  override val ACTION: String = "特殊な指し手"
   override val RESIGN: String = "投了"
 
   override val ANALYZE: String = "解析"
+  override val ANALYZE_FOR_CHECKMATE: String = "詰み解析"
   override val ANALYZE_CHECKMATE_TOOLTIP: String = "この局面の詰み手順を解析"
 
+  override val ADD_CHECKMATE_MOVES: String = "手順を棋譜に追記"
+
+  override val BRANCH: String = "分岐"
+
   override val COUNT_POINT: String = "点数計算"
+  override val COUNT_POINT_LABEL: String = "点数計算 (持将棋判定用)"
   override val COUNT_POINT_TOOLTIP: String = "局面の点数を計算 (持将棋判定用)"
 
+  override val RESET: String = "初期局面"
   override val INITIAL_STATE: Map[State, String] = Map(
     State.HIRATE -> "平手",
     State.MATING_BLACK -> "詰将棋 (先手)",
@@ -41,4 +64,21 @@ case object MessagesJapanese extends Messages {
     State.HANDICAP_NAKED_KING -> "裸玉"
   )
 
+  override val SETTINGS: String = "設定"
+  override val BOARD_SIZE: String = "盤面サイズ"
+  override val LAYOUT: String = "レイアウト"
+  override val PIECE_GRAPHIC: String = "駒画像"
+  override val DOUBLE_BOARD_MODE: String = "ダブル将棋盤モード"
+  override val VISUAL_EFFECTS: String = "エフェクト"
+  override val SOUND_EFFECTS: String = "サウンド"
+  override val MESSAGE_LANG: String = "表示言語"
+  override val RECORD_LANG: String = "棋譜言語"
+  override val SETTINGS_INFO: String = "設定はお使いのブラウザに保存されます"
+
+  override val HELP: String = "ヘルプ"
+  override val ABOUT_THIS_SITE: String = "このサイトについて"
+
+
+  override val MOVES: String = "棋譜"
+  override val TRUNK: String = "本譜"
 }

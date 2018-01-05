@@ -5,7 +5,7 @@ import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.analyze.AnalyzeCheckmateAction
 import com.mogproject.mogami.frontend.action.board.AddMovesAction
 import com.mogproject.mogami.frontend.action.dialog.MenuDialogAction
-import com.mogproject.mogami.frontend.view.button.{CommandButtonHoverable, MultiLingualLabel}
+import com.mogproject.mogami.frontend.view.button.CommandButtonHoverable
 import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
 import org.scalajs.dom
 import org.scalajs.dom.html.{Div, Input}
@@ -39,8 +39,7 @@ class CheckmateButton(isMobile: Boolean) extends WebComponent {
   ).render
 
   private[this] def generateAddMovesButton(moves: Seq[Move]) = CommandButtonHoverable(
-    DynamicLabel(_.ANALYZE).element,
-//    MultiLingualLabel("Add Moves to Game", "手順を棋譜に追記"),
+    DynamicLabel(_.ADD_CHECKMATE_MOVES).element,
     { () =>
       doAction(AddMovesAction(moves))
       displayCheckmateMessage("Moves are added.")

@@ -2,6 +2,7 @@ package com.mogproject.mogami.frontend.view.menu
 
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.model.{BasePlaygroundModel, PlayModeType, ViewModeType}
+import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
 import com.mogproject.mogami.frontend.view.share._
 import org.scalajs.dom.html.Div
 
@@ -14,7 +15,7 @@ import scalatags.JsDom.all._
 class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
 
   override lazy val ident: String = "Share"
-  override lazy val titleLabel: Map[Language, String] = Map(English -> ident, Japanese -> "シェア")
+  override lazy val titleLabel = DynamicLabel(_.SHARE)
   override lazy val icon: String = "share"
   override lazy val visibleMode = Set(PlayModeType, ViewModeType)
 

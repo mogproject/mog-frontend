@@ -1,7 +1,7 @@
 package com.mogproject.mogami.frontend.view.menu
 
-import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.model.{PlayModeType, ViewModeType}
+import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
 import com.mogproject.mogami.frontend.view.manage.SaveLoadButton
 import org.scalajs.dom.html.Div
 
@@ -13,7 +13,7 @@ import scalatags.JsDom.all._
   */
 class ManageMenu(isMobile: Boolean) extends AccordionMenu {
   override lazy val ident: String = "Manage"
-  override lazy val titleLabel: Map[Language, String] = Map(English -> ident, Japanese -> "ファイル管理")
+  override lazy val titleLabel = DynamicLabel(_.MANAGE)
   override lazy val icon: String = "file"
   override lazy val visibleMode = Set(PlayModeType, ViewModeType)
 

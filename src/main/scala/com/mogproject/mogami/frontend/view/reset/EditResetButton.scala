@@ -4,7 +4,7 @@ import com.mogproject.mogami.State
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.board.EditResetAction
 import com.mogproject.mogami.frontend.model.BasePlaygroundModel
-import com.mogproject.mogami.frontend.view.button.{CommandButton, MultiLingualLabel, SingleButton}
+import com.mogproject.mogami.frontend.view.button.{CommandButton, SingleButton}
 import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
 import org.scalajs.dom.html.Div
 

@@ -14,14 +14,38 @@ case object MessagesEnglish extends Messages {
   override val COMMENT_UPDATE: String = "Update"
   override val COMMENT_UPDATE_TOOLTIP: String = "Update this comment"
 
+  override val MENU: String = "Menu"
+
+  override val SHARE: String = "Share"
+  override val RECORD_URL: String = "Record URL"
+  override val SNAPSHOT_URL: String = "Snapshot URL"
+  override val SHORTEN_URL: String = "Shorten URL"
+  override val SNAPSHOT_IMAGE: String = "Snapshot Image"
+  override val SNAPSHOT_SFEN_STRING: String = "Snapshot SFEN String"
+  override val NOTES_VIEW: String = "Notes View"
+
+  override val MANAGE: String = "Manage"
+  override val LOAD_FROM_FILE: String = "Load from File"
+  override val LOAD_FROM_TEXT: String = "Load from Text"
+  override val SAVE_TO_FILE_CLIPBOARD: String = "Save to File / Clipboard"
+
+  override val ACTION: String = "Action"
   override val RESIGN: String = "Resign"
 
   override val ANALYZE: String = "Analyze"
+  override val ANALYZE_FOR_CHECKMATE: String = "Analyze for Checkmate"
+
   override val ANALYZE_CHECKMATE_TOOLTIP: String = "Analyze this position for checkmate"
 
+  override val ADD_CHECKMATE_MOVES: String ="Add Moves to Game"
+
+  override val BRANCH: String = "Branch"
+
   override val COUNT_POINT: String = "Count"
+  override val COUNT_POINT_LABEL: String = "Count Points"
   override val COUNT_POINT_TOOLTIP: String = "Count points for this position"
 
+  override val RESET: String = "Reset"
   override val INITIAL_STATE: Map[State, String] = Map(
     State.HIRATE -> "Even",
     State.MATING_BLACK -> "Mate (Black)",
@@ -40,4 +64,22 @@ case object MessagesEnglish extends Messages {
     State.HANDICAP_THREE_PAWNS -> "Three Pawns",
     State.HANDICAP_NAKED_KING -> "Naked King"
   )
+
+  override val SETTINGS: String = "Settings"
+  override val BOARD_SIZE: String = "Board Size"
+  override val LAYOUT: String = "Layout"
+  override val PIECE_GRAPHIC: String = "Piece Graphic"
+  override val DOUBLE_BOARD_MODE: String = "Double Board Mode"
+  override val VISUAL_EFFECTS: String = "Visual Effects"
+  override val SOUND_EFFECTS: String = "Sound Effects"
+  override val MESSAGE_LANG: String = "Messages"
+  override val RECORD_LANG: String = "Record"
+  override val SETTINGS_INFO: String = "These settings will be saved for your browser."
+
+  override val HELP: String = "Help"
+  override val ABOUT_THIS_SITE: String = "About This Site"
+
+
+  override val MOVES: String = "Moves"
+  override val TRUNK: String = "Trunk"
 }

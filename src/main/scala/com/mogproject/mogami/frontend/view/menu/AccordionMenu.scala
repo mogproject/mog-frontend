@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.view.menu
 
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.Observable
-import com.mogproject.mogami.frontend.view.button.{MultiLingualElement, MultiLingualLabel}
+import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
 import org.scalajs.dom.html.Div
 import com.mogproject.mogami.util.Implicits._
 
@@ -18,7 +18,7 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
 
   def ident: String
 
-  def titleLabel: Map[Language, String]
+  def titleLabel: DynamicLabel
 
   def icon: String
 
@@ -41,13 +41,13 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
     )
   ).render
 
-  private[this] val titleElem = MultiLingualLabel(titleLabel, paddingLeft := 20.px)
+  private[this] lazy val labelArea = span(titleLabel.element, paddingLeft := 20.px).render
 
   private[this] val titleElemHeading = h4(cls := "panel-title",
     span(
       cls := "accordion-toggle",
       glyph,
-      titleElem.elem
+      labelArea
     )
   ).render
 
@@ -89,12 +89,12 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
   }
 
   def collapseTitle(): Unit = {
-    titleElem.elem.style.display = display.none.v
+    labelArea.style.display = display.none.v
     element.setAttribute("data-original-title", ident)
   }
 
   def expandTitle(): Unit = {
-    titleElem.elem.style.display = display.inline.v
+    labelArea.style.display = display.inline.v
     element.removeAttribute("data-original-title")
   }
 

@@ -3,7 +3,7 @@ package com.mogproject.mogami.frontend.view.sidebar
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.menu._
 import com.mogproject.mogami.frontend.view.Observer
-import com.mogproject.mogami.frontend.view.button.{MultiLingualElement, MultiLingualLabel}
+import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
 import org.scalajs.dom.html.{Div, Heading}
 
 import scalatags.JsDom.all._
@@ -19,13 +19,11 @@ trait SideBarRight extends SideBarLike with Observer[AccordionMenu] with SAMObse
 
   override protected val outputClass: String = "sidebar-right"
 
-  private[this] lazy val titleLabel = MultiLingualLabel("Menu", "メニュー", paddingLeft := 14.px)
-
   override lazy val titleExpanded: Heading = h4(
     cls := "sidebar-heading",
     onclick := { () => collapseSideBar() },
     span(cls := "glyphicon glyphicon-minus"),
-    titleLabel.elem
+    span(DynamicLabel(_.MENU).element, paddingLeft := 14.px)
   ).render
 
   override lazy val titleCollapsed: Heading = h4(
