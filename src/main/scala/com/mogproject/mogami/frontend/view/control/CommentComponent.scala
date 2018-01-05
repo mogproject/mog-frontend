@@ -2,7 +2,8 @@ package com.mogproject.mogami.frontend.view.control
 
 import com.mogproject.mogami.frontend.action.{OpenCommentDialogAction, UpdateGameControlAction}
 import com.mogproject.mogami.frontend._
-import com.mogproject.mogami.frontend.view.button.SingleButton
+import com.mogproject.mogami.frontend.view.button._
+import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom
 import org.scalajs.dom.html.{Div, TextArea}
@@ -12,7 +13,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: String = "") {
+case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: String = "") extends SAMObserver[BasePlaygroundModel] {
 
   //
   // Elements
@@ -20,7 +21,7 @@ case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: Stri
   lazy val textCommentInput: TextArea = textarea(
     cls := "form-control input-small",
     rows := 10,
-    placeholder := "Comment",
+    placeholder := "",
     data("toggle") := "tooltip",
     data("trigger") := "manual",
     data("placement") := "top",
@@ -36,22 +37,25 @@ case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: Stri
     text
   ).render
 
-  lazy val textClearButton: SingleButton = SingleButton(
-    Map(English -> "Clear".render),
-    clickAction = Some { () => clickAction("") },
-    tooltip = isModal.fold(Map.empty, Map(English -> "Clear this comment")),
-    tooltipPlacement = "top",
-    isBlockButton = true,
-    dismissModal = true
+  private[this] val placeholders: Map[Language, String] = Map(English -> "Comment", Japanese -> "コメント")
+
+  /** Must be 'val' to initialize the label */
+  val textClearButton = HoverCommandButton(
+    MultiLingualLabel("Clear", "削除"),
+    () => clickAction(""),
+    Map(English -> "Clear this comment", Japanese -> "このコメントを削除"),
+    TooltipPlacement.Top,
+    isBlock = true,
+    isDismiss = true
   )
 
-  lazy val textUpdateButton: SingleButton = SingleButton(
-    Map(English -> "Update".render),
-    clickAction = Some { () => clickAction(textCommentInput.value) },
-    tooltip = isModal.fold(Map.empty, Map(English -> "Update this comment")),
-    tooltipPlacement = "top",
-    isBlockButton = true,
-    dismissModal = true
+  val textUpdateButton = HoverCommandButton(
+    MultiLingualLabel("Update", "更新"),
+    () => clickAction(textCommentInput.value),
+    Map(English -> "Update this comment", Japanese -> "このコメントを更新"),
+    TooltipPlacement.Top,
+    isBlock = true,
+    isDismiss = true
   )
 
   private[this] def clickAction(text: String): Unit = {
@@ -81,4 +85,12 @@ case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: Stri
     textUpdateButton.disableElement()
   }
 
+  //
+  // Observer
+  //
+  override val samObserveMask: Int = ObserveFlag.CONF_MSG_LANG
+
+  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+    placeholders.get(model.config.messageLang).foreach(textCommentInput.placeholder = _)
+  }
 }

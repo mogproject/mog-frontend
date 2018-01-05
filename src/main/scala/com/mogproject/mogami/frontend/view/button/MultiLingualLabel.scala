@@ -1,8 +1,7 @@
 package com.mogproject.mogami.frontend.view.button
 
 import com.mogproject.mogami.frontend.model.{English, Japanese}
-import com.mogproject.mogami.frontend.state.ObserveFlag
-import com.mogproject.mogami.frontend.{BasePlaygroundModel, Language, SAMObserver}
+import com.mogproject.mogami.frontend.{BasePlaygroundModel, Language}
 import org.scalajs.dom.raw.HTMLElement
 
 import scalatags.JsDom.Modifier
@@ -11,15 +10,14 @@ import scalatags.JsDom.all._
 /**
   *
   */
-case class MultiLingualLabel(elem: HTMLElement, labels: Map[Language, String]) extends SAMObserver[BasePlaygroundModel] {
-  //
-  // Observer
-  //
-  override val samObserveMask: Int = ObserveFlag.CONF_MSG_LANG
+case class MultiLingualLabel(elem: HTMLElement, labels: Map[Language, String]) extends MultiLingualLike {
+
+  override def isMulti: Boolean = labels.size > 1
 
   override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
-    labels.get(model.config.messageLang).foreach(elem.textContent = _)
+    labels.get(model.config.messageLang).foreach(elem.innerHTML = _)
   }
+
 }
 
 object MultiLingualLabel {

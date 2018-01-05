@@ -16,7 +16,7 @@ case class CommentArea(isDisplayOnly: Boolean, text: String = "") extends WebCom
   // Elements
   //
 
-  lazy val commentComponent = CommentComponent(isDisplayOnly, isModal = false, text)
+  val commentComponent = CommentComponent(isDisplayOnly, isModal = false, text)
 
   // Layout
   override lazy val element: Div = div(

@@ -90,7 +90,7 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
 
   def collapseTitle(): Unit = {
     titleElem.elem.style.display = display.none.v
-    element.setAttribute("data-original-title", (ident == "EditHelp").fold("Help", ident))
+    element.setAttribute("data-original-title", ident)
   }
 
   def expandTitle(): Unit = {

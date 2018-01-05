@@ -72,6 +72,9 @@ trait ModalLike {
 
     initialize(dialog)
 
+    // refresh text language
+    SAM.notifyObservers(ObserveFlag.CONF_MSG_LANG)
+
     dialog.asInstanceOf[BootstrapJQuery].modal("show")
   }
 
