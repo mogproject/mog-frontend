@@ -1,6 +1,7 @@
 package com.mogproject.mogami.frontend.view.i18n
 
 import com.mogproject.mogami.State
+import com.mogproject.mogami.util.Implicits._
 
 /**
   * English message definitions
@@ -34,16 +35,31 @@ case object MessagesEnglish extends Messages {
 
   override val ANALYZE: String = "Analyze"
   override val ANALYZE_FOR_CHECKMATE: String = "Analyze for Checkmate"
-
   override val ANALYZE_CHECKMATE_TOOLTIP: String = "Analyze this position for checkmate"
 
   override val ADD_CHECKMATE_MOVES: String ="Add Moves to Game"
+  override val ADD_CHECKMATE_MOVES_TOOLTIP: String ="Add this solution to the current game record"
 
+  override val CHECKMATE_MOVES_ADDED: String = "Moves are added."
+  override val TIMEOUT: String = "Timeout"
+  override val SEC: String = "sec"
+  override val ANALYZING: String = "Analyzing"
+  override val CHECKMATE_ANALYZE_TIMEOUT: String = "This position is too difficult to solve."
+  override val NO_CHECKMATES: String = "No checkmates."
+  override val CHECKMATE_FOUND: String = "Found a checkmate"
   override val BRANCH: String = "Branch"
 
   override val COUNT_POINT: String = "Count"
   override val COUNT_POINT_LABEL: String = "Count Points"
   override val COUNT_POINT_TOOLTIP: String = "Count points for this position"
+
+  override def COUNT_POINT_RESULT(point: Int, isKingInPromotionZone: Boolean, numPiecesInPromotionZone: Int): String = {
+    val plural = (1 < numPiecesInPromotionZone).fold("s", "")
+    Seq(
+      s"Points: ${point}",
+      "In the promotion zone: " + isKingInPromotionZone.fold("King + ", "") + s"${numPiecesInPromotionZone} piece${plural}"
+    ).mkString("\n")
+  }
 
   override val RESET: String = "Reset"
   override val INITIAL_STATE: Map[State, String] = Map(

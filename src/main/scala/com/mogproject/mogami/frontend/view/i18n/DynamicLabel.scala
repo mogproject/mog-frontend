@@ -19,7 +19,13 @@ case class DynamicLabel(f: Messages => String, glyphicon: Option[String] = None)
   //
   override val samObserveMask: Int = ObserveFlag.CONF_MSG_LANG
 
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+  private[this] def refresh(): Unit = {
     element.innerHTML = f(Messages.get) + additional
   }
+
+  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+    refresh()
+  }
+
+  refresh()
 }

@@ -6,7 +6,7 @@ import com.mogproject.mogami.frontend.action.analyze.AnalyzeCheckmateAction
 import com.mogproject.mogami.frontend.action.board.AddMovesAction
 import com.mogproject.mogami.frontend.action.dialog.MenuDialogAction
 import com.mogproject.mogami.frontend.view.button.CommandButtonHoverable
-import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
+import com.mogproject.mogami.frontend.view.i18n.{DynamicLabel, Messages}
 import org.scalajs.dom
 import org.scalajs.dom.html.{Div, Input}
 
@@ -40,12 +40,12 @@ class CheckmateButton(isMobile: Boolean) extends WebComponent {
 
   private[this] def generateAddMovesButton(moves: Seq[Move]) = CommandButtonHoverable(
     DynamicLabel(_.ADD_CHECKMATE_MOVES).element,
-    { () =>
+    () => {
       doAction(AddMovesAction(moves))
-      displayCheckmateMessage("Moves are added.")
+      displayCheckmateMessage(Messages.get.CHECKMATE_MOVES_ADDED)
       doAction(MenuDialogAction(false), 1000) // close menu modal after 1 sec (mobile)
     },
-    Map(English -> "Add this solution to the current game record", Japanese -> "この手順を現在の棋譜に追記")
+    _.ADD_CHECKMATE_MOVES_TOOLTIP
   )
 
   private[this] def validateTimeout(): Int = {
@@ -58,13 +58,13 @@ class CheckmateButton(isMobile: Boolean) extends WebComponent {
     div(
       cls := "row",
       div(cls := "col-xs-6 col-sm-8 text-right",
-        "Timeout"
+        DynamicLabel(_.TIMEOUT).element
       ),
       div(cls := "col-xs-6 col-sm-4",
         marginTop := (-8).px,
         div(cls := "input-group",
           timeoutInput,
-          span(cls := "input-group-addon", padding := 6.px, "sec")
+          span(cls := "input-group-addon", padding := 6.px, DynamicLabel(_.SEC).element)
         )
       )
     ),
@@ -82,26 +82,20 @@ class CheckmateButton(isMobile: Boolean) extends WebComponent {
   //
   private[this] def clickAction(): Unit = {
     disableAnalyzeButton()
-    displayCheckmateMessage("Analyzing...")
+    displayCheckmateMessage(Messages.get.ANALYZING + "...")
     dom.window.setTimeout(() => doAction(AnalyzeCheckmateAction(validateTimeout())), 100)
   }
 
-  def displayResult(result: Option[Seq[Move]], messageLang: Language, recordLang: Language): Unit = {
-    (result, messageLang) match {
-      case (None, Japanese) =>
-        displayCheckmateMessage("制限時間内に解析できませんでした。")
-      case (None, _) =>
-        displayCheckmateMessage("This position is too difficult to solve.")
-      case (Some(Nil), Japanese) =>
-        displayCheckmateMessage("詰みはありません。")
-      case (Some(Nil), _) =>
-        displayCheckmateMessage("No checkmates.")
-      case (Some(moves), _) =>
+  def displayResult(result: Option[Seq[Move]], recordLang: Language): Unit = {
+    result match {
+      case None => displayCheckmateMessage(Messages.get.CHECKMATE_ANALYZE_TIMEOUT)
+      case Some(Nil) => displayCheckmateMessage(Messages.get.NO_CHECKMATES)
+      case Some(moves) =>
         val s = moves.map(m => m.player.toSymbolString() + (recordLang match {
           case Japanese => m.toJapaneseNotationString
           case English => m.toWesternNotationString
         }))
-        displayCheckmateMessage(s"Found a checkmate:\n${s.mkString(" ")}")
+        displayCheckmateMessage(Messages.get.CHECKMATE_FOUND + ":\n" + s.mkString(" "))
         solverMessage.appendChild(generateAddMovesButton(moves).element)
     }
     dom.window.setTimeout(() => enableAnalyzeButton(), 500)

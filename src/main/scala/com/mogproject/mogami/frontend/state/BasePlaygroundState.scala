@@ -32,7 +32,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
     // process message box
     newModel.messageBox.foreach {
       case AnalyzeResultMessage(result) =>
-        view.renderAnalyzeResult(result, newModel.config.messageLang, newModel.config.recordLang)
+        view.renderAnalyzeResult(result, newModel.config.recordLang)
       case CopyResultMessage(format) =>
         newModel.mode.getGameControl.foreach { gc => view.website.manageMenu.saveLoadButton.renderRecord(gc.getRecord(format)) }
       case HandleDialogMessage(dialog, open) => dialog match {

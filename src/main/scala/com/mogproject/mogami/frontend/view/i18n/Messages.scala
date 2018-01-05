@@ -25,16 +25,25 @@ trait Messages {
   def MENU: String
 
   def SHARE: String
+
   def RECORD_URL: String
+
   def SNAPSHOT_URL: String
+
   def SHORTEN_URL: String
+
   def SNAPSHOT_IMAGE: String
+
   def SNAPSHOT_SFEN_STRING: String
+
   def NOTES_VIEW: String
 
   def MANAGE: String
+
   def LOAD_FROM_FILE: String
+
   def LOAD_FROM_TEXT: String
+
   def SAVE_TO_FILE_CLIPBOARD: String
 
   //
@@ -46,6 +55,7 @@ trait Messages {
   // Action
   //
   def ACTION: String
+
   def RESIGN: String
 
   //
@@ -59,35 +69,71 @@ trait Messages {
 
   def ADD_CHECKMATE_MOVES: String
 
+  def ADD_CHECKMATE_MOVES_TOOLTIP: String
+
+  def CHECKMATE_MOVES_ADDED: String
+
+  def TIMEOUT: String
+
+  def SEC: String
+
+  def ANALYZING: String
+
+  def CHECKMATE_ANALYZE_TIMEOUT: String
+
+  def NO_CHECKMATES: String
+
+  def CHECKMATE_FOUND: String
+
   def COUNT_POINT: String
 
   def COUNT_POINT_LABEL: String
 
   def COUNT_POINT_TOOLTIP: String
 
+  def COUNT_POINT_RESULT(point: Int, isKingInPromotionZone: Boolean, numPiecesInPromotionZone: Int): String
+
   //
   // Reset
   //
   def RESET: String
+
   def INITIAL_STATE: Map[State, String]
 
 
+  //
+  // Settings
+  //
   def SETTINGS: String
+
   def BOARD_SIZE: String
+
   def LAYOUT: String
+
   def PIECE_GRAPHIC: String
+
   def DOUBLE_BOARD_MODE: String
+
   def VISUAL_EFFECTS: String
+
   def SOUND_EFFECTS: String
+
   def MESSAGE_LANG: String
+
   def RECORD_LANG: String
+
   def SETTINGS_INFO: String
 
+  //
+  // Help
+  //
   def HELP: String
+
   def ABOUT_THIS_SITE: String
 
 
   def MOVES: String
+
   def TRUNK: String
 }
 

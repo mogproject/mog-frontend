@@ -21,8 +21,12 @@ trait DynamicHoverTooltip extends TooltipEnabled with SAMObserver[BasePlayground
   //
   override val samObserveMask: Int = ObserveFlag.CONF_MSG_LANG
 
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+  private[this] def refresh(): Unit = {
     element.setAttribute("data-original-title", getTooltipMessage(Messages.get))
+  }
+
+  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+    refresh()
   }
 
   private[this] def initialize(): Unit = {
@@ -32,6 +36,7 @@ trait DynamicHoverTooltip extends TooltipEnabled with SAMObserver[BasePlayground
       SAM.removeObserver(this)
     } else {
       Tooltip.enableHoverToolTip(element)
+      refresh()
     }
   }
 

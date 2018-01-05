@@ -4,8 +4,7 @@ import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.analyze.CountPointAction
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.button.CommandButtonHoverable
-import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
-import com.mogproject.mogami.util.Implicits._
+import com.mogproject.mogami.frontend.view.i18n.{DynamicLabel, Messages}
 import org.scalajs.dom.html.Div
 
 import scalatags.JsDom.all._
@@ -39,13 +38,7 @@ class PointCountButton(isMobile: Boolean) extends WebComponent with SAMObserver[
   // messaging
   //
   def displayResult(point: Int, isKingInPromotionZone: Boolean, numPiecesInPromotionZone: Int): Unit = {
-    val plural = (1 < numPiecesInPromotionZone).fold("s", "")
-
-    val msg = Seq(
-      s"Points: ${point}",
-      "In the promotion zone: " + isKingInPromotionZone.fold("King + ", "") + s"${numPiecesInPromotionZone} piece${plural}"
-    ).mkString("\n")
-    displayMessage(msg)
+    displayMessage(Messages.get.COUNT_POINT_RESULT(point, isKingInPromotionZone, numPiecesInPromotionZone))
   }
 
   private[this] def displayMessage(message: String): Unit = {

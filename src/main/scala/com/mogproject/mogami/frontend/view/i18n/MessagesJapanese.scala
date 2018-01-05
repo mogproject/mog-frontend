@@ -1,6 +1,7 @@
 package com.mogproject.mogami.frontend.view.i18n
 
 import com.mogproject.mogami.State
+import com.mogproject.mogami.util.Implicits._
 
 /**
   * Japanese message definitions
@@ -37,12 +38,27 @@ case object MessagesJapanese extends Messages {
   override val ANALYZE_CHECKMATE_TOOLTIP: String = "この局面の詰み手順を解析"
 
   override val ADD_CHECKMATE_MOVES: String = "手順を棋譜に追記"
+  override val ADD_CHECKMATE_MOVES_TOOLTIP: String = "この手順を現在の棋譜に反映"
 
+  override val CHECKMATE_MOVES_ADDED: String = "詰み手順が反映されました。"
+  override val TIMEOUT: String = "時間制限"
+  override val SEC: String = "秒"
+  override val ANALYZING: String = "解析中"
+  override val CHECKMATE_ANALYZE_TIMEOUT: String = "制限時間内に解析できませんでした。"
+  override val NO_CHECKMATES: String = "詰みはありません。"
+  override val CHECKMATE_FOUND: String = "詰み手順を発見しました"
   override val BRANCH: String = "分岐"
 
   override val COUNT_POINT: String = "点数計算"
   override val COUNT_POINT_LABEL: String = "点数計算 (持将棋判定用)"
   override val COUNT_POINT_TOOLTIP: String = "局面の点数を計算 (持将棋判定用)"
+
+  override def COUNT_POINT_RESULT(point: Int, isKingInPromotionZone: Boolean, numPiecesInPromotionZone: Int): String = {
+    Seq(
+      s"点数: ${point}点",
+      "敵陣3段目以内: " + isKingInPromotionZone.fold("玉 + ", "") + s"${numPiecesInPromotionZone}枚"
+    ).mkString("\n")
+  }
 
   override val RESET: String = "初期局面"
   override val INITIAL_STATE: Map[State, String] = Map(
