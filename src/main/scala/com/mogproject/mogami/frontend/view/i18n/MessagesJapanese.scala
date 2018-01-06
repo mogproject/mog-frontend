@@ -32,6 +32,8 @@ case object MessagesJapanese extends Messages {
   override val VIEW: String = "開く"
   override val SNAPSHOT_SFEN_STRING: String = "局面 SFEN 文字列"
   override val NOTES_VIEW: String = "Notes ビュー"
+  override val COPY_SUCCESS: String = "コピー完了"
+  override val COPY_FAILURE: String = "コピー失敗"
 
   override val MANAGE: String = "ファイル管理"
   override val LOAD_FROM_FILE: String = "棋譜ファイルの読み込み"

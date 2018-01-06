@@ -21,8 +21,6 @@ case class URLShortener(baseUrl: String, apiKey: String) {
   }
 
   private[this] def initialize(): Option[Thenable] = {
-    println("initialized")
-
     // check if Google API client is ready
     if (apiKey.isEmpty) {
       dom.console.warn("Google API Key is not set.")

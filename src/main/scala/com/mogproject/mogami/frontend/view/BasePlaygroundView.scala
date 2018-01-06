@@ -11,6 +11,7 @@ import com.mogproject.mogami.frontend.view.menu.MenuPane
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, GameControl}
 import com.mogproject.mogami.frontend.view.board.canvas.CanvasBoard
+import com.mogproject.mogami.frontend.view.i18n.Messages
 import com.mogproject.mogami.frontend.view.modal._
 import org.scalajs.dom
 import org.scalajs.dom.{Element, UIEvent}
@@ -39,8 +40,8 @@ trait BasePlaygroundView extends SAMView {
 
     // initialize clipboard.js
     val cp = new Clipboard(".btn")
-    cp.on("success", (e: Event) => Tooltip.display(e.trigger, "Copied!"))
-    cp.on("error", (e: Event) => Tooltip.display(e.trigger, "Failed!"))
+    cp.on("success", (e: Event) => Tooltip.display(e.trigger, Messages.get.COPY_SUCCESS))
+    cp.on("error", (e: Event) => Tooltip.display(e.trigger, Messages.get.COPY_FAILURE))
 
   }
 

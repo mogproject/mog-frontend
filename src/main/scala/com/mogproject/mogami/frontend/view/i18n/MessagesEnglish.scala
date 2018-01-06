@@ -32,6 +32,8 @@ case object MessagesEnglish extends Messages {
   override val VIEW: String = "View"
   override val SNAPSHOT_SFEN_STRING: String = "Snapshot SFEN String"
   override val NOTES_VIEW: String = "Notes View"
+  override val COPY_SUCCESS: String = "Copied!"
+  override val COPY_FAILURE: String = "Failed!"
 
   override val MANAGE: String = "Manage"
   override val LOAD_FROM_FILE: String = "Load from File"

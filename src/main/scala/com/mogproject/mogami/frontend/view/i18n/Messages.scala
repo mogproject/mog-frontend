@@ -57,6 +57,10 @@ trait Messages {
 
   def NOTES_VIEW: String
 
+  def COPY_SUCCESS: String
+
+  def COPY_FAILURE: String
+
   //
   // Manage
   //
