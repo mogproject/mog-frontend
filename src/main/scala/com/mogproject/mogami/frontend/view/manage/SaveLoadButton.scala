@@ -5,6 +5,7 @@ import com.mogproject.mogami.frontend.io.TextReader
 import com.mogproject.mogami.frontend.model.io.{KIF, RecordFormat}
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.button.{DropdownMenu, SingleButton}
+import com.mogproject.mogami.frontend.view.i18n.{DynamicLabel, Messages}
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom
 import org.scalajs.dom.html._
@@ -28,7 +29,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
     tpe := "file",
     display := "none",
     onchange := { () =>
-      displayFileLoadMessage("Loading...")
+      displayFileLoadMessage(Messages.get.LOADING + "...")
       fileLoadButton.disabled = true
       dom.window.setTimeout(() => readSingleFile(fileName => content => loadRecord(fileName, content)), 500)
     }
@@ -40,7 +41,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
       displayFileLoadMessage("")
       fileLoadInput.value = ""
     },
-    "Browse",
+    DynamicLabel(_.BROWSE).element,
     fileLoadInput
   ).render
 
@@ -56,7 +57,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
   // @note `textLoadInput` area is also used for clipboard copy
   private[this] lazy val textLoadInput: TextArea = textarea(
     id := textLoadInputId,
-    cls := "form-control",
+    cls := "form-control input-small",
     rows := 5,
     placeholder := "Paste your record here.",
     data("toggle") := "tooltip",
@@ -141,7 +142,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
   //
   override lazy val element: Div = {
     val elem = div(
-      label("Load from File"),
+      label(DynamicLabel(_.LOAD_FROM_FILE).element),
       div(
         cls := "row",
         marginTop := 3.px,
@@ -149,7 +150,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
         fileLoadMessage
       ),
       br(),
-      label("Load from Text"),
+      label(DynamicLabel(_.LOAD_FROM_TEXT).element),
       textLoadInput,
       div(
         cls := "row",
@@ -163,7 +164,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
         div(cls := "col-xs-5 col-sm-3", textClearButton.element)
       ),
       br(),
-      label("Save to File / Clipboard"),
+      label(DynamicLabel(_.SAVE_TO_FILE_CLIPBOARD).element),
       div(cls := "input-group",
         fileSaveName,
         span(cls := "input-group-addon", padding := 6, "."),

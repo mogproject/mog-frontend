@@ -10,9 +10,12 @@ case object MessagesEnglish extends Messages {
 
   override val FLIP: String = "Flip"
 
+  override val COMMENT: String = "Comment"
   override val COMMENT_CLEAR: String = "Clear"
+  override val COMMENT_CLEARED: String = "Cleared!"
   override val COMMENT_CLEAR_TOOLTIP: String = "Clear this comment"
   override val COMMENT_UPDATE: String = "Update"
+  override val COMMENT_UPDATED: String = "Updated!"
   override val COMMENT_UPDATE_TOOLTIP: String = "Update this comment"
 
   override val MENU: String = "Menu"
@@ -43,6 +46,8 @@ case object MessagesEnglish extends Messages {
   override val LOAD_FROM_FILE: String = "Load from File"
   override val LOAD_FROM_TEXT: String = "Load from Text"
   override val SAVE_TO_FILE_CLIPBOARD: String = "Save to File / Clipboard"
+  override val BROWSE: String = "Browse"
+  override val LOADING: String = "Loading"
 
   override val ACTION: String = "Action"
   override val RESIGN: String = "Resign"

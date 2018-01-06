@@ -13,11 +13,17 @@ trait Messages {
   //
   def FLIP: String
 
+  def COMMENT: String
+
   def COMMENT_CLEAR: String
+
+  def COMMENT_CLEARED: String
 
   def COMMENT_CLEAR_TOOLTIP: String
 
   def COMMENT_UPDATE: String
+
+  def COMMENT_UPDATED: String
 
   def COMMENT_UPDATE_TOOLTIP: String
 
@@ -80,6 +86,10 @@ trait Messages {
   def LOAD_FROM_TEXT: String
 
   def SAVE_TO_FILE_CLIPBOARD: String
+
+  def BROWSE: String
+
+  def LOADING: String
 
   //
   // Branch

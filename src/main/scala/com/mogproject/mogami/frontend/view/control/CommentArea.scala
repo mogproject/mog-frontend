@@ -21,7 +21,7 @@ case class CommentArea(isDisplayOnly: Boolean, text: String = "") extends WebCom
   // Layout
   override lazy val element: Div = div(
     cls := "center-block comment-" + isDisplayOnly.fold("mobile", "pc"),
-    commentComponent.textCommentInput,
+    commentComponent.textCommentInput.element,
     if (isDisplayOnly) "" else div(
       cls := "row",
       marginTop := 3,
@@ -41,7 +41,7 @@ case class CommentArea(isDisplayOnly: Boolean, text: String = "") extends WebCom
   override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
     if (isFlagUpdated(flag, ObserveFlag.CONF_DEVICE)) {
       // set text input height
-      commentComponent.textCommentInput.rows = isDisplayOnly.fold(model.config.deviceType.isLandscape.fold(10, 2), 5)
+      commentComponent.textCommentInput.element.rows = isDisplayOnly.fold(model.config.deviceType.isLandscape.fold(10, 2), 5)
     }
 
     if (model.mode.isEditMode) {
@@ -49,7 +49,7 @@ case class CommentArea(isDisplayOnly: Boolean, text: String = "") extends WebCom
     } else {
       show()
       val comment = model.mode.getGameControl.flatMap(_.getComment).getOrElse("")
-      commentComponent.textCommentInput.value = comment
+      commentComponent.textCommentInput.element.value = comment
       commentComponent.refreshButtonDisabled()
     }
   }

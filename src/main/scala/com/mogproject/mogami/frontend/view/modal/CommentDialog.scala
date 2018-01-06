@@ -18,7 +18,7 @@ case class CommentDialog(messageLang: Language, text: String) extends ModalLike 
     case English => "Comment"
   }
 
-  override val modalBody: ElemType = div(bodyDefinition, commentArea.textCommentInput)
+  override val modalBody: ElemType = div(bodyDefinition, commentArea.textCommentInput.element)
 
   override val modalFooter: ElemType = div(footerDefinition,
     div(cls := "row",

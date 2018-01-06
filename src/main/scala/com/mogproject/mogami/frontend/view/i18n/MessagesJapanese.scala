@@ -10,9 +10,13 @@ case object MessagesJapanese extends Messages {
 
   override val FLIP: String = "反転"
 
+
+  override val COMMENT: String = "コメント"
   override val COMMENT_CLEAR: String = "削除"
+  override val COMMENT_CLEARED: String = "削除しました"
   override val COMMENT_CLEAR_TOOLTIP: String = "このコメントを削除"
   override val COMMENT_UPDATE: String = "更新"
+  override val COMMENT_UPDATED: String = "更新しました"
   override val COMMENT_UPDATE_TOOLTIP: String = "このコメントを更新"
 
   override val MENU: String = "メニュー"
@@ -40,9 +44,11 @@ case object MessagesJapanese extends Messages {
   override val SHARE_WARNING: String = "URL 文字数制限のため、この棋譜内のコメントはシェアされません"
 
   override val MANAGE: String = "ファイル管理"
-  override val LOAD_FROM_FILE: String = "棋譜ファイルの読み込み"
-  override val LOAD_FROM_TEXT: String = "テキストの読み込み"
+  override val LOAD_FROM_FILE: String = "棋譜ファイル読み込み"
+  override val LOAD_FROM_TEXT: String = "テキスト読み込み"
   override val SAVE_TO_FILE_CLIPBOARD: String = "棋譜ファイル / クリップボードへ書き出し"
+  override val BROWSE: String = "選択"
+  override val LOADING: String = "読み込み中"
 
   override val ACTION: String = "特殊な指し手"
   override val RESIGN: String = "投了"

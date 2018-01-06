@@ -3,29 +3,22 @@ package com.mogproject.mogami.frontend.view.control
 import com.mogproject.mogami.frontend.action.{OpenCommentDialogAction, UpdateGameControlAction}
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.button._
-import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
+import com.mogproject.mogami.frontend.view.i18n.{DynamicLabel, Messages}
 import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom
-import org.scalajs.dom.html.{Div, TextArea}
 
 import scalatags.JsDom.all._
 
 /**
   *
   */
-case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: String = "") extends SAMObserver[BasePlaygroundModel] {
+case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: String = "") {
 
   //
   // Elements
   //
-  lazy val textCommentInput: TextArea = textarea(
-    cls := "form-control input-small",
-    rows := 10,
-    placeholder := "",
-    data("toggle") := "tooltip",
-    data("trigger") := "manual",
-    data("placement") := "top",
+  lazy val textCommentInput: TextAreaComponent = TextAreaComponent(text, 10, _.COMMENT,
     isDisplayOnly.option(readonly := true),
     if (isDisplayOnly) {
       onclick := { () => PlaygroundSAM.doAction(OpenCommentDialogAction) }
@@ -34,11 +27,8 @@ case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: Stri
         textClearButton.enableElement()
         textUpdateButton.enableElement()
       }
-    },
-    text
-  ).render
-
-  private[this] val placeholders: Map[Language, String] = Map(English -> "Comment", Japanese -> "コメント")
+    }
+  )
 
   /** Must be 'val' to initialize the label */
   val textClearButton = CommandButtonHoverable(
@@ -51,7 +41,7 @@ case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: Stri
 
   val textUpdateButton = CommandButtonHoverable(
     DynamicLabel(_.COMMENT_UPDATE).element,
-    () => clickAction(textCommentInput.value),
+    () => clickAction(textCommentInput.element.value),
     _.COMMENT_UPDATE_TOOLTIP,
     TooltipPlacement.Top,
     isDismiss = true
@@ -63,7 +53,7 @@ case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: Stri
     if (isModal) {
       dom.window.setTimeout(() => PlaygroundSAM.doAction(act), 1)
     } else {
-      if (text.isEmpty) textCommentInput.value = "" // necessary: there might be unsaved text
+      if (text.isEmpty) textCommentInput.element.value = "" // necessary: there might be unsaved text
       PlaygroundSAM.doAction(act)
       displayCommentInputTooltip(text.isEmpty)
       refreshButtonDisabled()
@@ -74,22 +64,13 @@ case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: Stri
   // Tooltip
   //
   def displayCommentInputTooltip(isClear: Boolean): Unit = {
-    Tooltip.display(textCommentInput, isClear.fold("Cleared!", "Updated!"), 2000)
+    Tooltip.display(textCommentInput.element, isClear.fold(Messages.get.COMMENT_CLEARED, Messages.get.COMMENT_UPDATED), 2000)
   }
 
   def refreshButtonDisabled(): Unit = {
     Tooltip.hideToolTip(textClearButton.element)
     Tooltip.hideToolTip(textUpdateButton.element)
-    textClearButton.setDisabled(textCommentInput.value.isEmpty)
+    textClearButton.setDisabled(textCommentInput.element.value.isEmpty)
     textUpdateButton.disableElement()
-  }
-
-  //
-  // Observer
-  //
-  override val samObserveMask: Int = ObserveFlag.CONF_MSG_LANG
-
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
-    placeholders.get(model.config.messageLang).foreach(textCommentInput.placeholder = _)
   }
 }
