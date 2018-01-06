@@ -2,10 +2,8 @@ package com.mogproject.mogami.frontend.view.share
 
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.i18n.{DynamicElement, Messages}
-import org.scalajs.dom.Element
 import org.scalajs.dom.raw.HTMLElement
 
-import scalatags.JsDom
 import scalatags.JsDom.all._
 
 /**
@@ -18,7 +16,7 @@ class WarningLabel extends WebComponent with DynamicElement {
     display := display.none.v
   ).render
 
-  override def getMessage(messages: Messages): JsDom.TypedTag[Element] = div(
+  override def getDynamicElements(messages: Messages): Seq[Frag] = Seq(
     strong(messages.WARNING + "!"),
     " " + messages.SHARE_WARNING
   )

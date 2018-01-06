@@ -3,9 +3,7 @@ package com.mogproject.mogami.frontend.view.i18n
 import com.mogproject.mogami.frontend.state.ObserveFlag
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.{BasePlaygroundModel, SAMObserver}
-import org.scalajs.dom.Element
-
-import scalatags.JsDom.TypedTag
+import scalatags.JsDom.Frag
 
 /**
   *
@@ -13,7 +11,7 @@ import scalatags.JsDom.TypedTag
 trait DynamicElement extends SAMObserver[BasePlaygroundModel] {
   self: WebComponent =>
 
-  def getMessage(messages: Messages): TypedTag[Element]
+  def getDynamicElements(messages: Messages): Seq[Frag]
 
   //
   // Observer
@@ -22,7 +20,7 @@ trait DynamicElement extends SAMObserver[BasePlaygroundModel] {
 
   private[this] def refresh(): Unit = {
     WebComponent.removeAllChildElements(element)
-    element.appendChild(getMessage(Messages.get).render)
+    getDynamicElements(Messages.get).foreach(e => element.appendChild(e.render))
   }
 
   override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
