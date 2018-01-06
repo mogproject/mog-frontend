@@ -1,12 +1,9 @@
 package com.mogproject.mogami.frontend.view.share
 
 import com.mogproject.mogami.frontend.view.button.{CopyButtonLike, DropdownMenu}
-import org.scalajs.dom.html.Div
+import org.scalajs.dom.Element
 
-import scalatags.JsDom.all._
-
-
-class ImageLinkButton extends CopyButtonLike with ViewButtonLike {
+class ImageLinkButton extends CopyButtonLike {
 
   /**
     * definitions of image sizes
@@ -26,8 +23,6 @@ class ImageLinkButton extends CopyButtonLike with ViewButtonLike {
     */
   override protected val ident = "image-link-copy"
 
-  override protected val labelString = "Snapshot Image"
-
   private[this] val sizeButton = {
     val d = DropdownMenu(
       allSizes,
@@ -40,18 +35,9 @@ class ImageLinkButton extends CopyButtonLike with ViewButtonLike {
     d
   }
 
-  override lazy val element: Div = div(
-    label(labelString),
-    div(cls := "input-group",
-      inputElem,
-      div(cls := "input-group-btn", sizeButton.element),
-      div(
-        cls := "input-group-btn",
-        viewButton,
-        copyButton
-      )
-    )
-  ).render
+  override protected def rightButton: Option[Element] = Some(sizeButton.element)
+
+  override protected def viewButtonEnabled: Boolean = true
 
   override def updateValue(value: String): Unit = updateValueWithSize(Some(value))
 
@@ -61,7 +47,6 @@ class ImageLinkButton extends CopyButtonLike with ViewButtonLike {
     val url = base.replaceAll("[&]sz=\\d+", "") + sizeParams
 
     super.updateValue(url)
-    updateViewUrl(url)
   }
 
 }

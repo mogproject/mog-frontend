@@ -2,12 +2,16 @@ package com.mogproject.mogami.frontend.view
 
 import com.mogproject.mogami.frontend.action.PlaygroundAction
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
+import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement.TooltipPlacement
 import org.scalajs.dom
+import org.scalajs.dom.html.Button
 import org.scalajs.dom.raw.{HTMLElement, SVGElement}
 import org.scalajs.dom.{Element, Node}
 import org.scalajs.jquery.jQuery
 
-import scalatags.JsDom.all._
+import scalatags.JsDom.TypedTag
+import scalatags.JsDom.Modifier
+import scalatags.JsDom.all.{button => btn, _}
 
 /**
   *
@@ -56,6 +60,15 @@ trait WebComponent {
   } else {
     dom.window.setTimeout(() => PlaygroundSAM.doAction(action), delayMS)
   }
+
+  def defaultButtonWithManualTooltip(tooltipPlacement: TooltipPlacement, modifier: Modifier*): TypedTag[Button] = btn(
+    cls := "btn btn-default",
+    tpe := "button",
+    data("toggle") := "tooltip",
+    data("trigger") := "manual",
+    data("placement") := tooltipPlacement.toString,
+    modifier
+  )
 }
 
 object WebComponent {

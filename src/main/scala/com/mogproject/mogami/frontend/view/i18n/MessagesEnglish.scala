@@ -18,10 +18,18 @@ case object MessagesEnglish extends Messages {
   override val MENU: String = "Menu"
 
   override val SHARE: String = "Share"
+  override val COPY: String = "Copy"
   override val RECORD_URL: String = "Record URL"
   override val SNAPSHOT_URL: String = "Snapshot URL"
   override val SHORTEN_URL: String = "Shorten URL"
+  override val SHORTEN_URL_TOOLTIP: String = "Create a short URL by Google URL Shortener"
+  override val SHORTEN_URL_CREATING: String = "creating"
   override val SNAPSHOT_IMAGE: String = "Snapshot Image"
+  override val IMAGE_SIZE: String = "Image Size"
+  override val SMALL: String = "Small"
+  override val MEDIUM: String = "Medium"
+  override val LARGE: String = "Large"
+  override val VIEW: String = "View"
   override val SNAPSHOT_SFEN_STRING: String = "Snapshot SFEN String"
   override val NOTES_VIEW: String = "Notes View"
 

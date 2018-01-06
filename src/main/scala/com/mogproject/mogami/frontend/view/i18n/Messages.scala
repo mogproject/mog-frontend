@@ -24,7 +24,12 @@ trait Messages {
 
   def MENU: String
 
+  //
+  // Share
+  //
   def SHARE: String
+
+  def COPY: String
 
   def RECORD_URL: String
 
@@ -32,12 +37,29 @@ trait Messages {
 
   def SHORTEN_URL: String
 
+  def SHORTEN_URL_TOOLTIP: String
+
+  def SHORTEN_URL_CREATING: String
+
   def SNAPSHOT_IMAGE: String
+
+  def IMAGE_SIZE: String
+
+  def SMALL: String
+
+  def MEDIUM: String
+
+  def LARGE: String
+
+  def VIEW: String
 
   def SNAPSHOT_SFEN_STRING: String
 
   def NOTES_VIEW: String
 
+  //
+  // Manage
+  //
   def MANAGE: String
 
   def LOAD_FROM_FILE: String

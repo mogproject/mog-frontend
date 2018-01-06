@@ -19,21 +19,28 @@ class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePl
   override lazy val icon: String = "share"
   override lazy val visibleMode = Set(PlayModeType, ViewModeType)
 
-  lazy val recordCopyButton = new RecordCopyButton(isMobile)
-  lazy val snapshotCopyButton = new SnapshotCopyButton(isMobile)
+  lazy val warningLabel = new WarningLabel
+  lazy val recordCopyButton = new RecordCopyButton
+  lazy val snapshotCopyButton = new SnapshotCopyButton
   lazy val imageLinkButton = new ImageLinkButton
   lazy val sfenStringCopyButton = new SfenStringCopyButton
-  lazy val notesViewButton = new NotesViewButton(isMobile)
+  lazy val notesViewButton = new NotesViewButton
 
   override lazy val content: JsDom.TypedTag[Div] = div(
+    warningLabel.element,
+    label(DynamicLabel(_.RECORD_URL).element),
     recordCopyButton.element,
     br(),
+    label(DynamicLabel(_.SNAPSHOT_URL).element),
     snapshotCopyButton.element,
     br(),
+    label(DynamicLabel(_.SNAPSHOT_IMAGE).element),
     imageLinkButton.element,
     br(),
+    label(DynamicLabel(_.SNAPSHOT_SFEN_STRING).element),
     sfenStringCopyButton.element,
     br(),
+    label(DynamicLabel(_.NOTES_VIEW).element),
     notesViewButton.element
   )
 
@@ -54,7 +61,7 @@ class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePl
       model.mode.getGameControl.foreach { gc =>
         val builder = ArgumentsBuilder(gc, model.config)
         recordCopyButton.updateValue(builder.toRecordUrl)
-        if (builder.commentOmitted) recordCopyButton.showWarning() else recordCopyButton.hideWarning()
+        if (builder.commentOmitted) warningLabel.show() else warningLabel.hide()
         snapshotCopyButton.updateValue(builder.toSnapshotUrl)
         imageLinkButton.updateValue(builder.toImageLinkUrl)
         sfenStringCopyButton.updateValue(gc.getDisplayingState.toSfenString)

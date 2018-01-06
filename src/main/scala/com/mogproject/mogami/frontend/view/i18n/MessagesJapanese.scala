@@ -18,10 +18,18 @@ case object MessagesJapanese extends Messages {
   override val MENU: String = "メニュー"
 
   override val SHARE: String = "シェア"
+  override val COPY: String = "コピー"
   override val RECORD_URL: String = "棋譜 URL"
   override val SNAPSHOT_URL: String = "局面 URL"
   override val SHORTEN_URL: String = "短縮 URL"
+  override val SHORTEN_URL_TOOLTIP: String = "Google URL Shortener を利用して短縮 URL を生成"
+  override val SHORTEN_URL_CREATING: String = "作成中"
   override val SNAPSHOT_IMAGE: String = "局面画像生成"
+  override val IMAGE_SIZE: String = "画像サイズ"
+  override val SMALL: String = "小"
+  override val MEDIUM: String = "中"
+  override val LARGE: String = "大"
+  override val VIEW: String = "開く"
   override val SNAPSHOT_SFEN_STRING: String = "局面 SFEN 文字列"
   override val NOTES_VIEW: String = "Notes ビュー"
 
