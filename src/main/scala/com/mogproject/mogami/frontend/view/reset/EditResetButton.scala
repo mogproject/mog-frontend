@@ -56,7 +56,6 @@ class EditResetButton extends WebComponent with SAMObserver[BasePlaygroundModel]
     if (model.mode.isEditMode) {
       if (!initialized) {
         buttons.foreach(e => element.appendChild(div(cls := "col-xs-6 col-sm-4", e.element).render))
-        SAM.notifyObservers(ObserveFlag.CONF_MSG_LANG)
         initialized = true
       }
     }

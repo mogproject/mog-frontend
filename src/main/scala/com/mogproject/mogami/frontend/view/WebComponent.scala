@@ -78,6 +78,16 @@ object WebComponent {
 
   def removeAllChildElements(elem: Node): Unit = jQuery(elem).empty()
 
+  def replaceChildElement(parent: Node, elem: Node): Unit = {
+    removeAllChildElements(parent)
+    parent.appendChild(elem)
+  }
+
+  def replaceChildElements(parent: Node, elems: Iterable[Node]): Unit = {
+    removeAllChildElements(parent)
+    elems.foreach(parent.appendChild)
+  }
+
   def showElement(elem: Element): Unit = elem match {
     case e: HTMLElement => e.style.display = display.block.v
     case e: SVGElement => e.setAttribute("visibility", "visible")

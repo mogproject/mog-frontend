@@ -54,7 +54,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
   private[this] def branchNoToString(branchNo: BranchNo): String = (branchNo == 0).fold("Trunk", s"Branch#${branchNo}")
 
   private[this] def updateBranchList(numBranches: Int, displayBranch: BranchNo): Unit = {
-    val s = (0 to numBranches).map(s => option(branchNoToString(s))).toString
+    val s = (0 to numBranches).map(s => option(branchNoToString(s))).mkString
     changeBranchButton.innerHTML = s
     changeBranchButton.selectedIndex = displayBranch
   }

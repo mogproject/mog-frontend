@@ -16,6 +16,7 @@ case object MessagesJapanese extends Messages {
   override val COMMENT_UPDATE_TOOLTIP: String = "このコメントを更新"
 
   override val MENU: String = "メニュー"
+  override val EDIT: String = "編集"
 
   override val SHARE: String = "シェア"
   override val COPY: String = "コピー"

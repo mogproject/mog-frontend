@@ -25,6 +25,11 @@ trait Messages {
   def MENU: String
 
   //
+  // Edit
+  //
+  def EDIT: String
+
+  //
   // Share
   //
   def SHARE: String

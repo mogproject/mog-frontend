@@ -19,8 +19,7 @@ trait DynamicElement extends SAMObserver[BasePlaygroundModel] {
   override val samObserveMask: Int = ObserveFlag.CONF_MSG_LANG
 
   private[this] def refresh(): Unit = {
-    WebComponent.removeAllChildElements(element)
-    getDynamicElements(Messages.get).foreach(e => element.appendChild(e.render))
+    WebComponent.replaceChildElements(element, getDynamicElements(Messages.get).map(_.render))
   }
 
   override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {

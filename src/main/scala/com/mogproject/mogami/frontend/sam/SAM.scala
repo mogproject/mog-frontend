@@ -21,8 +21,6 @@ trait SAMLike {
   def addObserver[M <: SAMModel](observer: SAMObserver[M]): Unit = {}
 
   def removeObserver[M <: SAMModel](observer: SAMObserver[M]): Unit = {}
-
-  def notifyObservers(flag: Int): Unit = {}
 }
 
 
@@ -38,7 +36,7 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
     //    SAM.debug(s"doAction: ${action}")
 
     val result: Option[M] = action.execute(state.model)
-    //    println(s"result: ${result}")
+    //        println(s"result: ${result}")
 
     result match {
       case Some(nextModel) =>
@@ -85,8 +83,6 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
     }
   }
 
-  override def notifyObservers(flag: Int): Unit = notifyObservers(flag, state.model)
-
   override def initialize(): Unit = {
     state.view.initialize()
     state.initialize()
@@ -127,9 +123,6 @@ object SAM {
     samImpl.removeObserver(observer)
   }
 
-  def notifyObservers(flag: Int): Unit = {
-    samImpl.notifyObservers(flag)
-  }
 }
 
 

@@ -16,6 +16,7 @@ case object MessagesEnglish extends Messages {
   override val COMMENT_UPDATE_TOOLTIP: String = "Update this comment"
 
   override val MENU: String = "Menu"
+  override val EDIT: String = "Edit"
 
   override val SHARE: String = "Share"
   override val COPY: String = "Copy"
