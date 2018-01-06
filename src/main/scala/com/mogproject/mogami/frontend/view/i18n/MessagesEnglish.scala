@@ -35,6 +35,9 @@ case object MessagesEnglish extends Messages {
   override val COPY_SUCCESS: String = "Copied!"
   override val COPY_FAILURE: String = "Failed!"
 
+  override val WARNING: String = "Warning"
+  override val SHARE_WARNING: String = "Comments will not be shared due to the URL length limit."
+
   override val MANAGE: String = "Manage"
   override val LOAD_FROM_FILE: String = "Load from File"
   override val LOAD_FROM_TEXT: String = "Load from Text"

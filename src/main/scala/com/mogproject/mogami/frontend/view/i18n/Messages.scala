@@ -61,6 +61,10 @@ trait Messages {
 
   def COPY_FAILURE: String
 
+  def WARNING: String
+
+  def SHARE_WARNING: String
+
   //
   // Manage
   //

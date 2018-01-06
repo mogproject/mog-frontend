@@ -35,6 +35,9 @@ case object MessagesJapanese extends Messages {
   override val COPY_SUCCESS: String = "コピー完了"
   override val COPY_FAILURE: String = "コピー失敗"
 
+  override val WARNING: String = "注意"
+  override val SHARE_WARNING: String = "URL 文字数制限のため、この棋譜内のコメントはシェアされません"
+
   override val MANAGE: String = "ファイル管理"
   override val LOAD_FROM_FILE: String = "棋譜ファイルの読み込み"
   override val LOAD_FROM_TEXT: String = "テキストの読み込み"
