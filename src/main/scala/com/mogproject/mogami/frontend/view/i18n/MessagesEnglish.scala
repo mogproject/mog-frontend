@@ -2,11 +2,12 @@ package com.mogproject.mogami.frontend.view.i18n
 
 import com.mogproject.mogami.frontend.model.io.RecordFormat
 import com.mogproject.mogami.State
+import com.mogproject.mogami.frontend.FrontendSettings
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.util.Implicits._
-import org.scalajs.dom.html.{LI, UList}
+import org.scalajs.dom.html.LI
 
-import scalatags.JsDom
+import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
 
 /**
@@ -147,7 +148,7 @@ case object MessagesEnglish extends Messages {
 
   override val HELP: String = "Help"
 
-  override val HELP_CONTENT: Seq[JsDom.TypedTag[LI]] = Seq(
+  override val HELP_CONTENT: Seq[TypedTag[LI]] = Seq(
     li("Click on a player name to set game information."),
     li("In Play Mode, you can move pieces by a flick."),
     li("In View Mode, click (or hold) on any squares on the right-hand side of the board to move to the next position, and click (or hold) the left-hand side to the previous position."),
@@ -156,6 +157,24 @@ case object MessagesEnglish extends Messages {
 
   override val ABOUT_THIS_SITE: String = "About This Site"
 
+  override val ABOUT_CONTENT: Seq[Frag] = Seq(
+    p(i(""""Run anywhere. Needs NO installation."""")),
+    p("Shogi Playground is a platform for all shogi --Japanese chess-- fans in the world." +
+      " This mobile-friendly website enables you to manage, analyze, and share shogi games as well as mate problems."),
+    p("If you have any questions, trouble, or suggestion, please tell the ",
+      a(href := FrontendSettings.url.authorContactUrl, target := "_blank", "author"),
+      ". Your voice matters."),
+    br(),
+    label("Special Thanks"),
+    p(
+      "Piece Graphics - ",
+      a(href := FrontendSettings.url.credit.shineleckomaUrl, target := "_blank", "shineleckoma")
+    ),
+    p(
+      "Piece Fonts - ",
+      a(href := FrontendSettings.url.credit.loraFontsUrl, target := "_blank", "Lora Fonts")
+    )
+  )
 
   override val MOVES: String = "Moves"
   override val TRUNK: String = "Trunk"

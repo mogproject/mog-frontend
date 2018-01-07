@@ -2,11 +2,12 @@ package com.mogproject.mogami.frontend.view.i18n
 
 import com.mogproject.mogami.frontend.model.io.RecordFormat
 import com.mogproject.mogami.State
+import com.mogproject.mogami.frontend.FrontendSettings
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.util.Implicits._
-import org.scalajs.dom.html.{LI, UList}
+import org.scalajs.dom.html.LI
 
-import scalatags.JsDom
+import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
 
 /**
@@ -146,7 +147,7 @@ case object MessagesJapanese extends Messages {
   override val JAPANESE: String = "日本語"
 
   override val HELP: String = "ヘルプ"
-  override val HELP_CONTENT: Seq[JsDom.TypedTag[LI]] = Seq(
+  override val HELP_CONTENT: Seq[TypedTag[LI]] = Seq(
     li("対局者の名前をクリックすると、対局情報設定画面が現れます。"),
     li("Play モードでは駒のフリック操作で素早く着手を入力できます。"),
     li("View モードでは、盤面をクリックまたは押し続けることで表示局面を変えることができます。盤面の右側をクリックすると 1手先に進み、左側をクリックすると 1手前に戻ります。"),
@@ -154,6 +155,25 @@ case object MessagesJapanese extends Messages {
   )
 
   override val ABOUT_THIS_SITE: String = "このサイトについて"
+
+  override val ABOUT_CONTENT: Seq[Frag] = Seq(
+    p(i(""""インストール不要。どんなデバイスでも OK!"""")),
+    p("Shogi Playground (将棋・プレイグラウンド) は世界中の将棋ファンのためのプラットフォームです。" +
+      "このモバイル・フレンドリーなウェブサイトで、棋譜や詰将棋を手軽に管理、解析、共有しましょう。"),
+    p("不具合の報告、改善のアイデア等がございましたら ",
+      a(href := FrontendSettings.url.authorContactUrl, target := "_blank", "作者"),
+      " までご連絡ください。"),
+    br(),
+    label("スペシャル・サンクス"),
+    p(
+      "駒画像 - ",
+      a(href := FrontendSettings.url.credit.shineleckomaUrl, target := "_blank", "しんえれ外部駒")
+    ),
+    p(
+      "駒用フォント - ",
+      a(href := FrontendSettings.url.credit.loraFontsUrl, target := "_blank", "Lora Fonts")
+    )
+  )
 
 
   override val MOVES: String = "棋譜"

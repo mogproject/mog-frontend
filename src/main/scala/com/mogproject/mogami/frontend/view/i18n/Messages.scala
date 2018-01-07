@@ -4,9 +4,9 @@ import com.mogproject.mogami.{BranchNo, State}
 import com.mogproject.mogami.frontend.Language
 import com.mogproject.mogami.frontend.model.io.RecordFormat
 import com.mogproject.mogami.frontend.model.{English, Japanese}
-import org.scalajs.dom.html.{LI, UList}
+import org.scalajs.dom.html.LI
 
-import scalatags.JsDom.TypedTag
+import scalatags.JsDom.{TypedTag, Frag}
 
 /**
   * Message definitions
@@ -231,6 +231,7 @@ trait Messages {
 
   def ABOUT_THIS_SITE: String
 
+  def ABOUT_CONTENT: Seq[Frag]
 
   def MOVES: String
 
