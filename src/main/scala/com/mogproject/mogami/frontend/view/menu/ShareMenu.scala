@@ -2,6 +2,7 @@ package com.mogproject.mogami.frontend.view.menu
 
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.model.{BasePlaygroundModel, PlayModeType, ViewModeType}
+import com.mogproject.mogami.frontend.view.common.WarningLabel
 import com.mogproject.mogami.frontend.view.share._
 import org.scalajs.dom.html.Div
 
@@ -20,7 +21,7 @@ class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePl
   override lazy val icon: String = "share"
   override lazy val visibleMode = Set(PlayModeType, ViewModeType)
 
-  lazy val warningLabel = new WarningLabel
+  lazy val warningLabel = WarningLabel(_.SHARE_WARNING)
   lazy val recordCopyButton = new RecordCopyButton
   lazy val snapshotCopyButton = new SnapshotCopyButton
   lazy val imageLinkButton = new ImageLinkButton

@@ -157,6 +157,9 @@ object WebComponent {
     apply(div(modifier: _*)).withDynamicTextContent(f)
   }
 
+  def dynamicDivElements(f: Messages => Seq[Frag], modifier: Modifier*): WebComponent = {
+    apply(div(modifier: _*)).withDynamicInnerElements(f)
+  }
   //
   // Utility Functions
   //
