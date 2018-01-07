@@ -55,14 +55,12 @@ class CheckmateButton(isMobile: Boolean) extends WebComponent {
   override lazy val element: Div = div(
     div(
       cls := "row",
-      div(cls := "col-xs-6 col-sm-8 text-right",
-        DynamicComponent(_.TIMEOUT).element
-      ),
+      WebComponent.dynamicDiv(_.TIMEOUT, cls := "col-xs-6 col-sm-8 text-right").element,
       div(cls := "col-xs-6 col-sm-4",
         marginTop := (-8).px,
         div(cls := "input-group",
           timeoutInput,
-          span(cls := "input-group-addon", padding := 6.px, DynamicComponent(_.SEC).element)
+          WebComponent.dynamicSpan(_.SEC, cls := "input-group-addon", padding := 6.px).element
         )
       )
     ),

@@ -40,7 +40,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
       displayFileLoadMessage("")
       fileLoadInput.value = ""
     },
-    DynamicComponent(_.BROWSE).element,
+    WebComponent.dynamicSpan(_.BROWSE).element,
     fileLoadInput
   ).render
 
@@ -134,7 +134,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
   //
   override lazy val element: Div = {
     val elem = div(
-      label(DynamicComponent(_.LOAD_FROM_FILE).element),
+      WebComponent.dynamicLabel(_.LOAD_FROM_FILE).element,
       div(
         cls := "row",
         marginTop := 3.px,
@@ -142,7 +142,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
         fileLoadMessage
       ),
       br(),
-      label(DynamicComponent(_.LOAD_FROM_TEXT).element),
+      WebComponent.dynamicLabel(_.LOAD_FROM_TEXT).element,
       textLoadInput.element,
       div(
         cls := "row",
@@ -156,7 +156,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
         div(cls := "col-xs-5 col-sm-3", textClearButton.element)
       ),
       br(),
-      label(DynamicComponent(_.SAVE_TO_FILE_CLIPBOARD).element),
+      WebComponent.dynamicLabel(_.SAVE_TO_FILE_CLIPBOARD).element,
       div(cls := "input-group",
         fileSaveName.element,
         span(cls := "input-group-addon", padding := 6, "."),

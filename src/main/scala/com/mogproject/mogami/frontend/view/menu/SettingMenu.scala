@@ -65,10 +65,7 @@ class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
 
   override lazy val content: JsDom.TypedTag[Div] = div(
     selectors.map(_.element),
-    div(
-      cls := "alert alert-success setting-alert",
-      DynamicComponent(_.SETTINGS_INFO).element
-    )
+    WebComponent.dynamicDiv(_.SETTINGS_INFO, cls := "alert alert-success setting-alert").element
   )
 
   //

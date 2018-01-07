@@ -24,10 +24,10 @@ class AnalyzeMenu(isMobile: Boolean) extends AccordionMenu {
   lazy val pointCountButton = new PointCountButton(isMobile)
 
   override lazy val content: JsDom.TypedTag[Div] = div(
-    label(DynamicComponent(_.ANALYZE_FOR_CHECKMATE).element),
+    WebComponent.dynamicLabel(_.ANALYZE_FOR_CHECKMATE).element,
     checkmateButton.element,
     br(),
-    label(DynamicComponent(_.COUNT_POINT_LABEL).element),
+    WebComponent.dynamicLabel(_.COUNT_POINT_LABEL).element,
     pointCountButton.element
   )
 }

@@ -145,7 +145,17 @@ object WebComponent {
 
   def apply[T <: Element](tag: TypedTag[T]): WebComponent = apply(tag.render)
 
-  def apply(): WebComponent = apply(span())
+  def dynamicLabel(f: Messages => String, modifier: Modifier*): WebComponent = {
+    apply(label(modifier: _*)).withDynamicTextContent(f)
+  }
+
+  def dynamicSpan(f: Messages => String, modifier: Modifier*): WebComponent = {
+    apply(span(modifier: _*)).withDynamicTextContent(f)
+  }
+
+  def dynamicDiv(f: Messages => String, modifier: Modifier*): WebComponent = {
+    apply(div(modifier: _*)).withDynamicTextContent(f)
+  }
 
   //
   // Utility Functions

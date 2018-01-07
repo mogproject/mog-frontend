@@ -29,19 +29,19 @@ class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePl
 
   override lazy val content: JsDom.TypedTag[Div] = div(
     warningLabel.element,
-    label(DynamicComponent(_.RECORD_URL).element),
+    WebComponent.dynamicLabel(_.RECORD_URL).element,
     recordCopyButton.element,
     br(),
-    label(DynamicComponent(_.SNAPSHOT_URL).element),
+    WebComponent.dynamicLabel(_.SNAPSHOT_URL).element,
     snapshotCopyButton.element,
     br(),
-    label(DynamicComponent(_.SNAPSHOT_IMAGE).element),
+    WebComponent.dynamicLabel(_.SNAPSHOT_IMAGE).element,
     imageLinkButton.element,
     br(),
-    label(DynamicComponent(_.SNAPSHOT_SFEN_STRING).element),
+    WebComponent.dynamicLabel(_.SNAPSHOT_SFEN_STRING).element,
     sfenStringCopyButton.element,
     br(),
-    label(DynamicComponent(_.NOTES_VIEW).element),
+    WebComponent.dynamicLabel(_.NOTES_VIEW).element,
     notesViewButton.element
   )
 

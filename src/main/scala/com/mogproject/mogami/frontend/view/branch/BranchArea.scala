@@ -110,7 +110,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
     div(cls := "row",
       marginRight := 12.px,
       marginBottom := 10.px,
-      div(cls := "col-xs-6", label(DynamicComponent(_.BRANCH).element)),
+      div(cls := "col-xs-6", WebComponent.dynamicLabel(_.BRANCH).element),
       div(cls := "col-xs-6", marginTop := (-6).px,
         newBranchButton.element)
     ),

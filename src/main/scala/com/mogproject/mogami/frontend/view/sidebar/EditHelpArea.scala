@@ -28,7 +28,7 @@ class EditHelpArea extends WebComponent with SAMObserver[BasePlaygroundModel] {
       label("Attributes"),
       attributeArea,
       br(),
-      label(DynamicComponent(_.HELP).element),
+      WebComponent.dynamicLabel(_.HELP).element,
       ul(
         li("Click on a player name to set the turn to move."),
         li("Double-click on a piece on board to change its attributes:",

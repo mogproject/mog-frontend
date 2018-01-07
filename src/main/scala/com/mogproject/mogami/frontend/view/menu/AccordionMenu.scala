@@ -40,7 +40,7 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
     )
   ).render
 
-  private[this] lazy val labelArea = WebComponent(span(paddingLeft := 20.px)).withDynamicTextContent(getTitle)
+  private[this] lazy val labelArea = WebComponent.dynamicSpan(getTitle, paddingLeft := 20.px)
 
   private[this] val titleElemHeading = h4(cls := "panel-title",
     span(

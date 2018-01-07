@@ -22,7 +22,7 @@ trait SideBarRight extends SideBarLike with Observer[AccordionMenu] with SAMObse
     cls := "sidebar-heading",
     onclick := { () => collapseSideBar() },
     span(cls := "glyphicon glyphicon-minus"),
-    span(DynamicComponent(_.MENU).element, paddingLeft := 14.px)
+    WebComponent.dynamicSpan(_.MENU, paddingLeft := 14.px).element
   ).render
 
   override lazy val titleCollapsed: Heading = h4(
