@@ -3,7 +3,7 @@ package com.mogproject.mogami.frontend.view.button
 import com.mogproject.mogami.frontend._
 import org.scalajs
 import org.scalajs.dom.Element
-import org.scalajs.dom.html.{Button, Div, Input}
+import org.scalajs.dom.html.{Anchor, Button, Div, Input}
 
 import scalatags.JsDom.all._
 
@@ -21,7 +21,18 @@ trait CopyButtonLike extends WebComponent {
 
   protected def rightButton: Option[Element] = None
 
-  private[this] lazy val viewButtonOpt: Option[ViewButton] = if (viewButtonEnabled) Some(new ViewButton) else None
+
+  private[this] lazy val viewButtonOpt: Option[WebComponent] = if (viewButtonEnabled) {
+    Some(
+      WebComponent(a(
+        cls := "btn "+ classButtonDefault,
+        tpe := "button",
+        target := "_blank"
+      )).withDynamicTextContent(_.VIEW)
+    )
+  } else {
+    None
+  }
 
   private[this] lazy val inputElem: Input = input(
     tpe := "text", id := ident, cls := "form-control", readonly := "readonly"
@@ -45,7 +56,7 @@ trait CopyButtonLike extends WebComponent {
 
   def updateValue(value: String): Unit = {
     inputElem.value = value
-    viewButtonOpt.foreach(_.updateViewUrl(value))
+    viewButtonOpt.foreach(_.element.asInstanceOf[Anchor].href = value)
   }
 
   def getValue: String = inputElem.value
