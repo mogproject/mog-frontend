@@ -11,10 +11,12 @@ import scalatags.JsDom.all._
 /**
   *
   */
-case class DropdownSelector[A](labelString: String,
+case class DropdownSelector[A](labelFunc: Messages => String,
                                items: Vector[(A, String)],
                                f: A => BasePlaygroundConfiguration => BasePlaygroundConfiguration,
                                separatorIndexes: Seq[Int] = Seq.empty) extends WebComponent {
+  private[this] val labelElem = WebComponent.dynamicLabel(labelFunc)
+
   private[this] val button = DropdownMenu[A](
     items.map(_._1),
     items.map { case (k, v) => k -> Map[Language, String](English -> v) }.toMap,
@@ -30,7 +32,7 @@ case class DropdownSelector[A](labelString: String,
       marginTop := (-8).px,
       button.element
     ),
-    label(labelString)
+    labelElem.element
   ).render
 
   def select(item: A): Unit = button.select(item)

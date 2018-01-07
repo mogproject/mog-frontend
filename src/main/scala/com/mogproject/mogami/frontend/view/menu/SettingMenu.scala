@@ -24,7 +24,7 @@ class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
   //
   // Elements
   //
-  private[this] lazy val boardSizeSelector = DropdownSelector[Option[Int]]("Board Size", Vector(
+  private[this] lazy val boardSizeSelector = DropdownSelector[Option[Int]](_.BOARD_SIZE, Vector(
     None -> "Automatic",
     Some(15) -> "15 - Extra Small",
     Some(20) -> "20",
@@ -35,22 +35,22 @@ class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
     Some(60) -> "60 - Extra Large"
   ), v => _.copy(pieceWidth = v), Seq(1))
 
-  private[this] lazy val layoutSelector = DropdownSelector[SVGAreaLayout]("Layout", Vector(
+  private[this] lazy val layoutSelector = DropdownSelector[SVGAreaLayout](_.LAYOUT, Vector(
     SVGStandardLayout -> "Standard",
     SVGCompactLayout -> "Compact",
     SVGWideLayout -> "Wide"
   ), v => _.copy(layout = v))
 
   private[this] lazy val pieceFaceSelector = DropdownSelector[PieceFace](
-    "Piece Graphic", PieceFace.all.map(p => p -> p.displayName).toVector, v => _.copy(pieceFace = v)
+    _.PIECE_GRAPHIC, PieceFace.all.map(p => p -> p.displayName).toVector, v => _.copy(pieceFace = v)
   )
 
-  private[this] lazy val doubleBoardSelector = BooleanSelector("Double Board Mode", v => _.copy(flipType = v.fold(DoubleBoard, FlipDisabled)))
-  private[this] lazy val visualEffectSelector = BooleanSelector("Visual Effects", v => _.copy(visualEffectEnabled = v))
-  private[this] lazy val soundEffectSelector = BooleanSelector("Sound Effects", v => _.copy(soundEffectEnabled = v))
+  private[this] lazy val doubleBoardSelector = BooleanSelector(_.DOUBLE_BOARD_MODE, v => _.copy(flipType = v.fold(DoubleBoard, FlipDisabled)))
+  private[this] lazy val visualEffectSelector = BooleanSelector(_.VISUAL_EFFECTS, v => _.copy(visualEffectEnabled = v))
+  private[this] lazy val soundEffectSelector = BooleanSelector(_.SOUND_EFFECTS, v => _.copy(soundEffectEnabled = v))
 
-  private[this] lazy val messageLanguageSelector = LanguageSelector("Messages", v => _.copy(messageLang = v))
-  private[this] lazy val recordLanguageSelector = LanguageSelector("Record", v => _.copy(recordLang = v))
+  private[this] lazy val messageLanguageSelector = LanguageSelector(_.MESSAGE_LANG, v => _.copy(messageLang = v))
+  private[this] lazy val recordLanguageSelector = LanguageSelector(_.RECORD_LANG, v => _.copy(recordLang = v))
 
   private[this] lazy val selectors = Seq(
     boardSizeSelector,
