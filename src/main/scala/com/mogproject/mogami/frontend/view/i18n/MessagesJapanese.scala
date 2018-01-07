@@ -160,7 +160,7 @@ case object MessagesJapanese extends Messages {
     p(i(""""インストール不要。どんなデバイスでも OK!"""")),
     p("Shogi Playground (将棋・プレイグラウンド) は世界中の将棋ファンのためのプラットフォームです。" +
       "このモバイル・フレンドリーなウェブサイトで、棋譜や詰将棋を手軽に管理、解析、共有しましょう。"),
-    p("不具合の報告、改善のアイデア等がございましたら ",
+    p("不具合、改善のアイデア等がございましたら ",
       a(href := FrontendSettings.url.authorContactUrl, target := "_blank", "作者"),
       " までご連絡ください。"),
     br(),
