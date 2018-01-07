@@ -5,7 +5,6 @@ import com.mogproject.mogami.frontend.io.TextReader
 import com.mogproject.mogami.frontend.model.io.{KIF, RecordFormat}
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.button._
-import com.mogproject.mogami.frontend.view.i18n.{DynamicHoverTooltipLike, DynamicPlaceholder}
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom
 import org.scalajs.dom.html._
@@ -88,11 +87,14 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
   //
   // elements #3: Save to File/ Clipboard
   //
-  private[this] val fileSaveName = DynamicPlaceholder(input(
-    tpe := "text",
-    cls := "form-control",
-    value := DEFAULT_FILE_NAME
-  ), (m: Messages) => m.FILE_NAME)
+  private[this] val fileSaveName = WebComponent(
+    input(
+      tpe := "text",
+      cls := "form-control",
+      value := DEFAULT_FILE_NAME
+    )
+  )
+    .withDynamicPlaceholder(_.FILE_NAME)
 
   private[this] val fileSaveFormat: DropdownMenu[RecordFormat] = DropdownMenu(
     RecordFormat.all,
@@ -239,7 +241,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
   // helper functions
   //
   private[this] def getFileName: String = {
-    val base = if (fileSaveName.element.value.isEmpty) DEFAULT_FILE_NAME else fileSaveName.element.value
-    base + "." + fileSaveFormat.getValue.toString.toLowerCase()
+    val s = fileSaveName.element.asInstanceOf[Input].value
+    s.isEmpty.fold(DEFAULT_FILE_NAME, s) + "." + fileSaveFormat.getValue.toString.toLowerCase()
   }
 }

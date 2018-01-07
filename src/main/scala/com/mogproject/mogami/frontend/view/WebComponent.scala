@@ -3,11 +3,11 @@ package com.mogproject.mogami.frontend.view
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.PlaygroundAction
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
-import com.mogproject.mogami.frontend.view.i18n.{DynamicComponentLike, DynamicHoverTooltipLike, Messages}
+import com.mogproject.mogami.frontend.view.i18n.{DynamicComponentLike, DynamicHoverTooltipLike, DynamicPlaceholderLike, Messages}
 import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement
 import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement.TooltipPlacement
 import org.scalajs.dom
-import org.scalajs.dom.html.Button
+import org.scalajs.dom.html.{Button, Input}
 import org.scalajs.dom.raw.{HTMLElement, SVGElement}
 import org.scalajs.dom.{Element, Node, Text}
 import org.scalajs.jquery.jQuery
@@ -122,9 +122,33 @@ trait WebComponent {
     }
   }
 
+  def withDynamicPlaceholder(f: Messages => String): WebComponent = {
+    element match {
+      case thisElem: Input =>
+        new WebComponent with DynamicPlaceholderLike {
+          override def element: Input = thisElem
+
+          override def getPlaceholder(messages: Messages): String = f(messages)
+        }
+      case _ => this
+    }
+  }
+
 }
 
 object WebComponent {
+  // Constructors
+  def apply(elem: Element): WebComponent = new WebComponent {
+    override def element: Element = elem
+  }
+
+  def apply[T <: Element](tag: TypedTag[T]): WebComponent = apply(tag.render)
+
+  def apply(): WebComponent = apply(span())
+
+  //
+  // Utility Functions
+  //
   def removeElement(elem: Node): Unit = jQuery(elem).remove()
 
   def removeElements(elems: Iterable[Node]): Unit = elems.foreach(removeElement)
