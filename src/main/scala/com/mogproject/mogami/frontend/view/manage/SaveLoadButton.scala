@@ -61,7 +61,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
     onclick := { () =>
       val text = textLoadInput.element.value
       val format = RecordFormat.detect(text)
-      displayTextLoadMessage(s"Loading as ${format} Format...")
+      displayTextLoadMessage(Messages.get.LOADING_TEXT(format))
       textLoadButton.disableElement()
       dom.window.setTimeout(() => readRecordText(format, text), 500)
     }
@@ -121,22 +121,6 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
   )
     .withManualTooltip()
     .withDynamicTextContent(_.COPY)
-
-
-  //
-  //    button(
-  //    cls := "btn btn-default",
-  //    tpe := "button",
-  //    data("toggle") := "tooltip",
-  //    data("placement") := "bottom",
-  //    data("trigger") := "manual",
-  //    data("clipboard-target") := "#" + textLoadInputId,
-  //    onclick := { () =>
-  //      displayTextLoadMessage("")
-  //      doAction(CopyRecordAction(fileSaveFormat.getValue))
-  //    },
-  //    "Copy"
-  //  ).render
 
   def renderRecord(record: String): Unit = {
     textLoadInput.element.value = record
@@ -200,16 +184,16 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
       def sizeChecker(sz: Int): Boolean = if (sz <= maxFileSizeKB * 1024) {
         false
       } else {
-        abortFileLoad(s"[Error] File too large. (must be <= ${maxFileSizeKB}KB)")
+        abortFileLoad(s"[${Messages.get.ERROR}] ${Messages.get.FILE_TOO_LARGE(maxFileSizeKB)}")
         true
       }
 
       Try(TextReader.readTextFile(f, callback(f.name), sizeChecker)) match {
         case Success(_) => // do nothing
-        case Failure(_) => abortFileLoad("[Error] Failed to open the file.")
+        case Failure(_) => abortFileLoad(s"[${Messages.get.ERROR}] ${Messages.get.ERROR_OPEN_FILE}")
       }
     }).getOrElse {
-      abortFileLoad("[Error] Failed to select the file.")
+      abortFileLoad(s"[${Messages.get.ERROR}] ${Messages.get.ERROR_SELECT_FILE}")
     }
   }
 
@@ -239,7 +223,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
 
   private[this] def abortFileLoad(message: String): Unit = {
     displayFileLoadMessage(message)
-    displayFileLoadTooltip("Failed!")
+    displayFileLoadTooltip(Messages.get.LOAD_FAILURE)
     clearFileLoad()
   }
 

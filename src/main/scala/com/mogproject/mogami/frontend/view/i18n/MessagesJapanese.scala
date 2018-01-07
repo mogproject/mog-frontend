@@ -1,5 +1,6 @@
 package com.mogproject.mogami.frontend.view.i18n
 
+import com.mogproject.mogami.frontend.model.io.RecordFormat
 import com.mogproject.mogami.{BranchNo, State}
 import com.mogproject.mogami.util.Implicits._
 
@@ -58,6 +59,19 @@ case object MessagesJapanese extends Messages {
   override val FILE_NAME: String = "ファイル名"
   override val BROWSE: String = "選択"
   override val LOADING: String = "読み込み中"
+
+  override def LOADING_TEXT(format: RecordFormat): String = s"${format} 形式として読み込み中..."
+
+  override def FILE_TOO_LARGE(maxFileSizeKB: Int): String = s"ファイルサイズが大きすぎます (最大 ${maxFileSizeKB}KB)"
+
+  override val ERROR_OPEN_FILE: String = "ファイルを開けませんでした"
+  override val ERROR_SELECT_FILE: String = "ファイルの選択に失敗しました"
+  override val ERROR: String = "エラー"
+  override val UNKNOWN_TYPE: String = "不明な棋譜形式です"
+  override val LOAD_SUCCESS: String = "読み込み完了"
+  override val LOAD_INFO_MOVES: String = "手"
+  override val LOAD_INFO_BRANCHES: String = "変化"
+  override val LOAD_FAILURE: String = ERROR
 
   override val ACTION: String = "特殊な指し手"
   override val RESIGN: String = "投了"

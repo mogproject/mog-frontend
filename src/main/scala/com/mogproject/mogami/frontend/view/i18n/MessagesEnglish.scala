@@ -1,5 +1,6 @@
 package com.mogproject.mogami.frontend.view.i18n
 
+import com.mogproject.mogami.frontend.model.io.RecordFormat
 import com.mogproject.mogami.{BranchNo, State}
 import com.mogproject.mogami.util.Implicits._
 
@@ -58,6 +59,20 @@ case object MessagesEnglish extends Messages {
   override val BROWSE: String = "Browse"
   override val LOADING: String = "Loading"
 
+  override def LOADING_TEXT(format: RecordFormat): String = s"Loading as ${format} Format..."
+
+  override def FILE_TOO_LARGE(maxFileSizeKB: Int): String = s"File too large. (must be <= ${maxFileSizeKB}KB)"
+
+  override val ERROR_OPEN_FILE: String = "Failed to open the file."
+  override val ERROR_SELECT_FILE: String = "Failed to select the file."
+  override val ERROR: String = "Error"
+
+  override val UNKNOWN_TYPE: String =  "Unknown file type"
+  override val LOAD_SUCCESS: String = "Loaded!"
+  override val LOAD_INFO_MOVES: String = "moves"
+  override val LOAD_INFO_BRANCHES: String = "branch(es)"
+  override val LOAD_FAILURE: String = "Failed!"
+
   override val ACTION: String = "Action"
   override val RESIGN: String = "Resign"
 
@@ -65,8 +80,8 @@ case object MessagesEnglish extends Messages {
   override val ANALYZE_FOR_CHECKMATE: String = "Analyze for Checkmate"
   override val ANALYZE_CHECKMATE_TOOLTIP: String = "Analyze this position for checkmate"
 
-  override val ADD_CHECKMATE_MOVES: String ="Add Moves to Game"
-  override val ADD_CHECKMATE_MOVES_TOOLTIP: String ="Add this solution to the current game record"
+  override val ADD_CHECKMATE_MOVES: String = "Add Moves to Game"
+  override val ADD_CHECKMATE_MOVES_TOOLTIP: String = "Add this solution to the current game record"
 
   override val CHECKMATE_MOVES_ADDED: String = "Moves are added."
   override val TIMEOUT: String = "Timeout"

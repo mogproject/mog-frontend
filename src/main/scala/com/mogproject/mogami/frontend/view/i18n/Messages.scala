@@ -2,6 +2,7 @@ package com.mogproject.mogami.frontend.view.i18n
 
 import com.mogproject.mogami.{BranchNo, State}
 import com.mogproject.mogami.frontend.Language
+import com.mogproject.mogami.frontend.model.io.RecordFormat
 import com.mogproject.mogami.frontend.model.{English, Japanese}
 
 /**
@@ -108,6 +109,26 @@ trait Messages {
   def BROWSE: String
 
   def LOADING: String
+
+  def LOADING_TEXT(format: RecordFormat): String
+
+  def FILE_TOO_LARGE(maxFileSizeKB: Int): String
+
+  def ERROR_OPEN_FILE: String
+
+  def ERROR_SELECT_FILE: String
+
+  def ERROR: String
+
+  def UNKNOWN_TYPE: String
+
+  def LOAD_SUCCESS: String
+
+  def LOAD_INFO_MOVES: String
+
+  def LOAD_INFO_BRANCHES: String
+
+  def LOAD_FAILURE: String
 
   //
   // Branch
