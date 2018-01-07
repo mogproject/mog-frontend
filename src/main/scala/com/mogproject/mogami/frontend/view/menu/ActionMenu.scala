@@ -13,7 +13,9 @@ import scalatags.JsDom.all._
 class ActionMenu extends AccordionMenu {
 
   override lazy val ident: String = "Action"
-  override lazy val titleLabel = DynamicComponent(_.ACTION)
+
+  override def getTitle(messages: Messages): String = messages.ACTION
+
   override lazy val icon: String = "tower"
   override lazy val visibleMode = Set(PlayModeType)
 

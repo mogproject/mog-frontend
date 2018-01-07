@@ -15,7 +15,9 @@ import scalatags.JsDom.all._
   */
 class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
   override lazy val ident: String = "Settings"
-  override lazy val titleLabel = DynamicComponent(_.SETTINGS)
+
+  override def getTitle(messages: Messages): String = messages.SETTINGS
+
   override lazy val icon: String = "wrench"
   override lazy val visibleMode = Set(PlayModeType, ViewModeType, EditModeType)
 

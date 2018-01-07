@@ -13,7 +13,9 @@ import scalatags.JsDom.all._
 class AnalyzeMenu(isMobile: Boolean) extends AccordionMenu {
 
   override lazy val ident: String = "Analyze"
-  override lazy val titleLabel = DynamicComponent(_.ANALYZE)
+
+  override def getTitle(messages: Messages): String = messages.ANALYZE
+
   override lazy val icon: String = "education"
   override lazy val visibleMode = Set(PlayModeType, ViewModeType)
 

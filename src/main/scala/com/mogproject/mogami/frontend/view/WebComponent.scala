@@ -15,6 +15,7 @@ import org.scalajs.jquery.jQuery
 import scalatags.JsDom.TypedTag
 import scalatags.JsDom.Modifier
 import scalatags.JsDom.all.{button => btn, _}
+import scalatags.generic.StylePair
 
 /**
   *
@@ -56,7 +57,7 @@ trait WebComponent {
 
   def hide(): Unit = WebComponent.hideElement(element)
 
-  def show(): Unit = WebComponent.showElement(element)
+  def show(displayStyle: StylePair[Element, String] = display.block): Unit = WebComponent.showElement(element, displayStyle)
 
   def doAction(action: PlaygroundAction, delayMS: Int = 0): Unit = if (delayMS <= 0) {
     PlaygroundSAM.doAction(action)
@@ -182,11 +183,13 @@ object WebComponent {
     //    }
   }
 
-  def showElement(elem: Element): Unit = elem match {
-    case e: HTMLElement => e.style.display = display.block.v
+  def showElement(elem: Element, displayStyle: StylePair[Element, String]): Unit = elem match {
+    case e: HTMLElement => e.style.display = displayStyle.v
     case e: SVGElement => e.setAttribute("visibility", "visible")
     case _ =>
   }
+
+  def showElement(elem: Element): Unit = showElement(elem, display.block)
 
   def hideElement(elem: Element): Unit = elem match {
     case e: HTMLElement => e.style.display = display.none.v

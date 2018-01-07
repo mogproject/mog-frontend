@@ -13,7 +13,9 @@ import scalatags.JsDom.all._
 class BranchMenu extends AccordionMenu {
 
   override lazy val ident: String = "Branch"
-  override lazy val titleLabel = DynamicComponent(_.BRANCH)
+
+  override def getTitle(messages: Messages): String = messages.BRANCH
+
   override lazy val icon: String = "share-alt"
   override lazy val visibleMode = Set(PlayModeType, ViewModeType)
 

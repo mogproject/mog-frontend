@@ -2,7 +2,6 @@ package com.mogproject.mogami.frontend.view.menu
 
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.Observable
-import com.mogproject.mogami.frontend.view.i18n.DynamicComponentLike
 import org.scalajs.dom.html.Div
 import com.mogproject.mogami.util.Implicits._
 
@@ -18,7 +17,7 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
 
   def ident: String
 
-  def titleLabel: DynamicComponentLike
+  def getTitle(messages: Messages): String
 
   def icon: String
 
@@ -41,13 +40,13 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
     )
   ).render
 
-  private[this] lazy val labelArea = span(titleLabel.element, paddingLeft := 20.px).render
+  private[this] lazy val labelArea = WebComponent(span(paddingLeft := 20.px)).withDynamicTextContent(getTitle)
 
   private[this] val titleElemHeading = h4(cls := "panel-title",
     span(
       cls := "accordion-toggle",
       glyph,
-      labelArea
+      labelArea.element
     )
   ).render
 
@@ -89,12 +88,12 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
   }
 
   def collapseTitle(): Unit = {
-    labelArea.style.display = display.none.v
+    labelArea.hide()
     element.setAttribute("data-original-title", ident)
   }
 
   def expandTitle(): Unit = {
-    labelArea.style.display = display.inline.v
+    labelArea.show(display.inline)
     element.removeAttribute("data-original-title")
   }
 

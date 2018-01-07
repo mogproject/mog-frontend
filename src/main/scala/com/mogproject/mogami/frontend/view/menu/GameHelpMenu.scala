@@ -11,7 +11,9 @@ import scalatags.JsDom.all._
   */
 class GameHelpMenu extends AccordionMenu {
   override lazy val ident: String = "Help"
-  override lazy val titleLabel = DynamicComponent(_.HELP)
+
+  override def getTitle(messages: Messages): String = messages.HELP
+
   override lazy val icon: String = "question-sign"
   override lazy val content: JsDom.TypedTag[Div] = div(
     ul(

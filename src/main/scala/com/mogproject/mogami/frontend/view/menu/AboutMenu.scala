@@ -11,7 +11,9 @@ import scalatags.JsDom.all._
   */
 class AboutMenu extends AccordionMenu {
   override lazy val ident: String = "About"
-  override lazy val titleLabel = DynamicComponent(_.ABOUT_THIS_SITE)
+
+  override def getTitle(messages: Messages): String = messages.ABOUT_THIS_SITE
+
   override lazy val icon: String = "info-sign"
   override lazy val content: JsDom.TypedTag[Div] = div(
     p(i(""""Run anywhere. Needs NO installation."""")),
