@@ -56,6 +56,8 @@ trait WebComponent {
     case _ => false
   }
 
+  def isVisible: Boolean = WebComponent.isVisibleElement(element)
+
   def hide(): Unit = WebComponent.hideElement(element)
 
   def show(displayStyle: StylePair[Element, String] = display.block): Unit = WebComponent.showElement(element, displayStyle)
@@ -252,6 +254,12 @@ object WebComponent {
     case e: HTMLElement => e.style.display = display.none.v
     case e: SVGElement => e.setAttribute("visibility", "hidden")
     case _ =>
+  }
+
+  def isVisibleElement(elem: Element): Boolean = elem match {
+    case e: HTMLElement => e.style.display != display.none.v
+    case e: SVGElement => e.getAttribute("visibility") != "hidden"
+    case _ => false
   }
 
   def clearClass(elem: Element): Unit = {

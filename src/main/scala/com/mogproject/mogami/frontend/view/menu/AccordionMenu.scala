@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view.menu
 
-import com.mogproject.mogami.frontend._
+import com.mogproject.mogami.frontend.{BootstrapJQuery, _}
 import com.mogproject.mogami.frontend.view.Observable
 import org.scalajs.dom.html.Div
 import com.mogproject.mogami.util.Implicits._
@@ -8,6 +8,8 @@ import com.mogproject.mogami.util.Implicits._
 import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
 import org.scalajs.jquery.jQuery
+
+import scala.scalajs.js
 
 
 /**
@@ -88,6 +90,7 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
   }
 
   def collapseTitle(): Unit = {
+    collapseContent()
     labelArea.hide()
     element.setAttribute("data-original-title", ident)
   }
@@ -95,6 +98,26 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
   def expandTitle(): Unit = {
     labelArea.show(display.inline)
     element.removeAttribute("data-original-title")
+  }
+
+  private[this] def getJQueryElem: BootstrapJQuery = {
+    val elem = jQuery(mainElem).asInstanceOf[BootstrapJQuery]
+
+    elem.collapse {
+      val r = js.Dynamic.literal()
+      r.toggle = false
+      r.parent = "#accordion" // necessary to keep group settings
+      r
+    }
+    elem
+  }
+
+  def collapseContent(): Unit = {
+    getJQueryElem.collapse("hide")
+  }
+
+  def expandContent(): Unit = {
+    if (labelArea.isVisible) getJQueryElem.collapse("show")
   }
 
   initialize()

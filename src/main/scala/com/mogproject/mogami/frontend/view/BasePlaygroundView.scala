@@ -43,6 +43,8 @@ trait BasePlaygroundView extends SAMView {
     cp.on("success", (e: Event) => Tooltip.display(e.trigger, Messages.get.COPY_SUCCESS))
     cp.on("error", (e: Event) => Tooltip.display(e.trigger, Messages.get.COPY_FAILURE))
 
+    // expand About menu
+    if (!website.isMobile) menuPane.accordions.find(_.ident == "About").foreach(a => dom.window.setTimeout(() => a.expandContent(), 100))
   }
 
   def renderAnalyzeResult(result: AnalyzeResult, recordLang: Language): Unit = result match {
