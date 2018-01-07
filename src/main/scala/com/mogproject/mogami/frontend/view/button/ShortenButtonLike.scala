@@ -2,8 +2,8 @@ package com.mogproject.mogami.frontend.view.button
 
 import com.mogproject.mogami.frontend.api.google.URLShortener
 import com.mogproject.mogami.frontend._
-import com.mogproject.mogami.frontend.view.i18n.DynamicHoverTooltip
 import org.scalajs.dom.Element
+import scalatags.JsDom.all._
 
 /**
   * Shorten Button
@@ -14,11 +14,9 @@ trait ShortenButtonLike extends CopyButtonLike {
 
   override protected def divClass: String = "shorten-bar"
 
-  private[this] val shortenButton = DynamicHoverTooltip(CommandButtonOld(
-    DynamicComponent(_.SHORTEN_URL, "arrow-right").element,
-    () => clickAction(),
-    isBlock = false
-  ), _.SHORTEN_URL_TOOLTIP)
+  private[this] val shortenButton = CommandButton(classButtonDefault, onclick := { () => clickAction() })
+    .withDynamicTextContent(_.SHORTEN_URL, "arrow-right")
+    .withDynamicHoverTooltip(_.SHORTEN_URL_TOOLTIP)
 
   private[this] def clickAction(): Unit = {
     updateValue(Messages.get.SHORTEN_URL_CREATING + "...", completed = false)

@@ -3,17 +3,19 @@ package com.mogproject.mogami.frontend.view.control
 import com.mogproject.mogami.frontend.action.{OpenCommentDialogAction, UpdateGameControlAction}
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.button._
-import com.mogproject.mogami.frontend.view.i18n.DynamicHoverTooltip
 import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom
+import org.scalajs.dom.Element
 
 import scalatags.JsDom.all._
 
 /**
   *
   */
-case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: String = "") {
+case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: String = "") extends WebComponent {
+
+  override def element: Element = ???
 
   //
   // Elements
@@ -31,17 +33,21 @@ case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: Stri
   )
 
   /** Must be 'val' to initialize the label */
-  val textClearButton = DynamicHoverTooltip(
-    CommandButtonOld(DynamicComponent(_.COMMENT_CLEAR).element, () => clickAction(""), isDismiss = true),
-    _.COMMENT_CLEAR_TOOLTIP,
-    TooltipPlacement.Top
+  val textClearButton: WebComponent = CommandButton(
+    classButtonDefaultBlock,
+    onclick := { () => clickAction("") },
+    dismissModalNew
   )
+    .withDynamicTextContent(_.COMMENT_CLEAR)
+    .withDynamicHoverTooltip(_.COMMENT_CLEAR_TOOLTIP, TooltipPlacement.Top)
 
-  val textUpdateButton = DynamicHoverTooltip(
-    CommandButtonOld(DynamicComponent(_.COMMENT_UPDATE).element, () => clickAction(textCommentInput.element.value), isDismiss = true),
-    _.COMMENT_UPDATE_TOOLTIP,
-    TooltipPlacement.Top
+  val textUpdateButton: WebComponent = CommandButton(
+    classButtonDefaultBlock,
+    onclick := { () => clickAction(textCommentInput.element.value) },
+    dismissModalNew
   )
+    .withDynamicTextContent(_.COMMENT_UPDATE)
+    .withDynamicHoverTooltip(_.COMMENT_UPDATE_TOOLTIP, TooltipPlacement.Top)
 
   private[this] def clickAction(text: String): Unit = {
     val act = UpdateGameControlAction(gc => gc.copy(game = gc.game.updateComment(gc.gamePosition, text).getOrElse(gc.game)))

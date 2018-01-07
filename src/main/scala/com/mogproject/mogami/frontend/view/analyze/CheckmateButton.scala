@@ -5,8 +5,7 @@ import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.analyze.AnalyzeCheckmateAction
 import com.mogproject.mogami.frontend.action.board.AddMovesAction
 import com.mogproject.mogami.frontend.action.dialog.MenuDialogAction
-import com.mogproject.mogami.frontend.view.button.CommandButtonOld
-import com.mogproject.mogami.frontend.view.i18n.DynamicHoverTooltip
+import com.mogproject.mogami.frontend.view.button.CommandButton
 import org.scalajs.dom
 import org.scalajs.dom.html.{Div, Input}
 
@@ -27,24 +26,25 @@ class CheckmateButton(isMobile: Boolean) extends WebComponent {
     value := DEFAULT_TIMEOUT
   ).render
 
-  private[this] lazy val analyzeButton = DynamicHoverTooltip(
-    CommandButtonOld(DynamicComponent(_.ANALYZE).element, () => clickAction()),
-    _.ANALYZE_CHECKMATE_TOOLTIP
-  )
+  private[this] lazy val analyzeButton = CommandButton(classButtonDefaultBlock, onclick := { () => clickAction() })
+    .withDynamicTextContent(_.ANALYZE)
+    .withDynamicHoverTooltip(_.ANALYZE_CHECKMATE_TOOLTIP)
 
   private[this] lazy val solverMessage: Div = div(
     cls := "col-xs-8 col-sm-9 text-muted",
     marginTop := 6
   ).render
 
-  private[this] def generateAddMovesButton(moves: Seq[Move]) = DynamicHoverTooltip(
-    CommandButtonOld(DynamicComponent(_.ADD_CHECKMATE_MOVES).element, () => {
+  private[this] def generateAddMovesButton(moves: Seq[Move]) = CommandButton(
+    classButtonDefaultBlock,
+    onclick := { () =>
       doAction(AddMovesAction(moves))
       displayCheckmateMessage(Messages.get.CHECKMATE_MOVES_ADDED)
       doAction(MenuDialogAction(false), 1000) // close menu modal after 1 sec (mobile)
-    }),
-    _.ADD_CHECKMATE_MOVES_TOOLTIP
+    }
   )
+    .withDynamicTextContent(_.ADD_CHECKMATE_MOVES)
+    .withDynamicHoverTooltip(_.ADD_CHECKMATE_MOVES_TOOLTIP)
 
   private[this] def validateTimeout(): Int = {
     val n = Try(timeoutInput.value.toInt).getOrElse(DEFAULT_TIMEOUT)

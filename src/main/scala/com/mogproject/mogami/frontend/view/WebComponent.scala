@@ -1,7 +1,10 @@
 package com.mogproject.mogami.frontend.view
 
+import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.PlaygroundAction
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
+import com.mogproject.mogami.frontend.view.i18n.{DynamicComponentLike, DynamicHoverTooltipLike, Messages}
+import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement
 import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement.TooltipPlacement
 import org.scalajs.dom
 import org.scalajs.dom.html.Button
@@ -83,6 +86,39 @@ trait WebComponent {
   // AttrPair shortcuts
   //
   def dismissModalNew: Modifier = data("dismiss") := "modal"
+
+
+  //
+  // Dynamic components
+  //
+  def withDynamicInnerElements(f: Messages => Seq[Frag]): WebComponent = {
+    val thisElem = element
+    new WebComponent with DynamicComponentLike {
+      override def element: Element = thisElem
+
+      override def getDynamicElements(messages: Messages): Seq[Frag] = f(messages)
+    }
+  }
+
+  def withDynamicInnerElement(f: Messages => Frag): WebComponent = withDynamicInnerElements(f.andThen(Seq(_)))
+
+  def withDynamicTextContent(f: Messages => String): WebComponent = withDynamicInnerElement(f.andThen(StringFrag))
+
+  def withDynamicTextContent(f: Messages => String, glyphicon: String): WebComponent = withDynamicInnerElements { messages: Messages =>
+    Seq(StringFrag(f(messages) + " "), span(cls := s"glyphicon glyphicon-${glyphicon}", aria.hidden := true))
+  }
+
+  def withDynamicHoverTooltip(f: Messages => String, tooltipPlacement: TooltipPlacement = TooltipPlacement.Bottom): WebComponent = {
+    val thisElem = element
+    new WebComponent with DynamicHoverTooltipLike {
+      override def element: Element = thisElem
+
+      override def placement: TooltipPlacement = tooltipPlacement
+
+      override def getTooltipMessage(messages: Messages): String = f(messages)
+    }
+  }
+
 }
 
 object WebComponent {
