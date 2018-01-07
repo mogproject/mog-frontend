@@ -4,9 +4,10 @@ import com.mogproject.mogami.{BranchNo, State}
 import com.mogproject.mogami.frontend.Language
 import com.mogproject.mogami.frontend.model.io.RecordFormat
 import com.mogproject.mogami.frontend.model.{English, Japanese}
+import com.mogproject.mogami.frontend.view.share.ImageSize
 import org.scalajs.dom.html.LI
 
-import scalatags.JsDom.{TypedTag, Frag}
+import scalatags.JsDom.{Frag, TypedTag}
 
 /**
   * Message definitions
@@ -221,6 +222,8 @@ trait Messages {
   def ENGLISH: String
 
   def JAPANESE: String
+
+  def IMAGE_SIZE_OPTIONS: Map[ImageSize, String]
 
   //
   // Help

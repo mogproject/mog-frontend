@@ -4,6 +4,7 @@ import com.mogproject.mogami.frontend.model.io.RecordFormat
 import com.mogproject.mogami.State
 import com.mogproject.mogami.frontend.FrontendSettings
 import com.mogproject.mogami.frontend.view.WebComponent
+import com.mogproject.mogami.frontend.view.share.ImageSize
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom.html.LI
 
@@ -145,6 +146,12 @@ case object MessagesJapanese extends Messages {
 
   override val ENGLISH: String = "英語"
   override val JAPANESE: String = "日本語"
+
+  override val IMAGE_SIZE_OPTIONS = Map(
+    ImageSize.Small -> "小",
+    ImageSize.Medium -> "中",
+    ImageSize.Large -> "大"
+  )
 
   override val HELP: String = "ヘルプ"
   override val HELP_CONTENT: Seq[TypedTag[LI]] = Seq(

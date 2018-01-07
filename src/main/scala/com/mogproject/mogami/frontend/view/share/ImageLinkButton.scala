@@ -3,12 +3,13 @@ package com.mogproject.mogami.frontend.view.share
 import com.mogproject.mogami.frontend.view.button.{CopyButtonLike, DropdownMenu}
 import org.scalajs.dom.Element
 
-class ImageLinkButton extends CopyButtonLike {
 
-  /**
-    * definitions of image sizes
-    */
-  sealed abstract class ImageSize(val w: Int)
+/**
+  * definitions of image sizes
+  */
+sealed abstract class ImageSize(val w: Int)
+
+object ImageSize {
 
   case object Small extends ImageSize(30)
 
@@ -16,7 +17,11 @@ class ImageLinkButton extends CopyButtonLike {
 
   case object Large extends ImageSize(50)
 
-  private[this] val allSizes = Vector(Small, Medium, Large)
+  val allSizes = Vector(Small, Medium, Large)
+
+}
+
+class ImageLinkButton extends CopyButtonLike {
 
   /**
     * Image link buttons
@@ -25,13 +30,13 @@ class ImageLinkButton extends CopyButtonLike {
 
   private[this] val sizeButton = {
     val d = DropdownMenu(
-      allSizes,
-      DropdownMenu.buildLabels(allSizes),
+      ImageSize.allSizes,
+      _.IMAGE_SIZE_OPTIONS,
       dropdownClass = "input-group-btn",
       clickAction = { (_: ImageSize) => updateValueWithSize() },
-      dropdownHeader = Some("Image Size")
+      dropdownHeader = Some(_.IMAGE_SIZE)
     )
-    d.select(Medium)
+    d.select(ImageSize.Medium)
     d
   }
 

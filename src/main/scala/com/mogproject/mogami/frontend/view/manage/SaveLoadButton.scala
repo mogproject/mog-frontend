@@ -96,9 +96,9 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
   )
     .withDynamicPlaceholder(_.FILE_NAME)
 
-  private[this] val fileSaveFormat: DropdownMenu[RecordFormat] = DropdownMenu(
+  private[this] val fileSaveFormat: DropdownMenuOld[RecordFormat] = DropdownMenuOld(
     RecordFormat.all,
-    DropdownMenu.buildLabels(RecordFormat.all),
+    DropdownMenuOld.buildLabels(RecordFormat.all),
     dropdownClass = "input-group-btn",
     labelClass = "dropdown-record",
     dropdownHeader = Some("Format")
