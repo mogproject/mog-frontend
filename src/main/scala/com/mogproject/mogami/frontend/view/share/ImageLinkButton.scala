@@ -17,7 +17,7 @@ object ImageSize {
 
   case object Large extends ImageSize(50)
 
-  val allSizes = Vector(Small, Medium, Large)
+  val all = Vector(Small, Medium, Large)
 
 }
 
@@ -30,7 +30,7 @@ class ImageLinkButton extends CopyButtonLike {
 
   private[this] val sizeButton = {
     val d = DropdownMenu(
-      ImageSize.allSizes,
+      ImageSize.all,
       _.IMAGE_SIZE_OPTIONS,
       dropdownClass = "input-group-btn",
       clickAction = { (_: ImageSize) => updateValueWithSize() },

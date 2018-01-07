@@ -2,8 +2,9 @@ package com.mogproject.mogami.frontend.view.i18n
 
 import com.mogproject.mogami.frontend.model.io.RecordFormat
 import com.mogproject.mogami.State
-import com.mogproject.mogami.frontend.FrontendSettings
+import com.mogproject.mogami.frontend.{FrontendSettings, PieceFace}
 import com.mogproject.mogami.frontend.view.WebComponent
+import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
 import com.mogproject.mogami.frontend.view.share.ImageSize
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom.html.LI
@@ -147,9 +148,28 @@ case object MessagesEnglish extends Messages {
   override val ENGLISH: String = "English"
   override val JAPANESE: String = "Japanese"
 
-  override val IMAGE_SIZE_OPTIONS: Map[ImageSize, String] = ImageSize.allSizes.map { s => s -> s.toString }.toMap
+  override val IMAGE_SIZE_OPTIONS: Map[ImageSize, String] = ImageSize.all.map { s => s -> s.toString }.toMap
 
   override val FORMAT: String = "Format"
+
+  override val BOARD_SIZE_OPTIONS: Map[Option[Int], String] = Map(
+    None -> "Automatic",
+    Some(15) -> "15 - Extra Small",
+    Some(20) -> "20",
+    Some(25) -> "25",
+    Some(30) -> "30 - Small",
+    Some(40) -> "40 - Medium",
+    Some(50) -> "50 - Large",
+    Some(60) -> "60 - Extra Large"
+  )
+
+  override val LAYOUT_OPTIONS: Map[SVGAreaLayout, String] = Map(
+    SVGStandardLayout -> "Standard",
+    SVGCompactLayout -> "Compact",
+    SVGWideLayout -> "Wide"
+  )
+
+  override val PIECE_GRAPHIC_OPTIONS: Map[PieceFace, String] = PieceFace.all.map(p => p -> p.displayName).toMap
 
   override val HELP: String = "Help"
 

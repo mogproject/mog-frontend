@@ -4,6 +4,7 @@ import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipDisabled}
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
+import com.mogproject.mogami.frontend.view.i18n.MessagesEnglish
 import com.mogproject.mogami.frontend.view.setting.{BooleanSelector, DropdownSelector, LanguageSelector}
 import org.scalajs.dom.html.Div
 
@@ -25,24 +26,15 @@ class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
   // Elements
   //
   private[this] lazy val boardSizeSelector = DropdownSelector[Option[Int]](_.BOARD_SIZE, Vector(
-    None -> "Automatic",
-    Some(15) -> "15 - Extra Small",
-    Some(20) -> "20",
-    Some(25) -> "25",
-    Some(30) -> "30 - Small",
-    Some(40) -> "40 - Medium",
-    Some(50) -> "50 - Large",
-    Some(60) -> "60 - Extra Large"
-  ), v => _.copy(pieceWidth = v), Seq(1))
+    None, Some(15), Some(20), Some(25), Some(30), Some(40), Some(50), Some(60)
+  ), _.BOARD_SIZE_OPTIONS, v => _.copy(pieceWidth = v), Seq(1))
 
   private[this] lazy val layoutSelector = DropdownSelector[SVGAreaLayout](_.LAYOUT, Vector(
-    SVGStandardLayout -> "Standard",
-    SVGCompactLayout -> "Compact",
-    SVGWideLayout -> "Wide"
-  ), v => _.copy(layout = v))
+    SVGStandardLayout, SVGCompactLayout, SVGWideLayout
+  ), _.LAYOUT_OPTIONS, v => _.copy(layout = v))
 
   private[this] lazy val pieceFaceSelector = DropdownSelector[PieceFace](
-    _.PIECE_GRAPHIC, PieceFace.all.map(p => p -> p.displayName).toVector, v => _.copy(pieceFace = v)
+    _.PIECE_GRAPHIC, PieceFace.all.toVector, _.PIECE_GRAPHIC_OPTIONS, v => _.copy(pieceFace = v)
   )
 
   private[this] lazy val doubleBoardSelector = BooleanSelector(_.DOUBLE_BOARD_MODE, v => _.copy(flipType = v.fold(DoubleBoard, FlipDisabled)))

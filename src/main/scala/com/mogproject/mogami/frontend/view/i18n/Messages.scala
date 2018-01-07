@@ -3,7 +3,8 @@ package com.mogproject.mogami.frontend.view.i18n
 import com.mogproject.mogami.{BranchNo, State}
 import com.mogproject.mogami.frontend.Language
 import com.mogproject.mogami.frontend.model.io.RecordFormat
-import com.mogproject.mogami.frontend.model.{English, Japanese}
+import com.mogproject.mogami.frontend.model.{English, Japanese, PieceFace}
+import com.mogproject.mogami.frontend.view.board.SVGAreaLayout
 import com.mogproject.mogami.frontend.view.share.ImageSize
 import org.scalajs.dom.html.LI
 
@@ -226,6 +227,12 @@ trait Messages {
   def IMAGE_SIZE_OPTIONS: Map[ImageSize, String]
 
   def FORMAT: String
+
+  def BOARD_SIZE_OPTIONS: Map[Option[Int], String]
+
+  def LAYOUT_OPTIONS: Map[SVGAreaLayout, String]
+
+  def PIECE_GRAPHIC_OPTIONS: Map[PieceFace, String]
 
   //
   // Help
