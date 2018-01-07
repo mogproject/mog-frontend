@@ -147,7 +147,9 @@ case object MessagesEnglish extends Messages {
   override val ENGLISH: String = "English"
   override val JAPANESE: String = "Japanese"
 
-  override val IMAGE_SIZE_OPTIONS = ImageSize.allSizes.map { s => s -> s.toString }.toMap
+  override val IMAGE_SIZE_OPTIONS: Map[ImageSize, String] = ImageSize.allSizes.map { s => s -> s.toString }.toMap
+
+  override val FORMAT: String = "Format"
 
   override val HELP: String = "Help"
 

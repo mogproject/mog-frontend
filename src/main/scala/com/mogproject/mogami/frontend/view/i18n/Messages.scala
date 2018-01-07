@@ -225,6 +225,8 @@ trait Messages {
 
   def IMAGE_SIZE_OPTIONS: Map[ImageSize, String]
 
+  def FORMAT: String
+
   //
   // Help
   //

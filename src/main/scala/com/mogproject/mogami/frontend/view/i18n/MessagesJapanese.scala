@@ -147,11 +147,12 @@ case object MessagesJapanese extends Messages {
   override val ENGLISH: String = "英語"
   override val JAPANESE: String = "日本語"
 
-  override val IMAGE_SIZE_OPTIONS = Map(
+  override val IMAGE_SIZE_OPTIONS: Map[ImageSize, String] = Map(
     ImageSize.Small -> "小",
     ImageSize.Medium -> "中",
     ImageSize.Large -> "大"
   )
+  override val FORMAT: String = "フォーマット"
 
   override val HELP: String = "ヘルプ"
   override val HELP_CONTENT: Seq[TypedTag[LI]] = Seq(

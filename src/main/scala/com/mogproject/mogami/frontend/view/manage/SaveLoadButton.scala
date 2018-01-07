@@ -96,12 +96,12 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
   )
     .withDynamicPlaceholder(_.FILE_NAME)
 
-  private[this] val fileSaveFormat: DropdownMenuOld[RecordFormat] = DropdownMenuOld(
+  private[this] val fileSaveFormat: DropdownMenu[RecordFormat] = DropdownMenu(
     RecordFormat.all,
-    DropdownMenuOld.buildLabels(RecordFormat.all),
+    (m: Messages) => RecordFormat.all.map { k => k -> k.toString}.toMap,
     dropdownClass = "input-group-btn",
     labelClass = "dropdown-record",
-    dropdownHeader = Some("Format")
+    dropdownHeader = Some(_.FORMAT)
   )
 
   private[this] val fileSaveButton = CommandButton(
