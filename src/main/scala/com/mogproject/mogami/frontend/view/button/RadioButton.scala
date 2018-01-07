@@ -26,7 +26,7 @@ case class RadioButton[A](items: Seq[A],
   protected def createInnerElements: Div = {
     div(cls := ("btn-group" :: buttonGroupClasses.toList).mkString(" "),
       items.map { item =>
-        a(
+        label(
           cls := ("btn" :: "btn-primary" :: (value == item).fold("active", "notActive") :: buttonClasses.toList).mkString(" "),
           onclick := { () => clickAction(item); select(item) },
           StringFrag(labelFunc(Messages.get).getOrElse(item, ""))
