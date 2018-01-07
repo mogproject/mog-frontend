@@ -101,6 +101,7 @@ case object MessagesEnglish extends Messages {
   override val BRANCH: String = "Branch"
   override val DELETE: String = "Delete"
   override val DELETE_BRANCH_TOOLTIP: String = "Delete this branch"
+  override val NEW_BRANCH_TOOLTIP: String = "Creates a new branch"
 
   override val COUNT_POINT: String = "Count"
   override val COUNT_POINT_LABEL: String = "Count Points"

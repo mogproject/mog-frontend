@@ -7,7 +7,7 @@ import com.mogproject.mogami.frontend.action.dialog.AskDeleteBranchAction
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 import com.mogproject.mogami.frontend.view.WebComponent
-import com.mogproject.mogami.frontend.view.button.{CommandButton, RadioButton}
+import com.mogproject.mogami.frontend.view.button.{CommandButton, RadioButton, RadioButtonOld}
 import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement
 import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement.TooltipPlacement
 import org.scalajs.dom.html.Div
@@ -37,10 +37,10 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
 
   private[this] lazy val newBranchButton: RadioButton[Boolean] = RadioButton(
     Seq(false, true),
-    Map(English -> Seq("Off", "On")),
-    (isNewBranchMode: Boolean) => PlaygroundSAM.doAction(UpdateConfigurationAction(_.copy(newBranchMode = isNewBranchMode))),
-    tooltip = (!isMobile).option("Creates a new branch")
+    (_: Messages) => Map(false -> "Off", true -> "On"),
+    (isNewBranchMode: Boolean) => doAction(UpdateConfigurationAction(_.copy(newBranchMode = isNewBranchMode)))
   )
+    .withDynamicHoverTooltip(_.NEW_BRANCH_TOOLTIP)
 
   private[this] lazy val deleteBranchButton = {
     val ret = CommandButton(
@@ -194,7 +194,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
             updateButtons(gc.game, gc.gamePosition, model.config.recordLang)
           }
           if (model.menuDialogOpen || isFlagUpdated(flag, CONF_NEW_BRANCH)) {
-            newBranchButton.updateValue(model.config.newBranchMode)
+            newBranchButton.select(model.config.newBranchMode)
           }
           if (model.menuDialogOpen || isFlagUpdated(flag, MODE_TYPE)) {
             if (model.mode.modeType == PlayModeType) showEditMenu() else hideEditMenu()

@@ -3,7 +3,7 @@ package com.mogproject.mogami.frontend.view.setting
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.UpdateConfigurationAction
 import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, English, Japanese, Language}
-import com.mogproject.mogami.frontend.view.button.RadioButton
+import com.mogproject.mogami.frontend.view.button.RadioButtonOld
 import org.scalajs.dom.html.Div
 
 import scalatags.JsDom.all._
@@ -14,7 +14,7 @@ import scalatags.JsDom.all._
 case class LanguageSelector(labelFunc: Messages => String, f: Language => BasePlaygroundConfiguration => BasePlaygroundConfiguration) extends WebComponent {
   private[this] val labelElem = WebComponent.dynamicLabel(labelFunc, marginTop := 6.px)
 
-  private[this] val button: RadioButton[Language] = RadioButton(
+  private[this] val button: RadioButtonOld[Language] = RadioButtonOld(
     Seq(Japanese, English), Map(English -> Seq("Japanese", "English")),
     onClick = { l: Language => PlaygroundSAM.doAction(UpdateConfigurationAction(f(l))) }
   )

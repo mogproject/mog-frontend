@@ -147,6 +147,8 @@ trait Messages {
 
   def DELETE_BRANCH_TOOLTIP: String
 
+  def NEW_BRANCH_TOOLTIP: String
+
   //
   // Action
   //

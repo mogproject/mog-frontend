@@ -140,7 +140,7 @@ trait WebComponent {
   def withDynamicInnerElements(f: Messages => Seq[Frag]): WebComponent = {
     val thisElem = element
     new WebComponent with DynamicComponentLike {
-      override def element: Element = thisElem
+      override lazy val element: Element = thisElem
 
       override def getDynamicElements(messages: Messages): Seq[Frag] = f(messages)
     }
@@ -156,9 +156,9 @@ trait WebComponent {
   def withDynamicHoverTooltip(f: Messages => String, tooltipPlacement: TooltipPlacement = TooltipPlacement.Bottom): WebComponent = {
     val thisElem = element
     new WebComponent with DynamicHoverTooltipLike {
-      override def element: Element = thisElem
+      override lazy val element: Element = thisElem
 
-      override def placement: TooltipPlacement = tooltipPlacement
+      override lazy val placement: TooltipPlacement = tooltipPlacement
 
       override def getTooltipMessage(messages: Messages): String = f(messages)
     }
@@ -168,7 +168,7 @@ trait WebComponent {
     element match {
       case thisElem: Input =>
         new WebComponent with DynamicPlaceholderLike {
-          override def element: Input = thisElem
+          override lazy val element: Input = thisElem
 
           override def getPlaceholder(messages: Messages): String = f(messages)
         }

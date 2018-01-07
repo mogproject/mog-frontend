@@ -6,7 +6,7 @@ import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.model.TestModel
 import com.mogproject.mogami.frontend.sam.SAMObserver
 import com.mogproject.mogami.frontend.state.ObserveFlag
-import com.mogproject.mogami.frontend.view.button.RadioButton
+import com.mogproject.mogami.frontend.view.button.RadioButtonOld
 import com.mogproject.mogami.frontend.view.nav.NavBarLike
 
 /**
@@ -14,7 +14,7 @@ import com.mogproject.mogami.frontend.view.nav.NavBarLike
   */
 case class NavBar(isMobile: Boolean) extends NavBarLike with SAMObserver[TestModel] {
 
-  lazy val modeButton: RadioButton[ModeType] = RadioButton(
+  lazy val modeButton: RadioButtonOld[ModeType] = RadioButtonOld(
     Seq(PlayModeType, ViewModeType, EditModeType),
     Map(English -> Seq("Play", "View", "Edit")),
     (mt: ModeType) => doAction(ChangeModeAction(mt, confirmed = false)),

@@ -102,6 +102,7 @@ case object MessagesJapanese extends Messages {
   override val BRANCH: String = "変化"
   override val DELETE: String = "削除"
   override val DELETE_BRANCH_TOOLTIP: String = "この変化を削除"
+  override val NEW_BRANCH_TOOLTIP: String = "未知の指し手に対して新しい変化を作成"
 
 
   override val COUNT_POINT: String = "点数計算"
