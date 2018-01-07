@@ -6,7 +6,7 @@ import com.mogproject.mogami.frontend.view.i18n.{DynamicHoverTooltipLike, Messag
 import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement
 import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement.TooltipPlacement
 import org.scalajs.dom.Element
-import org.scalajs.dom.html.{Anchor, Div}
+import org.scalajs.dom.html.Div
 
 import scalatags.JsDom.all._
 import com.mogproject.mogami.util.Implicits._

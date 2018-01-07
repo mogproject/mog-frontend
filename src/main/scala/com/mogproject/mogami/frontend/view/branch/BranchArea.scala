@@ -7,7 +7,7 @@ import com.mogproject.mogami.frontend.action.dialog.AskDeleteBranchAction
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 import com.mogproject.mogami.frontend.view.WebComponent
-import com.mogproject.mogami.frontend.view.button.{CommandButton, RadioButton, RadioButtonOld}
+import com.mogproject.mogami.frontend.view.button.{CommandButton, RadioButton}
 import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement
 import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement.TooltipPlacement
 import org.scalajs.dom.html.Div
