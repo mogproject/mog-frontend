@@ -1,8 +1,13 @@
 package com.mogproject.mogami.frontend.view.i18n
 
 import com.mogproject.mogami.frontend.model.io.RecordFormat
-import com.mogproject.mogami.{BranchNo, State}
+import com.mogproject.mogami.State
+import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.util.Implicits._
+import org.scalajs.dom.html.{LI, UList}
+
+import scalatags.JsDom
+import scalatags.JsDom.all._
 
 /**
   * English message definitions
@@ -67,7 +72,7 @@ case object MessagesEnglish extends Messages {
   override val ERROR_SELECT_FILE: String = "Failed to select the file."
   override val ERROR: String = "Error"
 
-  override val UNKNOWN_TYPE: String =  "Unknown file type"
+  override val UNKNOWN_TYPE: String = "Unknown file type"
   override val LOAD_SUCCESS: String = "Loaded!"
   override val LOAD_INFO_MOVES: String = "moves"
   override val LOAD_INFO_BRANCHES: String = "branch(es)"
@@ -137,7 +142,18 @@ case object MessagesEnglish extends Messages {
   override val RECORD_LANG: String = "Record"
   override val SETTINGS_INFO: String = "These settings will be saved for your browser."
 
+  override val ENGLISH: String = "English"
+  override val JAPANESE: String = "Japanese"
+
   override val HELP: String = "Help"
+
+  override val HELP_CONTENT: Seq[JsDom.TypedTag[LI]] = Seq(
+    li("Click on a player name to set game information."),
+    li("In Play Mode, you can move pieces by a flick."),
+    li("In View Mode, click (or hold) on any squares on the right-hand side of the board to move to the next position, and click (or hold) the left-hand side to the previous position."),
+    li("If you click and hold ", WebComponent.glyph("backward"), " or ", WebComponent.glyph("forward"), " button, the position changes continuously.")
+  )
+
   override val ABOUT_THIS_SITE: String = "About This Site"
 
 

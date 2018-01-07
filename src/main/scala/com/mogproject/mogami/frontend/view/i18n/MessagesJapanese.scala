@@ -1,8 +1,13 @@
 package com.mogproject.mogami.frontend.view.i18n
 
 import com.mogproject.mogami.frontend.model.io.RecordFormat
-import com.mogproject.mogami.{BranchNo, State}
+import com.mogproject.mogami.State
+import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.util.Implicits._
+import org.scalajs.dom.html.{LI, UList}
+
+import scalatags.JsDom
+import scalatags.JsDom.all._
 
 /**
   * Japanese message definitions
@@ -137,7 +142,17 @@ case object MessagesJapanese extends Messages {
   override val RECORD_LANG: String = "棋譜言語"
   override val SETTINGS_INFO: String = "設定はお使いのブラウザに保存されます"
 
+  override val ENGLISH: String = "英語"
+  override val JAPANESE: String = "日本語"
+
   override val HELP: String = "ヘルプ"
+  override val HELP_CONTENT: Seq[JsDom.TypedTag[LI]] = Seq(
+    li("対局者の名前をクリックすると、対局情報設定画面が現れます。"),
+    li("Play モードでは駒のフリック操作で素早く着手を入力できます。"),
+    li("View モードでは、盤面をクリックまたは押し続けることで表示局面を変えることができます。盤面の右側をクリックすると 1手先に進み、左側をクリックすると 1手前に戻ります。"),
+    li(WebComponent.glyph("backward"), " または ", WebComponent.glyph("forward"), " ボタンを 1秒以上押し続けると、連続して表示局面を変えることができます。")
+  )
+
   override val ABOUT_THIS_SITE: String = "このサイトについて"
 
 

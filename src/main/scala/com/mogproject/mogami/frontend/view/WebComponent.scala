@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view
 
-import com.mogproject.mogami.frontend._
+import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.action.PlaygroundAction
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 import com.mogproject.mogami.frontend.view.event.PointerHoldSensor
@@ -8,7 +8,7 @@ import com.mogproject.mogami.frontend.view.i18n.{DynamicComponentLike, DynamicHo
 import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement
 import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement.TooltipPlacement
 import org.scalajs.dom
-import org.scalajs.dom.html.{Button, Input}
+import org.scalajs.dom.html.{Button, Input, Span}
 import org.scalajs.dom.raw.{HTMLElement, SVGElement}
 import org.scalajs.dom.{Element, Node, Text}
 import org.scalajs.jquery.jQuery
@@ -70,8 +70,7 @@ trait WebComponent {
   // Utility
   //
   private[this] def getGlyphiconFrags(text: String, glyphicon: String): Seq[Frag] = {
-    val g = span(cls := s"glyphicon glyphicon-${glyphicon}", aria.hidden := true)
-    if (text.isEmpty) Seq(g) else Seq(StringFrag(text + " "), g)
+    text.nonEmpty.option(text).map(s => StringFrag(s + " ")).toSeq :+ WebComponent.glyph(glyphicon)
   }
 
   //
@@ -197,6 +196,10 @@ object WebComponent {
     apply(div(modifier: _*)).withDynamicTextContent(f)
   }
 
+  def dynamicDivElement(f: Messages => Frag, modifier: Modifier*): WebComponent = {
+    apply(div(modifier: _*)).withDynamicInnerElement(f)
+  }
+
   def dynamicDivElements(f: Messages => Seq[Frag], modifier: Modifier*): WebComponent = {
     apply(div(modifier: _*)).withDynamicInnerElements(f)
   }
@@ -263,4 +266,7 @@ object WebComponent {
     clearClass(elem)
     classNames.foreach(elem.classList.add)
   }
+
+  def glyph(glyphicon: String): TypedTag[Span] = span(cls := s"glyphicon glyphicon-${glyphicon}", aria.hidden := true)
+
 }

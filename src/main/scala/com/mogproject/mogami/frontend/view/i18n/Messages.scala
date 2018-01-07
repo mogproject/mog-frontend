@@ -4,11 +4,15 @@ import com.mogproject.mogami.{BranchNo, State}
 import com.mogproject.mogami.frontend.Language
 import com.mogproject.mogami.frontend.model.io.RecordFormat
 import com.mogproject.mogami.frontend.model.{English, Japanese}
+import org.scalajs.dom.html.{LI, UList}
+
+import scalatags.JsDom.TypedTag
 
 /**
   * Message definitions
   */
 trait Messages {
+
   //
   // Nav
   //
@@ -214,10 +218,16 @@ trait Messages {
 
   def SETTINGS_INFO: String
 
+  def ENGLISH: String
+
+  def JAPANESE: String
+
   //
   // Help
   //
   def HELP: String
+
+  def HELP_CONTENT: Seq[TypedTag[LI]]
 
   def ABOUT_THIS_SITE: String
 
