@@ -64,6 +64,7 @@ trait WebComponent {
     dom.window.setTimeout(() => PlaygroundSAM.doAction(action), delayMS)
   }
 
+  // remove: withManualTooltip
   def defaultButtonWithManualTooltip(tooltipPlacement: TooltipPlacement, modifier: Modifier*): TypedTag[Button] = btn(
     cls := "btn btn-default",
     tpe := "button",
@@ -78,9 +79,11 @@ trait WebComponent {
   //
   def classButtonDefault: String = "btn-default"
 
-  def classButtonDefaultBlock: String = "btn-default btn-block"
+  def classButtonBlock: String = "btn-block"
 
-  def classButtonPrimaryBlock: String = "btn-primary btn-block"
+  def classButtonDefaultBlock: String = classButtonDefault + " " + classButtonBlock
+
+  def classButtonPrimaryBlock: String = "btn-primary " + classButtonBlock
 
   //
   // AttrPair shortcuts

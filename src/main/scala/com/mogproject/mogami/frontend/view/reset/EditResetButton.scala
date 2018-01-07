@@ -4,7 +4,7 @@ import com.mogproject.mogami.State
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.board.EditResetAction
 import com.mogproject.mogami.frontend.model.BasePlaygroundModel
-import com.mogproject.mogami.frontend.view.button.CommandButtonOld
+import com.mogproject.mogami.frontend.view.button.CommandButton
 import org.scalajs.dom.html.Div
 
 import scalatags.JsDom.all._
@@ -37,11 +37,11 @@ class EditResetButton extends WebComponent with SAMObserver[BasePlaygroundModel]
   )
 
   private[this] lazy val buttons = keys.map { st =>
-    CommandButtonOld(
-      DynamicComponent(_.INITIAL_STATE(st)).element,
-      () => doAction(EditResetAction(st)),
-      isDismiss = true
-    )
+    CommandButton(
+      classButtonDefaultBlock,
+      onclick := {() =>doAction(EditResetAction(st))},
+      dismissModalNew
+    ).withDynamicTextContent(_.INITIAL_STATE(st))
   }
 
   override lazy val element: Div = div(cls := "row").render
