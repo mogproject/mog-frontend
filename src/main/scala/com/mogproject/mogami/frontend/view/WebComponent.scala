@@ -3,6 +3,7 @@ package com.mogproject.mogami.frontend.view
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.PlaygroundAction
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
+import com.mogproject.mogami.frontend.view.event.PointerHoldSensor
 import com.mogproject.mogami.frontend.view.i18n.{DynamicComponentLike, DynamicHoverTooltipLike, DynamicPlaceholderLike, Messages}
 import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement
 import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement.TooltipPlacement
@@ -112,6 +113,24 @@ trait WebComponent {
     val newElem = element
     WebComponent.replaceChildElements(newElem, getGlyphiconFrags(text, glyphicon).map(_.render))
     WebComponent(newElem)
+  }
+
+  def withHoldAction(pointerDown: () => Unit, pointerHold: () => Boolean): WebComponent = {
+    element match {
+      case thisElem: HTMLElement =>
+        new WebComponent with PointerHoldSensor {
+          override def element: Element = thisElem
+
+          override def eventTarget: HTMLElement = thisElem
+
+          override def pointerDownAction(clientX: Double, clientY: Double): Unit = pointerDown()
+
+          override def pointerUpAction(clientX: Double, clientY: Double): Unit = {}
+
+          override def pointerHoldAction(): Boolean = pointerHold()
+        }
+      case _ => this
+    }
   }
 
   //

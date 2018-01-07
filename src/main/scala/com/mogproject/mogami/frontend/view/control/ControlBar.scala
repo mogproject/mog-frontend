@@ -43,30 +43,34 @@ case class ControlBar(barType: ControlBarType) extends WebComponent with SAMObse
   }
 
   private[this] def createControlInput(glyph: String, clickAction: PlaygroundAction, holdCheck: Option[() => Boolean]): WebComponent = {
-    val lbl = span(cls := s"glyphicon glyphicon-${glyph}", aria.hidden := true).render
+    val hasHoldAction = holdCheck.isDefined
 
     val cs = Seq(classButtonDefault, "control-button") ++ (barType match {
       case ControlBarType.Small => Seq("control-small", "input-small")
       case _ => Seq.empty
     })
 
-    CommandButton(
+    val ret = CommandButton(
       cs.mkString(" "),
-      onclick := {() => doAction(clickAction)}
+      (!hasHoldAction).option(onclick := { () => doAction(clickAction) })
     )
       .withTextContent("", glyph)
 
-//    SingleButton(Map(English -> lbl), cs, None,
-//      Some(() => PlaygroundSAM.doAction(clickAction)),
-//      holdCheck.isDefined.fold(Some(() => PlaygroundSAM.doAction(clickAction)), None),
-//      holdCheck.getOrElse(() => false),
-//      useOnClick = false
-//    )
+    holdCheck match {
+      case Some(f) => ret.withHoldAction(
+        () => doAction(clickAction),
+        () => {
+          val flg = f()
+          if (flg) doAction(clickAction)
+          flg
+        })
+      case None => ret
+    }
   }
 
   private[this] lazy val controlInputStepBackward: WebComponent = createControlInput("step-backward", UpdateGameControlAction(_.withFirstDisplayPosition), None)
-  private[this] lazy val controlInputBackward: WebComponent = createControlInput("backward", UpdateGameControlAction(_.withPreviousDisplayPosition), Some(() => controlInputBackward.isDisabled))
-  private[this] lazy val controlInputForward: WebComponent = createControlInput("forward", UpdateGameControlAction(_.withNextDisplayPosition), Some(() => controlInputForward.isDisabled))
+  private[this] lazy val controlInputBackward: WebComponent = createControlInput("backward", UpdateGameControlAction(_.withPreviousDisplayPosition), Some(() => !controlInputBackward.isDisabled))
+  private[this] lazy val controlInputForward: WebComponent = createControlInput("forward", UpdateGameControlAction(_.withNextDisplayPosition), Some(() => !controlInputForward.isDisabled))
   private[this] lazy val controlInputStepForward: WebComponent = createControlInput("step-forward", UpdateGameControlAction(_.withLastDisplayPosition), None)
 
   private[this] lazy val controlBar = div(
