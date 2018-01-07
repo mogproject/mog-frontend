@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view.i18n
 
-import com.mogproject.mogami.State
+import com.mogproject.mogami.{BranchNo, State}
 import com.mogproject.mogami.util.Implicits._
 
 /**
@@ -76,7 +76,10 @@ case object MessagesJapanese extends Messages {
   override val CHECKMATE_ANALYZE_TIMEOUT: String = "制限時間内に解析できませんでした。"
   override val NO_CHECKMATES: String = "詰みはありません。"
   override val CHECKMATE_FOUND: String = "詰み手順を発見しました"
-  override val BRANCH: String = "分岐"
+  override val BRANCH: String = "変化"
+  override val DELETE: String = "削除"
+  override val DELETE_BRANCH_TOOLTIP: String = "この変化を削除"
+
 
   override val COUNT_POINT: String = "点数計算"
   override val COUNT_POINT_LABEL: String = "点数計算 (持将棋判定用)"

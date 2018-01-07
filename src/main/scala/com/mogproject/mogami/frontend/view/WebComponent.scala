@@ -66,6 +66,14 @@ trait WebComponent {
   }
 
   //
+  // Utility
+  //
+  private[this] def getGlyphiconFrags(text: String, glyphicon: String): Seq[Frag] = {
+    val g = span(cls := s"glyphicon glyphicon-${glyphicon}", aria.hidden := true)
+    if (text.isEmpty) Seq(g) else Seq(StringFrag(text + " "), g)
+  }
+
+  //
   // Class name shortcuts
   //
   def classButtonDefault: String = "btn-default"
@@ -81,16 +89,30 @@ trait WebComponent {
   //
   def dismissModalNew: Modifier = data("dismiss") := "modal"
 
+  def clipboardTarget(id: String): Modifier = data("clipboard-target") := "#" + id
+
   //
   // Mutator
   //
-  def setManualTooltip(placement: TooltipPlacement = TooltipPlacement.Bottom): WebComponent = {
-    element.setAttribute("data-toggle", "tooltip")
-    element.setAttribute("data-trigger", "manual")
-    element.setAttribute("data-placement", placement.toString)
-    this
+  def withManualTooltip(placement: TooltipPlacement = TooltipPlacement.Bottom): WebComponent = {
+    val newElem = element
+    newElem.setAttribute("data-toggle", "tooltip")
+    newElem.setAttribute("data-trigger", "manual")
+    newElem.setAttribute("data-placement", placement.toString)
+    WebComponent(newElem)
   }
 
+  def withTextContent(text: String): WebComponent = {
+    val newElem = element
+    WebComponent.replaceChildElement(newElem, text.render)
+    WebComponent(newElem)
+  }
+
+  def withTextContent(text: String, glyphicon: String): WebComponent = {
+    val newElem = element
+    WebComponent.replaceChildElements(newElem, getGlyphiconFrags(text, glyphicon).map(_.render))
+    WebComponent(newElem)
+  }
 
   //
   // Dynamic components
@@ -108,9 +130,8 @@ trait WebComponent {
 
   def withDynamicTextContent(f: Messages => String): WebComponent = withDynamicInnerElement(f.andThen(StringFrag))
 
-  def withDynamicTextContent(f: Messages => String, glyphicon: String): WebComponent = withDynamicInnerElements { messages: Messages =>
-    Seq(StringFrag(f(messages) + " "), span(cls := s"glyphicon glyphicon-${glyphicon}", aria.hidden := true))
-  }
+  def withDynamicTextContent(f: Messages => String, glyphicon: String): WebComponent = withDynamicInnerElements { messages: Messages => getGlyphiconFrags(f(messages), glyphicon) }
+
 
   def withDynamicHoverTooltip(f: Messages => String, tooltipPlacement: TooltipPlacement = TooltipPlacement.Bottom): WebComponent = {
     val thisElem = element
@@ -160,6 +181,7 @@ object WebComponent {
   def dynamicDivElements(f: Messages => Seq[Frag], modifier: Modifier*): WebComponent = {
     apply(div(modifier: _*)).withDynamicInnerElements(f)
   }
+
   //
   // Utility Functions
   //

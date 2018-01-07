@@ -43,7 +43,7 @@ trait CopyButtonLike extends WebComponent {
     onclick := { () => scalajs.dom.window.setTimeout({ () => copyButton.element.asInstanceOf[Button].focus() }, 0) },
     data("clipboard-target") := s"#${ident}"
   )
-    .setManualTooltip()
+    .withManualTooltip()
     .withDynamicTextContent(_.COPY)
 
   override lazy val element: Div = div(

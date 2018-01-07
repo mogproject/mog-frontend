@@ -104,29 +104,43 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
     dropdownHeader = Some("Format")
   )
 
-  private[this] val fileSaveButton: SingleButton = SingleButton(
-    Map(English -> "Save".render),
-    tooltip = isMobile.fold(Map.empty, Map(English -> "Save record as a file")),
-    clickAction = Some({ () => doAction(SaveRecordAction(fileSaveFormat.getValue, getFileName)) })
+  private[this] val fileSaveButton = CommandButton(
+    classButtonDefault,
+    onclick := { () => doAction(SaveRecordAction(fileSaveFormat.getValue, getFileName)) }
   )
+    .withDynamicTextContent(_.SAVE)
+    .withDynamicHoverTooltip(_.SAVE_TO_FILE_TOOLTIP)
 
-  private[this] lazy val textCopyButton: Button = button(
-    cls := "btn btn-default",
-    tpe := "button",
-    data("toggle") := "tooltip",
-    data("placement") := "bottom",
-    data("trigger") := "manual",
-    data("clipboard-target") := "#" + textLoadInputId,
+  private[this] lazy val textCopyButton: WebComponent = CommandButton(
+    classButtonDefault,
     onclick := { () =>
       displayTextLoadMessage("")
       doAction(CopyRecordAction(fileSaveFormat.getValue))
     },
-    "Copy"
-  ).render
+    clipboardTarget(textLoadInputId)
+  )
+    .withManualTooltip()
+    .withDynamicTextContent(_.COPY)
+
+
+  //
+  //    button(
+  //    cls := "btn btn-default",
+  //    tpe := "button",
+  //    data("toggle") := "tooltip",
+  //    data("placement") := "bottom",
+  //    data("trigger") := "manual",
+  //    data("clipboard-target") := "#" + textLoadInputId,
+  //    onclick := { () =>
+  //      displayTextLoadMessage("")
+  //      doAction(CopyRecordAction(fileSaveFormat.getValue))
+  //    },
+  //    "Copy"
+  //  ).render
 
   def renderRecord(record: String): Unit = {
     textLoadInput.element.value = record
-    dom.window.setTimeout(() => textCopyButton.focus(), 0)
+    dom.window.setTimeout(() => textCopyButton.element.asInstanceOf[Button].focus(), 0)
   }
 
   //
@@ -164,7 +178,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
         div(
           cls := "input-group-btn",
           fileSaveButton.element,
-          textCopyButton
+          textCopyButton.element
         )
       )
     ).render

@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view.i18n
 
-import com.mogproject.mogami.State
+import com.mogproject.mogami.{BranchNo, State}
 import com.mogproject.mogami.util.Implicits._
 
 /**
@@ -76,6 +76,8 @@ case object MessagesEnglish extends Messages {
   override val NO_CHECKMATES: String = "No checkmates."
   override val CHECKMATE_FOUND: String = "Found a checkmate"
   override val BRANCH: String = "Branch"
+  override val DELETE: String = "Delete"
+  override val DELETE_BRANCH_TOOLTIP: String = "Delete this branch"
 
   override val COUNT_POINT: String = "Count"
   override val COUNT_POINT_LABEL: String = "Count Points"

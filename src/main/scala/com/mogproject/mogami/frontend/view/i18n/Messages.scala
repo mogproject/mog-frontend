@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view.i18n
 
-import com.mogproject.mogami.State
+import com.mogproject.mogami.{BranchNo, State}
 import com.mogproject.mogami.frontend.Language
 import com.mogproject.mogami.frontend.model.{English, Japanese}
 
@@ -113,6 +113,12 @@ trait Messages {
   // Branch
   //
   def BRANCH: String
+
+  def BRANCH_NO(branchNo: BranchNo): String = if (branchNo == 0) TRUNK else BRANCH + "#" + branchNo
+
+  def DELETE: String
+
+  def DELETE_BRANCH_TOOLTIP: String
 
   //
   // Action

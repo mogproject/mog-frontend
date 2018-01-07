@@ -5,7 +5,7 @@ import com.mogproject.mogami.core.move.{DeclareWin, SpecialMove}
 import com.mogproject.mogami._
 import com.mogproject.mogami.frontend.action.{PlaygroundAction, UpdateGameControlAction}
 import com.mogproject.mogami.frontend.model.{English, Japanese, Language}
-import com.mogproject.mogami.frontend.view.button.SingleButton
+import com.mogproject.mogami.frontend.view.button.CommandButton
 import com.mogproject.mogami.frontend.view.control.ControlBarType.ControlBarType
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.util.Implicits._
@@ -42,26 +42,32 @@ case class ControlBar(barType: ControlBarType) extends WebComponent with SAMObse
     ).render
   }
 
-  private[this] def createControlInput(glyph: String, clickAction: PlaygroundAction, holdCheck: Option[() => Boolean]): SingleButton = {
+  private[this] def createControlInput(glyph: String, clickAction: PlaygroundAction, holdCheck: Option[() => Boolean]): WebComponent = {
     val lbl = span(cls := s"glyphicon glyphicon-${glyph}", aria.hidden := true).render
 
-    val cs = Seq("btn-default", "control-button") ++ (barType match {
+    val cs = Seq(classButtonDefault, "control-button") ++ (barType match {
       case ControlBarType.Small => Seq("control-small", "input-small")
       case _ => Seq.empty
     })
 
-    SingleButton(Map(English -> lbl), cs, None,
-      Some(() => PlaygroundSAM.doAction(clickAction)),
-      holdCheck.isDefined.fold(Some(() => PlaygroundSAM.doAction(clickAction)), None),
-      holdCheck.getOrElse(() => false),
-      useOnClick = false
+    CommandButton(
+      cs.mkString(" "),
+      onclick := {() => doAction(clickAction)}
     )
+      .withTextContent("", glyph)
+
+//    SingleButton(Map(English -> lbl), cs, None,
+//      Some(() => PlaygroundSAM.doAction(clickAction)),
+//      holdCheck.isDefined.fold(Some(() => PlaygroundSAM.doAction(clickAction)), None),
+//      holdCheck.getOrElse(() => false),
+//      useOnClick = false
+//    )
   }
 
-  private[this] lazy val controlInputStepBackward: SingleButton = createControlInput("step-backward", UpdateGameControlAction(_.withFirstDisplayPosition), None)
-  private[this] lazy val controlInputBackward: SingleButton = createControlInput("backward", UpdateGameControlAction(_.withPreviousDisplayPosition), Some(() => controlInputBackward.isDisabled))
-  private[this] lazy val controlInputForward: SingleButton = createControlInput("forward", UpdateGameControlAction(_.withNextDisplayPosition), Some(() => controlInputForward.isDisabled))
-  private[this] lazy val controlInputStepForward: SingleButton = createControlInput("step-forward", UpdateGameControlAction(_.withLastDisplayPosition), None)
+  private[this] lazy val controlInputStepBackward: WebComponent = createControlInput("step-backward", UpdateGameControlAction(_.withFirstDisplayPosition), None)
+  private[this] lazy val controlInputBackward: WebComponent = createControlInput("backward", UpdateGameControlAction(_.withPreviousDisplayPosition), Some(() => controlInputBackward.isDisabled))
+  private[this] lazy val controlInputForward: WebComponent = createControlInput("forward", UpdateGameControlAction(_.withNextDisplayPosition), Some(() => controlInputForward.isDisabled))
+  private[this] lazy val controlInputStepForward: WebComponent = createControlInput("step-forward", UpdateGameControlAction(_.withLastDisplayPosition), None)
 
   private[this] lazy val controlBar = div(
     cls := "center-block control-bar", role := "toolbar",
@@ -170,10 +176,10 @@ case class ControlBar(barType: ControlBarType) extends WebComponent with SAMObse
         recordSelector.selectedIndex = gc.displayPosition
 
         if (barType != ControlBarType.LongList) {
-          controlInputStepBackward.element.disabled = gc.isFirstDisplayPosition
-          controlInputBackward.element.disabled = gc.isFirstDisplayPosition
-          controlInputForward.element.disabled = gc.isLastDisplayPosition
-          controlInputStepForward.element.disabled = gc.isLastDisplayPosition
+          controlInputStepBackward.setDisabled(gc.isFirstDisplayPosition)
+          controlInputBackward.setDisabled(gc.isFirstDisplayPosition)
+          controlInputForward.setDisabled(gc.isLastDisplayPosition)
+          controlInputStepForward.setDisabled(gc.isLastDisplayPosition)
         }
       case None =>
         hide()
