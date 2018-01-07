@@ -32,13 +32,13 @@ case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: Stri
 
   /** Must be 'val' to initialize the label */
   val textClearButton = DynamicHoverTooltip(
-    CommandButton(DynamicComponent(_.COMMENT_CLEAR).element, () => clickAction(""), isDismiss = true),
+    CommandButtonOld(DynamicComponent(_.COMMENT_CLEAR).element, () => clickAction(""), isDismiss = true),
     _.COMMENT_CLEAR_TOOLTIP,
     TooltipPlacement.Top
   )
 
   val textUpdateButton = DynamicHoverTooltip(
-    CommandButton(DynamicComponent(_.COMMENT_UPDATE).element, () => clickAction(textCommentInput.element.value), isDismiss = true),
+    CommandButtonOld(DynamicComponent(_.COMMENT_UPDATE).element, () => clickAction(textCommentInput.element.value), isDismiss = true),
     _.COMMENT_UPDATE_TOOLTIP,
     TooltipPlacement.Top
   )

@@ -5,7 +5,7 @@ import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.analyze.AnalyzeCheckmateAction
 import com.mogproject.mogami.frontend.action.board.AddMovesAction
 import com.mogproject.mogami.frontend.action.dialog.MenuDialogAction
-import com.mogproject.mogami.frontend.view.button.CommandButton
+import com.mogproject.mogami.frontend.view.button.CommandButtonOld
 import com.mogproject.mogami.frontend.view.i18n.DynamicHoverTooltip
 import org.scalajs.dom
 import org.scalajs.dom.html.{Div, Input}
@@ -28,7 +28,7 @@ class CheckmateButton(isMobile: Boolean) extends WebComponent {
   ).render
 
   private[this] lazy val analyzeButton = DynamicHoverTooltip(
-    CommandButton(DynamicComponent(_.ANALYZE).element, () => clickAction()),
+    CommandButtonOld(DynamicComponent(_.ANALYZE).element, () => clickAction()),
     _.ANALYZE_CHECKMATE_TOOLTIP
   )
 
@@ -38,7 +38,7 @@ class CheckmateButton(isMobile: Boolean) extends WebComponent {
   ).render
 
   private[this] def generateAddMovesButton(moves: Seq[Move]) = DynamicHoverTooltip(
-    CommandButton(DynamicComponent(_.ADD_CHECKMATE_MOVES).element, () => {
+    CommandButtonOld(DynamicComponent(_.ADD_CHECKMATE_MOVES).element, () => {
       doAction(AddMovesAction(moves))
       displayCheckmateMessage(Messages.get.CHECKMATE_MOVES_ADDED)
       doAction(MenuDialogAction(false), 1000) // close menu modal after 1 sec (mobile)

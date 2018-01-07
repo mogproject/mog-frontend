@@ -4,7 +4,7 @@ import com.mogproject.mogami.frontend.action.manage.{CopyRecordAction, SaveRecor
 import com.mogproject.mogami.frontend.io.TextReader
 import com.mogproject.mogami.frontend.model.io.{KIF, RecordFormat}
 import com.mogproject.mogami.frontend._
-import com.mogproject.mogami.frontend.view.button.{CommandButton, DropdownMenu, SingleButton, TextAreaComponent}
+import com.mogproject.mogami.frontend.view.button.{CommandButtonOld, DropdownMenu, SingleButton, TextAreaComponent}
 import com.mogproject.mogami.frontend.view.i18n.{DynamicHoverTooltip, DynamicHoverTooltipLike, DynamicPlaceholder}
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom
@@ -58,7 +58,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
   private[this] lazy val textLoadInput: TextAreaComponent = TextAreaComponent("", 5, (m: Messages) => m.LOAD_FROM_TEXT_PLACEHOLDER, id := textLoadInputId)
 
   private[this] lazy val textLoadButton: WebComponent with DynamicHoverTooltipLike = DynamicHoverTooltip(
-    CommandButton(DynamicComponent(_.LOAD).element, { () =>
+    CommandButtonOld(DynamicComponent(_.LOAD).element, { () =>
       val text = textLoadInput.element.value
       val format = RecordFormat.detect(text)
       displayTextLoadMessage(s"Loading as ${format} Format...")
@@ -72,7 +72,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
   ).render
 
   private[this] lazy val textClearButton: WebComponent with DynamicHoverTooltipLike = DynamicHoverTooltip(
-    CommandButton(DynamicComponent(_.TEXT_CLEAR).element, { () =>
+    CommandButtonOld(DynamicComponent(_.TEXT_CLEAR).element, { () =>
       displayTextLoadMessage("")
       textLoadInput.element.value = ""
       displayTextLoadTooltip(Messages.get.TEXT_CLEARED)

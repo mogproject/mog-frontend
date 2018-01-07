@@ -26,4 +26,3 @@ class CommandButtonLike(labelElem: Element,
 
   override lazy val element: Element = btn
 }
-

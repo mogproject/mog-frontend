@@ -71,6 +71,15 @@ trait WebComponent {
   )
 
   //
+  // Class name shortcuts
+  //
+  def classButtonDefault: String = "btn-default"
+
+  def classButtonDefaultBlock: String = "btn-default btn-block"
+
+  def classButtonPrimaryBlock: String = "btn-primary btn-block"
+
+  //
   // AttrPair shortcuts
   //
   def dismissModalNew: Modifier = data("dismiss") := "modal"

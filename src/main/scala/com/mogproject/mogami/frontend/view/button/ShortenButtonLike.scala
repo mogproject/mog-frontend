@@ -14,7 +14,7 @@ trait ShortenButtonLike extends CopyButtonLike {
 
   override protected def divClass: String = "shorten-bar"
 
-  private[this] val shortenButton = DynamicHoverTooltip(CommandButton(
+  private[this] val shortenButton = DynamicHoverTooltip(CommandButtonOld(
     DynamicComponent(_.SHORTEN_URL, "arrow-right").element,
     () => clickAction(),
     isBlock = false

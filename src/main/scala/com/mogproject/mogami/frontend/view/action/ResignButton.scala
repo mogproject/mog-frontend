@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.view.action
 
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.game.ResignAction
-import com.mogproject.mogami.frontend.view.button.CommandButton
+import com.mogproject.mogami.frontend.view.button.CommandButtonOld
 import com.mogproject.mogami.frontend.view.modal.YesNoDialog
 import org.scalajs.dom.Element
 
@@ -13,7 +13,7 @@ import scalatags.JsDom.all._
   */
 case class ResignButton(isSmall: Boolean, confirm: Boolean) extends WebComponent with SAMObserver[BasePlaygroundModel] {
 
-  private[this] val button = CommandButton(
+  private[this] val button = CommandButtonOld(
     DynamicComponent(_.RESIGN, "flag").element,
     () => clickAction(),
     "btn-default" +: Seq("thin-btn", "btn-resign").filter(_ => isSmall),
