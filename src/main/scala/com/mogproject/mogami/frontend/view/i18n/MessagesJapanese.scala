@@ -183,7 +183,7 @@ case object MessagesJapanese extends Messages {
   override val HELP: String = "ヘルプ"
   override val HELP_CONTENT: Seq[TypedTag[LI]] = Seq(
     li("対局者の名前をクリックすると、対局情報設定画面が現れます。"),
-    li("Play モードでは駒のフリック操作で素早く着手を入力できます。"),
+    li("Play モードでは駒のフリック操作で素早く指し手を入力できます。"),
     li("View モードでは、盤面をクリックまたは押し続けることで表示局面を変えることができます。盤面の右側をクリックすると 1手先に進み、左側をクリックすると 1手前に戻ります。"),
     li(WebComponent.glyph("backward"), " または ", WebComponent.glyph("forward"), " ボタンを 1秒以上押し続けると、連続して表示局面を変えることができます。")
   )
