@@ -28,7 +28,7 @@ trait ShortenButtonLike extends CopyButtonLike {
   def updateValue(value: String, completed: Boolean): Unit = {
     updateValue(value)
     shortenButton.setDisabled(completed)
-    copyButton.disabled = !completed
+    copyButton.setDisabled(!completed)
   }
 
   def clear(): Unit = {

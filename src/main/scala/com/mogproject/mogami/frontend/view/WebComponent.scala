@@ -64,16 +64,6 @@ trait WebComponent {
     dom.window.setTimeout(() => PlaygroundSAM.doAction(action), delayMS)
   }
 
-  // remove: withManualTooltip
-  def defaultButtonWithManualTooltip(tooltipPlacement: TooltipPlacement, modifier: Modifier*): TypedTag[Button] = btn(
-    cls := "btn btn-default",
-    tpe := "button",
-    data("toggle") := "tooltip",
-    data("trigger") := "manual",
-    data("placement") := tooltipPlacement.toString,
-    modifier
-  )
-
   //
   // Class name shortcuts
   //
@@ -89,6 +79,16 @@ trait WebComponent {
   // AttrPair shortcuts
   //
   def dismissModalNew: Modifier = data("dismiss") := "modal"
+
+  //
+  // Mutator
+  //
+  def setManualTooltip(placement: TooltipPlacement = TooltipPlacement.Bottom): WebComponent = {
+    element.setAttribute("data-toggle", "tooltip")
+    element.setAttribute("data-trigger", "manual")
+    element.setAttribute("data-placement", placement.toString)
+    this
+  }
 
 
   //

@@ -1,7 +1,6 @@
 package com.mogproject.mogami.frontend.view.button
 
 import com.mogproject.mogami.frontend._
-import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement
 import org.scalajs
 import org.scalajs.dom.Element
 import org.scalajs.dom.html.{Button, Div, Input}
@@ -28,19 +27,20 @@ trait CopyButtonLike extends WebComponent {
     tpe := "text", id := ident, cls := "form-control", readonly := "readonly"
   ).render
 
-  protected lazy val copyButton: Button = defaultButtonWithManualTooltip(
-    TooltipPlacement.Bottom,
-    onclick := { () => scalajs.dom.window.setTimeout({ () => copyButton.focus() }, 0) },
-    data("clipboard-target") := s"#${ident}",
-    DynamicComponent(_.COPY).element
-  ).render
+  protected lazy val copyButton: WebComponent = CommandButton(
+    classButtonDefault,
+    onclick := { () => scalajs.dom.window.setTimeout({ () => copyButton.element.asInstanceOf[Button].focus() }, 0) },
+    data("clipboard-target") := s"#${ident}"
+  )
+    .setManualTooltip()
+    .withDynamicTextContent(_.COPY)
 
   override lazy val element: Div = div(
     cls := "input-group " + divClass,
     leftButton.map(div(cls := "input-group-btn", _)),
     inputElem,
     rightButton.map(div(cls := "input-group-btn", _)),
-    div(cls := "input-group-btn", viewButtonOpt.map(_.element).toSeq :+ copyButton)
+    div(cls := "input-group-btn", viewButtonOpt.map(_.element).toSeq :+ copyButton.element)
   ).render
 
   def updateValue(value: String): Unit = {
