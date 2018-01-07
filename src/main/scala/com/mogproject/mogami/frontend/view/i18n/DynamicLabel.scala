@@ -1,31 +1,18 @@
-package com.mogproject.mogami.frontend.view.i18n
-
-import com.mogproject.mogami.frontend.{BasePlaygroundModel, SAMObserver}
-import com.mogproject.mogami.frontend.state.ObserveFlag
-import org.scalajs.dom.raw.HTMLElement
-
-import scalatags.JsDom.all._
-
-/**
-  *
-  */
-case class DynamicLabel(f: Messages => String, glyphicon: Option[String] = None) extends SAMObserver[BasePlaygroundModel] {
-  val element: HTMLElement = span().render
-
-  private[this] val additional = glyphicon.map { g => " " + span(cls := s"glyphicon glyphicon-${g}", aria.hidden := true).toString }.getOrElse("")
-
-  //
-  // Observer
-  //
-  override val samObserveMask: Int = ObserveFlag.CONF_MSG_LANG
-
-  private[this] def refresh(): Unit = {
-    element.innerHTML = f(Messages.get) + additional
-  }
-
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
-    refresh()
-  }
-
-  refresh()
-}
+//package com.mogproject.mogami.frontend.view.i18n
+//
+//import org.scalajs.dom.raw.HTMLElement
+//
+//import scalatags.JsDom.all._
+//
+///**
+//  *
+//  */
+//case class DynamicLabel(f: Messages => String, glyphicon: Option[String] = None) extends DynamicElementLike[HTMLElement] {
+//  override val element: HTMLElement = span().render
+//
+//  private[this] val additional = glyphicon.map { g => " " + span(cls := s"glyphicon glyphicon-${g}", aria.hidden := true).toString }.getOrElse("")
+//
+//  override def refresh(): Unit = {
+//    element.innerHTML = f(Messages.get) + additional
+//  }
+//}

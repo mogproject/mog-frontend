@@ -2,31 +2,24 @@ package com.mogproject.mogami.frontend.view.i18n
 
 import com.mogproject.mogami.frontend.api.bootstrap.Tooltip
 import com.mogproject.mogami.frontend.sam.SAM
-import com.mogproject.mogami.frontend.state.ObserveFlag
-import com.mogproject.mogami.frontend.view.tooltip.TooltipEnabled
+import com.mogproject.mogami.frontend.view.tooltip.{TooltipEnabled, TooltipPlacement}
+import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement.TooltipPlacement
 import com.mogproject.mogami.frontend.view.{BrowserInfo, WebComponent}
-import com.mogproject.mogami.frontend.{BasePlaygroundModel, SAMObserver}
+import org.scalajs.dom.Element
+
+import scalatags.JsDom.TypedTag
 
 
 /**
   *
   */
-trait DynamicHoverTooltip extends TooltipEnabled with SAMObserver[BasePlaygroundModel] {
+trait DynamicHoverTooltipLike extends TooltipEnabled with DynamicElementLike[Element] {
   self: WebComponent =>
 
   def getTooltipMessage: Messages => String
 
-  //
-  // Observer
-  //
-  override val samObserveMask: Int = ObserveFlag.CONF_MSG_LANG
-
-  private[this] def refresh(): Unit = {
+  override def refresh(): Unit = {
     element.setAttribute("data-original-title", getTooltipMessage(Messages.get))
-  }
-
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
-    refresh()
   }
 
   private[this] def initialize(): Unit = {
@@ -36,9 +29,26 @@ trait DynamicHoverTooltip extends TooltipEnabled with SAMObserver[BasePlayground
       SAM.removeObserver(this)
     } else {
       Tooltip.enableHoverToolTip(element)
-      refresh()
     }
   }
 
   initialize()
+}
+
+object DynamicHoverTooltip {
+  def apply(elem: Element, tooltipFunc: Messages => String, tooltipPlacement: TooltipPlacement): WebComponent with DynamicHoverTooltipLike = new WebComponent with DynamicHoverTooltipLike {
+    override def element: Element = elem
+
+    override def placement: TooltipPlacement = tooltipPlacement
+
+    override def getTooltipMessage: Messages => String = tooltipFunc
+  }
+
+  //  def apply(elemTags: TypedTag[Element], tooltipFunc: Messages => String, tooltipPlacement: TooltipPlacement): DynamicHoverTooltipLike = {
+  //    apply(elemTags.render, tooltipPlacement, tooltipFunc)
+  //  }
+
+  def apply(component: WebComponent, tooltipFunc: Messages => String, tooltipPlacement: TooltipPlacement = TooltipPlacement.Bottom): WebComponent with DynamicHoverTooltipLike = {
+    apply(component.element, tooltipFunc, tooltipPlacement)
+  }
 }

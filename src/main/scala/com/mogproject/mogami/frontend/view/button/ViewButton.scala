@@ -1,7 +1,6 @@
 package com.mogproject.mogami.frontend.view.button
 
-import com.mogproject.mogami.frontend.view.WebComponent
-import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
+import com.mogproject.mogami.frontend._
 import org.scalajs.dom.html.Anchor
 
 import scalatags.JsDom.all._
@@ -16,7 +15,7 @@ class ViewButton extends WebComponent {
     cls := "btn btn-default",
     tpe := "button",
     target := "_blank",
-    DynamicLabel(_.VIEW).element
+    DynamicComponent(_.VIEW).element
   ).render
 
   def updateViewUrl(url: String): Unit = element.href = url

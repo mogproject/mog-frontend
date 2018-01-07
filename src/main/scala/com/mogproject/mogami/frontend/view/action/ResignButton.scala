@@ -2,10 +2,9 @@ package com.mogproject.mogami.frontend.view.action
 
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.game.ResignAction
-import com.mogproject.mogami.frontend.view.button.{CommandButton, SingleButton}
-import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
+import com.mogproject.mogami.frontend.view.button.CommandButton
 import com.mogproject.mogami.frontend.view.modal.YesNoDialog
-import org.scalajs.dom.raw.HTMLElement
+import org.scalajs.dom.Element
 
 import scalatags.JsDom.all._
 
@@ -15,7 +14,7 @@ import scalatags.JsDom.all._
 case class ResignButton(isSmall: Boolean, confirm: Boolean) extends WebComponent with SAMObserver[BasePlaygroundModel] {
 
   private[this] val button = CommandButton(
-    DynamicLabel(_.RESIGN, Some("flag")).element,
+    DynamicComponent(_.RESIGN, "flag").element,
     () => clickAction(),
     "btn-default" +: Seq("thin-btn", "btn-resign").filter(_ => isSmall),
     isBlock = !isSmall,
@@ -32,7 +31,7 @@ case class ResignButton(isSmall: Boolean, confirm: Boolean) extends WebComponent
     doAction(ResignAction, 100)
   }
 
-  override val element: HTMLElement = button.element
+  override val element: Element = button.element
 
   //
   // Observer

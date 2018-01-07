@@ -4,7 +4,6 @@ import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipDisabled}
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
-import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
 import com.mogproject.mogami.frontend.view.setting.{BooleanSelector, DropdownSelector, LanguageSelector}
 import org.scalajs.dom.html.Div
 
@@ -16,7 +15,7 @@ import scalatags.JsDom.all._
   */
 class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
   override lazy val ident: String = "Settings"
-  override lazy val titleLabel = DynamicLabel(_.SETTINGS)
+  override lazy val titleLabel = DynamicComponent(_.SETTINGS)
   override lazy val icon: String = "wrench"
   override lazy val visibleMode = Set(PlayModeType, ViewModeType, EditModeType)
 
@@ -66,7 +65,7 @@ class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
     selectors.map(_.element),
     div(
       cls := "alert alert-success setting-alert",
-      DynamicLabel(_.SETTINGS_INFO).element
+      DynamicComponent(_.SETTINGS_INFO).element
     )
   )
 

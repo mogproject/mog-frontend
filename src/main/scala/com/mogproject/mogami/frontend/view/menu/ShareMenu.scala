@@ -2,7 +2,6 @@ package com.mogproject.mogami.frontend.view.menu
 
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.model.{BasePlaygroundModel, PlayModeType, ViewModeType}
-import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
 import com.mogproject.mogami.frontend.view.share._
 import org.scalajs.dom.html.Div
 
@@ -15,7 +14,7 @@ import scalatags.JsDom.all._
 class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
 
   override lazy val ident: String = "Share"
-  override lazy val titleLabel = DynamicLabel(_.SHARE)
+  override lazy val titleLabel = DynamicComponent(_.SHARE)
   override lazy val icon: String = "share"
   override lazy val visibleMode = Set(PlayModeType, ViewModeType)
 
@@ -28,19 +27,19 @@ class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePl
 
   override lazy val content: JsDom.TypedTag[Div] = div(
     warningLabel.element,
-    label(DynamicLabel(_.RECORD_URL).element),
+    label(DynamicComponent(_.RECORD_URL).element),
     recordCopyButton.element,
     br(),
-    label(DynamicLabel(_.SNAPSHOT_URL).element),
+    label(DynamicComponent(_.SNAPSHOT_URL).element),
     snapshotCopyButton.element,
     br(),
-    label(DynamicLabel(_.SNAPSHOT_IMAGE).element),
+    label(DynamicComponent(_.SNAPSHOT_IMAGE).element),
     imageLinkButton.element,
     br(),
-    label(DynamicLabel(_.SNAPSHOT_SFEN_STRING).element),
+    label(DynamicComponent(_.SNAPSHOT_SFEN_STRING).element),
     sfenStringCopyButton.element,
     br(),
-    label(DynamicLabel(_.NOTES_VIEW).element),
+    label(DynamicComponent(_.NOTES_VIEW).element),
     notesViewButton.element
   )
 

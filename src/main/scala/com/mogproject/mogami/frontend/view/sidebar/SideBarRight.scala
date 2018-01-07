@@ -3,7 +3,6 @@ package com.mogproject.mogami.frontend.view.sidebar
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.menu._
 import com.mogproject.mogami.frontend.view.Observer
-import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
 import org.scalajs.dom.html.{Div, Heading}
 
 import scalatags.JsDom.all._
@@ -23,7 +22,7 @@ trait SideBarRight extends SideBarLike with Observer[AccordionMenu] with SAMObse
     cls := "sidebar-heading",
     onclick := { () => collapseSideBar() },
     span(cls := "glyphicon glyphicon-minus"),
-    span(DynamicLabel(_.MENU).element, paddingLeft := 14.px)
+    span(DynamicComponent(_.MENU).element, paddingLeft := 14.px)
   ).render
 
   override lazy val titleCollapsed: Heading = h4(

@@ -1,7 +1,6 @@
 package com.mogproject.mogami.frontend.view.button
 
 import com.mogproject.mogami.frontend._
-import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
 import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement
 import org.scalajs
 import org.scalajs.dom.Element
@@ -33,7 +32,7 @@ trait CopyButtonLike extends WebComponent {
     TooltipPlacement.Bottom,
     onclick := { () => scalajs.dom.window.setTimeout({ () => copyButton.focus() }, 0) },
     data("clipboard-target") := s"#${ident}",
-    DynamicLabel(_.COPY).element
+    DynamicComponent(_.COPY).element
   ).render
 
   override lazy val element: Div = div(

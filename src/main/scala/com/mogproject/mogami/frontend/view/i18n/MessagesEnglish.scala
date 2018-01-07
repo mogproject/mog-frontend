@@ -43,9 +43,18 @@ case object MessagesEnglish extends Messages {
   override val SHARE_WARNING: String = "Comments will not be shared due to the URL length limit."
 
   override val MANAGE: String = "Manage"
+  override val LOAD: String = "Load"
+  override val SAVE: String = "Save"
   override val LOAD_FROM_FILE: String = "Load from File"
   override val LOAD_FROM_TEXT: String = "Load from Text"
+  override val LOAD_FROM_TEXT_PLACEHOLDER: String = "Paste your record here."
+  override val LOAD_FROM_TEXT_TOOLTIP: String = "Load record from the text area"
+  override val TEXT_CLEAR: String = "Clear"
+  override val TEXT_CLEAR_TOOLTIP: String = "Clear the text area"
+  override val TEXT_CLEARED: String = "Cleared!"
   override val SAVE_TO_FILE_CLIPBOARD: String = "Save to File / Clipboard"
+  override val SAVE_TO_FILE_TOOLTIP: String = "Save record as a file"
+  override val FILE_NAME: String = "File Name"
   override val BROWSE: String = "Browse"
   override val LOADING: String = "Loading"
 

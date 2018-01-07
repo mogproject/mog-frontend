@@ -81,11 +81,29 @@ trait Messages {
   //
   def MANAGE: String
 
+  def LOAD: String
+
+  def SAVE: String
+
   def LOAD_FROM_FILE: String
 
   def LOAD_FROM_TEXT: String
 
+  def LOAD_FROM_TEXT_PLACEHOLDER: String
+
+  def LOAD_FROM_TEXT_TOOLTIP: String
+
+  def TEXT_CLEAR: String
+
+  def TEXT_CLEAR_TOOLTIP: String
+
+  def TEXT_CLEARED: String
+
   def SAVE_TO_FILE_CLIPBOARD: String
+
+  def SAVE_TO_FILE_TOOLTIP: String
+
+  def FILE_NAME: String
 
   def BROWSE: String
 

@@ -5,7 +5,6 @@ import com.mogproject.mogami.frontend.action.UpdateConfigurationAction
 import com.mogproject.mogami.frontend.model.{BasePlaygroundModel, Language}
 import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipEnabled, FlipType}
 import com.mogproject.mogami.frontend.view.button.ButtonLike
-import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
 import org.scalajs.dom.html.{Button, Div}
 
 import scalatags.JsDom.all._
@@ -19,7 +18,7 @@ class FlipButton extends ButtonLike[FlipType, Button, Div] with SAMObserver[Base
   override protected def generateInput(key: FlipType): Button = button(
     tpe := "button",
     cls := "btn btn-toggle thin-btn",
-    DynamicLabel(_.FLIP).element,
+    DynamicComponent(_.FLIP).element,
     " ",
     span(cls := s"glyphicon glyphicon-retweet", aria.hidden := true)
   ).render

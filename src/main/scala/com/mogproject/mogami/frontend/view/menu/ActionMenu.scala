@@ -1,9 +1,7 @@
 package com.mogproject.mogami.frontend.view.menu
 
-import com.mogproject.mogami.frontend.Language
-import com.mogproject.mogami.frontend.model.{English, Japanese, PlayModeType}
+import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.action.ResignButton
-import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
 import org.scalajs.dom.html.Div
 
 import scalatags.JsDom
@@ -15,7 +13,7 @@ import scalatags.JsDom.all._
 class ActionMenu extends AccordionMenu {
 
   override lazy val ident: String = "Action"
-  override lazy val titleLabel = DynamicLabel(_.ACTION)
+  override lazy val titleLabel = DynamicComponent(_.ACTION)
   override lazy val icon: String = "tower"
   override lazy val visibleMode = Set(PlayModeType)
 

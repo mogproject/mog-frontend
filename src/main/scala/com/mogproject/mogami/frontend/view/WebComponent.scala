@@ -6,7 +6,7 @@ import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement.TooltipPlace
 import org.scalajs.dom
 import org.scalajs.dom.html.Button
 import org.scalajs.dom.raw.{HTMLElement, SVGElement}
-import org.scalajs.dom.{Element, Node}
+import org.scalajs.dom.{Element, Node, Text}
 import org.scalajs.jquery.jQuery
 
 import scalatags.JsDom.TypedTag
@@ -69,6 +69,11 @@ trait WebComponent {
     data("placement") := tooltipPlacement.toString,
     modifier
   )
+
+  //
+  // AttrPair shortcuts
+  //
+  def dismissModalNew: Modifier = data("dismiss") := "modal"
 }
 
 object WebComponent {
@@ -81,11 +86,28 @@ object WebComponent {
   def replaceChildElement(parent: Node, elem: Node): Unit = {
     removeAllChildElements(parent)
     parent.appendChild(elem)
+    // debug:
+    //    if (parent == null) {
+    //      println(s"Error: parent not initialized in replaceChildElement elem=${elem}")
+    //    } else {
+    //
+    //    }
   }
 
   def replaceChildElements(parent: Node, elems: Iterable[Node]): Unit = {
     removeAllChildElements(parent)
     elems.foreach(parent.appendChild)
+    // debug:
+    //    if (parent == null) {
+    //      val msg = elems match {
+    //        case (x: Text) :: Nil => "[" + x.wholeText + "]"
+    //        case _ => elems.toString
+    //      }
+    //
+    //      println(s"Error: parent not initialized in replaceChildElements elems=${msg}")
+    //    } else {
+    //
+    //    }
   }
 
   def showElement(elem: Element): Unit = elem match {

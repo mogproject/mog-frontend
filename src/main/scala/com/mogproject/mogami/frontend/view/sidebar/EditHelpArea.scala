@@ -8,7 +8,6 @@ import com.mogproject.mogami.frontend.model.EditMode
 import com.mogproject.mogami.frontend.model.board.cursor.BoardCursor
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.button.PieceFaceButton
-import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
 import org.scalajs.dom.html.Div
 
 import scalatags.JsDom.all._
@@ -29,7 +28,7 @@ class EditHelpArea extends WebComponent with SAMObserver[BasePlaygroundModel] {
       label("Attributes"),
       attributeArea,
       br(),
-      label(DynamicLabel(_.HELP).element),
+      label(DynamicComponent(_.HELP).element),
       ul(
         li("Click on a player name to set the turn to move."),
         li("Double-click on a piece on board to change its attributes:",

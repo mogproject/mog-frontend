@@ -1,8 +1,6 @@
 package com.mogproject.mogami.frontend.view.menu
 
-import com.mogproject.mogami.frontend.{FrontendSettings, Language}
-import com.mogproject.mogami.frontend.model._
-import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
+import com.mogproject.mogami.frontend._
 import org.scalajs.dom.html.Div
 
 import scalatags.JsDom
@@ -13,7 +11,7 @@ import scalatags.JsDom.all._
   */
 class AboutMenu extends AccordionMenu {
   override lazy val ident: String = "About"
-  override lazy val titleLabel = DynamicLabel(_.ABOUT_THIS_SITE)
+  override lazy val titleLabel = DynamicComponent(_.ABOUT_THIS_SITE)
   override lazy val icon: String = "info-sign"
   override lazy val content: JsDom.TypedTag[Div] = div(
     p(i(""""Run anywhere. Needs NO installation."""")),

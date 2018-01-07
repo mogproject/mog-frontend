@@ -1,11 +1,11 @@
 package com.mogproject.mogami.frontend.view.button
 
-import org.scalajs.dom.raw.HTMLElement
+import org.scalajs.dom.Element
 
 /**
   * Command button
   */
-case class CommandButton(labelElem: HTMLElement,
+case class CommandButton(labelElem: Element,
                          clickAction: () => Unit,
                          buttonClass: Seq[String] = Seq("btn-default"),
                          isBlock: Boolean = true,

@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.view.menu
 
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.Observable
-import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
+import com.mogproject.mogami.frontend.view.i18n.DynamicComponentLike
 import org.scalajs.dom.html.Div
 import com.mogproject.mogami.util.Implicits._
 
@@ -18,7 +18,7 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
 
   def ident: String
 
-  def titleLabel: DynamicLabel
+  def titleLabel: DynamicComponentLike
 
   def icon: String
 

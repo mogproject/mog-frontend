@@ -4,8 +4,7 @@ import com.mogproject.mogami.State
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.board.EditResetAction
 import com.mogproject.mogami.frontend.model.BasePlaygroundModel
-import com.mogproject.mogami.frontend.view.button.{CommandButton, SingleButton}
-import com.mogproject.mogami.frontend.view.i18n.DynamicLabel
+import com.mogproject.mogami.frontend.view.button.CommandButton
 import org.scalajs.dom.html.Div
 
 import scalatags.JsDom.all._
@@ -39,7 +38,7 @@ class EditResetButton extends WebComponent with SAMObserver[BasePlaygroundModel]
 
   private[this] lazy val buttons = keys.map { st =>
     CommandButton(
-      DynamicLabel(_.INITIAL_STATE(st)).element,
+      DynamicComponent(_.INITIAL_STATE(st)).element,
       () => doAction(EditResetAction(st)),
       isDismiss = true
     )
