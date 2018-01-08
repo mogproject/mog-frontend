@@ -5,6 +5,7 @@ import com.mogproject.mogami.frontend.view.{BrowserInfo, WebComponent}
 import org.scalajs.dom
 import org.scalajs.dom.raw.SVGElement
 
+import scala.util.{Failure, Success, Try}
 import scalatags.JsDom.TypedTag
 
 
@@ -33,26 +34,33 @@ trait EffectorLike[A, T <: EffectorTarget] {
   def autoDestruct: Option[Int] = None
 
   def start(x: A, callback: () => Unit = { () => }): Unit = if (BrowserInfo.isAnimationSupported) {
-    stop()
+    Try {
+      stop()
 
-    // set callback
-    currentCallback = callback
+      // set callback
+      currentCallback = callback
 
-    // render SVG tags
-    val svgElems = generateElements(x).map(_.render).toList // stabilize elements (to avoid being a stream)
+      // render SVG tags
+      val svgElems = generateElements(x).map(_.render).toList // stabilize elements (to avoid being a stream)
 
-    // update local variables
-    currentElements = svgElems
-    currentValue = Some(x)
+      // update local variables
+      currentElements = svgElems
+      currentValue = Some(x)
 
-    // materialize
-    materialize(currentElements)
+      // materialize
+      materialize(currentElements)
 
-    // start animation
-    svgElems.foreach(startAnimation)
+      // start animation
+      svgElems.foreach(startAnimation)
 
-    // set self-destruction
-    autoDestruct.foreach(n => dom.window.setTimeout({ () => stop() }, n))
+      // set self-destruction
+      autoDestruct.foreach(n => dom.window.setTimeout({ () => stop() }, n))
+    } match {
+      case Success(_) => // ok
+      case Failure(e) =>
+        println(e.getMessage)
+        BrowserInfo.isAnimationSupported = false
+    }
   }
 
   def stop(): Unit = {
