@@ -190,9 +190,12 @@ case class ArgumentsBuilder(gameControl: GameControl,
   }
 
   private[this] def positionParams: Seq[(String, String)] = {
-    val prefix = (gameControl.gamePosition.branch == 0).fold("", s"${gameControl.gamePosition.branch}.")
-    (gameControl.gamePosition.branch != 0 || gameControl.gamePosition.position != gameControl.game.trunk.offset).option(
-      ("move", s"${prefix}${gameControl.displayPosition}")
+    val br = gameControl.gamePosition.branch
+    val pos = gameControl.displayPosition
+
+    val prefix = (br == 0).fold("", s"${br}.")
+    (br != 0 || pos != gameControl.game.trunk.offset).option(
+      ("move", s"${prefix}${pos}")
     ).toSeq
   }
 
