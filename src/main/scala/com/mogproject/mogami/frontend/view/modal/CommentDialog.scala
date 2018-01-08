@@ -11,7 +11,7 @@ import scalatags.JsDom.all._
   */
 case class CommentDialog(text: String) extends ModalLike {
 
-  override def getTitle(messages: Messages): String = messages.COMMENT
+  override def getTitle(messages: Messages): Frag = StringFrag(messages.COMMENT)
 
   private[this] val commentArea = CommentComponent(isDisplayOnly = false, isModal = true, text = text)
 

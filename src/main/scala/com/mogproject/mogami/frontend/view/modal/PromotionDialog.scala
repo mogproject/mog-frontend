@@ -25,7 +25,7 @@ case class PromotionDialog(pieceFace: PieceFace,
   //
   // modal traits
   //
-  override def getTitle(messages: Messages): String = messages.ASK_PROMOTE
+  override def getTitle(messages: Messages): Frag = StringFrag(messages.ASK_PROMOTE)
 
   override val modalBody: ElemType = div()
 
