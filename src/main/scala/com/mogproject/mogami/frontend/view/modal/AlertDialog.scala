@@ -11,7 +11,7 @@ import scalatags.JsDom.all._
   */
 case class AlertDialog(message: TypedTag[Element]) extends ModalLike {
 
-  override def getTitle(messages: Messages): String = messages.CONFIRMATION
+  override def getTitle(messages: Messages): Frag = StringFrag(messages.CONFIRMATION)
 
   override val modalBody: ElemType = div(bodyDefinition, message)
 

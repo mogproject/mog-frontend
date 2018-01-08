@@ -16,7 +16,7 @@ case class YesNoDialog(message: TypedTag[Element], callback: () => Unit) extends
   //
   override def isStatic: Boolean = true
 
-  override def getTitle(messages: Messages): String = messages.CONFIRMATION
+  override def getTitle(messages: Messages): Frag = StringFrag(messages.CONFIRMATION)
 
   override val modalBody: ElemType = div(bodyDefinition, message)
 

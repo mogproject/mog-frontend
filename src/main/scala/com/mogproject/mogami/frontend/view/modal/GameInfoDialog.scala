@@ -33,7 +33,7 @@ case class GameInfoDialog(gameInfo: GameInfo, isHandicapped: Boolean) extends Mo
   //
   // modal traits
   //
-  override def getTitle(messages: Messages): String = messages.GAME_INFORMATION
+  override def getTitle(messages: Messages): Frag = StringFrag(messages.GAME_INFORMATION)
 
   override val modalBody: ElemType = div(bodyDefinition,
     label(Messages.get.PLAYER_NAMES),

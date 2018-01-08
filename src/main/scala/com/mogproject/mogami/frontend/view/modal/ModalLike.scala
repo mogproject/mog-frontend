@@ -15,7 +15,7 @@ import scalatags.JsDom.all._
   *
   */
 trait ModalLike {
-  def getTitle(messages: Messages): String
+  def getTitle(messages: Messages): Frag
 
   type ElemType = TypedTag[Div]
 
