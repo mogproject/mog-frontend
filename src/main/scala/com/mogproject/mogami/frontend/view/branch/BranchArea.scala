@@ -132,13 +132,23 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
   //
   // actions
   //
-  private[this] def playModeElements = Seq(
-    playModeMenu
-  ) ++ isMobile.fold(Seq.empty, Seq(newBranchButton.element, deleteBranchButton.element))
+  def showEditMenu(): Unit = {
+    if (isMobile) {
+      WebComponent.showElement(playModeMenu)
+    } else {
+      newBranchButton.show()
+      deleteBranchButton.show()
+    }
+  }
 
-  def showEditMenu(): Unit = playModeElements.foreach(WebComponent.showElement)
-
-  def hideEditMenu(): Unit = playModeElements.foreach(WebComponent.hideElement)
+  def hideEditMenu(): Unit = {
+    if (isMobile) {
+      WebComponent.hideElement(playModeMenu)
+    } else {
+      newBranchButton.hide()
+      deleteBranchButton.hide()
+    }
+  }
 
   private[this] def updateButtons(game: Game, gamePosition: GamePosition, recordLang: Language): Unit = {
 
