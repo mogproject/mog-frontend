@@ -1,35 +1,32 @@
 package com.mogproject.mogami.frontend.view.nav
 
+import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.UpdateConfigurationAction
-import com.mogproject.mogami.frontend.model.{BasePlaygroundModel, Language}
-import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipEnabled, FlipType}
-import com.mogproject.mogami.frontend.view.button.{ButtonLike, CommandButton}
-import org.scalajs.dom.html.{Button, Div}
+import com.mogproject.mogami.frontend.model.BasePlaygroundModel
+import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipDisabled, FlipEnabled, FlipType}
+import com.mogproject.mogami.frontend.view.button.CommandButton
+import org.scalajs.dom.html.Button
 
 import scalatags.JsDom.all._
 
 /**
   *
   */
-class FlipButton extends ButtonLike[FlipType, Button, Div] with SAMObserver[BasePlaygroundModel] {
-  override protected lazy val keys = Seq(FlipEnabled)
+class FlipButton extends WebComponent with SAMObserver[BasePlaygroundModel] {
 
-  override protected def generateInput(key: FlipType): Button = CommandButton("btn-toggle thin-btn").withDynamicTextContent(_.FLIP, "retweet").element.asInstanceOf[Button]
+  private[this] var value: FlipType = FlipDisabled
 
-  override lazy val element: Div = div(cls := "input-group",
-    inputs
-  ).render
+  override lazy val element: Button = CommandButton(
+    "btn-toggle thin-btn",
+    onclick := { () => doAction(UpdateConfigurationAction(c => c.copy(flipType = !c.flipType))) }
+  ).withDynamicTextContent(_.FLIP, "retweet").element.asInstanceOf[Button]
 
-  override def updateLabel(lang: Language): Unit = {}
-
-  override def updateValue(newValue: FlipType): Unit = {
-    val elem = inputs.head
-    elem.disabled = newValue == DoubleBoard
-    updateLabelColor(elem, newValue == FlipEnabled)
+  def updateValue(newValue: FlipType): Unit = {
+    value = newValue
+    element.disabled = newValue == DoubleBoard
+    replaceClass(element, "ctive", (newValue == FlipEnabled).fold("active", "notActive"))
   }
-
-  override protected def invoke(key: FlipType): Unit = PlaygroundSAM.doAction(UpdateConfigurationAction(c => c.copy(flipType = !c.flipType)))
 
   //
   // Observer
