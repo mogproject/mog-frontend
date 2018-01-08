@@ -183,11 +183,13 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   }
 
   def playClickSound(): Unit = {
-    Try {
-      clickSound.play()
-    } match {
-      case Success(_) =>
-      case Failure(e) => println(e)
+    if (BrowserInfo.isSoundSupported) {
+      Try {
+        clickSound.play()
+      } match {
+        case Success(_) =>
+        case Failure(e) => println(e)
+      }
     }
   }
 

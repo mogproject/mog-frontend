@@ -1,7 +1,7 @@
 package com.mogproject.mogami.frontend.view.board.effect
 
 import com.mogproject.mogami.frontend.api.AnimateElementExtended
-import com.mogproject.mogami.frontend.view.WebComponent
+import com.mogproject.mogami.frontend.view.{BrowserInfo, WebComponent}
 import org.scalajs.dom
 import org.scalajs.dom.raw.SVGElement
 
@@ -32,7 +32,7 @@ trait EffectorLike[A, T <: EffectorTarget] {
     */
   def autoDestruct: Option[Int] = None
 
-  def start(x: A, callback: () => Unit = { () => }): Unit = {
+  def start(x: A, callback: () => Unit = { () => }): Unit = if (BrowserInfo.isAnimationSupported) {
     stop()
 
     // set callback
