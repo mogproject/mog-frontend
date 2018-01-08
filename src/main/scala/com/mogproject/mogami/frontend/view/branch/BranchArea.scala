@@ -16,6 +16,7 @@ import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom
 import org.scalajs.dom.Event
 
+import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
 
 /**
@@ -29,7 +30,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
     width := 100.pct,
     onchange := { e: Event =>
       e.target match {
-        case elem: HTMLSelectElement => PlaygroundSAM.doAction(UpdateGameControlAction(_.changeDisplayBranch(elem.selectedIndex)))
+        case elem: HTMLSelectElement => doAction(UpdateGameControlAction(_.changeDisplayBranch(elem.selectedIndex)))
         case _ => // do nothing
       }
     }
@@ -42,7 +43,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
   )
     .withDynamicHoverTooltip(_.NEW_BRANCH_TOOLTIP)
 
-  private[this] lazy val deleteBranchButton = {
+  private[this] lazy val deleteBranchButton: WebComponent = {
     val ret = CommandButton(
       classButtonDefaultBlock,
       onclick := { () => doAction(AskDeleteBranchAction) }
@@ -58,8 +59,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
   private[this] def branchNoToString(branchNo: BranchNo): String = (branchNo == 0).fold(Messages.get.TRUNK, Messages.get.BRANCH_NO(branchNo))
 
   private[this] def updateBranchList(numBranches: Int, displayBranch: BranchNo): Unit = {
-    val s = (0 to numBranches).map(s => option(branchNoToString(s))).mkString
-    changeBranchButton.innerHTML = s
+    WebComponent.replaceChildElements(changeBranchButton, (0 to numBranches).map(s => option(branchNoToString(s)).render))
     changeBranchButton.selectedIndex = displayBranch
   }
 
@@ -99,7 +99,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
 
   override lazy val element: Div = isMobile.fold(outputOnMenu, outputCompact).render
 
-  private[this] def outputOnMenu = div(
+  private[this] def outputOnMenu: TypedTag[Div] = div(
     div(cls := "row",
       div(cls := "col-xs-6 col-sm-8", WebComponent.dynamicLabel(_.CHANGE_BRANCH, paddingTop := "6px").element),
       div(cls := "col-xs-6 col-sm-4", changeBranchButton)
@@ -110,14 +110,13 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
     playModeMenu
   )
 
-  private[this] def outputCompact = div(
+  private[this] def outputCompact: TypedTag[Div] = div(
     marginTop := 20.px,
     div(cls := "row",
       marginRight := 12.px,
       marginBottom := 10.px,
       div(cls := "col-xs-6", WebComponent.dynamicLabel(_.BRANCH).element),
-      div(cls := "col-xs-6", marginTop := (-6).px,
-        newBranchButton.element)
+      div(cls := "col-xs-6", marginTop := (-6).px, newBranchButton.element)
     ),
     div(
       marginLeft := 14.px,
@@ -142,7 +141,6 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
   def hideEditMenu(): Unit = playModeElements.foreach(WebComponent.hideElement)
 
   private[this] def updateButtons(game: Game, gamePosition: GamePosition, recordLang: Language): Unit = {
-    updateBranchList(game.branches.length, gamePosition.branch)
 
     deleteBranchButton.setDisabled(gamePosition.isTrunk)
 
@@ -178,7 +176,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
   //
   override val samObserveMask: Int = {
     import ObserveFlag._
-    MODE_TYPE | GAME_BRANCH | GAME_POSITION | CONF_NEW_BRANCH | CONF_RCD_LANG | MENU_DIALOG
+    MODE_TYPE | GAME_BRANCH | GAME_POSITION | CONF_NEW_BRANCH | CONF_RCD_LANG | CONF_MSG_LANG | MENU_DIALOG
   }
 
   override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
@@ -190,6 +188,9 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
         case Some(gc) =>
           show()
 
+          if (model.menuDialogOpen || isFlagUpdated(flag, MODE_TYPE | GAME_BRANCH | GAME_POSITION | CONF_RCD_LANG | CONF_MSG_LANG)) {
+            updateBranchList(gc.game.branches.length, gc.gamePosition.branch)
+          }
           if (model.menuDialogOpen || isFlagUpdated(flag, MODE_TYPE | GAME_BRANCH | GAME_POSITION | CONF_RCD_LANG)) {
             updateButtons(gc.game, gc.gamePosition, model.config.recordLang)
           }
