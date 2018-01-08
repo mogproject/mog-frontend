@@ -56,7 +56,6 @@ trait EffectorLike[A, T <: EffectorTarget] {
         case Failure(e) =>
           println(e.getMessage)
           BrowserInfo.isAnimationSupported = false
-          // todo: show error message
       }
     }
 
