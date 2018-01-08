@@ -31,6 +31,17 @@ object BrowserInfo {
   lazy val isMobile: Boolean = dom.window.screen.width < 768
 
   /**
+    * todo: fixme
+    * currently check if a browser is MSIE or Edge
+    */
+  lazy val isAnimationSupported: Boolean = {
+    val ua = dom.window.navigator.userAgent
+    !ua.contains("MSIE ") && !ua.contains("Edge/")
+  }
+
+  lazy val isSoundSupported: Boolean = dom.window.hasOwnProperty("audioContext")
+
+  /**
     *
     * @return true if the orientation is the landscape mode, false if the portrait mode
     */
