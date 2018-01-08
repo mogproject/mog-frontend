@@ -30,17 +30,12 @@ trait WebComponent {
   }
 
   def replaceClass(elem: Element, replaceKeyword: String, newClassName: String*): Unit = {
-    val removeCandidates = for {
-      i <- 0 until elem.classList.length
-      cls = elem.classList(i)
-      if cls.contains(replaceKeyword)
-    } yield {
-      cls
-    }
-    removeCandidates.foreach(elem.classList.remove)
-    newClassName.foreach(elem.classList.add)
+    /** @note classList is not supported by IE9 and lower. */
+    val removeCandidates = elem.getAttribute("class").split(" ").filter(_.contains(replaceKeyword))
+    val jq = jQuery(elem)
+    removeCandidates.foreach(jq.removeClass(_))
+    jq.addClass(newClassName.mkString(" "))
   }
-
 
   def disableElement(): Unit = setDisabled(true)
 
@@ -263,7 +258,7 @@ object WebComponent {
   }
 
   def clearClass(elem: Element): Unit = {
-    while (elem.classList.length > 0) elem.classList.remove(elem.classList(0))
+    jQuery(elem).removeClass()
   }
 
   def setClass(elem: Element, className: String): Unit = {
@@ -272,7 +267,7 @@ object WebComponent {
 
   def setClass(elem: Element, classNames: Seq[String]): Unit = {
     clearClass(elem)
-    classNames.foreach(elem.classList.add)
+    jQuery(elem).addClass(classNames.mkString(" "))
   }
 
   def glyph(glyphicon: String): TypedTag[Span] = span(cls := s"glyphicon glyphicon-${glyphicon}", aria.hidden := true)
