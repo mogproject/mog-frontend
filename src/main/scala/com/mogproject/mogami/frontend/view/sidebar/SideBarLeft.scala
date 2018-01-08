@@ -3,6 +3,7 @@ package com.mogproject.mogami.frontend.view.sidebar
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.branch.BranchArea
 import com.mogproject.mogami.frontend.view.control.{ControlBar, ControlBarType}
+import com.mogproject.mogami.frontend.view.i18n.Messages
 import org.scalajs.dom.html.{Div, Heading}
 
 import scalatags.JsDom.all._
@@ -39,7 +40,6 @@ class SideBarLeft extends SideBarLike with SAMObserver[BasePlaygroundModel] {
     cls := "sidebar-heading",
     onclick := { () => collapseSideBar() },
     span(cls := "pull-right glyphicon glyphicon-minus"),
-
     title
   ).render
 
@@ -68,16 +68,10 @@ class SideBarLeft extends SideBarLike with SAMObserver[BasePlaygroundModel] {
 
   override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
     if (model.mode.isEditMode) {
-      title.innerHTML = model.config.messageLang match {
-        case Japanese => "編集"
-        case _ => "Edit"
-      }
+      title.innerHTML = Messages.get.EDIT
       editHelpArea.show()
     } else {
-      title.innerHTML = model.config.messageLang match {
-        case Japanese => "棋譜"
-        case _ => "Moves"
-      }
+      title.innerHTML = Messages.get.MOVES
       editHelpArea.hide()
     }
   }

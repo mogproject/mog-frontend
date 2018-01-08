@@ -16,7 +16,7 @@ case class NavBar(isMobile: Boolean) extends NavBarLike with SAMObserver[TestMod
 
   lazy val modeButton: RadioButton[ModeType] = RadioButton(
     Seq(PlayModeType, ViewModeType, EditModeType),
-    Map(English -> Seq("Play", "View", "Edit")),
+    (_: Messages) => Map(PlayModeType -> "Play", ViewModeType -> "View", EditModeType -> "Edit"),
     (mt: ModeType) => doAction(ChangeModeAction(mt, confirmed = false)),
     Seq("thin-btn", "mode-select"),
     Seq.empty
@@ -31,7 +31,7 @@ case class NavBar(isMobile: Boolean) extends NavBarLike with SAMObserver[TestMod
 
   override def refresh(model: TestModel, flag: Int): Unit = {
     val modeType = model.mode.modeType
-    modeButton.updateValue(modeType)
+    modeButton.select(modeType)
     replaceClass(navElem, "nav-bg-", s"nav-bg-${modeType.toString.take(4).toLowerCase()}")
   }
 }

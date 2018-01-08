@@ -4,7 +4,7 @@ import com.mogproject.mogami.frontend.action.manage.{CopyRecordAction, SaveRecor
 import com.mogproject.mogami.frontend.io.TextReader
 import com.mogproject.mogami.frontend.model.io.{KIF, RecordFormat}
 import com.mogproject.mogami.frontend._
-import com.mogproject.mogami.frontend.view.button.{DropdownMenu, SingleButton}
+import com.mogproject.mogami.frontend.view.button._
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom
 import org.scalajs.dom.html._
@@ -28,7 +28,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
     tpe := "file",
     display := "none",
     onchange := { () =>
-      displayFileLoadMessage("Loading...")
+      displayFileLoadMessage(Messages.get.LOADING + "...")
       fileLoadButton.disabled = true
       dom.window.setTimeout(() => readSingleFile(fileName => content => loadRecord(fileName, content)), 500)
     }
@@ -40,7 +40,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
       displayFileLoadMessage("")
       fileLoadInput.value = ""
     },
-    "Browse",
+    WebComponent.dynamicSpan(_.BROWSE).element,
     fileLoadInput
   ).render
 
@@ -54,86 +54,77 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
   // elements #2: Load from Text
   //
   // @note `textLoadInput` area is also used for clipboard copy
-  private[this] lazy val textLoadInput: TextArea = textarea(
-    id := textLoadInputId,
-    cls := "form-control",
-    rows := 5,
-    placeholder := "Paste your record here.",
-    data("toggle") := "tooltip",
-    data("trigger") := "manual",
-    data("placement") := "top"
-  ).render
+  private[this] lazy val textLoadInput: TextAreaComponent = TextAreaComponent("", 5, (m: Messages) => m.LOAD_FROM_TEXT_PLACEHOLDER, id := textLoadInputId)
 
-  private[this] lazy val textLoadButton: SingleButton = SingleButton(
-    Map(English -> "Load".render, Japanese -> "読込".render),
-    tooltip = isMobile.fold(Map.empty, Map(English -> "Load record from the text area")),
-    isBlockButton = true,
-    clickAction = Some({ () =>
-      val text = textLoadInput.value
+  private[this] lazy val textLoadButton: WebComponent = CommandButton(
+    classButtonDefaultBlock,
+    onclick := { () =>
+      val text = textLoadInput.element.value
       val format = RecordFormat.detect(text)
-      displayTextLoadMessage(s"Loading as ${format} Format...")
+      displayTextLoadMessage(Messages.get.LOADING_TEXT(format))
       textLoadButton.disableElement()
       dom.window.setTimeout(() => readRecordText(format, text), 500)
-    })
+    }
   )
+    .withDynamicTextContent(_.LOAD)
+    .withDynamicHoverTooltip(_.LOAD_FROM_TEXT_TOOLTIP)
 
   private[this] lazy val textLoadMessage: Div = div(
     cls := "col-sm-9 col-xs-8 text-muted",
     marginTop := 6
   ).render
 
-  private[this] lazy val textClearButton: SingleButton = SingleButton(
-    Map(English -> "Clear".render, Japanese -> "消去".render),
-    tooltip = isMobile.fold(Map.empty, Map(English -> "Clear the text area")),
-    isBlockButton = true,
-    clickAction = Some({ () =>
+  private[this] lazy val textClearButton: WebComponent = CommandButton(
+    classButtonDefaultBlock, onclick := { () =>
       displayTextLoadMessage("")
-      textLoadInput.value = ""
-      displayTextLoadTooltip("Cleared!")
-    })
+      textLoadInput.element.value = ""
+      displayTextLoadTooltip(Messages.get.TEXT_CLEARED)
+    }
   )
+    .withDynamicTextContent(_.TEXT_CLEAR)
+    .withDynamicHoverTooltip(_.TEXT_CLEAR_TOOLTIP)
 
   //
   // elements #3: Save to File/ Clipboard
   //
-  private[this] val fileSaveName: Input = input(
-    tpe := "text",
-    cls := "form-control",
-    placeholder := "File name",
-    value := DEFAULT_FILE_NAME
-  ).render
+  private[this] val fileSaveName = WebComponent(
+    input(
+      tpe := "text",
+      cls := "form-control",
+      value := DEFAULT_FILE_NAME
+    )
+  )
+    .withDynamicPlaceholder(_.FILE_NAME)
 
   private[this] val fileSaveFormat: DropdownMenu[RecordFormat] = DropdownMenu(
     RecordFormat.all,
-    DropdownMenu.buildLabels(RecordFormat.all),
+    (m: Messages) => RecordFormat.all.map { k => k -> k.toString}.toMap,
     dropdownClass = "input-group-btn",
     labelClass = "dropdown-record",
-    dropdownHeader = Some("Format")
+    dropdownHeader = Some(_.FORMAT)
   )
 
-  private[this] val fileSaveButton: SingleButton = SingleButton(
-    Map(English -> "Save".render),
-    tooltip = isMobile.fold(Map.empty, Map(English -> "Save record as a file")),
-    clickAction = Some({ () => doAction(SaveRecordAction(fileSaveFormat.getValue, getFileName)) })
+  private[this] val fileSaveButton = CommandButton(
+    classButtonDefault,
+    onclick := { () => doAction(SaveRecordAction(fileSaveFormat.getValue, getFileName)) }
   )
+    .withDynamicTextContent(_.SAVE)
+    .withDynamicHoverTooltip(_.SAVE_TO_FILE_TOOLTIP)
 
-  private[this] lazy val textCopyButton: Button = button(
-    cls := "btn btn-default",
-    tpe := "button",
-    data("toggle") := "tooltip",
-    data("placement") := "bottom",
-    data("trigger") := "manual",
-    data("clipboard-target") := "#" + textLoadInputId,
+  private[this] lazy val textCopyButton: WebComponent = CommandButton(
+    classButtonDefault,
     onclick := { () =>
       displayTextLoadMessage("")
       doAction(CopyRecordAction(fileSaveFormat.getValue))
     },
-    "Copy"
-  ).render
+    clipboardTarget(textLoadInputId)
+  )
+    .withManualTooltip()
+    .withDynamicTextContent(_.COPY)
 
   def renderRecord(record: String): Unit = {
-    textLoadInput.value = record
-    dom.window.setTimeout(() => textCopyButton.focus(), 0)
+    textLoadInput.element.value = record
+    dom.window.setTimeout(() => textCopyButton.element.asInstanceOf[Button].focus(), 0)
   }
 
   //
@@ -141,7 +132,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
   //
   override lazy val element: Div = {
     val elem = div(
-      label("Load from File"),
+      WebComponent.dynamicLabel(_.LOAD_FROM_FILE).element,
       div(
         cls := "row",
         marginTop := 3.px,
@@ -149,8 +140,8 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
         fileLoadMessage
       ),
       br(),
-      label("Load from Text"),
-      textLoadInput,
+      WebComponent.dynamicLabel(_.LOAD_FROM_TEXT).element,
+      textLoadInput.element,
       div(
         cls := "row",
         marginTop := 3,
@@ -163,15 +154,15 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
         div(cls := "col-xs-5 col-sm-3", textClearButton.element)
       ),
       br(),
-      label("Save to File / Clipboard"),
+      WebComponent.dynamicLabel(_.SAVE_TO_FILE_CLIPBOARD).element,
       div(cls := "input-group",
-        fileSaveName,
+        fileSaveName.element,
         span(cls := "input-group-addon", padding := 6, "."),
         div(cls := "input-group-btn", fileSaveFormat.element),
         div(
           cls := "input-group-btn",
           fileSaveButton.element,
-          textCopyButton
+          textCopyButton.element
         )
       )
     ).render
@@ -193,16 +184,16 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
       def sizeChecker(sz: Int): Boolean = if (sz <= maxFileSizeKB * 1024) {
         false
       } else {
-        abortFileLoad(s"[Error] File too large. (must be <= ${maxFileSizeKB}KB)")
+        abortFileLoad(s"[${Messages.get.ERROR}] ${Messages.get.FILE_TOO_LARGE(maxFileSizeKB)}")
         true
       }
 
       Try(TextReader.readTextFile(f, callback(f.name), sizeChecker)) match {
         case Success(_) => // do nothing
-        case Failure(_) => abortFileLoad("[Error] Failed to open the file.")
+        case Failure(_) => abortFileLoad(s"[${Messages.get.ERROR}] ${Messages.get.ERROR_OPEN_FILE}")
       }
     }).getOrElse {
-      abortFileLoad("[Error] Failed to select the file.")
+      abortFileLoad(s"[${Messages.get.ERROR}] ${Messages.get.ERROR_SELECT_FILE}")
     }
   }
 
@@ -227,12 +218,12 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
   }
 
   protected def displayTextLoadTooltip(message: String): Unit = {
-    Tooltip.display(textLoadInput, message, 2000)
+    Tooltip.display(textLoadInput.element, message, 2000)
   }
 
   private[this] def abortFileLoad(message: String): Unit = {
     displayFileLoadMessage(message)
-    displayFileLoadTooltip("Failed!")
+    displayFileLoadTooltip(Messages.get.LOAD_FAILURE)
     clearFileLoad()
   }
 
@@ -248,7 +239,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
   // helper functions
   //
   private[this] def getFileName: String = {
-    val base = if (fileSaveName.value.isEmpty) DEFAULT_FILE_NAME else fileSaveName.value
-    base + "." + fileSaveFormat.getValue.toString.toLowerCase()
+    val s = fileSaveName.element.asInstanceOf[Input].value
+    s.isEmpty.fold(DEFAULT_FILE_NAME, s) + "." + fileSaveFormat.getValue.toString.toLowerCase()
   }
 }

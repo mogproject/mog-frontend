@@ -9,16 +9,13 @@ import scalatags.JsDom.all._
 /**
   * Game information dialog
   */
-case class CommentDialog(messageLang: Language, text: String) extends ModalLike {
+case class CommentDialog(text: String) extends ModalLike {
+
+  override def getTitle(messages: Messages): String = messages.COMMENT
 
   private[this] val commentArea = CommentComponent(isDisplayOnly = false, isModal = true, text = text)
 
-  override val title: String = messageLang match {
-    case Japanese => "コメント"
-    case English => "Comment"
-  }
-
-  override val modalBody: ElemType = div(bodyDefinition, commentArea.textCommentInput)
+  override val modalBody: ElemType = div(bodyDefinition, commentArea.textCommentInput.element)
 
   override val modalFooter: ElemType = div(footerDefinition,
     div(cls := "row",

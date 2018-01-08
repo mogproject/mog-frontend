@@ -4,6 +4,7 @@ import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipDisabled}
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
+import com.mogproject.mogami.frontend.view.i18n.MessagesEnglish
 import com.mogproject.mogami.frontend.view.setting.{BooleanSelector, DropdownSelector, LanguageSelector}
 import org.scalajs.dom.html.Div
 
@@ -15,40 +16,33 @@ import scalatags.JsDom.all._
   */
 class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
   override lazy val ident: String = "Settings"
-  override lazy val titleLabel: Map[Language, String] = Map(English -> ident, Japanese -> "設定")
+
+  override def getTitle(messages: Messages): String = messages.SETTINGS
+
   override lazy val icon: String = "wrench"
   override lazy val visibleMode = Set(PlayModeType, ViewModeType, EditModeType)
 
   //
   // Elements
   //
-  private[this] lazy val boardSizeSelector = DropdownSelector[Option[Int]]("Board Size", Vector(
-    None -> "Automatic",
-    Some(15) -> "15 - Extra Small",
-    Some(20) -> "20",
-    Some(25) -> "25",
-    Some(30) -> "30 - Small",
-    Some(40) -> "40 - Medium",
-    Some(50) -> "50 - Large",
-    Some(60) -> "60 - Extra Large"
-  ), v => _.copy(pieceWidth = v), Seq(1))
+  private[this] lazy val boardSizeSelector = DropdownSelector[Option[Int]](_.BOARD_SIZE, Vector(
+    None, Some(15), Some(20), Some(25), Some(30), Some(40), Some(50), Some(60)
+  ), _.BOARD_SIZE_OPTIONS, v => _.copy(pieceWidth = v), Seq(1))
 
-  private[this] lazy val layoutSelector = DropdownSelector[SVGAreaLayout]("Layout", Vector(
-    SVGStandardLayout -> "Standard",
-    SVGCompactLayout -> "Compact",
-    SVGWideLayout -> "Wide"
-  ), v => _.copy(layout = v))
+  private[this] lazy val layoutSelector = DropdownSelector[SVGAreaLayout](_.LAYOUT, Vector(
+    SVGStandardLayout, SVGCompactLayout, SVGWideLayout
+  ), _.LAYOUT_OPTIONS, v => _.copy(layout = v))
 
   private[this] lazy val pieceFaceSelector = DropdownSelector[PieceFace](
-    "Piece Graphic", PieceFace.all.map(p => p -> p.displayName).toVector, v => _.copy(pieceFace = v)
+    _.PIECE_GRAPHIC, PieceFace.all.toVector, _.PIECE_GRAPHIC_OPTIONS, v => _.copy(pieceFace = v)
   )
 
-  private[this] lazy val doubleBoardSelector = BooleanSelector("Double Board Mode", v => _.copy(flipType = v.fold(DoubleBoard, FlipDisabled)))
-  private[this] lazy val visualEffectSelector = BooleanSelector("Visual Effects", v => _.copy(visualEffectEnabled = v))
-  private[this] lazy val soundEffectSelector = BooleanSelector("Sound Effects", v => _.copy(soundEffectEnabled = v))
+  private[this] lazy val doubleBoardSelector = BooleanSelector(_.DOUBLE_BOARD_MODE, v => _.copy(flipType = v.fold(DoubleBoard, FlipDisabled)))
+  private[this] lazy val visualEffectSelector = BooleanSelector(_.VISUAL_EFFECTS, v => _.copy(visualEffectEnabled = v))
+  private[this] lazy val soundEffectSelector = BooleanSelector(_.SOUND_EFFECTS, v => _.copy(soundEffectEnabled = v))
 
-  private[this] lazy val messageLanguageSelector = LanguageSelector("Messages", v => _.copy(messageLang = v))
-  private[this] lazy val recordLanguageSelector = LanguageSelector("Record", v => _.copy(recordLang = v))
+  private[this] lazy val messageLanguageSelector = LanguageSelector(_.MESSAGE_LANG, v => _.copy(messageLang = v))
+  private[this] lazy val recordLanguageSelector = LanguageSelector(_.RECORD_LANG, v => _.copy(recordLang = v))
 
   private[this] lazy val selectors = Seq(
     boardSizeSelector,
@@ -63,10 +57,7 @@ class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
 
   override lazy val content: JsDom.TypedTag[Div] = div(
     selectors.map(_.element),
-    div(
-      cls := "alert alert-success setting-alert",
-      "These settings will be saved for your browser."
-    )
+    WebComponent.dynamicDiv(_.SETTINGS_INFO, cls := "alert alert-success setting-alert").element
   )
 
   //

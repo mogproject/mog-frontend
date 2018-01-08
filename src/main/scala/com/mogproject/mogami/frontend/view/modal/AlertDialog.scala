@@ -9,12 +9,9 @@ import scalatags.JsDom.all._
 /**
   * Alert dialog
   */
-case class AlertDialog(messageLang: Language, message: TypedTag[Element]) extends ModalLike {
+case class AlertDialog(message: TypedTag[Element]) extends ModalLike {
 
-  override val title: String = messageLang match {
-    case Japanese => "確認"
-    case English => "Confirmation"
-  }
+  override def getTitle(messages: Messages): String = messages.CONFIRMATION
 
   override val modalBody: ElemType = div(bodyDefinition, message)
 

@@ -1,10 +1,11 @@
 package com.mogproject.mogami.frontend.view.action
 
+import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.game.ResignAction
-import com.mogproject.mogami.frontend.view.button.SingleButton
+import com.mogproject.mogami.frontend.view.button.CommandButton
 import com.mogproject.mogami.frontend.view.modal.YesNoDialog
-import org.scalajs.dom.raw.HTMLElement
+import org.scalajs.dom.Element
 
 import scalatags.JsDom.all._
 
@@ -12,25 +13,16 @@ import scalatags.JsDom.all._
   * Resign button
   */
 case class ResignButton(isSmall: Boolean, confirm: Boolean) extends WebComponent with SAMObserver[BasePlaygroundModel] {
-  private[this] def createLabel(messageLang: Language) = {
-    val s = Map[Language, String](English -> "Resign", Japanese -> "投了")(messageLang)
-    if (isSmall) {
-      Seq(StringFrag(s + " "), span(cls := s"glyphicon glyphicon-flag", aria.hidden := true)).render
-    } else {
-      s.render
-    }
-  }
 
-  private[this] val button = SingleButton(
-    Map(English -> createLabel(English), Japanese -> createLabel(Japanese)),
-    "btn-default" +: Seq("thin-btn", "btn-resign").filter(_ => isSmall),
-    clickAction = Some(() => clickAction()),
-    isBlockButton = !isSmall,
-    dismissModal = !isSmall
+  private[this] val button = CommandButton(
+    classButtonDefault + " " + isSmall.fold("thin-btn btn-resign", classButtonBlock),
+    onclick := {() => clickAction()},
+    (!isSmall).option(dismissModalNew)
   )
+    .withDynamicTextContent(_.RESIGN, "flag")
 
   def clickAction(): Unit = if (confirm) {
-    YesNoDialog(English, div("Do you really want to resign?"), () => clickActionImpl()).show()
+    YesNoDialog(div(Messages.get.ASK_RESIGN), () => clickActionImpl()).show()
   } else {
     clickActionImpl()
   }
@@ -39,7 +31,7 @@ case class ResignButton(isSmall: Boolean, confirm: Boolean) extends WebComponent
     doAction(ResignAction, 100)
   }
 
-  override val element: HTMLElement = button.element
+  override val element: Element = button.element
 
   //
   // Observer

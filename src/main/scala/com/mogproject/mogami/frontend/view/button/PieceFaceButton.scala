@@ -17,7 +17,7 @@ case class PieceFaceButton(pieceFace: PieceFace, ptype: Ptype, rotated: Boolean,
 
   override lazy val element: Element = button(
     tpe := "button",
-    cls := "btn btn-default btn-block",
+    cls := "btn " + classButtonDefaultBlock,
     modifier,
     svgTags.svg(
       svgAttrs.width := 100.pct,

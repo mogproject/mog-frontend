@@ -19,6 +19,8 @@ trait SAMLike {
   def doAction[M <: SAMModel](action: SAMAction[M]): Unit = {}
 
   def addObserver[M <: SAMModel](observer: SAMObserver[M]): Unit = {}
+
+  def removeObserver[M <: SAMModel](observer: SAMObserver[M]): Unit = {}
 }
 
 
@@ -31,22 +33,22 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
 
   @tailrec
   private[this] def doActionImpl(action: SAMAction[M]): Unit = {
-//    SAM.debug(s"doAction: ${action}")
+    //    SAM.debug(s"doAction: ${action}")
 
     val result: Option[M] = action.execute(state.model)
-//    println(s"result: ${result}")
+    //        println(s"result: ${result}")
 
     result match {
       case Some(nextModel) =>
         // process observers
         val flag = state.getObserveFlag(nextModel)
-//        SAM.debug(s"Observer flag: ${flag}")
-
-        notifyObservers(flag, nextModel)
+        //        SAM.debug(s"Observer flag: ${flag}")
 
         val (nextState, nextAction) = state.render(nextModel)
-//        SAM.debug(s"nextState: ${nextState}")
-//        SAM.debug(s"nextAction: ${nextAction}")
+        //        SAM.debug(s"nextState: ${nextState}")
+        //        SAM.debug(s"nextAction: ${nextAction}")
+
+        notifyObservers(flag, nextModel)
 
         state = nextState
 
@@ -65,9 +67,15 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
     case _ => // do nothing
   }
 
+  override def removeObserver[N <: SAMModel](observer: SAMObserver[N]): Unit = observer match {
+    case o: SAMObserver[M] => observers -= o
+    case _ => // do nothing
+  }
+
   private[this] def notifyObservers(flag: Int, model: M): Unit = observers.foreach { o =>
+    //    println(s"Notifying: ${o}")
     if (scalajs.js.isUndefined(o)) {
-      println(s"Found undefined: ${}o}")
+      //      println(s"Found undefined: ${o}}")
       observers -= o
     } else if ((o.samObserveMask & flag) != 0) {
       //      SAM.debug(s"Refreshing: ${o}")
@@ -84,11 +92,11 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
 
 object SAM {
 
-//  private[this] var verboseLogEnabled: Boolean = false
+  //  private[this] var verboseLogEnabled: Boolean = false
 
-//  def setDebugLog(enabled: Boolean): Unit = verboseLogEnabled = enabled
+  //  def setDebugLog(enabled: Boolean): Unit = verboseLogEnabled = enabled
 
-//  def debug(message: String): Unit = if (verboseLogEnabled) println(message)
+  //  def debug(message: String): Unit = if (verboseLogEnabled) println(message)
 
   private[this] var samImpl: SAMLike = new SAMLike {}
 
@@ -103,12 +111,18 @@ object SAM {
   def initialize[M <: SAMModel](state: SAMState[M]): Unit = {
     samImpl = new SAM(state)
     samImpl.initialize()
-//    debug("SAM Debug mode enabled.")
+    //    debug("SAM Debug mode enabled.")
   }
 
   def addObserver[M <: SAMModel](observer: SAMObserver[M]): Unit = {
+    //    println(s"Adding observer: ${observer}")
     samImpl.addObserver(observer)
   }
+
+  def removeObserver[M <: SAMModel](observer: SAMObserver[M]): Unit = {
+    samImpl.removeObserver(observer)
+  }
+
 }
 
 

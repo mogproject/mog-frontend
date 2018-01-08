@@ -1,12 +1,11 @@
 package com.mogproject.mogami.frontend.view.analyze
 
-import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.Move
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.analyze.AnalyzeCheckmateAction
 import com.mogproject.mogami.frontend.action.board.AddMovesAction
 import com.mogproject.mogami.frontend.action.dialog.MenuDialogAction
-import com.mogproject.mogami.frontend.view.button.SingleButton
+import com.mogproject.mogami.frontend.view.button.CommandButton
 import org.scalajs.dom
 import org.scalajs.dom.html.{Div, Input}
 
@@ -27,28 +26,25 @@ class CheckmateButton(isMobile: Boolean) extends WebComponent {
     value := DEFAULT_TIMEOUT
   ).render
 
-  private[this] lazy val analyzeButton: SingleButton = SingleButton(
-    Map(English -> "Analyze".render),
-    clickAction = Some(() => clickAction()),
-    tooltip = isMobile.fold(Map.empty, Map(English -> "Analyze this position for checkmate")),
-    isBlockButton = true
-  )
+  private[this] lazy val analyzeButton = CommandButton(classButtonDefaultBlock, onclick := { () => clickAction() })
+    .withDynamicTextContent(_.ANALYZE)
+    .withDynamicHoverTooltip(_.ANALYZE_CHECKMATE_TOOLTIP)
 
   private[this] lazy val solverMessage: Div = div(
     cls := "col-xs-8 col-sm-9 text-muted",
     marginTop := 6
   ).render
 
-  private[this] def generateAddMovesButton(moves: Seq[Move]): SingleButton = SingleButton(
-    Map(English -> "Add Moves to Game".render, Japanese -> "手順を棋譜に追記".render),
-    clickAction = Some { () =>
+  private[this] def generateAddMovesButton(moves: Seq[Move]) = CommandButton(
+    classButtonDefaultBlock,
+    onclick := { () =>
       doAction(AddMovesAction(moves))
-      displayCheckmateMessage("Moves are added.")
+      displayCheckmateMessage(Messages.get.CHECKMATE_MOVES_ADDED)
       doAction(MenuDialogAction(false), 1000) // close menu modal after 1 sec (mobile)
-    },
-    tooltip = isMobile.fold(Map.empty, Map(English -> "Add this solution to the current game recocrd")),
-    isBlockButton = true
+    }
   )
+    .withDynamicTextContent(_.ADD_CHECKMATE_MOVES)
+    .withDynamicHoverTooltip(_.ADD_CHECKMATE_MOVES_TOOLTIP)
 
   private[this] def validateTimeout(): Int = {
     val n = Try(timeoutInput.value.toInt).getOrElse(DEFAULT_TIMEOUT)
@@ -59,19 +55,17 @@ class CheckmateButton(isMobile: Boolean) extends WebComponent {
   override lazy val element: Div = div(
     div(
       cls := "row",
-      div(cls := "col-xs-6 col-sm-8 text-right",
-        "Timeout"
-      ),
+      WebComponent.dynamicDiv(_.TIMEOUT, cls := "col-xs-6 col-sm-8 text-right").element,
       div(cls := "col-xs-6 col-sm-4",
         marginTop := (-8).px,
         div(cls := "input-group",
           timeoutInput,
-          span(cls := "input-group-addon", padding := 6.px, "sec")
+          WebComponent.dynamicSpan(_.SEC, cls := "input-group-addon", padding := 6.px).element
         )
       )
     ),
     div(cls := "row",
-      div(cls := "col-xs-4 col-sm-3",
+      div(cls := "col-xs-5 col-sm-3",
         analyzeButton.element
       ),
       solverMessage
@@ -84,22 +78,20 @@ class CheckmateButton(isMobile: Boolean) extends WebComponent {
   //
   private[this] def clickAction(): Unit = {
     disableAnalyzeButton()
-    displayCheckmateMessage("Analyzing...")
+    displayCheckmateMessage(Messages.get.ANALYZING + "...")
     dom.window.setTimeout(() => doAction(AnalyzeCheckmateAction(validateTimeout())), 100)
   }
 
   def displayResult(result: Option[Seq[Move]], recordLang: Language): Unit = {
     result match {
-      case None =>
-        displayCheckmateMessage("This position is too difficult to solve.")
-      case Some(Nil) =>
-        displayCheckmateMessage("No checkmates.")
+      case None => displayCheckmateMessage(Messages.get.CHECKMATE_ANALYZE_TIMEOUT)
+      case Some(Nil) => displayCheckmateMessage(Messages.get.NO_CHECKMATES)
       case Some(moves) =>
         val s = moves.map(m => m.player.toSymbolString() + (recordLang match {
           case Japanese => m.toJapaneseNotationString
           case English => m.toWesternNotationString
         }))
-        displayCheckmateMessage(s"Found a checkmate:\n${s.mkString(" ")}")
+        displayCheckmateMessage(Messages.get.CHECKMATE_FOUND + ":\n" + s.mkString(" "))
         solverMessage.appendChild(generateAddMovesButton(moves).element)
     }
     dom.window.setTimeout(() => enableAnalyzeButton(), 500)

@@ -1,17 +1,15 @@
 package com.mogproject.mogami.frontend.view.share
 
 import com.mogproject.mogami.frontend.view.button.{CopyButtonLike, DropdownMenu}
-import org.scalajs.dom.html.Div
-
-import scalatags.JsDom.all._
+import org.scalajs.dom.Element
 
 
-class ImageLinkButton extends CopyButtonLike with ViewButtonLike {
+/**
+  * definitions of image sizes
+  */
+sealed abstract class ImageSize(val w: Int)
 
-  /**
-    * definitions of image sizes
-    */
-  sealed abstract class ImageSize(val w: Int)
+object ImageSize {
 
   case object Small extends ImageSize(30)
 
@@ -19,39 +17,32 @@ class ImageLinkButton extends CopyButtonLike with ViewButtonLike {
 
   case object Large extends ImageSize(50)
 
-  private[this] val allSizes = Vector(Small, Medium, Large)
+  val all = Vector(Small, Medium, Large)
+
+}
+
+class ImageLinkButton extends CopyButtonLike {
 
   /**
     * Image link buttons
     */
   override protected val ident = "image-link-copy"
 
-  override protected val labelString = "Snapshot Image"
-
   private[this] val sizeButton = {
     val d = DropdownMenu(
-      allSizes,
-      DropdownMenu.buildLabels(allSizes),
+      ImageSize.all,
+      _.IMAGE_SIZE_OPTIONS,
       dropdownClass = "input-group-btn",
       clickAction = { (_: ImageSize) => updateValueWithSize() },
-      dropdownHeader = Some("Image Size")
+      dropdownHeader = Some(_.IMAGE_SIZE)
     )
-    d.select(Medium)
+    d.select(ImageSize.Medium)
     d
   }
 
-  override lazy val element: Div = div(
-    label(labelString),
-    div(cls := "input-group",
-      inputElem,
-      div(cls := "input-group-btn", sizeButton.element),
-      div(
-        cls := "input-group-btn",
-        viewButton,
-        copyButton
-      )
-    )
-  ).render
+  override protected def rightButton: Option[Element] = Some(sizeButton.element)
+
+  override protected def viewButtonEnabled: Boolean = true
 
   override def updateValue(value: String): Unit = updateValueWithSize(Some(value))
 
@@ -61,7 +52,6 @@ class ImageLinkButton extends CopyButtonLike with ViewButtonLike {
     val url = base.replaceAll("[&]sz=\\d+", "") + sizeParams
 
     super.updateValue(url)
-    updateViewUrl(url)
   }
 
 }

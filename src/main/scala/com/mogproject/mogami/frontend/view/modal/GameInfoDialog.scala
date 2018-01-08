@@ -12,23 +12,18 @@ import scalatags.JsDom.all._
 /**
   * Game information dialog
   */
-case class GameInfoDialog(messageLang: Language, gameInfo: GameInfo, isHandicapped: Boolean) extends ModalLike {
+case class GameInfoDialog(gameInfo: GameInfo, isHandicapped: Boolean) extends ModalLike {
 
   //
   // game info specific
   //
-  private[this] val nameLabel = messageLang match {
-    case Japanese => "対局者名"
-    case English => "Player Names"
-  }
-
   private[this] val inputNames: Map[Player, Input] = List(BLACK, WHITE).map { p =>
     p -> input(
       tpe := "text",
       cls := "form-control",
       maxlength := 12,
       onfocus := { () => inputNames(p).select() },
-      value := PlayerUtil.getCompletePlayerName(gameInfo, p, messageLang, isHandicapped)
+      value := PlayerUtil.getCompletePlayerName(gameInfo, p, Messages.getLanguage, isHandicapped)
     ).render
   }.toMap
 
@@ -38,13 +33,10 @@ case class GameInfoDialog(messageLang: Language, gameInfo: GameInfo, isHandicapp
   //
   // modal traits
   //
-  override val title: String = messageLang match {
-    case Japanese => "対局情報"
-    case English => "Game Information"
-  }
+  override def getTitle(messages: Messages): String = messages.GAME_INFORMATION
 
   override val modalBody: ElemType = div(bodyDefinition,
-    label(nameLabel),
+    label(Messages.get.PLAYER_NAMES),
     div(cls := "row",
       marginBottom := 3,
       div(cls := "col-xs-4 small-padding", textAlign := "right", marginTop := 6, label("☗")),
@@ -62,7 +54,7 @@ case class GameInfoDialog(messageLang: Language, gameInfo: GameInfo, isHandicapp
         button(
           tpe := "submit", cls := "btn btn-default btn-block", dismiss,
           onclick := { () => PlaygroundSAM.doAction(UpdateGameInfoAction(getGameInfo)) },
-          "Update"
+          Messages.get.UPDATE
         )
       )
     )

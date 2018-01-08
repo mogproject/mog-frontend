@@ -25,27 +25,16 @@ class EditHelpArea extends WebComponent with SAMObserver[BasePlaygroundModel] {
     clearAttributes()
 
     div(
-      label("Attributes"),
+      WebComponent.dynamicLabel(_.ATTRIBUTES).element,
       attributeArea,
       br(),
-      label("Help"),
-      ul(
-        li("Click on a player name to set the turn to move."),
-        li("Double-click on a piece on board to change its attributes:",
-          ul(
-            li("Black Unpromoted ->"),
-            li("Black Promoted ->"),
-            li("White Unpromoted ->"),
-            li("White Promoted ->"),
-            li("Black Unpromoted")
-          )
-        )
-      )
+      WebComponent.dynamicLabel(_.HELP).element,
+      WebComponent(ul()).withDynamicInnerElements(_.EDIT_HELP).element
     ).render
   }
 
   def clearAttributes(): Unit = {
-    attributeArea.innerHTML = "Select a piece on board."
+    WebComponent.replaceChildElement(attributeArea, WebComponent.dynamicSpan(_.SELECT_PIECE_ON_BOARD).element)
   }
 
   def renderAttributes(ptype: Ptype, pieceFace: PieceFace): Unit = {
@@ -60,8 +49,7 @@ class EditHelpArea extends WebComponent with SAMObserver[BasePlaygroundModel] {
       )
     }
 
-    WebComponent.removeAllChildElements(attributeArea)
-    attributeArea.appendChild(div(g(true), br(), g(false)).render)
+    WebComponent.replaceChildElements(attributeArea, Seq(g(true), br(), g(false)).map(_.render))
   }
 
   //

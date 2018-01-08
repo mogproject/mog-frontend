@@ -13,7 +13,9 @@ import scalatags.JsDom.all._
 class ResetMenu extends AccordionMenu {
 
   override lazy val ident: String = "Reset"
-  override lazy val titleLabel: Map[Language, String] = Map(English -> ident, Japanese -> "初期局面")
+
+  override def getTitle(messages: Messages): String = messages.RESET
+
   override lazy val icon: String = "erase"
   override lazy val visibleMode = Set(EditModeType)
 

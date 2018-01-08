@@ -51,4 +51,6 @@ package object frontend {
   val Tooltip = com.mogproject.mogami.frontend.api.bootstrap.Tooltip
   type BootstrapJQuery = com.mogproject.mogami.frontend.api.bootstrap.BootstrapJQuery
 
+  type Messages = com.mogproject.mogami.frontend.view.i18n.Messages
+  val Messages = com.mogproject.mogami.frontend.view.i18n.Messages
 }

@@ -1,14 +1,15 @@
 package com.mogproject.mogami.frontend.view.menu
 
-import com.mogproject.mogami.frontend._
+import com.mogproject.mogami.frontend.{BootstrapJQuery, _}
 import com.mogproject.mogami.frontend.view.Observable
-import com.mogproject.mogami.frontend.view.button.{MultiLingualElement, MultiLingualLabel}
 import org.scalajs.dom.html.Div
 import com.mogproject.mogami.util.Implicits._
 
 import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
 import org.scalajs.jquery.jQuery
+
+import scala.scalajs.js
 
 
 /**
@@ -18,7 +19,7 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
 
   def ident: String
 
-  def titleLabel: Map[Language, String]
+  def getTitle(messages: Messages): String
 
   def icon: String
 
@@ -41,13 +42,13 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
     )
   ).render
 
-  private[this] val titleElem = MultiLingualLabel(titleLabel, paddingLeft := 20.px)
+  private[this] lazy val labelArea = WebComponent.dynamicSpan(getTitle, paddingLeft := 20.px)
 
   private[this] val titleElemHeading = h4(cls := "panel-title",
     span(
       cls := "accordion-toggle",
       glyph,
-      titleElem.elem
+      labelArea.element
     )
   ).render
 
@@ -89,13 +90,34 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
   }
 
   def collapseTitle(): Unit = {
-    titleElem.elem.style.display = display.none.v
-    element.setAttribute("data-original-title", (ident == "EditHelp").fold("Help", ident))
+    collapseContent()
+    labelArea.hide()
+    element.setAttribute("data-original-title", ident)
   }
 
   def expandTitle(): Unit = {
-    titleElem.elem.style.display = display.inline.v
+    labelArea.show(display.inline)
     element.removeAttribute("data-original-title")
+  }
+
+  private[this] def getJQueryElem: BootstrapJQuery = {
+    val elem = jQuery(mainElem).asInstanceOf[BootstrapJQuery]
+
+    elem.collapse {
+      val r = js.Dynamic.literal()
+      r.toggle = false
+      r.parent = "#accordion" // necessary to keep group settings
+      r
+    }
+    elem
+  }
+
+  def collapseContent(): Unit = {
+    getJQueryElem.collapse("hide")
+  }
+
+  def expandContent(): Unit = {
+    if (labelArea.isVisible) getJQueryElem.collapse("show")
   }
 
   initialize()

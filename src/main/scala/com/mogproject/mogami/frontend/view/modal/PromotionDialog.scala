@@ -11,8 +11,7 @@ import scalatags.JsDom.all._
 /**
   * Promotion dialog
   */
-case class PromotionDialog(messageLang: Language,
-                           pieceFace: PieceFace,
+case class PromotionDialog(pieceFace: PieceFace,
                            rawMove: Move,
                            rotate: Boolean
                           ) extends ModalLike {
@@ -20,16 +19,13 @@ case class PromotionDialog(messageLang: Language,
   // promotion specific
   //
   private[this] val BUTTON_HEIGHT: Int = 80
-  private[this] val buttonUnpromote = PieceFaceButton(pieceFace, rawMove.oldPtype, rotate, height := BUTTON_HEIGHT.px, dismiss, onclick := {() => PlaygroundSAM.doAction(MakeMoveAction(rawMove))})
-  private[this] val buttonPromote = PieceFaceButton(pieceFace, rawMove.oldPtype.promoted, rotate, height := BUTTON_HEIGHT.px, dismiss, onclick := {() => PlaygroundSAM.doAction(MakeMoveAction(rawMove.copy(newPtype = rawMove.newPtype.promoted, promote = true)))})
+  private[this] val buttonUnpromote = PieceFaceButton(pieceFace, rawMove.oldPtype, rotate, height := BUTTON_HEIGHT.px, dismiss, onclick := { () => PlaygroundSAM.doAction(MakeMoveAction(rawMove)) })
+  private[this] val buttonPromote = PieceFaceButton(pieceFace, rawMove.oldPtype.promoted, rotate, height := BUTTON_HEIGHT.px, dismiss, onclick := { () => PlaygroundSAM.doAction(MakeMoveAction(rawMove.copy(newPtype = rawMove.newPtype.promoted, promote = true))) })
 
   //
   // modal traits
   //
-  override val title: String = messageLang match {
-    case Japanese => "成りますか?"
-    case English => "Do you want to promote?"
-  }
+  override def getTitle(messages: Messages): String = messages.ASK_PROMOTE
 
   override val modalBody: ElemType = div()
 

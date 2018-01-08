@@ -2,7 +2,8 @@ package com.mogproject.mogami.frontend.view.button
 
 import com.mogproject.mogami.frontend._
 import org.scalajs
-import org.scalajs.dom.html.{Button, Div, Input}
+import org.scalajs.dom.Element
+import org.scalajs.dom.html.{Anchor, Button, Div, Input}
 
 import scalatags.JsDom.all._
 
@@ -12,35 +13,51 @@ import scalatags.JsDom.all._
 trait CopyButtonLike extends WebComponent {
   protected def ident: String
 
-  protected def labelString: String
+  protected def divClass: String = ""
 
-  protected lazy val inputElem: Input = input(
+  protected def viewButtonEnabled: Boolean = false
+
+  protected def leftButton: Option[Element] = None
+
+  protected def rightButton: Option[Element] = None
+
+
+  private[this] lazy val viewButtonOpt: Option[WebComponent] = if (viewButtonEnabled) {
+    Some(
+      WebComponent(a(
+        cls := "btn "+ classButtonDefault,
+        tpe := "button",
+        target := "_blank"
+      )).withDynamicTextContent(_.VIEW)
+    )
+  } else {
+    None
+  }
+
+  private[this] lazy val inputElem: Input = input(
     tpe := "text", id := ident, cls := "form-control", readonly := "readonly"
   ).render
 
-  protected lazy val copyButton: Button = button(
-    cls := "btn btn-default",
-    tpe := "button",
-    data("clipboard-target") := s"#${ident}",
-    data("toggle") := "tooltip",
-    data("trigger") := "manual",
-    data("placement") := "bottom",
-    onclick := { () => scalajs.dom.window.setTimeout({ () => copyButton.focus() }, 0) },
-    "Copy"
-  ).render
+  protected lazy val copyButton: WebComponent = CommandButton(
+    classButtonDefault,
+    onclick := { () => scalajs.dom.window.setTimeout({ () => copyButton.element.asInstanceOf[Button].focus() }, 0) },
+    data("clipboard-target") := s"#${ident}"
+  )
+    .withManualTooltip()
+    .withDynamicTextContent(_.COPY)
 
   override lazy val element: Div = div(
-    label(labelString),
-    div(cls := "input-group",
-      inputElem,
-      div(
-        cls := "input-group-btn",
-        copyButton
-      )
-    )
+    cls := "input-group " + divClass,
+    leftButton.map(div(cls := "input-group-btn", _)),
+    inputElem,
+    rightButton.map(div(cls := "input-group-btn", _)),
+    div(cls := "input-group-btn", viewButtonOpt.map(_.element).toSeq :+ copyButton.element)
   ).render
 
-  def updateValue(value: String): Unit = inputElem.value = value
+  def updateValue(value: String): Unit = {
+    inputElem.value = value
+    viewButtonOpt.foreach(_.element.asInstanceOf[Anchor].href = value)
+  }
 
   def getValue: String = inputElem.value
 }

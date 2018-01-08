@@ -2,6 +2,7 @@ package com.mogproject.mogami.frontend.view.menu
 
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.model.{BasePlaygroundModel, PlayModeType, ViewModeType}
+import com.mogproject.mogami.frontend.view.common.WarningLabel
 import com.mogproject.mogami.frontend.view.share._
 import org.scalajs.dom.html.Div
 
@@ -14,25 +15,34 @@ import scalatags.JsDom.all._
 class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
 
   override lazy val ident: String = "Share"
-  override lazy val titleLabel: Map[Language, String] = Map(English -> ident, Japanese -> "シェア")
+
+  override def getTitle(messages: Messages): String = messages.SHARE
+
   override lazy val icon: String = "share"
   override lazy val visibleMode = Set(PlayModeType, ViewModeType)
 
-  lazy val recordCopyButton = new RecordCopyButton(isMobile)
-  lazy val snapshotCopyButton = new SnapshotCopyButton(isMobile)
+  lazy val warningLabel = WarningLabel(_.SHARE_WARNING)
+  lazy val recordCopyButton = new RecordCopyButton
+  lazy val snapshotCopyButton = new SnapshotCopyButton
   lazy val imageLinkButton = new ImageLinkButton
   lazy val sfenStringCopyButton = new SfenStringCopyButton
-  lazy val notesViewButton = new NotesViewButton(isMobile)
+  lazy val notesViewButton = new NotesViewButton
 
   override lazy val content: JsDom.TypedTag[Div] = div(
+    warningLabel.element,
+    WebComponent.dynamicLabel(_.RECORD_URL).element,
     recordCopyButton.element,
     br(),
+    WebComponent.dynamicLabel(_.SNAPSHOT_URL).element,
     snapshotCopyButton.element,
     br(),
+    WebComponent.dynamicLabel(_.SNAPSHOT_IMAGE).element,
     imageLinkButton.element,
     br(),
+    WebComponent.dynamicLabel(_.SNAPSHOT_SFEN_STRING).element,
     sfenStringCopyButton.element,
     br(),
+    WebComponent.dynamicLabel(_.NOTES_VIEW).element,
     notesViewButton.element
   )
 
@@ -53,7 +63,7 @@ class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePl
       model.mode.getGameControl.foreach { gc =>
         val builder = ArgumentsBuilder(gc, model.config)
         recordCopyButton.updateValue(builder.toRecordUrl)
-        if (builder.commentOmitted) recordCopyButton.showWarning() else recordCopyButton.hideWarning()
+        if (builder.commentOmitted) warningLabel.show() else warningLabel.hide()
         snapshotCopyButton.updateValue(builder.toSnapshotUrl)
         imageLinkButton.updateValue(builder.toImageLinkUrl)
         sfenStringCopyButton.updateValue(gc.getDisplayingState.toSfenString)
