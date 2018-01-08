@@ -29,7 +29,7 @@ trait RecordLoader {
     result match {
       case Success(g) =>
         displayFileLoadMessage(s"${Messages.get.LOAD_SUCCESS}: ${fileName}<br/>${getLoadInfo(g)}")
-        displayFileLoadTooltip(Messages.get.LOAD_FAILURE)
+        displayFileLoadTooltip(Messages.get.LOAD_SUCCESS)
 
         doAction(LoadGameAction(g))
         doAction(MenuDialogAction(false), 1000) // close menu modal after 1 sec (mobile)
