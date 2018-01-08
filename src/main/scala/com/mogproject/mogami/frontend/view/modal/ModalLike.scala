@@ -15,7 +15,7 @@ import scalatags.JsDom.all._
   *
   */
 trait ModalLike {
-  def title: String
+  def getTitle(messages: Messages): String
 
   type ElemType = TypedTag[Div]
 
@@ -45,7 +45,7 @@ trait ModalLike {
         div(cls := "modal-content",
           // header
           div(cls := "modal-header",
-            h4(cls := "modal-title", float := "left", title),
+            h4(cls := "modal-title", float := "left", getTitle(Messages.get)),
             displayCloseButton.fold(closeButton, Seq.empty[JsDom.Modifier])
           ),
           // body

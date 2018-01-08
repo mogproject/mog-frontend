@@ -9,40 +9,24 @@ import scalatags.JsDom.all._
 /**
   * Yes-no dialog
   */
-case class YesNoDialog(lang: Language, message: TypedTag[Element], callback: () => Unit) extends ModalLike {
-
-  //
-  // yes no specific
-  //
-  private[this] val yes = lang match {
-    case Japanese => "はい"
-    case English => "Yes"
-  }
-
-  private[this] val no = lang match {
-    case Japanese => "いいえ"
-    case English => "No"
-  }
+case class YesNoDialog(message: TypedTag[Element], callback: () => Unit) extends ModalLike {
 
   //
   // modal traits
   //
   override def isStatic: Boolean = true
 
-  override val title: String = lang match {
-    case Japanese => "確認"
-    case English => "Confirmation"
-  }
+  override def getTitle(messages: Messages): String = messages.CONFIRMATION
 
   override val modalBody: ElemType = div(bodyDefinition, message)
 
   override val modalFooter: ElemType = div(footerDefinition,
     div(cls := "row",
       div(cls := "col-xs-4 col-xs-offset-4 col-md-3 col-md-offset-6",
-        button(tpe := "button", cls := "btn btn-default btn-block", dismiss, no)
+        button(tpe := "button", cls := "btn btn-default btn-block", dismiss, Messages.get.NO)
       ),
       div(cls := "col-xs-4 col-md-3",
-        button(tpe := "button", cls := "btn btn-primary btn-block", onclick := callback, dismiss, yes)
+        button(tpe := "button", cls := "btn btn-primary btn-block", onclick := callback, dismiss, Messages.get.YES)
       )
     )
   )

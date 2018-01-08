@@ -63,42 +63,30 @@ trait BasePlaygroundView extends SAMView {
   //
   // Dialogs
   //
-  def askPromote(messageLang: Language, pieceFace: PieceFace, rawMove: Move, rotate: Boolean): Unit = {
-    PromotionDialog(messageLang, pieceFace, rawMove, rotate).show()
+  def askPromote(pieceFace: PieceFace, rawMove: Move, rotate: Boolean): Unit = {
+    PromotionDialog(pieceFace, rawMove, rotate).show()
   }
 
-  def showGameInfoDialog(messageLang: Language, gameInfo: GameInfo, isHandicapped: Boolean): Unit = {
-    GameInfoDialog(messageLang, gameInfo, isHandicapped).show()
+  def showGameInfoDialog(gameInfo: GameInfo, isHandicapped: Boolean): Unit = {
+    GameInfoDialog(gameInfo, isHandicapped).show()
   }
 
-  def showEditWarningDialog(messageLang: Language): Unit = {
-    val s = messageLang match {
-      case Japanese => p("棋譜およびコメントの情報が失われますが、よろしいですか?")
-      case English => p("The record and comments will be discarded. Are you sure?")
-    }
+  def showEditWarningDialog(): Unit = {
     val action = ChangeModeAction(EditModeType, confirmed = true)
-    YesNoDialog(messageLang, s, () => PlaygroundSAM.doAction(action)).show()
+    YesNoDialog(p(Messages.get.ASK_EDIT), () => PlaygroundSAM.doAction(action)).show()
   }
 
-  def askDeleteBranch(messageLang: Language, branchNo: BranchNo): Unit = {
-    val s = messageLang match {
-      case Japanese => p(s"現在の変化 (Branch#${branchNo}) が削除されます。コメントも失われますが、よろしいですか?")
-      case English => p(s"Branch#${branchNo} will be deleted. Comments on this branch will also be removed. Are you sure?")
-    }
+  def askDeleteBranch(branchNo: BranchNo): Unit = {
     val action = UpdateGameControlAction(_.deleteBranch(branchNo))
-    YesNoDialog(messageLang, s, () => PlaygroundSAM.doAction(action)).show()
+    YesNoDialog(p(Messages.get.ASK_DELETE_BRANCH(branchNo)), () => PlaygroundSAM.doAction(action)).show()
   }
 
-  def showEditAlertDialog(msg: String, messageLang: Language): Unit = {
-    val s = messageLang match {
-      case Japanese => p("不正な局面です。", br, s"(${msg})")
-      case English => p("Invalid state.", br, s"(${msg})")
-    }
-    AlertDialog(messageLang, s).show()
+  def showEditAlertDialog(msg: String): Unit = {
+    AlertDialog(p(Messages.get.INVALID_STATE, br(), s"(${msg})")).show()
   }
 
-  def showCommentDialog(messageLang: Language, text: String): Unit = {
-    CommentDialog(messageLang, text).show()
+  def showCommentDialog(text: String): Unit = {
+    CommentDialog(text).show()
   }
 
   //

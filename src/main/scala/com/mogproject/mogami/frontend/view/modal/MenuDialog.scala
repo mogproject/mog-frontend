@@ -13,8 +13,7 @@ import scalatags.JsDom.all._
   */
 case class MenuDialog(menuPane: MenuPane) extends ModalLike with SAMObserver[BasePlaygroundModel] {
 
-  // todo: change w/ lang?
-  override val title: String = "Menu"
+  override def getTitle(messages: Messages): String = messages.MENU
 
   override lazy val modalBody: ElemType = div(bodyDefinition, menuPane.element)
 

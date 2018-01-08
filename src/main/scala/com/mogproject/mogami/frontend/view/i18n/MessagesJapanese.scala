@@ -1,7 +1,7 @@
 package com.mogproject.mogami.frontend.view.i18n
 
 import com.mogproject.mogami.frontend.model.io.RecordFormat
-import com.mogproject.mogami.State
+import com.mogproject.mogami.{BranchNo, State}
 import com.mogproject.mogami.frontend.model.{JapaneseOneCharFace, JapaneseOneCharGraphicalFace, JapaneseTwoCharGraphicalFace, WesternOneCharFace}
 import com.mogproject.mogami.frontend.{FrontendSettings, PieceFace}
 import com.mogproject.mogami.frontend.view.WebComponent
@@ -228,7 +228,21 @@ case object MessagesJapanese extends Messages {
     )
   )
 
-
   override val MOVES: String = "棋譜"
   override val TRUNK: String = "本譜"
+
+  override val CONFIRMATION: String = "確認"
+  override val GAME_INFORMATION: String = "対局情報"
+  override val PLAYER_NAMES: String = "対局者名"
+  override val UPDATE: String = "更新"
+  override val ASK_PROMOTE: String = "成りますか?"
+  override val YES: String = "はい"
+  override val NO: String = "いいえ"
+  override val ASK_RESIGN: String = "本当に投了してよろしいですか?"
+  override val IMAGE_DOWNLOAD_FAILURE: String = "画像ファイルのダウンロードに失敗しました:"
+  override val ASK_EDIT: String = "棋譜およびコメントの情報が失われますが、よろしいですか?"
+
+  override def ASK_DELETE_BRANCH(branchNo: BranchNo): String = s"現在の変化 (変化#${branchNo}) が削除されます。コメントも失われますが、よろしいですか?"
+
+  override val INVALID_STATE: String = "不正な局面です。"
 }

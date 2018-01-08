@@ -37,18 +37,18 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
         newModel.mode.getGameControl.foreach { gc => view.website.manageMenu.saveLoadButton.renderRecord(gc.getRecord(format)) }
       case HandleDialogMessage(dialog, open) => dialog match {
         case PromotionDialog(rawMove, rotate) =>
-          view.askPromote(newModel.config.messageLang, newModel.config.pieceFace, rawMove, rotate)
+          view.askPromote(newModel.config.pieceFace, rawMove, rotate)
         case GameInfoDialog =>
-          newModel.mode.getGameControl.foreach { gc => view.showGameInfoDialog(newModel.config.messageLang, gc.game.gameInfo, gc.isHandicapped) }
+          newModel.mode.getGameControl.foreach { gc => view.showGameInfoDialog(gc.game.gameInfo, gc.isHandicapped) }
         case EditWarningDialog =>
-          view.showEditWarningDialog(newModel.config.messageLang)
+          view.showEditWarningDialog()
         case EditAlertDialog(message) =>
-          view.showEditAlertDialog(message, newModel.config.messageLang)
+          view.showEditAlertDialog(message)
         case CommentDialog =>
           val comment = newModel.mode.getGameControl.flatMap(gc => gc.game.getComment(gc.gamePosition)).getOrElse("")
-          view.showCommentDialog(newModel.config.messageLang, comment)
+          view.showCommentDialog(comment)
         case AskDeleteBranchDialog =>
-          newModel.mode.getGameControl.foreach { gc => view.askDeleteBranch(newModel.config.messageLang, gc.displayBranchNo) }
+          newModel.mode.getGameControl.foreach { gc => view.askDeleteBranch(gc.displayBranchNo) }
       }
     }
 

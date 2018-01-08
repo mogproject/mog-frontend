@@ -22,7 +22,7 @@ case class ResignButton(isSmall: Boolean, confirm: Boolean) extends WebComponent
     .withDynamicTextContent(_.RESIGN, "flag")
 
   def clickAction(): Unit = if (confirm) {
-    YesNoDialog(English, div("Do you really want to resign?"), () => clickActionImpl()).show()
+    YesNoDialog(div(Messages.get.ASK_RESIGN), () => clickActionImpl()).show()
   } else {
     clickActionImpl()
   }

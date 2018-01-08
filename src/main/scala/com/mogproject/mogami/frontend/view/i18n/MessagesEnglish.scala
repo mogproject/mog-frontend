@@ -1,7 +1,7 @@
 package com.mogproject.mogami.frontend.view.i18n
 
 import com.mogproject.mogami.frontend.model.io.RecordFormat
-import com.mogproject.mogami.State
+import com.mogproject.mogami.{BranchNo, State}
 import com.mogproject.mogami.frontend.{FrontendSettings, PieceFace}
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
@@ -224,4 +224,19 @@ case object MessagesEnglish extends Messages {
 
   override val MOVES: String = "Moves"
   override val TRUNK: String = "Trunk"
+
+  override val CONFIRMATION: String = "Confirmation"
+  override val GAME_INFORMATION: String = "Game Information"
+  override val PLAYER_NAMES: String = "Player Names"
+  override val UPDATE: String = "Update"
+  override val ASK_PROMOTE: String = "Do you want to promote?"
+  override val YES: String = "Yes"
+  override val NO: String = "No"
+  override val ASK_RESIGN: String = "Do you really want to resign?"
+  override val IMAGE_DOWNLOAD_FAILURE: String = "Failed to download image(s):"
+  override val ASK_EDIT: String = "The record and comments will be discarded. Are you sure?"
+
+  override def ASK_DELETE_BRANCH(branchNo: BranchNo): String = s"Branch#${branchNo} will be deleted. Comments on this branch will also be removed. Are you sure?"
+
+  override val INVALID_STATE: String = "Invalid state."
 }

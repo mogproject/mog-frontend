@@ -269,6 +269,22 @@ trait Messages {
   def MOVES: String
 
   def TRUNK: String
+
+  //
+  // Modal
+  //
+  def CONFIRMATION: String
+  def GAME_INFORMATION: String
+  def PLAYER_NAMES: String
+  def UPDATE: String
+  def ASK_PROMOTE: String
+  def YES: String
+  def NO: String
+  def ASK_RESIGN: String
+  def IMAGE_DOWNLOAD_FAILURE: String
+  def ASK_EDIT: String
+  def ASK_DELETE_BRANCH(branchNo: BranchNo): String
+  def INVALID_STATE: String
 }
 
 object Messages {
