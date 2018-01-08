@@ -28,7 +28,7 @@ case class RadioButton[A](items: Seq[A],
       items.map { item =>
         label(
           cls := ("btn" :: "btn-primary" :: (value == item).fold("active", "notActive") :: buttonClasses.toList).mkString(" "),
-          onclick := { () => clickAction(item); select(item) },
+          onclick := { () => clickAction(item) }, // do not select here (selection might be invalidated)
           StringFrag(labelFunc(Messages.get).getOrElse(item, ""))
         )
       }
