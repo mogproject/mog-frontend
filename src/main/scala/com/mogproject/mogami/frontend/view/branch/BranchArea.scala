@@ -26,7 +26,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
   /** HTML elements */
   private[this] lazy val changeBranchButton: HTMLSelectElement = select(
     cls := "form-control",
-    width := "100%",
+    width := 100.pct,
     onchange := { e: Event =>
       e.target match {
         case elem: HTMLSelectElement => PlaygroundSAM.doAction(UpdateGameControlAction(_.changeDisplayBranch(elem.selectedIndex)))
@@ -45,7 +45,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
   private[this] lazy val deleteBranchButton = {
     val ret = CommandButton(
       classButtonDefaultBlock,
-      onclick := { () => PlaygroundSAM.doAction(AskDeleteBranchAction) }
+      onclick := { () => doAction(AskDeleteBranchAction) }
     )
       .withDynamicHoverTooltip(_.DELETE_BRANCH_TOOLTIP)
 
@@ -82,17 +82,17 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
   //
   // layout
   //
-  private[this] val playModeMenu: Div = div(
+  private[this] lazy val playModeMenu: Div = div(
     display := display.none.v,
     br(),
-    label("New Branch Mode"),
+    WebComponent.dynamicLabel(_.NEW_BRANCH_MODE).element,
     div(cls := "row",
-      div(cls := "col-xs-7 col-sm-9", p(paddingTop := "6px", "Creates a new branch whenever you make a different move.")),
+      div(cls := "col-xs-7 col-sm-9", WebComponent(p(paddingTop := "6px")).withDynamicTextContent(_.NEW_BRANCH_HELP).element),
       div(cls := "col-xs-5 col-sm-3", newBranchButton.element)
     ),
     br(),
     div(cls := "row",
-      div(cls := "col-xs-7 col-sm-9", label(paddingTop := "6px", "Delete This Branch")),
+      div(cls := "col-xs-7 col-sm-9", WebComponent.dynamicLabel(_.DELETE_BRANCH, paddingTop := "6px").element),
       div(cls := "col-xs-5 col-sm-3", deleteBranchButton.element)
     )
   ).render
@@ -101,10 +101,10 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
 
   private[this] def outputOnMenu = div(
     div(cls := "row",
-      div(cls := "col-xs-6 col-sm-8", label(paddingTop := "6px", "Change Branch")),
+      div(cls := "col-xs-6 col-sm-8", WebComponent.dynamicLabel(_.CHANGE_BRANCH, paddingTop := "6px").element),
       div(cls := "col-xs-6 col-sm-4", changeBranchButton)
     ),
-    label("Forks"),
+    WebComponent.dynamicLabel(_.FORKS).element,
     br(),
     forksButtons,
     playModeMenu
@@ -149,7 +149,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
     val forks = game.getForks(gamePosition)
 
     if (forks.isEmpty) {
-      forksButtons.innerHTML = isMobile.fold("No forks.", "")
+      forksButtons.innerHTML = isMobile.fold(Messages.get.NO_FORKS, "")
     } else {
       val nextMove = game.getMove(gamePosition).map(_ -> gamePosition.branch)
 

@@ -101,9 +101,14 @@ case object MessagesJapanese extends Messages {
   override val CHECKMATE_FOUND: String = "詰み手順を発見しました"
   override val BRANCH: String = "変化"
   override val DELETE: String = "削除"
+  override val DELETE_BRANCH: String = "この変化を削除"
   override val DELETE_BRANCH_TOOLTIP: String = "この変化を削除"
   override val NEW_BRANCH_TOOLTIP: String = "新しい指し手に対して変化を作成"
-
+  override val NEW_BRANCH_MODE: String = "分岐作成モード"
+  override val NEW_BRANCH_HELP: String = "新しい指し手に対して常に変化を作成します。"
+  override val CHANGE_BRANCH: String = "変化を選択"
+  override val FORKS: String = "分岐"
+  override val NO_FORKS: String = "この局面に分岐はありません。"
 
   override val COUNT_POINT: String = "点数計算"
   override val COUNT_POINT_LABEL: String = "点数計算 (持将棋判定用)"

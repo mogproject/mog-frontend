@@ -145,9 +145,22 @@ trait Messages {
 
   def DELETE: String
 
+  def DELETE_BRANCH: String
+
   def DELETE_BRANCH_TOOLTIP: String
 
+  def NEW_BRANCH_MODE: String
+
+  def NEW_BRANCH_HELP: String
+
   def NEW_BRANCH_TOOLTIP: String
+
+  def CHANGE_BRANCH: String
+
+  def FORKS: String
+
+  def NO_FORKS: String
+
 
   //
   // Action
