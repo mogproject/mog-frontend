@@ -33,34 +33,35 @@ trait EffectorLike[A, T <: EffectorTarget] {
     */
   def autoDestruct: Option[Int] = None
 
-  def start(x: A, callback: () => Unit = { () => }): Unit = if (BrowserInfo.isAnimationSupported) {
-    Try {
-      stop()
+  def start(x: A, callback: () => Unit = { () => }): Unit = {
+    stop()
 
-      // set callback
-      currentCallback = callback
+    // set callback
+    currentCallback = callback
 
-      // render SVG tags
-      val svgElems = generateElements(x).map(_.render).toList // stabilize elements (to avoid being a stream)
+    // render SVG tags
+    val svgElems = generateElements(x).map(_.render).toList // stabilize elements (to avoid being a stream)
 
-      // update local variables
-      currentElements = svgElems
-      currentValue = Some(x)
+    // update local variables
+    currentElements = svgElems
+    currentValue = Some(x)
 
-      // materialize
-      materialize(currentElements)
+    // materialize
+    materialize(currentElements)
 
-      // start animation
-      svgElems.foreach(startAnimation)
-
-      // set self-destruction
-      autoDestruct.foreach(n => dom.window.setTimeout({ () => stop() }, n))
-    } match {
-      case Success(_) => // ok
-      case Failure(e) =>
-        println(e.getMessage)
-        BrowserInfo.isAnimationSupported = false
+    // start animation
+    if (BrowserInfo.isAnimationSupported) {
+      Try(svgElems.foreach(startAnimation)) match {
+        case Success(_) => // ok
+        case Failure(e) =>
+          println(e.getMessage)
+          BrowserInfo.isAnimationSupported = false
+          // todo: show error message
+      }
     }
+
+    // set self-destruction
+    autoDestruct.foreach(n => dom.window.setTimeout({ () => stop() }, n))
   }
 
   def stop(): Unit = {
