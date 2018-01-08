@@ -68,12 +68,6 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
 
   private[this] val sidebars: Seq[SideBarLike] = sideBarRight.toSeq ++ sideBarLeft
 
-  private[this] val clickSound = {
-    val sound = new WebAudioAPISound("assets/mp3/click")
-    sound.setVolume(100)
-    sound
-  }
-
   override lazy val element: Element = div(
     if (isMobile) {
       mainContent
@@ -182,14 +176,18 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     updateSVGArea(_.flashCursor(cursor))
   }
 
+  private[this] val clickSound: Option[WebAudioAPISound] = BrowserInfo.isSoundSupported.option {
+    val sound = new WebAudioAPISound("assets/mp3/click")
+    sound.setVolume(100)
+    sound
+  }
+
   def playClickSound(): Unit = {
-    if (BrowserInfo.isSoundSupported) {
-      Try {
-        clickSound.play()
-      } match {
-        case Success(_) =>
-        case Failure(e) => println(e)
-      }
+    Try {
+      clickSound.foreach(_.play())
+    } match {
+      case Success(_) =>
+      case Failure(e) => println(e)
     }
   }
 
