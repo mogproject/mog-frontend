@@ -76,8 +76,7 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
 
   def initialize(): Unit = {
     def f(b: Boolean): Unit = {
-      element.classList.remove(panelCls(!b))
-      element.classList.add(panelCls(b))
+      jQuery(element).addClass(panelCls(b)).removeClass(panelCls(!b))
     }
 
     // set events
