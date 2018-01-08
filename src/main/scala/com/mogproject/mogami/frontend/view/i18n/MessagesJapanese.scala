@@ -20,7 +20,6 @@ case object MessagesJapanese extends Messages {
 
   override val FLIP: String = "反転"
 
-
   override val COMMENT: String = "コメント"
   override val COMMENT_CLEAR: String = "削除"
   override val COMMENT_CLEARED: String = "削除しました"
@@ -30,7 +29,21 @@ case object MessagesJapanese extends Messages {
   override val COMMENT_UPDATE_TOOLTIP: String = "このコメントを更新"
 
   override val MENU: String = "メニュー"
-  override val EDIT: String = "編集"
+  override val EDIT: String = "編集モード"
+  override val ATTRIBUTES: String = "駒の属性"
+  override val SELECT_PIECE_ON_BOARD: String = "盤上の駒を選択してください。"
+  override val EDIT_HELP: Seq[TypedTag[LI]] = Seq(
+    li("対局者名をクリックすると手番を設定できます。"),
+    li("盤上の駒をダブルクリックすると、駒の属性を変更できます。駒は以下の順番で変化します。",
+      ul(
+        li("先手 不成駒 ->"),
+        li("先手 成駒 ->"),
+        li("後手 不成駒->"),
+        li("後手 成駒 ->"),
+        li("先手 不成駒")
+      )
+    )
+  )
 
   override val SHARE: String = "シェア"
   override val COPY: String = "コピー"

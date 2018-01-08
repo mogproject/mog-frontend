@@ -42,6 +42,12 @@ trait Messages {
   //
   def EDIT: String
 
+  def ATTRIBUTES: String
+
+  def SELECT_PIECE_ON_BOARD: String
+
+  def EDIT_HELP: Seq[TypedTag[LI]]
+
   //
   // Share
   //

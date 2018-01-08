@@ -29,6 +29,20 @@ case object MessagesEnglish extends Messages {
 
   override val MENU: String = "Menu"
   override val EDIT: String = "Edit"
+  override val ATTRIBUTES: String = "Attributes"
+  override val SELECT_PIECE_ON_BOARD: String = "Select a piece on board."
+  override val EDIT_HELP: Seq[TypedTag[LI]] = Seq(
+    li("Click on a player name to set the turn to move."),
+    li("Double-click on a piece on board to change its attributes:",
+      ul(
+        li("Black Unpromoted ->"),
+        li("Black Promoted ->"),
+        li("White Unpromoted ->"),
+        li("White Promoted ->"),
+        li("Black Unpromoted")
+      )
+    )
+  )
 
   override val SHARE: String = "Share"
   override val COPY: String = "Copy"

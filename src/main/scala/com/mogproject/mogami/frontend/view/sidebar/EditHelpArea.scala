@@ -25,27 +25,16 @@ class EditHelpArea extends WebComponent with SAMObserver[BasePlaygroundModel] {
     clearAttributes()
 
     div(
-      label("Attributes"),
+      WebComponent.dynamicLabel(_.ATTRIBUTES).element,
       attributeArea,
       br(),
       WebComponent.dynamicLabel(_.HELP).element,
-      ul(
-        li("Click on a player name to set the turn to move."),
-        li("Double-click on a piece on board to change its attributes:",
-          ul(
-            li("Black Unpromoted ->"),
-            li("Black Promoted ->"),
-            li("White Unpromoted ->"),
-            li("White Promoted ->"),
-            li("Black Unpromoted")
-          )
-        )
-      )
+      WebComponent(ul()).withDynamicInnerElements(_.EDIT_HELP).element
     ).render
   }
 
   def clearAttributes(): Unit = {
-    attributeArea.innerHTML = "Select a piece on board."
+    WebComponent.replaceChildElement(attributeArea, WebComponent.dynamicSpan(_.SELECT_PIECE_ON_BOARD).element)
   }
 
   def renderAttributes(ptype: Ptype, pieceFace: PieceFace): Unit = {
