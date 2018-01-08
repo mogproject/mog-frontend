@@ -1,6 +1,7 @@
 package com.mogproject.mogami.frontend.view.board.canvas
 
 import com.mogproject.mogami._
+import com.mogproject.mogami.frontend.Mode
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.board._
 import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, GameControl, Japanese}
@@ -15,7 +16,8 @@ import scalatags.JsDom.all._
 /**
   * For PNG image creation
   */
-case class CanvasBoard(config: BasePlaygroundConfiguration, gameControl: GameControl) extends CanvasRenderer {
+case class CanvasBoard(config: BasePlaygroundConfiguration, mode: Mode) extends CanvasRenderer {
+  private[this] val gameControl = mode.getGameControl.get
 
   private[this] val canvasWidth = config.layout.viewBoxBottomRight.x
   private[this] val canvasHeight = config.layout.viewBoxBottomRight.y
@@ -28,7 +30,7 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, gameControl: GameCon
   private[this] val displayState = gameControl.getDisplayingState
   private[this] val lastMove = gameControl.getDisplayingLastMove
   private[this] val flipped = config.flipType == FlipEnabled
-  private[this] val playerNames = PlayerUtil.getCompletePlayerNames(gameControl.game.gameInfo, config.messageLang, gameControl.isHandicapped)
+  private[this] val playerNames = PlayerUtil.getCompletePlayerNames(gameControl.game.gameInfo, config.messageLang, mode.isHandicapped)
   private[this] val indicator = BoardIndicator.fromGameStatus(displayState.turn, gameControl.getDisplayingGameStatus)
 
   object color {

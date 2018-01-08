@@ -197,10 +197,4 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
     case KIF => game.toKifString
     case KI2 => game.toKi2String
   }
-
-  def isHandicapped: Boolean = {
-    game.getState(GamePosition(0, 0)).exists { st =>
-      st.turnsKing.isDefined && st.occupancy(Player.BLACK).count != st.occupancy(Player.WHITE).count
-    }
-  }
 }

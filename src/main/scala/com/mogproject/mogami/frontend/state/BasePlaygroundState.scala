@@ -39,7 +39,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
         case PromotionDialog(rawMove, rotate) =>
           view.askPromote(newModel.config.pieceFace, rawMove, rotate)
         case GameInfoDialog =>
-          newModel.mode.getGameControl.foreach { gc => view.showGameInfoDialog(gc.game.gameInfo, gc.isHandicapped) }
+          newModel.mode.getGameControl.foreach { gc => view.showGameInfoDialog(gc.game.gameInfo, newModel.mode.isHandicapped) }
         case EditWarningDialog =>
           view.showEditWarningDialog()
         case EditAlertDialog(message) =>
