@@ -212,13 +212,22 @@ case object MessagesEnglish extends Messages {
       ". Your voice matters."),
     br(),
     label("Special Thanks"),
-    p(
-      "Piece Graphics - ",
-      a(href := FrontendSettings.url.credit.shineleckomaUrl, target := "_blank", "shineleckoma")
+    ul(
+      li(
+        "Piece Graphics - ",
+        a(href := FrontendSettings.url.credit.shineleckomaUrl, target := "_blank", "shineleckoma")
+      ),
+      li(
+        "Piece Fonts - ",
+        a(href := FrontendSettings.url.credit.loraFontsUrl, target := "_blank", "Lora Fonts")
+      )
     ),
-    p(
-      "Piece Fonts - ",
-      a(href := FrontendSettings.url.credit.loraFontsUrl, target := "_blank", "Lora Fonts")
+    br(),
+    label("Supported Browsers"),
+    ul(
+      li("Firefox"),
+      li("Chrome"),
+      li("Safari")
     )
   )
 

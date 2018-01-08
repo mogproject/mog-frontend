@@ -218,13 +218,22 @@ case object MessagesJapanese extends Messages {
       " までご連絡ください。"),
     br(),
     label("スペシャル・サンクス"),
-    p(
-      "駒画像 - ",
-      a(href := FrontendSettings.url.credit.shineleckomaUrl, target := "_blank", "しんえれ外部駒")
+    ul(
+      li(
+        "駒画像 - ",
+        a(href := FrontendSettings.url.credit.shineleckomaUrl, target := "_blank", "しんえれ外部駒")
+      ),
+      li(
+        "駒用フォント - ",
+        a(href := FrontendSettings.url.credit.loraFontsUrl, target := "_blank", "Lora Fonts")
+      )
     ),
-    p(
-      "駒用フォント - ",
-      a(href := FrontendSettings.url.credit.loraFontsUrl, target := "_blank", "Lora Fonts")
+    br(),
+    label("対応ブラウザ"),
+    ul(
+      li("Firefox"),
+      li("Chrome"),
+      li("Safari")
     )
   )
 
