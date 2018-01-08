@@ -26,7 +26,6 @@ object App extends JSApp {
       .parseQueryString(dom.window.location.search)
     if (args.config.isDebug) {
       println("Debug Mode enabled.")
-      println(s"Animation supported: ${BrowserInfo.isAnimationSupported}")
       println(s"Sound supported: ${BrowserInfo.isSoundSupported}")
     }
     if (args.config.isDev) println("Dev Mode enabled.")
@@ -44,7 +43,6 @@ object App extends JSApp {
 
     // update config
     val verifiedConfig = args.config.copy(
-      visualEffectEnabled = args.config.visualEffectEnabled && BrowserInfo.isAnimationSupported,
       soundEffectEnabled = args.config.soundEffectEnabled && BrowserInfo.isSoundSupported
     )
 
