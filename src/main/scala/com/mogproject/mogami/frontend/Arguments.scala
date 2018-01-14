@@ -103,6 +103,13 @@ case class Arguments(sfen: Option[String] = None,
       case ("bn" :: s :: Nil) :: xs => f(sofar.copy(gameInfo = sofar.gameInfo.updated('blackName, s)), xs)
       case ("wn" :: s :: Nil) :: xs => f(sofar.copy(gameInfo = sofar.gameInfo.updated('whiteName, s)), xs)
 
+      case ("free" :: s :: Nil) :: xs => s.toLowerCase match {
+        case "true" => f(sofar.copy(config = sofar.config.copy(freeMode = true)), xs)
+        case "false" => f(sofar.copy(config = sofar.config.copy(freeMode = false)), xs)
+        case _ =>
+          println(s"Invalid parameter: free=${s}")
+          f(sofar, xs)
+      }
       case ("dev" :: s :: Nil) :: xs => s.toLowerCase match {
         case "true" => f(sofar.copy(config = sofar.config.copy(isDev = true)), xs)
         case "false" => f(sofar.copy(config = sofar.config.copy(isDev = false)), xs)
@@ -145,7 +152,7 @@ case class ArgumentsBuilder(gameControl: GameControl,
 
   private[this] def toGamePosition(branchNo: BranchNo, pos: Position) = (branchNo == 0).fold("", branchNo + ".") + pos
 
-  private[this] lazy val gameParams: Seq[(String, String)] = Seq("u" -> gameControl.game.toUsenString)
+  private[this] lazy val gameParams: Seq[(String, String)] = Seq("u" -> gameControl.game.toUsenString) ++ config.freeMode.option("free" -> "true")
 
   private[this] lazy val instantGameParams: Seq[(String, String)] = Seq("u" -> Game(Branch(displayingState)).toUsenString)
 

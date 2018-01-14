@@ -158,7 +158,7 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
     if (newBranchMode) {
       // New Branch Mode
       /** @note compare moves regardless of elapsed time */
-      game.getMove(gamePosition).map(_.copy(elapsedTime = None)) match {
+      game.getMove(gamePosition).map(_.dropElapsedTime) match {
         case Some(m) if m == move => Some(this.copy(displayPosition = displayPosition + offset)) // move next
         case Some(_) => game.getForks(gamePosition).find(_._1 == move) match {
           case Some((_, br)) => moveToBranch(br, offset)

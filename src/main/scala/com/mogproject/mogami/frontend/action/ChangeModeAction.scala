@@ -28,7 +28,7 @@ case class ChangeModeAction(newModeType: ModeType, confirmed: Boolean) extends P
 
       // Edit -> (Play|View)
       case (EditMode(gi, t, b, h), None, _) =>
-        Try(GameControl(Game(Branch(State(t, b, h)), gi))) match {
+        Try(GameControl(Game(Branch(State(t, b, h)), gameInfo = gi))) match {
           case Success(gc) =>
             Some(model.copy(newMode = createMode(newModeType, gc)))
           case Failure(e) =>
