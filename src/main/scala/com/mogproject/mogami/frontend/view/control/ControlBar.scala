@@ -104,8 +104,8 @@ case class ControlBar(barType: ControlBarType) extends WebComponent with SAMObse
     */
   private[this] def getMoves(game: Game, branchNo: BranchNo, recordLang: Language): List[String] = {
     val f: Move => String = recordLang match {
-      case Japanese => _.toJapaneseNotationString
-      case English => _.toWesternNotationString
+      case Japanese => mv => mv.player.toSymbolString() + mv.toJapaneseNotationString
+      case English => mv => mv.player.toSymbolString() + mv.toWesternNotationString
     }
     val g: SpecialMove => String = recordLang match {
       case Japanese => _.toJapaneseNotationString
@@ -126,14 +126,13 @@ case class ControlBar(barType: ControlBarType) extends WebComponent with SAMObse
       case Japanese => "初期局面"
       case English => "Start"
     }
-    val initTurn = game.trunk.initialState.turn
 
     game.withBranch(branchNo) { br =>
       // moves
       val xs = (prefix +: getMoves(game, branchNo, recordLang)).zipWithIndex.map { case (m, i) =>
         val pos = i + game.trunk.offset
         val symbolMark = game.hasFork(GamePosition(branchNo, pos)).fold("+", game.hasComment(GamePosition(branchNo, pos)).fold("*", ""))
-        val indexNotation = if (i == 0) "" else s"${pos}: " + (i % 2 == 0).fold(!initTurn, initTurn).toSymbolString()
+        val indexNotation = if (i == 0) "" else s"${pos}: "
         symbolMark + indexNotation + m
       }
 

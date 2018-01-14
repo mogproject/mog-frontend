@@ -79,13 +79,13 @@ object App extends JSApp {
       case Success(g) => g
       case Failure(e) =>
         println(s"Failed to create a game: ${e}")
-        Game()
+        Game(args.config.freeMode)
     }
 
     val gg: Game = ((args.usen, args.sfen) match {
-      case (Some(u), _) => loadGame(Game.parseUsenString(u)) // parse USEN string
-      case (_, Some(s)) => loadGame(Game.parseSfenString(s)) // parse SFEN string
-      case _ => Game()
+      case (Some(u), _) => loadGame(Game.parseUsenString(u, args.config.freeMode)) // parse USEN string
+      case (_, Some(s)) => loadGame(Game.parseSfenString(s, args.config.freeMode)) // parse SFEN string
+      case _ => Game(args.config.freeMode)
     }).copy(newGameInfo = args.gameInfo)
 
     // update comments

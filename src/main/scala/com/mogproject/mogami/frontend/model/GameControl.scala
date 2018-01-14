@@ -5,7 +5,6 @@ import com.mogproject.mogami.core.state.State.PromotionFlag
 import com.mogproject.mogami.frontend.model.io.{CSA, KI2, KIF, RecordFormat}
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.{GamePosition, _}
-import org.scalajs.dom
 
 /**
   * Manages a game and its display position.
@@ -176,7 +175,7 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
   }
 
   private[this] def createNewBranch(move: Move, offset: Int): Option[GameControl] = {
-    game.createBranch(gamePosition, move).map(g => this.copy(game = g, displayBranchNo = game.branches.length + 1, displayPosition = displayPosition + offset))
+    game.createBranch(gamePosition, move, game.trunk.isFreeMode).map(g => this.copy(game = g, displayBranchNo = game.branches.length + 1, displayPosition = displayPosition + offset))
   }
 
   private[this] def makeMoveOnCurrentBranch(move: Move, offset: Int): Option[GameControl] = {
