@@ -17,21 +17,23 @@ trait PlaygroundSiteLike extends WebComponent {
 
   def freeMode: Boolean
 
+  def embeddedMode: Boolean
+
   def navBar: NavBarLike
 
   def mainPane: MainPaneLike
 
-  val shareMenu: ShareMenu = new ShareMenu(isMobile)
+  lazy val shareMenu: ShareMenu = new ShareMenu(isMobile)
   lazy val branchMenu: BranchMenu = new BranchMenu
-  val manageMenu: ManageMenu = new ManageMenu(isMobile, freeMode)
+  lazy val manageMenu: ManageMenu = new ManageMenu(isMobile, freeMode)
   lazy val actionMenu: ActionMenu = new ActionMenu
-  val analyzeMenu: AnalyzeMenu = new AnalyzeMenu(isMobile)
-  val resetMenu: ResetMenu = new ResetMenu
-  val settingMenu: SettingMenu = new SettingMenu
-  val gameHelpMenu: GameHelpMenu = new GameHelpMenu
-  val aboutMenu: AboutMenu = new AboutMenu
+  lazy val analyzeMenu: AnalyzeMenu = new AnalyzeMenu(isMobile)
+  lazy val resetMenu: ResetMenu = new ResetMenu
+  lazy val settingMenu: SettingMenu = new SettingMenu
+  lazy val gameHelpMenu: GameHelpMenu = new GameHelpMenu
+  lazy val aboutMenu: AboutMenu = new AboutMenu
 
-  val menuPane: MenuPane = if (isMobile) {
+  lazy val menuPane: MenuPane = if (isMobile) {
     MenuPane(Seq(shareMenu, manageMenu, actionMenu, branchMenu, analyzeMenu, resetMenu, settingMenu, gameHelpMenu, aboutMenu))
   } else {
     MenuPane(Seq(shareMenu, manageMenu, analyzeMenu, resetMenu, settingMenu, gameHelpMenu, aboutMenu))
@@ -42,16 +44,26 @@ trait PlaygroundSiteLike extends WebComponent {
   def footer: FooterLike
 
   override def element: Element = {
-    val elem = div(
-      div(cls := "navbar", tag("nav")(cls := navBar.classNames, navBar.element)),
-      div(cls := "container-fluid",
-        isMobile.fold(Seq(width := "100%", padding := 0), ""),
-        mainPane.element,
-        footer.element
+    val elem = (if (embeddedMode) {
+      div(
+        div(cls := "navbar", tag("nav")(cls := navBar.classNames, navBar.element)),
+        div(cls := "container-fluid",
+          width := "100%", padding := 0,
+          mainPane.element
+        )
       )
-    ).render
+    } else {
+      div(
+        div(cls := "navbar", tag("nav")(cls := navBar.classNames, navBar.element)),
+        div(cls := "container-fluid",
+          isMobile.fold(Seq(width := "100%", padding := 0), ""),
+          mainPane.element,
+          footer.element
+        )
+      )
+    }).render
 
-    if (isMobile) menuDialog // activate here
+    if (!embeddedMode && isMobile) menuDialog // activate here
     elem
   }
 }

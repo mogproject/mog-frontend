@@ -28,6 +28,8 @@ case object MessagesEnglish extends Messages {
   override val COMMENT_UPDATE_TOOLTIP: String = "Update this comment"
 
   override val MENU: String = "Menu"
+  override val PLAYGROUND_LINK_TOOLTIP: String = "Open Shogi Playground"
+
   override val EDIT: String = "Edit"
   override val ATTRIBUTES: String = "Attributes"
   override val SELECT_PIECE_ON_BOARD: String = "Select a piece on board."
@@ -152,7 +154,8 @@ case object MessagesEnglish extends Messages {
     State.HANDICAP_8_PIECE -> "8-Piece",
     State.HANDICAP_10_PIECE -> "10-Piece",
     State.HANDICAP_THREE_PAWNS -> "Three Pawns",
-    State.HANDICAP_NAKED_KING -> "Naked King"
+    State.HANDICAP_NAKED_KING -> "Naked King",
+    State.empty -> "Empty"
   )
 
   override val SETTINGS: String = "Settings"

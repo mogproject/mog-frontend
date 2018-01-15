@@ -26,6 +26,7 @@ case class BasePlaygroundConfiguration(layout: SVGAreaLayout = SVGStandardLayout
                                        baseUrl: String = BasePlaygroundConfiguration.defaultBaseUrl,
                                        deviceType: DeviceType = BasePlaygroundConfiguration.defaultDeviceType,
                                        freeMode: Boolean = false, // the turn never changes when this parameter is true
+                                       embeddedMode: Boolean = false,
                                        isDev: Boolean = false,
                                        isDebug: Boolean = false
                                       ) {

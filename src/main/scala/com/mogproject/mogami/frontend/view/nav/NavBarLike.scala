@@ -17,6 +17,8 @@ trait NavBarLike extends WebComponent {
 
   def isMobile: Boolean
 
+  def embeddedMode: Boolean
+
   def brandName: String = "Shogi Playground"
 
   def brandUrl: Option[String] = None
@@ -30,7 +32,12 @@ trait NavBarLike extends WebComponent {
     onclick := { () => doAction(MenuDialogAction(true)) }
   ).withTextContent(MessagesEnglish.MENU, "menu-hamburger")
 
-  def buttons: Seq[WebComponent] = Seq(flipButton) ++ (!isMobile).option(resignButton) ++ isMobile.option(menuButton)
+  lazy val linkButton = new PlaygroundLinkButton
+
+  def buttons: Seq[WebComponent] = Seq(flipButton) ++
+    (!isMobile && !embeddedMode).option(resignButton) ++
+    (isMobile && !embeddedMode).option(menuButton) ++
+    embeddedMode.option(linkButton)
 
   def classNames: String = "navbar navbar-default navbar-fixed-top"
 
@@ -45,7 +52,7 @@ trait NavBarLike extends WebComponent {
     div(cls := "container", padding := 0,
       div(cls := "navbar-header",
         ul(cls := "nav navbar-nav",
-          brandElem,
+          (!embeddedMode).option(brandElem),
           buttons.map(b => li(b.element))
         )
       )
