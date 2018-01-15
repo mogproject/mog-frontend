@@ -15,7 +15,7 @@ object App extends PlaygroundAppLike[TestModel, TestView, TestState] {
   override def createModel(mode: Mode, config: BasePlaygroundConfiguration): TestModel = TestModel(mode, config)
 
   override def createView(config: BasePlaygroundConfiguration, rootElem: Element): TestView = {
-    TestView(config.deviceType.isMobile, config.freeMode, config.isDev, config.isDebug, rootElem)
+    TestView(config.deviceType.isMobile, config.freeMode, config.embeddedMode, config.isDev, config.isDebug, rootElem)
   }
 
   override def createState(model: TestModel, view: TestView): TestState = TestState(model, view)

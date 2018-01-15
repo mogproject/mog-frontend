@@ -29,6 +29,8 @@ import scalatags.JsDom.all._
 trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObserver[BasePlaygroundModel] {
   def isMobile: Boolean
 
+  def embeddedMode: Boolean
+
   def getSite: () => PlaygroundSiteLike
 
   lazy val imageCache: ImageCache = new ImageCache
@@ -49,9 +51,9 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
 
   private[this] val svgAreas: mutable.ListBuffer[SVGArea] = mutable.ListBuffer.empty
 
-  private[this] val controlBar: ControlBar = ControlBar(isMobile.fold(ControlBarType.Small, ControlBarType.Normal))
+  private[this] val controlBar: ControlBar = ControlBar((isMobile || embeddedMode).fold(ControlBarType.Small, ControlBarType.Normal))
 
-  private[this] val commentArea: CommentArea = CommentArea(isDisplayOnly = isMobile)
+  private[this] val commentArea: CommentArea = CommentArea(isDisplayOnly = isMobile || embeddedMode)
 
   private[this] val mainArea = div().render
 
@@ -60,16 +62,16 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     mainArea
   ).render
 
-  private[this] val sideBarRight: Option[SideBarRight] = (!isMobile).option(new SideBarRight {
+  private[this] val sideBarRight: Option[SideBarRight] = (!isMobile && !embeddedMode).option(new SideBarRight {
     override def getMenuPane: MenuPane = getSite().menuPane
   })
 
-  private[this] val sideBarLeft: Option[SideBarLeft] = (!isMobile).option(new SideBarLeft)
+  private[this] val sideBarLeft: Option[SideBarLeft] = (!isMobile && !embeddedMode).option(new SideBarLeft)
 
   private[this] val sidebars: Seq[SideBarLike] = sideBarRight.toSeq ++ sideBarLeft
 
   override lazy val element: Element = div(
-    if (isMobile) {
+    if (isMobile || embeddedMode) {
       mainContent
     } else {
       div(cls := "row no-margin no-overflow",
@@ -90,17 +92,17 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     svgAreas.foreach(_.terminate())
     svgAreas.clear()
 
-    val maxNumAreas = (deviceType == DeviceType.MobilePortrait).fold(1, 2)
+    val maxNumAreas = (deviceType == DeviceType.MobilePortrait || embeddedMode).fold(1, 2)
     svgAreas ++= (0 until math.min(maxNumAreas, numAreas)).map(n => SVGArea(n, layout))
 
-    val node = deviceType match {
-      case DeviceType.MobileLandscape => createMobileLandscapeMain
-      case DeviceType.MobilePortrait => createMobilePortraitMain
-      case DeviceType.PC => createPCPortraitMain
+    val node = (embeddedMode, deviceType) match {
+      case (true, _) => createMobilePortraitMain
+      case (false, DeviceType.MobilePortrait) => createMobilePortraitMain
+      case (false, DeviceType.MobileLandscape) => createMobileLandscapeMain
+      case (false, DeviceType.PC) => createPCPortraitMain
     }
 
-    WebComponent.removeAllChildElements(mainArea)
-    mainArea.appendChild(node.render)
+    WebComponent.replaceChildElement(mainArea, node.render)
     resizeSVGAreas(deviceType, pieceWidth, layout)
   }
 
@@ -202,7 +204,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
 
   def initialize(): Unit = {
     sidebars.foreach(_.addObserver(this))
-    if (isMobile) widenMainPane() else recenterMainPane()
+    if (isMobile || embeddedMode) widenMainPane() else recenterMainPane()
   }
 
   initialize()
@@ -235,11 +237,12 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
 
     // 3. Flip
     if (check(CONF_FLIP_TYPE)) {
-      (config.flipType, config.deviceType) match {
-        case (FlipDisabled, _) => updateSVGArea(_.setFlip(false))
-        case (FlipEnabled, _) => updateSVGArea(_.setFlip(true))
-        case (DoubleBoard, DeviceType.MobilePortrait) => updateSVGArea(_.setFlip(false))
-        case (DoubleBoard, _) => Seq(0, 1).foreach { n => updateSVGArea(n, _.setFlip(n == 1)) }
+      (config.flipType, config.deviceType, config.embeddedMode) match {
+        case (FlipDisabled, _, _) => updateSVGArea(_.setFlip(false))
+        case (FlipEnabled, _, _) => updateSVGArea(_.setFlip(true))
+        case (DoubleBoard, DeviceType.MobilePortrait, _) => updateSVGArea(_.setFlip(false))
+        case (DoubleBoard, _, true) => updateSVGArea(_.setFlip(false))
+        case (DoubleBoard, _, false) => Seq(0, 1).foreach { n => updateSVGArea(n, _.setFlip(n == 1)) }
       }
     }
 

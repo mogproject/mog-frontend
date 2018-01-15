@@ -4,6 +4,7 @@ import com.mogproject.mogami._
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.core.state.StateCache.Implicits.DefaultStateCache
 import com.mogproject.mogami.frontend.model._
+import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipDisabled}
 import com.mogproject.mogami.frontend.state.BasePlaygroundState
 import com.mogproject.mogami.frontend.view.{BasePlaygroundView, BrowserInfo}
 import com.mogproject.mogami.frontend.view.board.{SVGCompactLayout, SVGStandardLayout}
@@ -51,9 +52,10 @@ trait PlaygroundAppLike[M <: BasePlaygroundModel, V <: BasePlaygroundView, S <: 
       ViewMode(GameControl(game, args.gamePosition.branch, math.max(0, args.gamePosition.position - game.trunk.offset)))
     )
 
-    // update config
+    // verify config
     val verifiedConfig = args.config.copy(
-      soundEffectEnabled = args.config.soundEffectEnabled && BrowserInfo.isSoundSupported
+      soundEffectEnabled = args.config.soundEffectEnabled && BrowserInfo.isSoundSupported,
+      flipType = (args.config.embeddedMode && args.config.flipType == DoubleBoard).fold(FlipDisabled, args.config.flipType)
     )
 
     // create model
