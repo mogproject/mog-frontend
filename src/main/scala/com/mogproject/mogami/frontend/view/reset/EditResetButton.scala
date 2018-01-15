@@ -33,7 +33,8 @@ class EditResetButton extends WebComponent with SAMObserver[BasePlaygroundModel]
     State.HANDICAP_8_PIECE,
     State.HANDICAP_10_PIECE,
     State.HANDICAP_THREE_PAWNS,
-    State.HANDICAP_NAKED_KING
+    State.HANDICAP_NAKED_KING,
+    State.empty
   )
 
   private[this] lazy val buttons = keys.map { st =>

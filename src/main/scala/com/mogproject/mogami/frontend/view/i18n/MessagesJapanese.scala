@@ -151,7 +151,8 @@ case object MessagesJapanese extends Messages {
     State.HANDICAP_8_PIECE -> "八枚落ち",
     State.HANDICAP_10_PIECE -> "十枚落ち",
     State.HANDICAP_THREE_PAWNS -> "歩三兵",
-    State.HANDICAP_NAKED_KING -> "裸玉"
+    State.HANDICAP_NAKED_KING -> "裸玉",
+    State.empty -> "全て駒箱へ"
   )
 
   override val SETTINGS: String = "設定"
