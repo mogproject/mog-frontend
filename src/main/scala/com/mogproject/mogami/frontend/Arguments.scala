@@ -27,103 +27,61 @@ case class Arguments(sfen: Option[String] = None,
   def loadLocalStorage(): Arguments = this.copy(config = config.loadLocalStorage())
 
   def parseQueryString(query: String): Arguments = {
+
     @tailrec
     def f(sofar: Arguments, ls: List[List[String]]): Arguments = ls match {
-      case ("sfen" :: s :: Nil) :: xs => f(sofar.copy(sfen = Some(s)), xs)
-      case ("u" :: s :: Nil) :: xs => f(sofar.copy(usen = Some(s)), xs)
-      case (x :: s :: Nil) :: xs if x.startsWith("c") => // comments
-        parseGamePosition(x.drop(1)) match {
-          case Some(pos) =>
+      case (x :: s :: Nil) :: xs =>
+        (if (x.startsWith("c")) {
+          // Comments
+          parseGamePosition(x.drop(1)) map { pos =>
             val c = sofar.comments.updated(pos.branch, sofar.comments.getOrElse(pos.branch, Map.empty).updated(pos.position, s))
-            f(sofar.copy(comments = c), xs)
-          case _ =>
+            sofar.copy(comments = c)
+          }
+        } else {
+          x match {
+            case "sfen" => Some(sofar.copy(sfen = Some(s)))
+            case "u" => Some(sofar.copy(usen = Some(s)))
+            case "mlang" => Language.parseString(s).map(lang => sofar.copy(config = sofar.config.copy(messageLang = lang)))
+            case "rlang" => Language.parseString(s).map(lang => sofar.copy(config = sofar.config.copy(recordLang = lang)))
+            case "p" => PieceFace.parseString(s).map(pf => sofar.copy(config = sofar.config.copy(pieceFace = pf)))
+            case "move" => parseGamePosition(s).map(gp => sofar.copy(gamePosition = gp))
+            case "flip" => s.toLowerCase match {
+              case "true" => Some(sofar.copy(config = sofar.config.copy(flipType = FlipEnabled)))
+              case "false" => Some(sofar)
+              case "double" => Some(sofar.copy(config = sofar.config.copy(flipType = DoubleBoard)))
+              case _ => None
+            }
+            case "action" => s match {
+              case "image" => Some(sofar.copy(action = ImageAction))
+              case "notes" => Some(sofar.copy(action = NotesAction))
+              case _ => None
+            }
+            case "sz" => Try(s.toInt).filter(_ > 0).map(n => sofar.copy(config = sofar.config.copy(pieceWidth = Some(n))))
+            case "layout" => s.toLowerCase match {
+              case "s" => Some(sofar.copy(config = sofar.config.copy(layout = SVGStandardLayout)))
+              case "c" => Some(sofar.copy(config = sofar.config.copy(layout = SVGCompactLayout)))
+              case "w" => Some(sofar.copy(config = sofar.config.copy(layout = SVGWideLayout)))
+              case _ => None
+            }
+            case "device" => s match {
+              case "1" => Some(sofar.copy(config = sofar.config.copy(deviceType = DeviceType.MobilePortrait)))
+              case "2" => Some(sofar.copy(config = sofar.config.copy(deviceType = DeviceType.MobileLandscape)))
+              case _ => None
+            }
+            case "bn" => Some(sofar.copy(gameInfo = sofar.gameInfo.updated('blackName, s)))
+            case "wn" => Some(sofar.copy(gameInfo = sofar.gameInfo.updated('whiteName, s)))
+            case "free" => parseBoolean(s).map(b => sofar.copy(config = sofar.config.copy(freeMode = b)))
+            case "dev" => parseBoolean(s).map(b => sofar.copy(config = sofar.config.copy(isDev = b)))
+            case "debug" => parseBoolean(s).map(b => sofar.copy(config = sofar.config.copy(isDebug = b)))
+            case _ => None
+          }
+        }) match {
+          case Some(a: Arguments) =>
+            f(a, xs)
+          case None =>
             println(s"Invalid parameter: ${x}=${s}")
             f(sofar, xs)
         }
-      case ("mlang" :: s :: Nil) :: xs => Language.parseString(s) match {
-        case Some(lang) => f(sofar.copy(config = sofar.config.copy(messageLang = lang)), xs)
-        case None =>
-          println(s"Invalid parameter: mlang=${s}")
-          f(sofar, xs)
-      }
-      case ("rlang" :: s :: Nil) :: xs => Language.parseString(s) match {
-        case Some(lang) => f(sofar.copy(config = sofar.config.copy(recordLang = lang)), xs)
-        case None =>
-          println(s"Invalid parameter: rlang=${s}")
-          f(sofar, xs)
-      }
-      case ("p" :: s :: Nil) :: xs => PieceFace.parseString(s) match {
-        case Some(pf) => f(sofar.copy(config = sofar.config.copy(pieceFace = pf)), xs)
-        case None =>
-          println(s"Invalid parameter: p=${s}")
-          f(sofar, xs)
-      }
-      case ("move" :: s :: Nil) :: xs => parseGamePosition(s) match {
-        case Some(gp) => f(sofar.copy(gamePosition = gp), xs)
-        case _ =>
-          println(s"Invalid parameter: move=${s}")
-          f(sofar, xs)
-      }
-      case ("flip" :: s :: Nil) :: xs => s.toLowerCase match {
-        case "true" => f(sofar.copy(config = sofar.config.copy(flipType = FlipEnabled)), xs)
-        case "false" => f(sofar, xs)
-        case "double" => f(sofar.copy(config = sofar.config.copy(flipType = DoubleBoard)), xs)
-        case _ =>
-          println(s"Invalid parameter: flip=${s}")
-          f(sofar, xs)
-      }
-      case ("action" :: s :: Nil) :: xs => s match {
-        case "image" => f(sofar.copy(action = ImageAction), xs)
-        case "notes" => f(sofar.copy(action = NotesAction), xs)
-        case _ =>
-          println(s"Invalid parameter: action=${s}")
-          f(sofar, xs)
-      }
-      case ("sz" :: s :: Nil) :: xs => Try(s.toInt) match {
-        case Success(n) if n > 0 => f(sofar.copy(config = sofar.config.copy(pieceWidth = Some(n))), xs)
-        case _ =>
-          println(s"Invalid parameter: sz=${s}")
-          f(sofar, xs)
-      }
-      case ("layout" :: s :: Nil) :: xs => s.toLowerCase match {
-        case "s" => f(sofar.copy(config = sofar.config.copy(layout = SVGStandardLayout)), xs)
-        case "c" => f(sofar.copy(config = sofar.config.copy(layout = SVGCompactLayout)), xs)
-        case "w" => f(sofar.copy(config = sofar.config.copy(layout = SVGWideLayout)), xs)
-        case _ =>
-          println(s"Invalid parameter: layout=${s}")
-          f(sofar, xs)
-      }
-      case ("device" :: s :: Nil) :: xs => s.toLowerCase match {
-        case "1" => f(sofar.copy(config = sofar.config.copy(deviceType = DeviceType.MobilePortrait)), xs)
-        case "2" => f(sofar.copy(config = sofar.config.copy(deviceType = DeviceType.MobileLandscape)), xs)
-        case _ =>
-          println(s"Invalid parameter: device=${s}")
-          f(sofar, xs)
-      }
-      case ("bn" :: s :: Nil) :: xs => f(sofar.copy(gameInfo = sofar.gameInfo.updated('blackName, s)), xs)
-      case ("wn" :: s :: Nil) :: xs => f(sofar.copy(gameInfo = sofar.gameInfo.updated('whiteName, s)), xs)
-
-      case ("free" :: s :: Nil) :: xs => s.toLowerCase match {
-        case "true" => f(sofar.copy(config = sofar.config.copy(freeMode = true)), xs)
-        case "false" => f(sofar.copy(config = sofar.config.copy(freeMode = false)), xs)
-        case _ =>
-          println(s"Invalid parameter: free=${s}")
-          f(sofar, xs)
-      }
-      case ("dev" :: s :: Nil) :: xs => s.toLowerCase match {
-        case "true" => f(sofar.copy(config = sofar.config.copy(isDev = true)), xs)
-        case "false" => f(sofar.copy(config = sofar.config.copy(isDev = false)), xs)
-        case _ =>
-          println(s"Invalid parameter: dev=${s}")
-          f(sofar, xs)
-      }
-      case ("debug" :: s :: Nil) :: xs => s.toLowerCase match {
-        case "true" => f(sofar.copy(config = sofar.config.copy(isDebug = true)), xs)
-        case "false" => f(sofar.copy(config = sofar.config.copy(isDebug = false)), xs)
-        case _ =>
-          println(s"Invalid parameter: debug=${s}")
-          f(sofar, xs)
-      }
       case x :: xs =>
         if (x.exists(_.nonEmpty)) println(s"Unknown parameter: ${x}")
         f(sofar, xs)
@@ -143,6 +101,13 @@ case class Arguments(sfen: Option[String] = None,
     }
   }
 
+  private[this] def parseBoolean(s: String): Option[Boolean] = {
+    s.toLowerCase match {
+      case "true" => Some(true)
+      case "false" => Some(false)
+      case _ => None
+    }
+  }
 }
 
 case class ArgumentsBuilder(gameControl: GameControl,
