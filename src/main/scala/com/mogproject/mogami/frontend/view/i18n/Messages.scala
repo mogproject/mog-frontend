@@ -37,6 +37,8 @@ trait Messages {
 
   def MENU: String
 
+  def PLAYGROUND_LINK_TOOLTIP: String
+
   //
   // Edit
   //

@@ -32,7 +32,12 @@ trait NavBarLike extends WebComponent {
     onclick := { () => doAction(MenuDialogAction(true)) }
   ).withTextContent(MessagesEnglish.MENU, "menu-hamburger")
 
-  def buttons: Seq[WebComponent] = Seq(flipButton) ++ (!isMobile && !embeddedMode).option(resignButton) ++ (isMobile && !embeddedMode).option(menuButton)
+  lazy val linkButton = new PlaygroundLinkButton
+
+  def buttons: Seq[WebComponent] = Seq(flipButton) ++
+    (!isMobile && !embeddedMode).option(resignButton) ++
+    (isMobile && !embeddedMode).option(menuButton) ++
+    embeddedMode.option(linkButton)
 
   def classNames: String = "navbar navbar-default navbar-fixed-top"
 

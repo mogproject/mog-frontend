@@ -29,6 +29,8 @@ case object MessagesJapanese extends Messages {
   override val COMMENT_UPDATE_TOOLTIP: String = "このコメントを更新"
 
   override val MENU: String = "メニュー"
+  override val PLAYGROUND_LINK_TOOLTIP: String = "Shogi Playground を開く"
+
   override val EDIT: String = "編集モード"
   override val ATTRIBUTES: String = "駒の属性"
   override val SELECT_PIECE_ON_BOARD: String = "盤上の駒を選択してください。"
