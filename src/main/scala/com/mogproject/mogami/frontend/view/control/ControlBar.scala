@@ -103,20 +103,24 @@ case class ControlBar(barType: ControlBarType) extends WebComponent with SAMObse
     * @return
     */
   private[this] def getMoves(game: Game, branchNo: BranchNo, recordLang: Language): List[String] = {
-    val f: Move => String = recordLang match {
-      case Japanese => _.toJapaneseNotationString
-      case English => _.toWesternNotationString
-    }
+    val f: Move => (Player, String) = mv => mv.player -> (recordLang match {
+      case Japanese => mv.toJapaneseNotationString
+      case English => mv.toWesternNotationString
+    })
     val g: SpecialMove => String = recordLang match {
       case Japanese => _.toJapaneseNotationString
       case English => _.toWesternNotationString
     }
     game.withBranch(branchNo) { br =>
-      (game.getAllMoves(branchNo).map(f) ++ (br.status match {
-        case GameStatus.Resigned | GameStatus.TimedUp => List(g(br.finalAction.get))
-        case GameStatus.IllegallyMoved => g(br.finalAction.get).split("\n").toList.take(1)
+      val lastTurn = br.lastState.turn
+      val mvs = game.getAllMoves(branchNo).map(f)
+      val lst: List[(Player, String)] = br.status match {
+        case GameStatus.Resigned | GameStatus.TimedUp => List(lastTurn -> g(br.finalAction.get))
+        case GameStatus.IllegallyMoved => g(br.finalAction.get).split("\n").toList.take(1).map(lastTurn -> _)
         case _ => Nil
-      })).toList
+      }
+
+      (mvs ++ lst).map {case (pl, ss) => pl.toSymbolString() + ss } .toList
     }.getOrElse(Nil)
   }
 
@@ -126,14 +130,13 @@ case class ControlBar(barType: ControlBarType) extends WebComponent with SAMObse
       case Japanese => "初期局面"
       case English => "Start"
     }
-    val initTurn = game.trunk.initialState.turn
 
     game.withBranch(branchNo) { br =>
       // moves
       val xs = (prefix +: getMoves(game, branchNo, recordLang)).zipWithIndex.map { case (m, i) =>
         val pos = i + game.trunk.offset
         val symbolMark = game.hasFork(GamePosition(branchNo, pos)).fold("+", game.hasComment(GamePosition(branchNo, pos)).fold("*", ""))
-        val indexNotation = if (i == 0) "" else s"${pos}: " + (i % 2 == 0).fold(!initTurn, initTurn).toSymbolString()
+        val indexNotation = if (i == 0) "" else s"${pos}: "
         symbolMark + indexNotation + m
       }
 

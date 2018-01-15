@@ -25,6 +25,7 @@ case class BasePlaygroundConfiguration(layout: SVGAreaLayout = SVGStandardLayout
                                        soundEffectEnabled: Boolean = false,
                                        baseUrl: String = BasePlaygroundConfiguration.defaultBaseUrl,
                                        deviceType: DeviceType = BasePlaygroundConfiguration.defaultDeviceType,
+                                       freeMode: Boolean = false, // the turn never changes when this parameter is true
                                        isDev: Boolean = false,
                                        isDebug: Boolean = false
                                       ) {

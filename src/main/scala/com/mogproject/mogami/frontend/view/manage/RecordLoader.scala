@@ -16,13 +16,12 @@ import scala.util.{Failure, Success, Try}
 trait RecordLoader {
   self: SaveLoadButton =>
 
-  protected def loadRecord(fileName: String, content: String): Unit = {
-
+  protected def loadRecord(fileName: String, content: String, freeMode: Boolean): Unit = {
     val fileType = fileName.split('.').lastOption.mkString
     val result = fileType.toUpperCase match {
-      case "CSA" => Try(Game.parseCsaString(content))
-      case "KIF" => Try(Game.parseKifString(content))
-      case "KI2" => Try(Game.parseKi2String(content))
+      case "CSA" => parseRecord(CSA, content, freeMode)
+      case "KIF" => parseRecord(KIF, content, freeMode)
+      case "KI2" => parseRecord(KI2, content, freeMode)
       case _ => Failure(new RuntimeException(s"${Messages.get.UNKNOWN_TYPE}: ${fileType}"))
     }
 
@@ -40,12 +39,8 @@ trait RecordLoader {
     }
   }
 
-  protected def loadRecordText(format: RecordFormat, content: String): Unit = {
-    val result = format match {
-      case CSA => Try(Game.parseCsaString(content))
-      case KIF => Try(Game.parseKifString(content))
-      case KI2 => Try(Game.parseKi2String(content))
-    }
+  protected def loadRecordText(format: RecordFormat, content: String, freeMode: Boolean): Unit = {
+    val result = parseRecord(format, content, freeMode)
 
     result match {
       case Success(g) =>
@@ -59,6 +54,14 @@ trait RecordLoader {
       case Failure(e) =>
         displayTextLoadMessage(s"${Messages.get.ERROR}: ${e.getMessage}")
         displayTextLoadTooltip(Messages.get.LOAD_FAILURE)
+    }
+  }
+
+  private[this] def parseRecord(format: RecordFormat, content: String, freeMode: Boolean): Try[Game] = Try {
+    format match {
+      case CSA => Game.parseCsaString(content, freeMode)
+      case KIF => Game.parseKifString(content, freeMode)
+      case KI2 => Game.parseKi2String(content, freeMode)
     }
   }
 
