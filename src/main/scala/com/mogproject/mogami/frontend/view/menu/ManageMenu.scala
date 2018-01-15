@@ -11,7 +11,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class ManageMenu(isMobile: Boolean) extends AccordionMenu {
+class ManageMenu(isMobile: Boolean, freeMode: Boolean) extends AccordionMenu {
   override lazy val ident: String = "Manage"
 
   override def getTitle(messages: Messages): String = messages.MANAGE
@@ -19,7 +19,7 @@ class ManageMenu(isMobile: Boolean) extends AccordionMenu {
   override lazy val icon: String = "file"
   override lazy val visibleMode = Set(PlayModeType, ViewModeType)
 
-  lazy val saveLoadButton = new SaveLoadButton(isMobile)
+  lazy val saveLoadButton = new SaveLoadButton(isMobile, freeMode)
 
   override lazy val content: JsDom.TypedTag[Div] = div(saveLoadButton.element)
 }

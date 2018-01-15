@@ -15,13 +15,15 @@ import scalatags.JsDom.all._
 trait PlaygroundSiteLike extends WebComponent {
   def isMobile: Boolean
 
+  def freeMode: Boolean
+
   def navBar: NavBarLike
 
   def mainPane: MainPaneLike
 
   val shareMenu: ShareMenu = new ShareMenu(isMobile)
   lazy val branchMenu: BranchMenu = new BranchMenu
-  val manageMenu: ManageMenu = new ManageMenu(isMobile)
+  val manageMenu: ManageMenu = new ManageMenu(isMobile, freeMode)
   lazy val actionMenu: ActionMenu = new ActionMenu
   val analyzeMenu: AnalyzeMenu = new AnalyzeMenu(isMobile)
   val resetMenu: ResetMenu = new ResetMenu

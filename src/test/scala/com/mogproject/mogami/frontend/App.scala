@@ -51,7 +51,7 @@ object App extends JSApp {
 
     // create view
     val rootElem = dom.document.getElementById("app").asInstanceOf[Div]
-    val view = TestView(verifiedConfig.deviceType.isMobile, verifiedConfig.isDev, verifiedConfig.isDebug, rootElem)
+    val view = TestView(verifiedConfig.deviceType.isMobile, verifiedConfig.freeMode, verifiedConfig.isDev, verifiedConfig.isDebug, rootElem)
 
     // handle special actions
     args.action match {

@@ -15,7 +15,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
+class SaveLoadButton(isMobile: Boolean, freeMode: Boolean) extends WebComponent with RecordLoader {
   // constants
   private[this] final val DEFAULT_FILE_NAME = "record"
 
@@ -30,7 +30,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
     onchange := { () =>
       displayFileLoadMessage(Messages.get.LOADING + "...")
       fileLoadButton.disabled = true
-      dom.window.setTimeout(() => readSingleFile(fileName => content => loadRecord(fileName, content)), 500)
+      dom.window.setTimeout(() => readSingleFile(fileName => content => loadRecord(fileName, content, freeMode)), 500)
     }
   ).render
 
@@ -198,7 +198,7 @@ class SaveLoadButton(isMobile: Boolean) extends WebComponent with RecordLoader {
   }
 
   private[this] def readRecordText(format: RecordFormat, text: String): Unit = {
-    loadRecordText(format, text)
+    loadRecordText(format, text, freeMode)
     clearTextLoad()
   }
 

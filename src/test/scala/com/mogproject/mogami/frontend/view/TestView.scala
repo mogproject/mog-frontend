@@ -11,7 +11,7 @@ case class MainPane(isMobile: Boolean, override val getSite: () => PlaygroundSit
 
 case class Footer(isDev: Boolean, isDebug: Boolean) extends FooterLike
 
-case class TestSite(isMobile: Boolean, isDev: Boolean, isDebug: Boolean) extends PlaygroundSiteLike {
+case class TestSite(isMobile: Boolean, freeMode: Boolean, isDev: Boolean, isDebug: Boolean) extends PlaygroundSiteLike {
   override lazy val mainPane: MainPaneLike = MainPane(isMobile, () => this)
 
   override lazy val navBar: NavBar = NavBar(isMobile)
@@ -19,6 +19,6 @@ case class TestSite(isMobile: Boolean, isDev: Boolean, isDebug: Boolean) extends
   override lazy val footer: FooterLike = Footer(isDev, isDebug)
 }
 
-case class TestView(isMobile: Boolean, isDev: Boolean, isDebug: Boolean, rootElem: Element) extends BasePlaygroundView {
-  override lazy val website: PlaygroundSiteLike = TestSite(isMobile, isDev, isDebug)
+case class TestView(isMobile: Boolean, freeMode: Boolean, isDev: Boolean, isDebug: Boolean, rootElem: Element) extends BasePlaygroundView {
+  override lazy val website: PlaygroundSiteLike = TestSite(isMobile, freeMode, isDev, isDebug)
 }
