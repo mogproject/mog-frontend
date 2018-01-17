@@ -31,11 +31,9 @@
 
 html {
   height: 100%;
-  position: fixed;
 }
 body {
   height: 100%;
-  position: fixed;
   /* disables selection */
   user-select: none; /* CSS3 */
   -moz-user-select: none; /* Firefox */
@@ -76,6 +74,10 @@ ul {
 
 .container-fluid {
   padding: 0 !important;
+}
+
+.modal {
+  position: fixed;
 }
 
 .modal-open {
