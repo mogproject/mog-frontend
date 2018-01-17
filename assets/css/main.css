@@ -76,10 +76,6 @@ ul {
   padding: 0 !important;
 }
 
-.modal {
-  position: fixed;
-}
-
 .modal-open {
   padding-right: 0px !important;
 }

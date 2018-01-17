@@ -73,6 +73,9 @@ trait ModalLike {
     initialize(dialog)
 
     dialog.asInstanceOf[BootstrapJQuery].modal("show")
+
+    // Reset scroll
+    dom.window.scrollTo(0, 0)
   }
 
   def hide(): Unit = {
