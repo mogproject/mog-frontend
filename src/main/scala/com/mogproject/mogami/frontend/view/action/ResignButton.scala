@@ -22,8 +22,7 @@ case class ResignButton(isSmall: Boolean, confirm: Boolean) extends WebComponent
     .withDynamicTextContent(_.RESIGN, "flag")
 
   def clickAction(): Unit = if (confirm) {
-    /** @note assume the menu will not be shown in the embedded mode */
-    YesNoDialog(div(Messages.get.ASK_RESIGN), () => clickActionImpl(), embeddedMode = false).show()
+    YesNoDialog(div(Messages.get.ASK_RESIGN), () => clickActionImpl()).show()
   } else {
     clickActionImpl()
   }

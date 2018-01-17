@@ -64,29 +64,29 @@ trait BasePlaygroundView extends SAMView {
   // Dialogs
   //
   def askPromote(pieceFace: PieceFace, rawMove: Move, rotate: Boolean): Unit = {
-    PromotionDialog(pieceFace, rawMove, rotate, mainPane.embeddedMode).show()
+    PromotionDialog(pieceFace, rawMove, rotate).show()
   }
 
   def showGameInfoDialog(gameInfo: GameInfo, isHandicapped: Boolean): Unit = {
-    GameInfoDialog(gameInfo, isHandicapped, mainPane.embeddedMode).show()
+    GameInfoDialog(gameInfo, isHandicapped).show()
   }
 
   def showEditWarningDialog(): Unit = {
     val action = ChangeModeAction(EditModeType, confirmed = true)
-    YesNoDialog(p(Messages.get.ASK_EDIT), () => PlaygroundSAM.doAction(action), mainPane.embeddedMode).show()
+    YesNoDialog(p(Messages.get.ASK_EDIT), () => PlaygroundSAM.doAction(action)).show()
   }
 
   def askDeleteBranch(branchNo: BranchNo): Unit = {
     val action = UpdateGameControlAction(_.deleteBranch(branchNo))
-    YesNoDialog(p(Messages.get.ASK_DELETE_BRANCH(branchNo)), () => PlaygroundSAM.doAction(action), mainPane.embeddedMode).show()
+    YesNoDialog(p(Messages.get.ASK_DELETE_BRANCH(branchNo)), () => PlaygroundSAM.doAction(action)).show()
   }
 
   def showEditAlertDialog(msg: String): Unit = {
-    AlertDialog(p(Messages.get.INVALID_STATE, br(), s"(${msg})"), mainPane.embeddedMode).show()
+    AlertDialog(p(Messages.get.INVALID_STATE, br(), s"(${msg})")).show()
   }
 
   def showCommentDialog(text: String): Unit = {
-    CommentDialog(text, mainPane.embeddedMode).show()
+    CommentDialog(text).show()
   }
 
   //
