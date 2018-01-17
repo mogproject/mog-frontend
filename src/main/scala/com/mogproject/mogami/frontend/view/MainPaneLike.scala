@@ -198,7 +198,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   //
   def downloadImages(urls: Seq[String], callback: () => Unit): Unit = {
     imageCache.download(urls, callback, failedUrls => {
-      AlertDialog(p(Messages.get.IMAGE_DOWNLOAD_FAILURE, br(), pre(failedUrls.map(u => Seq(StringFrag(u), br()))))).show()
+      AlertDialog(p(Messages.get.IMAGE_DOWNLOAD_FAILURE, br(), pre(failedUrls.map(u => Seq(StringFrag(u), br())))), embeddedMode).show()
     })
   }
 
