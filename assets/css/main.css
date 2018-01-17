@@ -3,6 +3,7 @@
  */
 @media screen and (min-width: 768px) {
   html {
+    overflow-y: scroll;
   }
 
   .sidebar-heading:hover {
@@ -15,6 +16,10 @@
 }
 
 @media screen and (max-width: 767px) {
+  html, body {
+    overflow-y: hidden;
+  }
+
   .collapsing {
     /* fixes issue#105 */
     height: 100% !important;
@@ -40,7 +45,6 @@ body {
   -ms-user-select: none; /* IE10 */
 
   /* scrolling */
-  overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 }
 noscript div {
