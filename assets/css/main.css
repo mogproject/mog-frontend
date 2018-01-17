@@ -3,7 +3,6 @@
  */
 @media screen and (min-width: 768px) {
   html {
-    overflow-y: scroll;
   }
 
   .sidebar-heading:hover {
@@ -41,6 +40,7 @@ body {
   -ms-user-select: none; /* IE10 */
 
   /* scrolling */
+  overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
 }
 noscript div {

@@ -19,8 +19,6 @@ trait ModalLike {
 
   type ElemType = TypedTag[Div]
 
-  def embeddedMode: Boolean
-
   def dismiss: Modifier = data("dismiss") := "modal"
 
   protected val bodyDefinition: scalatags.generic.AttrPair[Element, String] = cls := "modal-body"
@@ -66,7 +64,7 @@ trait ModalLike {
       Tooltip.hideAllToolTip()
 
       // Reset scroll
-      if (!embeddedMode) dom.window.scrollTo(0, 0)
+      dom.window.scrollTo(0, 0)
 
       // Remove from DOM
       dialog.remove()
