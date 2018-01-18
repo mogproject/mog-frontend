@@ -13,6 +13,8 @@ import scalatags.JsDom.all._
   */
 case class MenuDialog(menuPane: MenuPane) extends ModalLike with SAMObserver[BasePlaygroundModel] {
 
+  override def embeddedMode: Boolean = false
+
   override def getTitle(messages: Messages): Frag = WebComponent.dynamicSpan(_.MENU).element
 
   override lazy val modalBody: ElemType = div(bodyDefinition, menuPane.element)
