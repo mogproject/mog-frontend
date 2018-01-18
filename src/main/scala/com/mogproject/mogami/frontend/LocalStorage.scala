@@ -1,5 +1,7 @@
 package com.mogproject.mogami.frontend
 
+import com.mogproject.mogami.frontend.api.LZString
+import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
 import org.scalajs.dom
 
@@ -70,24 +72,22 @@ object LocalStorage {
 
   def loadImage(url: String, imageVersion: Int): Option[String] = {
     val key = "i:" + url
-    Option(dom.window.localStorage.getItem(key)).flatMap { data =>
-      val tokens = data.split(";", 2)
-      if (tokens.size == 2) {
-        // check version
-        Try(tokens.head.toInt) match {
-          case Success(v) if imageVersion == v => Some(tokens(1))
-          case _ =>
-            dom.window.localStorage.removeItem(key)
-            None
-        }
-      } else {
-        dom.window.localStorage.removeItem(key)
-        None
-      }
+    val ret = for {
+      compressed <- Option(dom.window.localStorage.getItem(key))
+      data = LZString.decompressFromUTF16(compressed)
+      tokens = data.split(";", 2) if tokens.size == 2
+      v <- Try(tokens.head.toInt).toOption if imageVersion == v // check version
+    } yield {
+      tokens(1)
     }
+
+    if (ret.isEmpty) dom.window.localStorage.removeItem(key)
+    ret
   }
 
   def saveImage(url: String, imageVersion: Int, data: String): Unit = {
-    dom.window.localStorage.setItem("i:" + url, imageVersion + ";" + data)
+    val s = imageVersion + ";" + data
+    val compressed = LZString.compressToUTF16(s)
+    dom.window.localStorage.setItem("i:" + url, compressed)
   }
 }
