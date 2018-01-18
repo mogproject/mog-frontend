@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view.board.board
 
-import com.mogproject.mogami.frontend.view.WebComponent
+import com.mogproject.mogami.frontend.view.{SVGImageCache, WebComponent}
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom.raw.SVGElement
 
@@ -27,7 +27,7 @@ trait SVGBoardIndexManager {
     layout.getFileIndexRect(index, isFlipped).toSVGText(index.toString, false, true, None, cls := textClass)
   }
 
-  private[this] def generateJapaneseRankIndex(index: Int): TypedTag[SVGElement] = {
+  private[this] def generateJapaneseRankIndex(index: Int)(implicit imageCache: SVGImageCache): TypedTag[SVGElement] = {
     layout.getRankIndexRect(index, isFlipped).toSVGImage(layout.getJapaneseRankIndexImagePath(index), rotated = false)
   }
 
@@ -39,7 +39,7 @@ trait SVGBoardIndexManager {
   //
   // Operation
   //
-  def drawIndexes(useJapanese: Boolean = true): Unit = if (!currentStatus.contains(useJapanese)) {
+  def drawIndexes(useJapanese: Boolean = true)(implicit imageCache: SVGImageCache): Unit = if (!currentStatus.contains(useJapanese)) {
     clearIndexes()
 
     // filewise
@@ -64,7 +64,7 @@ trait SVGBoardIndexManager {
     currentRankElements = Seq.empty
   }
 
-  def refreshIndexes(): Unit = {
+  def refreshIndexes()(implicit imageCache: SVGImageCache): Unit = {
     val c = currentStatus
     currentStatus = None
     c.foreach(drawIndexes)

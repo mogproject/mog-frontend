@@ -1,6 +1,7 @@
 package com.mogproject.mogami.frontend.view.board.effect
 
 import com.mogproject.mogami.frontend.model.PieceFace
+import com.mogproject.mogami.frontend.view.SVGImageCache
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.{Piece, Square}
 import com.mogproject.mogami.frontend.view.board.board.SVGBoard
@@ -17,7 +18,7 @@ case class PieceFlipAttribute(square: Square, fromPiece: Piece, toPiece: Piece, 
 /**
   * Piece flip effect
   */
-case class PieceFlipEffector(target: SVGBoard) extends BackgroundEffectorLike[PieceFlipAttribute, SVGBoard] {
+case class PieceFlipEffector(target: SVGBoard)(implicit imageCache: SVGImageCache) extends BackgroundEffectorLike[PieceFlipAttribute, SVGBoard] {
 
   override def autoDestruct: Option[Int] = Some(600)
 

@@ -6,7 +6,7 @@ import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.board.EditAttributeAction
 import com.mogproject.mogami.frontend.model.EditMode
 import com.mogproject.mogami.frontend.model.board.cursor.BoardCursor
-import com.mogproject.mogami.frontend.view.WebComponent
+import com.mogproject.mogami.frontend.view.{SVGImageCache, WebComponent}
 import com.mogproject.mogami.frontend.view.button.PieceFaceButton
 import org.scalajs.dom.html.Div
 
@@ -15,7 +15,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class EditHelpArea extends WebComponent with SAMObserver[BasePlaygroundModel] {
+class EditHelpArea(implicit imageCache: SVGImageCache) extends WebComponent with SAMObserver[BasePlaygroundModel] {
 
   final val ATTRIBUTE_BUTTON_HEIGHT: Int = 64
 

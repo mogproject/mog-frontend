@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.view.board
 
 import com.mogproject.mogami.frontend.model.board.cursor._
 import com.mogproject.mogami.{Move, Piece, Square}
-import com.mogproject.mogami.frontend.view.WebComponent
+import com.mogproject.mogami.frontend.view.{SVGImageCache, WebComponent}
 import com.mogproject.mogami.frontend.view.board.board.SVGBoard
 import com.mogproject.mogami.frontend.view.board.box.SVGBox
 import com.mogproject.mogami.frontend.view.board.hand.SVGHand
@@ -20,7 +20,7 @@ import scalatags.JsDom.svgTags.svg
 /**
   *
   */
-case class SVGArea(areaId: Int, layout: SVGAreaLayout) extends WebComponent with SVGAreaEventHandler {
+case class SVGArea(areaId: Int, layout: SVGAreaLayout)(implicit imageCache: SVGImageCache) extends WebComponent with SVGAreaEventHandler {
 
   private[this] lazy val boxSize = layout.viewBoxBottomRight.copy(y = layout.box.extendedHeight)
 

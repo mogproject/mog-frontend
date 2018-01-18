@@ -4,6 +4,7 @@ import com.mogproject.mogami._
 import com.mogproject.mogami.frontend.action.board.MakeMoveAction
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
+import com.mogproject.mogami.frontend.view.SVGImageCache
 import com.mogproject.mogami.frontend.view.button.PieceFaceButton
 
 import scalatags.JsDom.all._
@@ -14,7 +15,7 @@ import scalatags.JsDom.all._
 case class PromotionDialog(pieceFace: PieceFace,
                            rawMove: Move,
                            rotate: Boolean
-                          ) extends ModalLike {
+                          )(implicit imageCache: SVGImageCache) extends ModalLike {
   //
   // promotion specific
   //

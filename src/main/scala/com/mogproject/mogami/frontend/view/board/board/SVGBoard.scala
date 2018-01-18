@@ -2,6 +2,7 @@ package com.mogproject.mogami.frontend.view.board.board
 
 import com.mogproject.mogami.frontend.model.PieceFace
 import com.mogproject.mogami.frontend.model.board.cursor.{BoardCursor, Cursor}
+import com.mogproject.mogami.frontend.view.SVGImageCache
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.{Piece, Square}
 import com.mogproject.mogami.frontend.view.board.Flippable
@@ -15,7 +16,7 @@ import org.scalajs.dom
 /**
   *
   */
-case class SVGBoard(layout: SVGBoardLayout, foremostElement: SVGElement) extends SVGBoardPieceManager with SVGBoardIndexManager with EffectorTarget with Flippable {
+case class SVGBoard(layout: SVGBoardLayout, foremostElement: SVGElement)(implicit imageCache: SVGImageCache) extends SVGBoardPieceManager with SVGBoardIndexManager with EffectorTarget with Flippable {
 
   import layout._
 

@@ -4,7 +4,7 @@ import com.mogproject.mogami._
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.Rect
 import com.mogproject.mogami.frontend.model.{JapaneseOneCharFace, PieceFace}
-import com.mogproject.mogami.frontend.view.WebComponent
+import com.mogproject.mogami.frontend.view.{SVGImageCache, WebComponent}
 import com.mogproject.mogami.frontend.view.board.effect.EffectorTarget
 import org.scalajs.dom.Element
 import org.scalajs.dom.raw.{SVGImageElement, SVGTextElement}
@@ -46,7 +46,7 @@ trait SVGPieceManager[Key, Value] {
 
   protected def resetPieceEffect(keepLastMove: Boolean = false): Unit
 
-  def generatePieceElement(key: Key, value: Value, pieceFace: PieceFace, modifiers: Modifier*): TypedTag[SVGImageElement] = {
+  def generatePieceElement(key: Key, value: Value, pieceFace: PieceFace, modifiers: Modifier*)(implicit imageCache: SVGImageCache): TypedTag[SVGImageElement] = {
     getPieceRect(key).toSVGImage(pieceFace.getImagePath(getPtype(key, value)), isFlipped(key, value), modifiers)
   }
 
@@ -65,7 +65,7 @@ trait SVGPieceManager[Key, Value] {
     * @param pieceFace
     * @param keepLastMove
     */
-  def drawPieces(pieces: Map[Key, Value], pieceFace: PieceFace = JapaneseOneCharFace, keepLastMove: Boolean = false): Unit = {
+  def drawPieces(pieces: Map[Key, Value], pieceFace: PieceFace = JapaneseOneCharFace, keepLastMove: Boolean = false)(implicit imageCache: SVGImageCache): Unit = {
     resetPieceEffect(keepLastMove)
 
     // get diffs
@@ -117,7 +117,7 @@ trait SVGPieceManager[Key, Value] {
   /**
     * Refresh pieces
     */
-  def refreshPieces(): Unit = {
+  def refreshPieces()(implicit imageCache: SVGImageCache): Unit = {
     val cp = currentPieces
     clearPieces()
     drawPieces(cp, currentPieceFace, keepLastMove = true)

@@ -1,6 +1,7 @@
 package com.mogproject.mogami.frontend.view.sidebar
 
 import com.mogproject.mogami.frontend._
+import com.mogproject.mogami.frontend.view.SVGImageCache
 import com.mogproject.mogami.frontend.view.branch.BranchArea
 import com.mogproject.mogami.frontend.view.control.{ControlBar, ControlBarType}
 import com.mogproject.mogami.frontend.view.i18n.Messages
@@ -11,7 +12,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class SideBarLeft extends SideBarLike with SAMObserver[BasePlaygroundModel] {
+class SideBarLeft(implicit imageCache: SVGImageCache) extends SideBarLike with SAMObserver[BasePlaygroundModel] {
 
   override val EXPANDED_WIDTH: Int = SideBarLeft.EXPANDED_WIDTH
 

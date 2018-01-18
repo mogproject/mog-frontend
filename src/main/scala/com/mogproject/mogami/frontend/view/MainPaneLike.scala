@@ -33,7 +33,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
 
   def getSite: () => PlaygroundSiteLike
 
-  lazy val imageCache: ImageCache = new ImageCache
+  lazy implicit val imageCache2: SVGImageCache = new SVGImageCache
 
   //
   // Utility
@@ -197,7 +197,8 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   // Image cache
   //
   def downloadImages(urls: Seq[String], callback: () => Unit): Unit = {
-    imageCache.download(urls, callback, failedUrls => {
+//    imageCache.download(urls, callback, failedUrls => {
+    imageCache2.download(urls, callback, failedUrls => {
       AlertDialog(p(Messages.get.IMAGE_DOWNLOAD_FAILURE, br(), pre(failedUrls.map(u => Seq(StringFrag(u), br()))))).show()
     })
   }
