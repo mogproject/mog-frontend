@@ -9,7 +9,7 @@ import scalatags.JsDom.all._
 /**
   * Game information dialog
   */
-case class CommentDialog(text: String) extends ModalLike {
+case class CommentDialog(text: String, embeddedMode: Boolean) extends ModalLike {
 
   override def getTitle(messages: Messages): Frag = StringFrag(messages.COMMENT)
 

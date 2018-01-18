@@ -13,7 +13,8 @@ import scalatags.JsDom.all._
   */
 case class PromotionDialog(pieceFace: PieceFace,
                            rawMove: Move,
-                           rotate: Boolean
+                           rotate: Boolean,
+                           embeddedMode: Boolean
                           ) extends ModalLike {
   //
   // promotion specific

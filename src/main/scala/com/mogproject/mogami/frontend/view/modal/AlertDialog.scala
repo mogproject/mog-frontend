@@ -9,7 +9,7 @@ import scalatags.JsDom.all._
 /**
   * Alert dialog
   */
-case class AlertDialog(message: TypedTag[Element]) extends ModalLike {
+case class AlertDialog(message: TypedTag[Element], embeddedMode: Boolean) extends ModalLike {
 
   override def getTitle(messages: Messages): Frag = StringFrag(messages.CONFIRMATION)
 
