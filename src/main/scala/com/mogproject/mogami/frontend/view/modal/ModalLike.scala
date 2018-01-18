@@ -66,7 +66,7 @@ trait ModalLike {
       Tooltip.hideAllToolTip()
 
       // Reset scroll
-      if (!embeddedMode) dom.window.scrollTo(0, 0)
+      dom.window.scrollTo(0, 0)
 
       // Remove from DOM
       dialog.remove()
@@ -74,7 +74,15 @@ trait ModalLike {
 
     initialize(dialog)
 
-    dialog.asInstanceOf[BootstrapJQuery].modal("show")
+    if (embeddedMode) {
+      // Keep the parent scroll position while showing modal
+      val parent = jQuery(dom.window.parent.document)
+      val prev = parent.scrollTop()
+      dialog.asInstanceOf[BootstrapJQuery].modal("show")
+      parent.scrollTop(prev)
+    } else {
+      dialog.asInstanceOf[BootstrapJQuery].modal("show")
+    }
   }
 
   def hide(): Unit = {
