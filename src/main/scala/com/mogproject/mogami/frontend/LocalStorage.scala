@@ -76,7 +76,7 @@ object LocalStorage {
         // check version
         Try(tokens.head.toInt) match {
           case Success(v) if imageVersion == v => Some(tokens(1))
-          case Failure(_) =>
+          case _ =>
             dom.window.localStorage.removeItem(key)
             None
         }

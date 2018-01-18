@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view
 
-import com.mogproject.mogami.frontend.LocalStorage
+import com.mogproject.mogami.frontend.{FrontendSettings, LocalStorage}
 import org.scalajs.dom
 import org.scalajs.dom.ext.{Ajax, AjaxException}
 import org.scalajs.dom.raw.{Blob, BlobPropertyBag, URL}
@@ -55,7 +55,7 @@ class SVGImageCache {
     processingUrls += url
 
     // check Local Storage
-    LocalStorage.loadImage(url, 0) match {
+    LocalStorage.loadImage(url, FrontendSettings.imageVersion) match {
       case Some(data) => Future(createObjectURL(url, data))
       case None =>
         Ajax.get(url, timeout = timeout).recover {
@@ -70,7 +70,7 @@ class SVGImageCache {
           }
         } map { data =>
           // save to Local Storage
-          LocalStorage.saveImage(url, 0, data)
+          LocalStorage.saveImage(url, FrontendSettings.imageVersion, data)
           createObjectURL(url, data)
         }
     }
