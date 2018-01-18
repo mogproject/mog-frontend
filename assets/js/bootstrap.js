@@ -933,7 +933,7 @@ if (typeof jQuery === 'undefined') {
     this.options             = options
     this.$body               = $(document.body)
     this.$element            = $(element)
-    this.$dialog             = this.$element.find('.modal-dialog')
+    this.$dialog             = this.$element.find('.modal-dialog-x') // this.$element.find('.modal-dialog')
     this.$backdrop           = null
     this.isShown             = null
     this.originalBodyPad     = null
@@ -1157,12 +1157,12 @@ if (typeof jQuery === 'undefined') {
   }
 
   Modal.prototype.adjustDialog = function () {
-    var modalIsOverflowing = this.$element[0].scrollHeight > document.documentElement.clientHeight
+    //var modalIsOverflowing = this.$element[0].scrollHeight > document.documentElement.clientHeight
 
-    this.$element.css({
-      paddingLeft:  !this.bodyIsOverflowing && modalIsOverflowing ? this.scrollbarWidth : '',
-      paddingRight: this.bodyIsOverflowing && !modalIsOverflowing ? this.scrollbarWidth : ''
-    })
+    //this.$element.css({
+    //  paddingLeft:  !this.bodyIsOverflowing && modalIsOverflowing ? this.scrollbarWidth : '',
+    //  paddingRight: this.bodyIsOverflowing && !modalIsOverflowing ? this.scrollbarWidth : ''
+    //})
   }
 
   Modal.prototype.resetAdjustments = function () {
