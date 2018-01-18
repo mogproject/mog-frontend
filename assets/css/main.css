@@ -80,6 +80,22 @@ ul {
   padding-right: 0px !important;
 }
 
+/* Do not use modal-dialog. It will make a parent window scroll in the embedded mode. */
+.modal-dialog-x {
+  position: relative;
+  width: auto;
+  margin: 0.5rem;
+  pointer-events: none;
+}
+
+.modal.fade .modal-dialog-x {
+  transition: -webkit-transform 0.3s ease-out;
+  transition: transform 0.3s ease-out;
+  transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
+  -webkit-transform: translate(0, -25%);
+  transform: translate(0, -25%);
+}
+
 .input-small {
   font-size: 12px;
 }
