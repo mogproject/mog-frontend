@@ -1,5 +1,6 @@
 package com.mogproject.mogami.frontend.view
 
+import com.mogproject.mogami.frontend.LocalStorage
 import org.scalajs.dom
 import org.scalajs.dom.ext.{Ajax, AjaxException}
 import org.scalajs.dom.raw.{Blob, BlobPropertyBag, URL}
@@ -53,24 +54,35 @@ class SVGImageCache {
   private[this] def downloadImage(url: String, timeout: Int): Future[String] = {
     processingUrls += url
 
-    Ajax.get(url, timeout = timeout).recover {
-      case AjaxException(xhr) => xhr
-    } map { xhr =>
-      xhr.status match {
-        case 200 => xhr.responseText
-        case _ =>
-          val msg = s"Failed to download image: url=${url} status=${xhr.status}"
-          println(msg)
-          throw new RuntimeException(msg)
-      }
-    } map { data =>
-      val objUrl = URL.createObjectURL(new Blob(js.Array(data.asInstanceOf[js.Any]), BlobPropertyBag("image/svg+xml;charset=utf-8")))
-      if (!cacheData.contains(url)) {
-        cacheData += url -> objUrl
-        processingUrls.remove(url)
-      }
-      objUrl
+    // check Local Storage
+    LocalStorage.loadImage(url, 0) match {
+      case Some(data) => Future(createObjectURL(url, data))
+      case None =>
+        Ajax.get(url, timeout = timeout).recover {
+          case AjaxException(xhr) => xhr
+        } map { xhr =>
+          xhr.status match {
+            case 200 => xhr.responseText
+            case _ =>
+              val msg = s"Failed to download image: url=${url} status=${xhr.status}"
+              println(msg)
+              throw new RuntimeException(msg)
+          }
+        } map { data =>
+          // save to Local Storage
+          LocalStorage.saveImage(url, 0, data)
+          createObjectURL(url, data)
+        }
     }
+  }
+
+  private[this] def createObjectURL(url: String, data: String): String = {
+    val objUrl = URL.createObjectURL(new Blob(js.Array(data.asInstanceOf[js.Any]), BlobPropertyBag("image/svg+xml;charset=utf-8")))
+    if (!cacheData.contains(url)) {
+      cacheData += url -> objUrl
+      processingUrls.remove(url)
+    }
+    objUrl
   }
 
 }

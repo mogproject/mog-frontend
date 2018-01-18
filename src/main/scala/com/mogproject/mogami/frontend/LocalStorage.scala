@@ -3,7 +3,7 @@ package com.mogproject.mogami.frontend
 import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
 import org.scalajs.dom
 
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 /**
   * Manages browser's Local Storage
@@ -68,4 +68,26 @@ object LocalStorage {
     case _ => None
   }
 
+  def loadImage(url: String, imageVersion: Int): Option[String] = {
+    val key = "i:" + url
+    Option(dom.window.localStorage.getItem(key)).flatMap { data =>
+      val tokens = data.split(";", 2)
+      if (tokens.size == 2) {
+        // check version
+        Try(tokens.head.toInt) match {
+          case Success(v) if imageVersion == v => Some(tokens(1))
+          case Failure(_) =>
+            dom.window.localStorage.removeItem(key)
+            None
+        }
+      } else {
+        dom.window.localStorage.removeItem(key)
+        None
+      }
+    }
+  }
+
+  def saveImage(url: String, imageVersion: Int, data: String): Unit = {
+    dom.window.localStorage.setItem("i:" + url, imageVersion + ";" + data)
+  }
 }

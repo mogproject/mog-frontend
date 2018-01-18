@@ -96,7 +96,7 @@ case class SVGPlayer(layout: SVGPlayerLayout, foremostElement: SVGElement)(impli
 
   def drawSymbols(): Unit = {
     symbolElements.foreach { case (pl, elem) =>
-      elem.setAttribute("xlink:href", layout.getSymbolImagePath(getFlippedPlayer(pl)))
+      elem.setAttribute("xlink:href", imageCache.getURL(layout.getSymbolImagePath(getFlippedPlayer(pl))))
     }
   }
 

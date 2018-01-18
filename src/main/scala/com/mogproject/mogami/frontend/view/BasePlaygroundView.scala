@@ -64,7 +64,7 @@ trait BasePlaygroundView extends SAMView {
   // Dialogs
   //
   def askPromote(pieceFace: PieceFace, rawMove: Move, rotate: Boolean): Unit = {
-    PromotionDialog(pieceFace, rawMove, rotate)(mainPane.imageCache2).show()
+    PromotionDialog(pieceFace, rawMove, rotate)(mainPane.imageCache).show()
   }
 
   def showGameInfoDialog(gameInfo: GameInfo, isHandicapped: Boolean): Unit = {
