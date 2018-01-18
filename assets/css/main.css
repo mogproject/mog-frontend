@@ -92,8 +92,22 @@ ul {
   transition: -webkit-transform 0.3s ease-out;
   transition: transform 0.3s ease-out;
   transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
-  -webkit-transform: translate(0, -25%);
-  transform: translate(0, -25%);
+  /* -webkit-transform: translate(0, -25%);
+  transform: translate(0, -25%); */
+  -webkit-transform: translate(0, 0);
+  transform: translate(0, 0);
+}
+
+.modal.show .modal-dialog-x {
+  -webkit-transform: translate(0, 0);
+  transform: translate(0, 0);
+}
+
+@media (min-width: 576px) {
+  .modal-dialog-x {
+    max-width: 500px;
+    margin: 1.75rem auto;
+  }
 }
 
 .input-small {
