@@ -43,7 +43,7 @@ case class SVGPlayer(layout: SVGPlayerLayout, foremostElement: SVGElement)(impli
   private[this] val borderElements: Seq[RectElement] = layout.borders.map(_.render)
 
   private[this] val symbolElements: SymmetricElement[SVGImageElement] = SymmetricElement { pl =>
-    layout.getSymbolArea(pl).toSVGImage(layout.getSymbolImagePath(getFlippedPlayer(pl)), rotated = pl.isWhite).render
+    layout.getSymbolArea(pl).toSVGImage("", rotated = pl.isWhite).render
   }
 
   private[this] val nameElements: SymmetricElement[svg.Text] = SymmetricElement { pl =>
