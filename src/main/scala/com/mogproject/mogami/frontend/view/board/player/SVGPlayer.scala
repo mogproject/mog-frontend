@@ -5,7 +5,7 @@ import com.mogproject.mogami.core.Player.{BLACK, WHITE}
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.board.BoardIndicator
 import com.mogproject.mogami.frontend.model.board.cursor.{Cursor, PlayerCursor}
-import com.mogproject.mogami.frontend.view.WebComponent
+import com.mogproject.mogami.frontend.view.{SVGImageCache, WebComponent}
 import com.mogproject.mogami.frontend.view.board.{Flippable, SymmetricElement}
 import com.mogproject.mogami.frontend.view.board.effect.{CursorEffector, EffectorTarget, FlashEffector}
 import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
@@ -19,7 +19,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-case class SVGPlayer(layout: SVGPlayerLayout, foremostElement: SVGElement) extends EffectorTarget with Flippable {
+case class SVGPlayer(layout: SVGPlayerLayout, foremostElement: SVGElement)(implicit imageCache: SVGImageCache) extends EffectorTarget with Flippable {
 
   protected def self: SVGPlayer = this
 
@@ -43,7 +43,7 @@ case class SVGPlayer(layout: SVGPlayerLayout, foremostElement: SVGElement) exten
   private[this] val borderElements: Seq[RectElement] = layout.borders.map(_.render)
 
   private[this] val symbolElements: SymmetricElement[SVGImageElement] = SymmetricElement { pl =>
-    layout.getSymbolArea(pl).toSVGImage(layout.getSymbolImagePath(getFlippedPlayer(pl)), rotated = pl.isWhite).render
+    layout.getSymbolArea(pl).toSVGImage("", rotated = pl.isWhite).render
   }
 
   private[this] val nameElements: SymmetricElement[svg.Text] = SymmetricElement { pl =>
@@ -96,7 +96,7 @@ case class SVGPlayer(layout: SVGPlayerLayout, foremostElement: SVGElement) exten
 
   def drawSymbols(): Unit = {
     symbolElements.foreach { case (pl, elem) =>
-      elem.setAttribute("xlink:href", layout.getSymbolImagePath(getFlippedPlayer(pl)))
+      elem.setAttribute("xlink:href", imageCache.getURL(layout.getSymbolImagePath(getFlippedPlayer(pl))))
     }
   }
 

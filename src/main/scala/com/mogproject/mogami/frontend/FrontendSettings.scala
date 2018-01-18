@@ -7,6 +7,8 @@ object FrontendSettings {
 
   val currentYear = 2018
 
+  val imageVersion = 1
+
   object url {
     val baseUrl = "https://play.mogproject.com/"
     val authorSiteUrl = "https://mogproject.com"

@@ -3,6 +3,7 @@ package com.mogproject.mogami.frontend.view.board.hand
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami._
 import com.mogproject.mogami.frontend.model.board.cursor.{Cursor, HandCursor}
+import com.mogproject.mogami.frontend.view.SVGImageCache
 import com.mogproject.mogami.frontend.view.board.Flippable
 import com.mogproject.mogami.frontend.view.board.effect._
 import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
@@ -13,7 +14,7 @@ import org.scalajs.dom.svg.RectElement
 /**
   * Hand
   */
-case class SVGHand(layout: SVGHandLayout, foremostElement: SVGElement) extends SVGHandPieceManager with EffectorTarget with Flippable {
+case class SVGHand(layout: SVGHandLayout, foremostElement: SVGElement)(implicit imageCache: SVGImageCache) extends SVGHandPieceManager with EffectorTarget with Flippable {
 
   protected def self: SVGHand = this
 

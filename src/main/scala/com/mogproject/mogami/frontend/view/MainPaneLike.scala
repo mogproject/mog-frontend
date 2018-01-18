@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view
 
-import com.mogproject.mogami.core.Ptype
+import com.mogproject.mogami.core.{Player, Ptype}
 import com.mogproject.mogami.frontend.model.DeviceType.DeviceType
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.api.WebAudioAPISound
@@ -33,7 +33,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
 
   def getSite: () => PlaygroundSiteLike
 
-  lazy val imageCache: ImageCache = new ImageCache
+  lazy implicit val imageCache: SVGImageCache = new SVGImageCache
 
   //
   // Utility
@@ -237,17 +237,28 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
 
     // 3. Flip
     if (check(CONF_FLIP_TYPE)) {
-      (config.flipType, config.deviceType, config.embeddedMode) match {
-        case (FlipDisabled, _, _) => updateSVGArea(_.setFlip(false))
-        case (FlipEnabled, _, _) => updateSVGArea(_.setFlip(true))
-        case (DoubleBoard, DeviceType.MobilePortrait, _) => updateSVGArea(_.setFlip(false))
-        case (DoubleBoard, _, true) => updateSVGArea(_.setFlip(false))
-        case (DoubleBoard, _, false) => Seq(0, 1).foreach { n => updateSVGArea(n, _.setFlip(n == 1)) }
-      }
+      downloadImages(Player.constructor.map(p => config.layout.player.getSymbolImagePath(p)), () => {
+        (config.flipType, config.deviceType, config.embeddedMode) match {
+          case (FlipDisabled, _, _) => updateSVGArea(_.setFlip(false))
+          case (FlipEnabled, _, _) => updateSVGArea(_.setFlip(true))
+          case (DoubleBoard, DeviceType.MobilePortrait, _) => updateSVGArea(_.setFlip(false))
+          case (DoubleBoard, _, true) => updateSVGArea(_.setFlip(false))
+          case (DoubleBoard, _, false) => Seq(0, 1).foreach { n => updateSVGArea(n, _.setFlip(n == 1)) }
+        }
+      })
     }
 
     // 4. Indexes
-    if (check(CONF_RCD_LANG)) updateSVGArea(_.board.drawIndexes(config.recordLang == Japanese))
+    if (check(CONF_RCD_LANG)) {
+      if (config.recordLang == Japanese) {
+        downloadImages((1 to 9).map(n => config.layout.board.getJapaneseRankIndexImagePath(n)), () =>
+          updateSVGArea(_.board.drawIndexes(useJapanese = true))
+        )
+      } else {
+        updateSVGArea(_.board.drawIndexes(useJapanese = false))
+      }
+
+    }
 
     // 5. Player Names
     if (check(GAME_INFO | CONF_MSG_LANG | GAME_HANDICAP)) {
