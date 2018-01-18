@@ -221,9 +221,12 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   }
 
   override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+    refreshPhase1(model, flag)
+  }
+
+  private[this] def refreshPhase1(model: BasePlaygroundModel, flag: Int): Unit = {
     import ObserveFlag._
 
-    lazy val mode = model.mode
     lazy val config = model.config
     val areaUpdated = (flag & (CONF_DEVICE | CONF_LAYOUT | CONF_NUM_AREAS)) != 0
 
@@ -245,8 +248,21 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
           case (DoubleBoard, _, true) => updateSVGArea(_.setFlip(false))
           case (DoubleBoard, _, false) => Seq(0, 1).foreach { n => updateSVGArea(n, _.setFlip(n == 1)) }
         }
+
+        refreshPhase2(model, flag, areaUpdated)
       })
+    } else {
+      refreshPhase2(model, flag, areaUpdated)
     }
+  }
+
+  private[this] def refreshPhase2(model: BasePlaygroundModel, flag: Int, areaUpdated: Boolean): Unit = {
+    import ObserveFlag._
+
+    lazy val mode = model.mode
+    lazy val config = model.config
+
+    def check(mask: Int) = areaUpdated || (flag & mask) != 0
 
     // 4. Indexes
     if (check(CONF_RCD_LANG)) {
@@ -275,7 +291,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     // 8. Board/Hand/Box Pieces
     if (check(GAME_BRANCH | GAME_POSITION | CONF_PIECE_FACE | MODE_EDIT)) {
       // use image cache
-      downloadImages(Ptype.constructor.map(model.config.pieceFace.getImagePath), () =>
+      downloadImages(Ptype.constructor.map(config.pieceFace.getImagePath), () =>
         updateSVGArea { area =>
           area.board.drawPieces(mode.getBoardPieces, config.pieceFace, keepLastMove = true)
           area.hand.drawPieces(mode.getHandPieces, config.pieceFace, keepLastMove = true)
@@ -332,5 +348,6 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
 
     // 14. Move Forward/Backward Effect
     if (flag != -1 && isFlagUpdated(flag, GAME_NEXT_POS | GAME_PREV_POS) && model.selectedCursor.isDefined) updateSVGArea(_.board.effect.forwardEffector.start((flag & GAME_NEXT_POS) != 0))
+
   }
 }
