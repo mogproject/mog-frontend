@@ -7,6 +7,7 @@ PROD_ASS = ${PROD_RSC}/assets
 DEV_PORT = 8001
 TARGET = target/scala-2.12/${APP_NAME}-test-
 COPY_PROD = cp -f ${TARGET}opt.js ${TARGET}opt.js.map  ${PROD_ASS}/js/ && cp -rf ${TEST_ASS}/* ${PROD_ASS}/
+UGLIFY_CSS = rm -f ${PROD_ASS}/css/* && uglifycss ${TEST_ASS}/css/* > ${PROD_ASS}/css/pg.min.css
 
 build:
 	${SBT} test:fastOptJS
@@ -30,7 +31,7 @@ server:
 	python -m 'http.server' ${DEV_PORT}
 
 publish: test
-	${SBT} test:fullOptJS && ${COPY_PROD}
+	${SBT} test:fullOptJS && ${COPY_PROD} && ${UGLIFY_CSS}
 
 publish-commit: publish
 	git add . && git commit -m Publish && git push
