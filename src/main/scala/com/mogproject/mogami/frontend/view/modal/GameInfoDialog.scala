@@ -12,7 +12,7 @@ import scalatags.JsDom.all._
 /**
   * Game information dialog
   */
-case class GameInfoDialog(gameInfo: GameInfo, isHandicapped: Boolean, embeddedMode: Boolean) extends ModalLike {
+case class GameInfoDialog(gameInfo: GameInfo, isHandicapped: Boolean) extends ModalLike {
 
   //
   // game info specific

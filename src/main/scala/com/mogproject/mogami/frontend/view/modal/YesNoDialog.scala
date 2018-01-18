@@ -9,7 +9,7 @@ import scalatags.JsDom.all._
 /**
   * Yes-no dialog
   */
-case class YesNoDialog(message: TypedTag[Element], callback: () => Unit, embeddedMode: Boolean) extends ModalLike {
+case class YesNoDialog(message: TypedTag[Element], callback: () => Unit) extends ModalLike {
 
   //
   // modal traits

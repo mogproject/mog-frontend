@@ -19,8 +19,6 @@ trait ModalLike {
 
   type ElemType = TypedTag[Div]
 
-  def embeddedMode: Boolean
-
   def dismiss: Modifier = data("dismiss") := "modal"
 
   protected val bodyDefinition: scalatags.generic.AttrPair[Element, String] = cls := "modal-body"
@@ -42,13 +40,13 @@ trait ModalLike {
   )
 
   protected lazy val elem: Div =
-    div(cls := "modal face", tabindex := "-1", role := "dialog", isStatic.fold(data("backdrop") := "static", Seq.empty[JsDom.Modifier]),
+    div(cls := "modal fade", tabindex := "-1", role := "dialog", isStatic.option(data("backdrop") := "static"),
       div(cls := "modal-dialog", role := "document",
         div(cls := "modal-content",
           // header
           div(cls := "modal-header",
             h4(cls := "modal-title", float := "left", getTitle(Messages.get)),
-            displayCloseButton.fold(closeButton, Seq.empty[JsDom.Modifier])
+            displayCloseButton.option(closeButton)
           ),
           // body
           modalBody,
@@ -74,15 +72,7 @@ trait ModalLike {
 
     initialize(dialog)
 
-    if (embeddedMode) {
-      // Keep the parent scroll position while showing modal
-      val parent = jQuery(dom.window.parent.document)
-      val prev = parent.scrollTop()
-      dialog.asInstanceOf[BootstrapJQuery].modal("show")
-      parent.scrollTop(prev)
-    } else {
-      dialog.asInstanceOf[BootstrapJQuery].modal("show")
-    }
+    dialog.asInstanceOf[BootstrapJQuery].modal("show")
   }
 
   def hide(): Unit = {
