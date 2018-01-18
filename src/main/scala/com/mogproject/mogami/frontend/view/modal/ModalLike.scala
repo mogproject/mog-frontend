@@ -41,12 +41,12 @@ trait ModalLike {
 
   protected lazy val elem: Div =
     div(cls := "modal fade", tabindex := "-1", role := "dialog", isStatic.option(data("backdrop") := "static"),
-      div(cls := "modal-dialog-x", role := "document",
+      div(cls := "modal-dialog", role := "document",
         div(cls := "modal-content",
           // header
           div(cls := "modal-header",
             h4(cls := "modal-title", float := "left", getTitle(Messages.get)),
-            displayCloseButton.fold(closeButton, Seq.empty[JsDom.Modifier])
+            displayCloseButton.option(closeButton)
           ),
           // body
           modalBody,
