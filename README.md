@@ -5,6 +5,8 @@ Common frontend components of Shogi Playground
 
 ```
 npm install jsdom
+npm install uglify-js
+npm install uglifycss
 make test
 ```
 
