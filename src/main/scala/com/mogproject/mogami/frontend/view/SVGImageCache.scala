@@ -77,7 +77,8 @@ class SVGImageCache {
   }
 
   private[this] def createObjectURL(url: String, data: String): String = {
-    val objUrl = URL.createObjectURL(new Blob(js.Array(data.asInstanceOf[js.Any]), BlobPropertyBag("image/svg+xml;charset=utf-8")))
+    // Do not add ";charset=utf-8". This will break data on Safari.
+    val objUrl = URL.createObjectURL(new Blob(js.Array(data.asInstanceOf[js.Any]), BlobPropertyBag("image/svg+xml")))
     if (!cacheData.contains(url)) {
       cacheData += url -> objUrl
       processingUrls.remove(url)
