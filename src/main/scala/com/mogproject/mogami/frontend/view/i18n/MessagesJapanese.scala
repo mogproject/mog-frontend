@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.view.i18n
 
 import com.mogproject.mogami.frontend.model.io.RecordFormat
 import com.mogproject.mogami.{BranchNo, State}
-import com.mogproject.mogami.frontend.model.{JapaneseOneCharFace, JapaneseOneCharGraphicalFace, JapaneseTwoCharGraphicalFace, WesternOneCharFace}
+import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.frontend.{FrontendSettings, PieceFace}
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
@@ -199,7 +199,8 @@ case object MessagesJapanese extends Messages {
     JapaneseOneCharFace -> "日本語 1",
     JapaneseOneCharGraphicalFace -> "日本語 2",
     JapaneseTwoCharGraphicalFace -> "日本語 3",
-    WesternOneCharFace -> "西洋 1"
+    WesternOneCharFace -> "西洋 1",
+    HidetchiInternational -> "Hidetchi 国際駒"
   )
 
   override val HELP: String = "ヘルプ"
