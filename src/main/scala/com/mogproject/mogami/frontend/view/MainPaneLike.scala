@@ -291,7 +291,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     // 8. Board/Hand/Box Pieces
     if (check(GAME_BRANCH | GAME_POSITION | CONF_PIECE_FACE | MODE_EDIT)) {
       // use image cache
-      downloadImages(Ptype.constructor.map(config.pieceFace.getImagePath), () =>
+      downloadImages(config.pieceFace.allImagePaths, () =>
         updateSVGArea { area =>
           area.board.drawPieces(mode.getBoardPieces, config.pieceFace, keepLastMove = true)
           area.hand.drawPieces(mode.getHandPieces, config.pieceFace, keepLastMove = true)

@@ -4,7 +4,7 @@ import com.mogproject.mogami._
 import com.mogproject.mogami.frontend.Mode
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.board._
-import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, GameControl, Japanese}
+import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, Japanese}
 import com.mogproject.mogami.frontend.util.PlayerUtil
 import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
 import org.scalajs.dom
@@ -66,6 +66,7 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, mode: Mode) extends 
       final val INDICATOR = 60
       final val HAND_NUMBER = 110
     }
+
   }
 
   /** set background as white */
@@ -73,11 +74,12 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, mode: Mode) extends 
     renderRect(Rect(Coord(0, 0), canvasWidth, canvasHeight), Some(color.BACKGROUND))
   }
 
-  private[this] def drawLastMoveReverse(): Unit = {
+  private[this] def drawLastMove(rotated: Boolean): Unit = {
+    val r = rotated ^ flipped
     val rs = lastMove.toSeq.flatMap { mv =>
       mv.moveFrom match {
-        case Left(sq) => Seq(sq, mv.to).map(s => config.layout.board.getRect(s, !flipped))
-        case Right(h) => Seq(config.layout.hand.getRect(h.toPiece, !flipped), config.layout.board.getRect(mv.to, !flipped))
+        case Left(sq) => Seq(sq, mv.to).map(s => config.layout.board.getRect(s, r))
+        case Right(h) => Seq(config.layout.hand.getRect(h.toPiece, r), config.layout.board.getRect(mv.to, r))
       }
     }
     rs.foreach(renderRect(_, Some(color.LAST_MOVE)))
@@ -91,20 +93,23 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, mode: Mode) extends 
     lo.boardCircleCoords.foreach(renderCircle(_, lo.CIRCLE_SIZE, color.BORDER))
   }
 
-  private[this] def drawBoard(player: Player): Unit = {
+  private[this] def drawBoard(player: Player, positionRotated: Boolean, pieceRotated: Boolean): Unit = {
     val lo = config.layout.board
     displayState.board.filter(_._2.owner == player).foreach {
-      case (sq, pc) => renderPiece(lo.getPieceRect(sq, player.isWhite), pc.ptype)
+      case (sq, pc) => renderPiece(lo.getPieceRect(sq, positionRotated), pc.ptype, pieceRotated)
     }
   }
 
-  private[this] def drawHand(player: Player): Unit = {
+  private[this] def drawHandBackground(): Unit = {
+    renderRect(config.layout.hand.blackRect, None, Some(color.BORDER), stroke.BORDER)
+  }
+
+  private[this] def drawHand(player: Player, positionRotated: Boolean, pieceRotated: Boolean): Unit = {
     val lo = config.layout.hand
 
-    renderRect(lo.blackRect, None, Some(color.BORDER), stroke.BORDER)
     displayState.hand.foreach {
       case (h, n) if (h.owner == player) && n > 0 =>
-        renderPiece(lo.getPieceRect(h.toPiece, player.isWhite), h.ptype)
+        renderPiece(lo.getPieceRect(h.toPiece, positionRotated), h.ptype, pieceRotated)
       case _ =>
     }
   }
@@ -171,13 +176,14 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, mode: Mode) extends 
 
     /** @note drawing order matters */
     drawBackground()
-    drawLastMoveReverse()
+    drawLastMove(true)
     drawForeground()
 
     val pl = flipped.fold(BLACK, WHITE)
-    drawBoard(pl)
+    drawBoard(pl, pl.isWhite, pieceRotated = false)
     drawPlayer(pl)
-    drawHand(pl)
+    drawHandBackground()
+    drawHand(pl, pl.isWhite, pieceRotated = false)
 
     waitDraw { () =>
       drawHandNumbers(pl)
@@ -185,14 +191,53 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, mode: Mode) extends 
       waitDraw { () =>
         ctx.restore()
 
-        drawBoard(!pl)
+        drawBoard(!pl, pl.isBlack, pieceRotated = false)
         drawPlayer(!pl)
-        drawHand(!pl)
+        drawHandBackground()
+        drawHand(!pl, pl.isBlack, pieceRotated = false)
 
         drawIndexes()
 
         waitDraw { () =>
           drawHandNumbers(!pl)
+          callback()
+        }
+      }
+    }
+  }
+
+  private[this] def drawAsymmetric(callback: () => Unit): Unit = {
+    ctx.save()
+
+    /** @note drawing order matters */
+    drawBackground()
+    drawLastMove(false)
+    drawForeground()
+
+    val pl = flipped.fold(BLACK, WHITE)
+
+    drawPlayer(!pl)
+    drawHandBackground()
+
+    drawBoard(BLACK, flipped, flipped)
+    drawHand(BLACK, flipped, flipped)
+    drawBoard(WHITE, flipped, !flipped)
+    drawHand(WHITE, flipped, !flipped)
+
+    waitDraw { () =>
+      drawHandNumbers(!pl)
+
+      waitDraw { () =>
+        rotateCanvas()
+
+        drawPlayer(pl)
+        drawHandBackground()
+
+        waitDraw { () =>
+          drawHandNumbers(pl)
+          ctx.restore()
+
+          drawIndexes()
           callback()
         }
       }
@@ -221,7 +266,7 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, mode: Mode) extends 
   }
 
   def processPNGData(callback: String => Unit): Unit = {
-    draw(() => {
+    val f = () => {
       // scale image
       val cv2 = resizeGradually(cv, config.layout.areaWidth(pieceWidth))
 
@@ -230,6 +275,7 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, mode: Mode) extends 
 
       // callback
       callback(data)
-    })
+    }
+    config.pieceFace.symmetric.fold(draw(f), drawAsymmetric(f))
   }
 }
