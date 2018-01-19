@@ -24,7 +24,8 @@ case class SVGHandLayout(center: Coord, blackOffset: Coord, pieceWidth: Int, pie
 
   final val numberSize: Coord = Coord(162, 110) // .y = font size (in css)
 
-  final val PIECE_FACE_SIZE: Int = pieceWidth * 20 / 21
+  final val PIECE_FACE_WIDTH: Int = pieceWidth * 20 / 21
+  final val PIECE_FACE_HEIGHT: Int = pieceHeight * 20 / 21
 
   final val numberAdjustment: Coord = Coord(50, 20)
 
@@ -36,7 +37,7 @@ case class SVGHandLayout(center: Coord, blackOffset: Coord, pieceWidth: Int, pie
     Rect(os + Coord(c * pieceWidth, r * pieceHeight), pieceWidth, pieceHeight)
   }
 
-  def getPieceRect(piece: Piece, isFlipped: Boolean): Rect = getRect(piece, isFlipped).toInnerRect(PIECE_FACE_SIZE, PIECE_FACE_SIZE)
+  def getPieceRect(piece: Piece, isFlipped: Boolean): Rect = getRect(piece, isFlipped).toInnerRect(PIECE_FACE_WIDTH, PIECE_FACE_HEIGHT)
 
   def getNumberRect(piece: Piece, isFlipped: Boolean): Rect = {
     val r = getRect(Piece(BLACK, piece.ptype), isFlipped = false)

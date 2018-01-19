@@ -10,7 +10,7 @@ import com.mogproject.mogami.frontend.view.board.SVGPieceManager
 trait SVGBoxPieceManager extends SVGPieceManager[Ptype, Int] {
   self: SVGBox =>
 
-  override def getPieceRect(key: Ptype): Rect = layout.getRect(key)
+  override def getPieceRect(key: Ptype): Rect = layout.getPieceRect(key)
 
   override protected def getNumberRect(key: Ptype): Rect = layout.getNumberRect(key)
 
