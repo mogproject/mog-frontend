@@ -24,7 +24,7 @@ case class PieceFaceButton(pieceFace: PieceFace, ptype: Ptype, rotated: Boolean,
       svgAttrs.width := 100.pct,
       svgAttrs.height := 100.pct,
       svgAttrs.viewBox := s"0 0 ${pieceSize}",
-      Rect(Coord(0, 0), pieceSize.x, pieceSize.y).toSVGImage(pieceFace.getImagePath(ptype), rotated)
+      Rect(Coord(0, 0), pieceSize.x, pieceSize.y).toSVGImage(pieceFace.getImagePath(ptype, rotated), rotated && pieceFace.symmetric)
     )
   ).render
 }

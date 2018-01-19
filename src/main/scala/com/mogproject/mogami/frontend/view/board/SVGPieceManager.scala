@@ -47,7 +47,8 @@ trait SVGPieceManager[Key, Value] {
   protected def resetPieceEffect(keepLastMove: Boolean = false): Unit
 
   def generatePieceElement(key: Key, value: Value, pieceFace: PieceFace, modifiers: Modifier*)(implicit imageCache: SVGImageCache): TypedTag[SVGImageElement] = {
-    getPieceRect(key).toSVGImage(pieceFace.getImagePath(getPtype(key, value)), isFlipped(key, value), modifiers)
+    val flipped = isFlipped(key, value)
+    getPieceRect(key).toSVGImage(pieceFace.getImagePath(getPtype(key, value), flipped), flipped && pieceFace.symmetric, modifiers)
   }
 
   def generateNumberElement(key: Key, value: Value, modifiers: Modifier*): TypedTag[SVGTextElement] = {

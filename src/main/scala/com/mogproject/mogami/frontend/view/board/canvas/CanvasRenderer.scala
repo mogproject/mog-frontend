@@ -53,8 +53,8 @@ trait CanvasRenderer {
     }
   }
 
-  def renderPiece(rect: Rect, ptype: Ptype): Unit = {
-    renderImage(rect, config.pieceFace.getImagePath(ptype))
+  def renderPiece(rect: Rect, ptype: Ptype, flipped: Boolean): Unit = {
+    renderImage(rect, config.pieceFace.getImagePath(ptype, flipped))
   }
 
   def rotateCanvas(): Unit = {

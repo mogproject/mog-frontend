@@ -291,13 +291,27 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     // 8. Board/Hand/Box Pieces
     if (check(GAME_BRANCH | GAME_POSITION | CONF_PIECE_FACE | MODE_EDIT)) {
       // use image cache
-      downloadImages(Ptype.constructor.map(config.pieceFace.getImagePath), () =>
+      downloadImages(config.pieceFace.allImagePaths, () => {
         updateSVGArea { area =>
           area.board.drawPieces(mode.getBoardPieces, config.pieceFace, keepLastMove = true)
           area.hand.drawPieces(mode.getHandPieces, config.pieceFace, keepLastMove = true)
           if (mode.isEditMode) area.box.drawPieces(mode.getBoxPieces, config.pieceFace)
-        })
+        }
+        refreshPhase3(model, flag, areaUpdated)
+      })
+    } else {
+      refreshPhase3(model, flag, areaUpdated)
     }
+  }
+
+
+  private[this] def refreshPhase3(model: BasePlaygroundModel, flag: Int, areaUpdated: Boolean): Unit = {
+    import ObserveFlag._
+
+    lazy val mode = model.mode
+    lazy val config = model.config
+
+    def check(mask: Int) = areaUpdated || (flag & mask) != 0
 
     // 9. Last Move
     if (check(GAME_BRANCH | GAME_POSITION | MODE_EDIT | CONF_FLIP_TYPE)) updateSVGArea(_.drawLastMove(mode.getLastMove))
@@ -348,6 +362,5 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
 
     // 14. Move Forward/Backward Effect
     if (flag != -1 && isFlagUpdated(flag, GAME_NEXT_POS | GAME_PREV_POS) && model.selectedCursor.isDefined) updateSVGArea(_.board.effect.forwardEffector.start((flag & GAME_NEXT_POS) != 0))
-
   }
 }

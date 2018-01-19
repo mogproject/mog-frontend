@@ -61,7 +61,7 @@ case class PieceFlipEffector(target: SVGBoard)(implicit imageCache: SVGImageCach
     for {
       isFrom <- Seq(true, false)
       piece = isFrom.fold(x.fromPiece, x.toPiece)
-      isFlipped = target.isFlipped ^ piece.owner.isWhite
+      isFlipped = (target.isFlipped ^ piece.owner.isWhite) && x.pieceFace.symmetric
       centerX = target.getPieceRect(x.square).center.x * isFlipped.fold(-1, 1) + isFlipped.fold(1, 0)
       isLeft <- Seq(true, false)
       className = isLeft.fold("left-half", "right-half")
