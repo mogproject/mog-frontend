@@ -224,7 +224,10 @@ case object MessagesJapanese extends Messages {
     ul(
       li(
         "駒画像 - ",
-        a(href := FrontendSettings.url.credit.shineleckomaUrl, target := "_blank", "しんえれ外部駒")
+        a(href := FrontendSettings.url.credit.shineleckomaUrl, target := "_blank", "しんえれ外部駒"),
+        " / ",
+        a(href := FrontendSettings.url.credit.hidetchiUrl, target := "_blank", "Hidetchi - 81PieceSetSource")
+
       ),
       li(
         "駒用フォント - ",

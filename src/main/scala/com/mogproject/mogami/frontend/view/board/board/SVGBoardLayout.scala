@@ -24,7 +24,7 @@ case class SVGBoardLayout(offset: Coord, pieceWidth: Int, pieceHeight: Int) {
     getRect(9 - s.file, s.rank - 1)
   }
 
-  def getPieceRect(square: Square, isFlipped: Boolean): Rect = getRect(square, isFlipped).toInnerRect(PIECE_FACE_SIZE, PIECE_FACE_SIZE)
+  def getPieceRect(square: Square, isFlipped: Boolean): Rect = getRect(square, isFlipped).toInnerRect(PIECE_FACE_WIDTH, PIECE_FACE_HEIGHT)
 
   // Index
   def getJapaneseRankIndexImagePath(index: Int): String = s"assets/img/n/N${index}.svg"
@@ -42,7 +42,8 @@ case class SVGBoardLayout(offset: Coord, pieceWidth: Int, pieceHeight: Int) {
   def center: Coord = offset + Coord(MARGIN_SIZE + pieceWidth * 9 / 2, MARGIN_SIZE + pieceHeight * 9 / 2)
 
   final val VIEW_BOX_WIDTH: Int = 2048
-  final val PIECE_FACE_SIZE: Int = pieceWidth * 20 / 21
+  final val PIECE_FACE_WIDTH: Int = pieceWidth * 20 / 21
+  final val PIECE_FACE_HEIGHT: Int = pieceHeight * 20 / 21
   final val BOARD_WIDTH: Int = pieceWidth * 9
   final val BOARD_HEIGHT: Int = pieceHeight * 9
   final val MARGIN_SIZE: Int = (VIEW_BOX_WIDTH - BOARD_WIDTH) / 2

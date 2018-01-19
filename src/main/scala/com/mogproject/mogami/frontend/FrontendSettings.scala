@@ -19,6 +19,7 @@ object FrontendSettings {
 
     object credit {
       val shineleckomaUrl = "http://shineleckoma.web.fc2.com/"
+      val hidetchiUrl = "https://github.com/Hidetchi/81PieceSetSource"
       val loraFontsUrl = "https://github.com/cyrealtype/Lora-Cyrillic"
     }
 

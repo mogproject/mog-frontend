@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view.board.box
 
-import com.mogproject.mogami.Ptype
+import com.mogproject.mogami.{Ptype, Square}
 import com.mogproject.mogami.frontend.{Coord, Rect}
 import org.scalajs.dom.raw.SVGTextElement
 import org.scalajs.dom.svg.RectElement
@@ -22,7 +22,8 @@ case class SVGBoxLayout(centerX: Int,
 
   final val numberSize: Coord = Coord(162, 110) // .y = font size (in css)
 
-  final val PIECE_FACE_SIZE: Int = pieceSize.x * 20 / 21
+  final val PIECE_FACE_WIDTH: Int = pieceSize.x * 20 / 21
+  final val PIECE_FACE_HEIGHT: Int = pieceSize.y * 20 / 21
 
   final val numberAdjustment: Coord = Coord(50, 20)
 
@@ -49,6 +50,8 @@ case class SVGBoxLayout(centerX: Int,
   def getRect(ptype: Ptype): Rect = {
     Rect(boxRect.leftTop + Coord(ptype.sortId * pieceSize.x, 0), pieceSize.x, pieceSize.y)
   }
+
+  def getPieceRect(ptype: Ptype): Rect = getRect(ptype).toInnerRect(PIECE_FACE_WIDTH, PIECE_FACE_HEIGHT)
 
   def getNumberRect(ptype: Ptype): Rect = {
     Rect(getRect(ptype).rightBottom + numberAdjustment - numberSize, numberSize.x, numberSize.y)

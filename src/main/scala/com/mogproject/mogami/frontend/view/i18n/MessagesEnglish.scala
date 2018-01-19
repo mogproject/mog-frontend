@@ -218,7 +218,9 @@ case object MessagesEnglish extends Messages {
     ul(
       li(
         "Piece Graphics - ",
-        a(href := FrontendSettings.url.credit.shineleckomaUrl, target := "_blank", "shineleckoma")
+        a(href := FrontendSettings.url.credit.shineleckomaUrl, target := "_blank", "shineleckoma"),
+        " / ",
+        a(href := FrontendSettings.url.credit.hidetchiUrl, target := "_blank", "Hidetchi - 81PieceSetSource")
       ),
       li(
         "Piece Fonts - ",
