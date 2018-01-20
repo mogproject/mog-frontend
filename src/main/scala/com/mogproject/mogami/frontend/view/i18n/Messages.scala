@@ -57,6 +57,10 @@ trait Messages {
 
   def COPY: String
 
+  def RECORD: String
+
+  def SNAPSHOT: String
+
   def RECORD_URL: String
 
   def SNAPSHOT_URL: String
@@ -90,6 +94,18 @@ trait Messages {
   def WARNING: String
 
   def SHARE_WARNING: String
+
+  def EMBED_LABEL: String
+
+  def EMBED_BUTTON: String
+
+  def EMBED_CODE: String
+
+  def EMBED_CONTENT: String
+
+  def EMBED_REFERENCE: String
+
+  def AUTO_DETECT: String
 
   //
   // Manage

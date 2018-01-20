@@ -16,6 +16,7 @@ object FrontendSettings {
     val donationUrl = "https://www.paypal.me/mogproject"
     val shogiBotUrl = "https://www.facebook.com/shogibot/"
     val playgroundLiveUrl = "https://live.mogproject.com"
+    val queryParamDocUrl = "https://github.com/mogproject/mog-playground/wiki/Query-Parameters"
 
     object credit {
       val shineleckomaUrl = "http://shineleckoma.web.fc2.com/"
