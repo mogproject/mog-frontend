@@ -101,6 +101,8 @@ trait Messages {
 
   def EMBED_CODE: String
 
+  def EMBED_OPTIONS: String
+
   def EMBED_CONTENT: String
 
   def EMBED_REFERENCE: String
