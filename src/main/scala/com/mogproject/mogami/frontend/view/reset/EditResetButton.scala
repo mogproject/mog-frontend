@@ -41,7 +41,7 @@ class EditResetButton extends WebComponent with SAMObserver[BasePlaygroundModel]
     CommandButton(
       classButtonDefaultBlock,
       onclick := {() =>doAction(EditResetAction(st))},
-      dismissModalNew
+      dismissModal
     ).withDynamicTextContent(_.INITIAL_STATE(st))
   }
 
