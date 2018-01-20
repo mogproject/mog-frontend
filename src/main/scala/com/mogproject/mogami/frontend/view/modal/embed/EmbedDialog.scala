@@ -4,11 +4,8 @@ import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.model.board.FlipEnabled
 import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, English, GameControl, Japanese, Language}
 import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
-import com.mogproject.mogami.frontend.view.button.{DropdownMenu, RadioButton}
 import com.mogproject.mogami.frontend.view.i18n.Messages
 import com.mogproject.mogami.frontend.view.modal.ModalLike
-import org.scalajs.dom.Element
-import org.scalajs.dom.html.Div
 import org.scalajs.jquery.JQuery
 
 import scalatags.JsDom.all._
@@ -21,88 +18,39 @@ case class EmbedDialog(gameControl: GameControl, config: BasePlaygroundConfigura
   private[this] val msgs: Messages = Messages.get
 
 
+  private[this] final val DEFAULT_LABEL_CLASS = "col-xs-5 col-sm-3 col-sm-offset-1"
+  private[this] final val DEFAULT_BUTTON_CLASS = "col-xs-7 col-sm-4"
+
+
   // local classes
   case class DropdownSelector[A](labelFunc: Messages => String,
                                  items: Vector[A],
-                                 itemLabelFunc: Messages => Map[A, String]) extends WebComponent {
-    private[this] val labelElem = WebComponent.dynamicLabel(labelFunc)
+                                 itemLabelFunc: Messages => Map[A, String],
+                                 labelClass: String = DEFAULT_LABEL_CLASS,
+                                 buttonClass: String = DEFAULT_BUTTON_CLASS
+                                ) extends EmbedDropdownSelector[A](items, itemLabelFunc, () => updateEmbedCode())
 
-    private[this] val button: DropdownMenu[A] = DropdownMenu[A](items, itemLabelFunc, labelClass = "setting-row-dropdown", menuClass = "left", clickAction = v => {
-      button.select(v)
-      updateEmbedCode()
-    })
+  case class BooleanSelector(labelFunc: Messages => String,
+                             messageFunc: Messages => Map[Boolean, String] = (_: Messages) => Map(false -> "Off", true -> "On"),
+                             labelClass: String = DEFAULT_LABEL_CLASS,
+                             buttonClass: String = DEFAULT_BUTTON_CLASS
+                            ) extends EmbedRadioSelector[Boolean](Seq(false, true), messageFunc, () => updateEmbedCode())
 
-    override def element: Element = div(cls := "row setting-row",
-      div(cls := "col-xs-3 col-xs-offset-1 setting-row-label", labelElem.element),
-      div(cls := "col-xs-4", button.element)
-    ).render
-
-    def select(item: A): Unit = button.select(item)
-
-    def getValue: A = button.getValue
-  }
-
-  case class BooleanSelector(labelFunc: Messages => String) extends WebComponent {
-    private[this] val labelElem = WebComponent.dynamicLabel(labelFunc)
-
-    private[this] val button: RadioButton[Boolean] = RadioButton(Seq(false, true), (_: Messages) => Map(false -> "Off", true -> "On"),
-      (v: Boolean) => {
-        button.select(v)
-        updateEmbedCode()
-      }
-    )
-
-    override def element: Element = div(cls := "row setting-row",
-      div(cls := "col-xs-3 col-xs-offset-1 setting-row-label", labelElem.element),
-      div(cls := "col-xs-4", button.element)
-    ).render
-
-    def select(item: Boolean): Unit = button.select(item)
-
-    def getValue: Boolean = button.getValue
-  }
-
-  case class LanguageSelector(labelFunc: Messages => String) extends WebComponent {
-    private[this] val labelElem = WebComponent.dynamicLabel(labelFunc)
-
-    private[this] val button: RadioButton[Option[Language]] = RadioButton(
-      Seq(Some(Japanese), Some(English), None),
-      (m: Messages) => Map(Some(English) -> m.ENGLISH, Some(Japanese) -> m.JAPANESE, None -> m.AUTO_DETECT),
-      (l: Option[Language]) => {
-        button.select(l)
-        updateEmbedCode()
-      }
-    )
-
-    override val element: Div = div(cls := "row setting-row",
-      div(cls := "col-xs-3 col-xs-offset-1 setting-row-label", labelElem.element),
-      div(cls := "col-xs-7", button.element)
-    ).render
-
-    def select(item: Option[Language]): Unit = button.select(item)
-
-    def getValue: Option[Language] = button.getValue
-  }
-
+  case class LanguageSelector(labelFunc: Messages => String,
+                              labelClass: String = DEFAULT_LABEL_CLASS,
+                              buttonClass: String = "col-xs-11 col-xs-offset-1 col-sm-7 col-sm-offset-0"
+                             ) extends EmbedRadioSelector[Option[Language]](
+    Seq(Some(Japanese), Some(English), None),
+    (m: Messages) => Map(Some(English) -> m.ENGLISH, Some(Japanese) -> m.JAPANESE, None -> m.AUTO_DETECT),
+    () => updateEmbedCode()
+  )
 
   override def getTitle(messages: Messages): Frag = StringFrag(messages.EMBED_CODE)
 
-
-  private[this] val contentButton: RadioButton[Boolean] = RadioButton(Seq(false, true), m => Map(false -> m.RECORD, true -> m.SNAPSHOT), b => {
-    contentButton.select(b)
-    updateEmbedCode()
-  })
-
-  private[this] val sizeSelector = DropdownSelector[Int](
-    _.BOARD_SIZE, Vector(22, 25, 30), m => Map(22 -> m.SMALL, 25 -> m.MEDIUM, 30 -> m.LARGE)
-  )
-  private[this] val layoutSelector = DropdownSelector[SVGAreaLayout](
-    _.LAYOUT, Vector(SVGStandardLayout, SVGCompactLayout, SVGWideLayout), _.LAYOUT_OPTIONS
-  )
-  private[this] val pieceFaceSelector = DropdownSelector[PieceFace](
-    _.PIECE_GRAPHIC, PieceFace.all.toVector, _.PIECE_GRAPHIC_OPTIONS
-  )
-
+  private[this] val contentSelector = BooleanSelector(_.EMBED_CONTENT, m => Map(false -> m.RECORD, true -> m.SNAPSHOT))
+  private[this] val sizeSelector = DropdownSelector[Int](_.BOARD_SIZE, Vector(22, 25, 30), m => Map(22 -> m.SMALL, 25 -> m.MEDIUM, 30 -> m.LARGE))
+  private[this] val layoutSelector = DropdownSelector[SVGAreaLayout](_.LAYOUT, Vector(SVGStandardLayout, SVGCompactLayout, SVGWideLayout), _.LAYOUT_OPTIONS)
+  private[this] val pieceFaceSelector = DropdownSelector[PieceFace](_.PIECE_GRAPHIC, PieceFace.all.toVector, _.PIECE_GRAPHIC_OPTIONS)
   private[this] val flipSelector = BooleanSelector(_.FLIP)
   private[this] val visualEffectSelector = BooleanSelector(_.VISUAL_EFFECTS)
   private[this] val soundEffectSelector = BooleanSelector(_.SOUND_EFFECTS)
@@ -114,18 +62,17 @@ case class EmbedDialog(gameControl: GameControl, config: BasePlaygroundConfigura
   override val modalBody: ElemType = div(bodyDefinition,
     embedCodeArea.element,
     h4(msgs.EMBED_OPTIONS),
-    div(cls := "row setting-row",
-      div(cls := "col-xs-3 col-xs-offset-1 setting-row-label", label(msgs.EMBED_CONTENT)),
-      div(cls := "col-xs-4", contentButton.element)
-    ),
-    sizeSelector.element,
-    layoutSelector.element,
-    pieceFaceSelector.element,
-    flipSelector.element,
-    visualEffectSelector.element,
-    soundEffectSelector.element,
-    messageLanguageSelector.element,
-    recordLanguageSelector.element
+    Seq(
+      contentSelector,
+      sizeSelector,
+      layoutSelector,
+      pieceFaceSelector,
+      flipSelector,
+      visualEffectSelector,
+      soundEffectSelector,
+      messageLanguageSelector,
+      recordLanguageSelector
+    ).map(_.element)
   )
 
   override val modalFooter: ElemType = div(footerDefinition, div(cls := "row",
@@ -141,7 +88,7 @@ case class EmbedDialog(gameControl: GameControl, config: BasePlaygroundConfigura
 
   private[this] def updateEmbedCode(): Unit = {
     val s = builder.toEmbedCode(
-      contentButton.getValue,
+      contentSelector.getValue,
       sizeSelector.getValue,
       layoutSelector.getValue,
       pieceFaceSelector.getValue,
@@ -155,7 +102,7 @@ case class EmbedDialog(gameControl: GameControl, config: BasePlaygroundConfigura
   }
 
   override def initialize(dialog: JQuery): Unit = {
-    contentButton.select(false)
+    contentSelector.select(false)
     sizeSelector.select(25)
     layoutSelector.select(config.layout)
     pieceFaceSelector.select(config.pieceFace)
