@@ -238,7 +238,8 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, mode: Mode) extends 
           ctx.restore()
 
           drawIndexes()
-          callback()
+
+          waitDraw { () => callback() }
         }
       }
     }

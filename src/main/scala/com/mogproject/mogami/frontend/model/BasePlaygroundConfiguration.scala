@@ -17,7 +17,7 @@ import scala.scalajs.js.UndefOr
 case class BasePlaygroundConfiguration(layout: SVGAreaLayout = SVGStandardLayout,
                                        pieceWidth: Option[Int] = None,
                                        flipType: FlipType = FlipDisabled,
-                                       pieceFace: PieceFace = JapaneseOneCharFace,
+                                       pieceFace: PieceFace = PieceFace.JapaneseOneCharFace,
                                        newBranchMode: Boolean = false,
                                        messageLang: Language = BasePlaygroundConfiguration.browserLanguage,
                                        recordLang: Language = BasePlaygroundConfiguration.browserLanguage,
