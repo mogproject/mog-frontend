@@ -7,7 +7,7 @@ object FrontendSettings {
 
   val currentYear = 2018
 
-  val imageVersion = 3
+  val imageVersion = 4
 
   object url {
     val baseUrl = "https://play.mogproject.com/"
@@ -19,7 +19,8 @@ object FrontendSettings {
 
     object credit {
       val shineleckomaUrl = "http://shineleckoma.web.fc2.com/"
-      val hidetchiUrl = "https://github.com/Hidetchi/81PieceSetSource"
+      val hidetchiUrl = "http://81dojo.com/"
+      val shogiCzUrl = "http://www.shogi.cz/en/"
       val loraFontsUrl = "https://github.com/cyrealtype/Lora-Cyrillic"
     }
 

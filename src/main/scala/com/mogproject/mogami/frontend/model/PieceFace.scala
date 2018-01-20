@@ -23,18 +23,34 @@ sealed abstract class PieceFace(val faceId: String, val displayName: String, val
   }
 }
 
-case object JapaneseOneCharFace extends PieceFace("jp1", "Japanese 1", true)
-
-case object JapaneseOneCharGraphicalFace extends PieceFace("jp2", "Japanese 2", true)
-
-case object JapaneseTwoCharGraphicalFace extends PieceFace("jp3", "Japanese 3", true)
-
-case object WesternOneCharFace extends PieceFace("en1", "Western 1", true)
-
-case object HidetchiInternational extends PieceFace("hd1", "Hidetchi", false)
-
 object PieceFace {
   def parseString(s: String): Option[PieceFace] = all.find(_.faceId == s)
 
-  val all = Seq(JapaneseOneCharFace, JapaneseOneCharGraphicalFace, JapaneseTwoCharGraphicalFace, WesternOneCharFace, HidetchiInternational)
+  case object JapaneseOneCharFace extends PieceFace("jp1", "Japanese 1", true)
+
+  case object JapaneseOneCharGraphicalFace extends PieceFace("jp2", "Japanese 2", true)
+
+  case object JapaneseTwoCharGraphicalFace extends PieceFace("jp3", "Japanese 3", true)
+
+  case object JapaneseOneCharHidetchiFace extends PieceFace("jp4", "Japanese 4", false)
+
+  case object JapaneseOneCharHidetchiRyokoFace extends PieceFace("jp5", "Japanese 5", false)
+
+  case object WesternOneCharFace extends PieceFace("en1", "Western 1", true)
+
+  case object HidetchiInternational extends PieceFace("hd1", "Hidetchi", false)
+
+  case object ShogiCzFace extends PieceFace("cz1", "Shogi.cz", false)
+
+
+  val all = Seq(
+    JapaneseOneCharFace,
+    JapaneseOneCharGraphicalFace,
+    JapaneseTwoCharGraphicalFace,
+    JapaneseOneCharHidetchiFace,
+    JapaneseOneCharHidetchiRyokoFace,
+    WesternOneCharFace,
+    HidetchiInternational,
+    ShogiCzFace
+  )
 }

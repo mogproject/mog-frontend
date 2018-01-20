@@ -3,7 +3,7 @@ package com.mogproject.mogami.frontend.view.board
 import com.mogproject.mogami._
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.Rect
-import com.mogproject.mogami.frontend.model.{JapaneseOneCharFace, PieceFace}
+import com.mogproject.mogami.frontend.model.PieceFace
 import com.mogproject.mogami.frontend.view.{SVGImageCache, WebComponent}
 import com.mogproject.mogami.frontend.view.board.effect.EffectorTarget
 import org.scalajs.dom.Element
@@ -23,7 +23,7 @@ trait SVGPieceManager[Key, Value] {
   //
   private[this] var currentPieces: Map[Key, Value] = Map.empty
 
-  private[this] var currentPieceFace: PieceFace = JapaneseOneCharFace
+  private[this] var currentPieceFace: PieceFace = PieceFace.JapaneseOneCharFace
 
   private[this] var pieceMap: Map[Key, (Element, Option[Element])] = Map.empty
 
@@ -66,7 +66,7 @@ trait SVGPieceManager[Key, Value] {
     * @param pieceFace
     * @param keepLastMove
     */
-  def drawPieces(pieces: Map[Key, Value], pieceFace: PieceFace = JapaneseOneCharFace, keepLastMove: Boolean = false)(implicit imageCache: SVGImageCache): Unit = {
+  def drawPieces(pieces: Map[Key, Value], pieceFace: PieceFace = PieceFace.JapaneseOneCharFace, keepLastMove: Boolean = false)(implicit imageCache: SVGImageCache): Unit = {
     resetPieceEffect(keepLastMove)
 
     // get diffs

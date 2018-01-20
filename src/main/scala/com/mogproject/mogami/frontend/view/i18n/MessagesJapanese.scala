@@ -195,13 +195,19 @@ case object MessagesJapanese extends Messages {
     SVGWideLayout -> "ワイド"
   )
 
-  override val PIECE_GRAPHIC_OPTIONS: Map[PieceFace, String] = Map(
-    JapaneseOneCharFace -> "日本語 1",
-    JapaneseOneCharGraphicalFace -> "日本語 2",
-    JapaneseTwoCharGraphicalFace -> "日本語 3",
-    WesternOneCharFace -> "西洋 1",
-    HidetchiInternational -> "Hidetchi 国際駒"
-  )
+  override val PIECE_GRAPHIC_OPTIONS: Map[PieceFace, String] = {
+    import PieceFace._
+    Map(
+      JapaneseOneCharFace -> "日本語 1",
+      JapaneseOneCharGraphicalFace -> "日本語 2",
+      JapaneseTwoCharGraphicalFace -> "日本語 3",
+      JapaneseOneCharHidetchiFace -> "日本語 4",
+      JapaneseOneCharHidetchiRyokoFace -> "日本語 5",
+      WesternOneCharFace -> "西洋 1",
+      HidetchiInternational -> "Hidetchi 国際駒",
+      ShogiCzFace -> "Shogi.cz"
+    )
+  }
 
   override val HELP: String = "ヘルプ"
   override val HELP_CONTENT: Seq[TypedTag[LI]] = Seq(
@@ -227,8 +233,9 @@ case object MessagesJapanese extends Messages {
         "駒画像 - ",
         a(href := FrontendSettings.url.credit.shineleckomaUrl, target := "_blank", "しんえれ外部駒"),
         " / ",
-        a(href := FrontendSettings.url.credit.hidetchiUrl, target := "_blank", "Hidetchi - 81PieceSetSource")
-
+        a(href := FrontendSettings.url.credit.hidetchiUrl, target := "_blank", "81 Dojo"),
+        " / ",
+        a(href := FrontendSettings.url.credit.shogiCzUrl, target := "_blank", "Shogi.cz")
       ),
       li(
         "駒用フォント - ",
