@@ -14,7 +14,7 @@ lazy val root = (project in file("."))
       "org.scalatest" %%% "scalatest" % "3.0.1" % Test,
       "org.scalacheck" %%% "scalacheck" % "1.13.4" % Test
     ),
-    scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation"),
+    scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation", "-feature"),
 
     skip in packageJSDependencies := false,
 

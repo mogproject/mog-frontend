@@ -46,6 +46,9 @@ case object MessagesEnglish extends Messages {
     )
   )
 
+  override val RECORD: String = "Record"
+  override val SNAPSHOT: String = "Snapshot"
+
   override val SHARE: String = "Share"
   override val COPY: String = "Copy"
   override val RECORD_URL: String = "Record URL"
@@ -66,6 +69,14 @@ case object MessagesEnglish extends Messages {
 
   override val WARNING: String = "Warning"
   override val SHARE_WARNING: String = "Comments will not be shared due to the URL length limit."
+
+  override val EMBED_LABEL: String = "Embed Playground"
+  override val EMBED_BUTTON: String = "Open Embed Menu"
+  override val EMBED_CODE: String = "Embed Code"
+  override val EMBED_OPTIONS: String = "Embed Options"
+  override val EMBED_CONTENT: String = "Content"
+  override val EMBED_REFERENCE: String = "Query Parameter Reference"
+  override val AUTO_DETECT: String = "Auto Detect"
 
   override val MANAGE: String = "Manage"
   override val LOAD: String = "Load"

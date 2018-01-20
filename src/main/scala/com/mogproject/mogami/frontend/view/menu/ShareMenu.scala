@@ -1,7 +1,9 @@
 package com.mogproject.mogami.frontend.view.menu
 
 import com.mogproject.mogami.frontend._
+import com.mogproject.mogami.frontend.action.dialog.EmbedDialogAction
 import com.mogproject.mogami.frontend.model.{BasePlaygroundModel, PlayModeType, ViewModeType}
+import com.mogproject.mogami.frontend.view.button.CommandButton
 import com.mogproject.mogami.frontend.view.common.WarningLabel
 import com.mogproject.mogami.frontend.view.share._
 import org.scalajs.dom.html.Div
@@ -27,6 +29,7 @@ class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePl
   lazy val imageLinkButton = new ImageLinkButton
   lazy val sfenStringCopyButton = new SfenStringCopyButton
   lazy val notesViewButton = new NotesViewButton
+  lazy val embedButton: WebComponent = CommandButton(classButtonDefault, onclick := { () => doAction(EmbedDialogAction) }).withDynamicTextContent(_.EMBED_BUTTON)
 
   override lazy val content: JsDom.TypedTag[Div] = div(
     warningLabel.element,
@@ -43,7 +46,11 @@ class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePl
     sfenStringCopyButton.element,
     br(),
     WebComponent.dynamicLabel(_.NOTES_VIEW).element,
-    notesViewButton.element
+    notesViewButton.element,
+    br(),
+    WebComponent.dynamicLabel(_.EMBED_LABEL).element,
+    br(),
+    embedButton.element
   )
 
   //

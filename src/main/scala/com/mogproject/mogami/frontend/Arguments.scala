@@ -6,7 +6,7 @@ import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.core.state.StateCache.Implicits.DefaultStateCache
 import com.mogproject.mogami.frontend.model.board._
 import com.mogproject.mogami.frontend.model._
-import com.mogproject.mogami.frontend.view.board.{SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
+import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
 
 import scala.annotation.tailrec
 import scala.collection.mutable
@@ -115,8 +115,11 @@ case class Arguments(sfen: Option[String] = None,
   def updateConfig(f: BasePlaygroundConfiguration => BasePlaygroundConfiguration): Arguments = copy(config = f(config))
 }
 
-case class ArgumentsBuilder(gameControl: GameControl,
-                            config: BasePlaygroundConfiguration = BasePlaygroundConfiguration()) {
+trait ArgumentsBuilderLike {
+
+  def gameControl: GameControl
+
+  def config: BasePlaygroundConfiguration
 
   private[this] lazy val displayingState: State = gameControl.getDisplayingState
 
@@ -126,7 +129,7 @@ case class ArgumentsBuilder(gameControl: GameControl,
 
   private[this] lazy val instantGameParams: Seq[(String, String)] = Seq("u" -> Game(Branch(displayingState)).toUsenString)
 
-  lazy val fullRecordUrl: String = createUrl(recordParams(createFullUrl = true))
+  private[this] lazy val fullRecordUrl: String = createUrl(recordParams(createFullUrl = true))
 
   /**
     * true if comments are too long and omitted
@@ -134,7 +137,7 @@ case class ArgumentsBuilder(gameControl: GameControl,
   lazy val commentOmitted: Boolean = fullRecordUrl.length > 2000
 
   def toRecordUrl: String = {
-    if (commentOmitted) createUrl(gameParams ++ gameInfoParams ++ positionParams) else fullRecordUrl
+    if (commentOmitted) createUrl(recordParams(createFullUrl = false)) else fullRecordUrl
   }
 
   def toSnapshotUrl: String = {
@@ -159,7 +162,7 @@ case class ArgumentsBuilder(gameControl: GameControl,
     }
   }
 
-  def toNotesViewUrl: String = createUrl(notesViewActionParams ++ recordParams())
+  def toNotesViewUrl: String = createUrl(notesViewActionParams ++ recordParams(createFullUrl = false))
 
   private[this] def gameInfoParams: Seq[(String, String)] = {
     val params = List(("bn", 'blackName), ("wn", 'whiteName))
@@ -176,15 +179,62 @@ case class ArgumentsBuilder(gameControl: GameControl,
     ).toSeq
   }
 
-  private[this] def recordParams(createFullUrl: Boolean = false): Seq[(String, String)] =
+  /**
+    *
+    * @param createFullUrl if true, the url length can exceed the maximum length
+    * @return
+    */
+  protected def recordParams(createFullUrl: Boolean): Seq[(String, String)] =
     gameParams ++ (createFullUrl || !commentOmitted).fold(commentParams, Seq.empty) ++ gameInfoParams ++ positionParams
+
+  protected def snapshotParams: Seq[(String, String)] = instantGameParams ++ gameControl.getComment.map("c0" -> _) ++ gameInfoParams
 
   private[this] def imageActionParams: Seq[(String, String)] = Seq(("action", "image"))
 
   private[this] def notesViewActionParams: Seq[(String, String)] = Seq(("action", "notes"))
 
-  private[this] def createUrl(params: Seq[(String, String)]) = {
+  protected def createUrl(params: Seq[(String, String)]): String = {
     config.baseUrl + "?" + (params.map { case (k, v) => k + "=" + encodeURIComponent(v) } ++ config.toQueryParameters).mkString("&")
   }
 
+}
+
+
+case class ArgumentsBuilder(gameControl: GameControl,
+                            config: BasePlaygroundConfiguration = BasePlaygroundConfiguration()) extends ArgumentsBuilderLike {
+}
+
+case class ArgumentsBuilderEmbed(gameControl: GameControl) extends ArgumentsBuilderLike {
+  override val config: BasePlaygroundConfiguration = BasePlaygroundConfiguration()
+
+
+  def toEmbedCode(isSnapshot: Boolean,
+                  pieceWidth: Int,
+                  layout: SVGAreaLayout,
+                  pieceFace: PieceFace,
+                  isFlipped: Boolean,
+                  visualEffectEnabled: Boolean,
+                  soundEffectEnabled: Boolean,
+                  messageLang: Option[Language],
+                  recordLang: Option[Language]
+                 ): String = {
+    val params = isSnapshot.fold(snapshotParams, recordParams(createFullUrl = false)) ++ Seq(
+      "embed" -> "true",
+      "sz" -> pieceWidth.toString,
+      "layout" -> (layout match {
+        case SVGStandardLayout => "s"
+        case SVGCompactLayout => "c"
+        case SVGWideLayout => "w"
+      }),
+      "p" -> pieceFace.faceId,
+      "ve" -> visualEffectEnabled.toString,
+      "se" -> soundEffectEnabled.toString
+    ) ++ messageLang.map("mlang" -> _.toString) ++ recordLang.map("rlang" -> _.toString) ++ isFlipped.option("flip" -> "true")
+
+    val url = createUrl(params)
+    val w = layout.areaWidth(pieceWidth) + 38
+    val h = layout.areaHeight(pieceWidth) + 170 + (layout == SVGStandardLayout).fold(10, 0)
+
+    s"""<iframe src="${url}" width="${w}" height="${h}"></iframe>"""
+  }
 }

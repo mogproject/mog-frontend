@@ -36,3 +36,6 @@ src/test/resources/assets
 # font image creation
 script/out/
 
+# testing html
+x.html
+

@@ -49,6 +49,8 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
           view.showCommentDialog(comment)
         case AskDeleteBranchDialog =>
           newModel.mode.getGameControl.foreach { gc => view.askDeleteBranch(gc.displayBranchNo) }
+        case EmbedDialog =>
+          newModel.mode.getGameControl.foreach { gc => view.showEmbedDialog(gc, newModel.config) }
       }
     }
 
