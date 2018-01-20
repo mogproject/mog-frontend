@@ -422,6 +422,23 @@ ul {
 }
 
 /*
+ * Setting Items
+ */
+.setting-row {
+  margin-top: 2px;
+  margin-bottom: 2px;
+}
+
+.setting-row-label {
+  margin-top: 6px;
+}
+
+.setting-row-dropdown {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+/*
  * Control Bar
  */
 

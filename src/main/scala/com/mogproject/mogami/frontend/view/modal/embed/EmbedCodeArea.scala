@@ -12,7 +12,7 @@ import scalatags.JsDom.all._
   *
   */
 case class EmbedCodeArea(ident: String) extends WebComponent {
-  private[this] val textArea: TextAreaComponent = TextAreaComponent("", 4, (_: Messages) => "",
+  private[this] val textArea: TextAreaComponent = TextAreaComponent("", 3, (_: Messages) => "",
     readonly := true,
     id := ident
   )

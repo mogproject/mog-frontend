@@ -72,7 +72,7 @@ case object MessagesJapanese extends Messages {
   override val SHARE_WARNING: String = "URL 文字数制限のため、この棋譜内のコメントはシェアされません"
 
   override val EMBED_LABEL: String = "サイト埋め込み"
-  override val EMBED_BUTTON: String = "埋め込みコードを開く"
+  override val EMBED_BUTTON: String = "埋め込みメニューを開く"
   override val EMBED_CODE: String = "埋め込みコード"
   override val EMBED_OPTIONS: String = "埋め込み設定"
   override val EMBED_CONTENT: String = "コンテンツ"

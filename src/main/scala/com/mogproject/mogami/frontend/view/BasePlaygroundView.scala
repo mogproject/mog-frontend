@@ -13,6 +13,7 @@ import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, GameCo
 import com.mogproject.mogami.frontend.view.board.canvas.CanvasBoard
 import com.mogproject.mogami.frontend.view.i18n.Messages
 import com.mogproject.mogami.frontend.view.modal._
+import com.mogproject.mogami.frontend.view.modal.embed.EmbedDialog
 import org.scalajs.dom
 import org.scalajs.dom.{Element, UIEvent}
 

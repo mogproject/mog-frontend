@@ -1,4 +1,4 @@
-package com.mogproject.mogami.frontend.view.modal
+package com.mogproject.mogami.frontend.view.modal.embed
 
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.model.board.FlipEnabled
@@ -6,7 +6,7 @@ import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, Englis
 import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
 import com.mogproject.mogami.frontend.view.button.{DropdownMenu, RadioButton}
 import com.mogproject.mogami.frontend.view.i18n.Messages
-import com.mogproject.mogami.frontend.view.modal.embed.EmbedCodeArea
+import com.mogproject.mogami.frontend.view.modal.ModalLike
 import org.scalajs.dom.Element
 import org.scalajs.dom.html.Div
 import org.scalajs.jquery.JQuery
@@ -27,16 +27,14 @@ case class EmbedDialog(gameControl: GameControl, config: BasePlaygroundConfigura
                                  itemLabelFunc: Messages => Map[A, String]) extends WebComponent {
     private[this] val labelElem = WebComponent.dynamicLabel(labelFunc)
 
-    private[this] val button: DropdownMenu[A] = DropdownMenu[A](items, itemLabelFunc, menuClass = "left", clickAction = v => {
+    private[this] val button: DropdownMenu[A] = DropdownMenu[A](items, itemLabelFunc, labelClass = "setting-row-dropdown", menuClass = "left", clickAction = v => {
       button.select(v)
       updateEmbedCode()
     })
 
-    override def element: Element = div(
-      cls := "row",
-      marginBottom := 10.px,
-      div(cls := "col-xs-3 col-xs-offset-1 small-padding", labelElem.element),
-      div(cls := "col-xs-4", marginTop := (-8).px, button.element)
+    override def element: Element = div(cls := "row setting-row",
+      div(cls := "col-xs-3 col-xs-offset-1 setting-row-label", labelElem.element),
+      div(cls := "col-xs-4", button.element)
     ).render
 
     def select(item: A): Unit = button.select(item)
@@ -45,7 +43,7 @@ case class EmbedDialog(gameControl: GameControl, config: BasePlaygroundConfigura
   }
 
   case class BooleanSelector(labelFunc: Messages => String) extends WebComponent {
-    private[this] val labelElem = WebComponent.dynamicLabel(labelFunc, marginTop := 6.px)
+    private[this] val labelElem = WebComponent.dynamicLabel(labelFunc)
 
     private[this] val button: RadioButton[Boolean] = RadioButton(Seq(false, true), (_: Messages) => Map(false -> "Off", true -> "On"),
       (v: Boolean) => {
@@ -54,10 +52,8 @@ case class EmbedDialog(gameControl: GameControl, config: BasePlaygroundConfigura
       }
     )
 
-    override def element: Element = div(cls := "row",
-      //      marginLeft := (-10).px,
-      marginBottom := 3.px,
-      div(cls := "col-xs-3 col-xs-offset-1 small-padding", labelElem.element),
+    override def element: Element = div(cls := "row setting-row",
+      div(cls := "col-xs-3 col-xs-offset-1 setting-row-label", labelElem.element),
       div(cls := "col-xs-4", button.element)
     ).render
 
@@ -67,7 +63,7 @@ case class EmbedDialog(gameControl: GameControl, config: BasePlaygroundConfigura
   }
 
   case class LanguageSelector(labelFunc: Messages => String) extends WebComponent {
-    private[this] val labelElem = WebComponent.dynamicLabel(labelFunc, marginTop := 6.px)
+    private[this] val labelElem = WebComponent.dynamicLabel(labelFunc)
 
     private[this] val button: RadioButton[Option[Language]] = RadioButton(
       Seq(Some(Japanese), Some(English), None),
@@ -78,12 +74,9 @@ case class EmbedDialog(gameControl: GameControl, config: BasePlaygroundConfigura
       }
     )
 
-    override val element: Div = div(cls := "row",
-      marginBottom := 3.px,
-      div(cls := "row",
-        div(cls := "col-xs-3 col-xs-offset-1 small-padding", labelElem.element),
-        div(cls := "col-xs-7", button.element)
-      )
+    override val element: Div = div(cls := "row setting-row",
+      div(cls := "col-xs-3 col-xs-offset-1 setting-row-label", labelElem.element),
+      div(cls := "col-xs-7", button.element)
     ).render
 
     def select(item: Option[Language]): Unit = button.select(item)
@@ -121,9 +114,8 @@ case class EmbedDialog(gameControl: GameControl, config: BasePlaygroundConfigura
   override val modalBody: ElemType = div(bodyDefinition,
     embedCodeArea.element,
     h4(msgs.EMBED_OPTIONS),
-    div(cls := "row",
-      marginBottom := 15.px,
-      div(cls := "col-xs-3 col-xs-offset-1", label(msgs.EMBED_CONTENT)),
+    div(cls := "row setting-row",
+      div(cls := "col-xs-3 col-xs-offset-1 setting-row-label", label(msgs.EMBED_CONTENT)),
       div(cls := "col-xs-4", contentButton.element)
     ),
     sizeSelector.element,
