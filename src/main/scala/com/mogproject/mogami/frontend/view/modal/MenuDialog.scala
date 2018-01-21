@@ -57,9 +57,9 @@ case class MenuDialog(menuPane: MenuPane) extends ModalLike with SAMObserver[Bas
   //
   // Observer
   //
-  override val samObserveMask: Int = ObserveFlag.MENU_DIALOG
+  override val samObserveMask: Long = ObserveFlag.MENU_DIALOG
 
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
     if (model.menuDialogOpen) show() else hide()
   }
 }

@@ -18,7 +18,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
 
   def copy(model: M = model, view: V = view): BasePlaygroundState[M, V]
 
-  override def getObserveFlag(newModel: M): BranchNo = ObserveFlag.getObserveFlag(model, newModel)
+  override def getObserveFlag(newModel: M): Long = ObserveFlag.getObserveFlag(model, newModel)
 
   override def render(newModel: M): (SAMState[M], Option[SAMAction[M]]) = renderImpl(newModel, renderAll = false)
 

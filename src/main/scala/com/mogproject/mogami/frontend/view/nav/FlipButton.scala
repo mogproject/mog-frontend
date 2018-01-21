@@ -31,7 +31,7 @@ class FlipButton extends WebComponent with SAMObserver[BasePlaygroundModel] {
   //
   // Observer
   //
-  override val samObserveMask: Int = ObserveFlag.CONF_FLIP_TYPE
+  override val samObserveMask: Long = ObserveFlag.CONF_FLIP_TYPE
 
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = updateValue(model.config.flipType)
+  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = updateValue(model.config.flipType)
 }

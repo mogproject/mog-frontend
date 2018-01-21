@@ -56,12 +56,12 @@ class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePl
   //
   // Observer
   //
-  override val samObserveMask: Int = super.samObserveMask | {
+  override val samObserveMask: Long = super.samObserveMask | {
     import ObserveFlag._
     GAME_BRANCH | GAME_INFO | GAME_POSITION | GAME_COMMENT | CONF_FLIP_TYPE | MENU_DIALOG
   }
 
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
 
     /** Do not update if the menu dialog is hidden. */
     if (!model.config.deviceType.isMobile || model.menuDialogOpen) {

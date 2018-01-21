@@ -61,15 +61,15 @@ trait SideBarRight extends SideBarLike with Observer[AccordionMenu] with SAMObse
   //
   // Observer
   //
-  override val samObserveMask: Int = ObserveFlag.CONF_DEVICE
+  override val samObserveMask: Long = ObserveFlag.CONF_DEVICE
 
   /**
     * Collapse this sidebar is the screen is too small
     *
     * @param model model
-    * @param flag -1: all bits on => refresh all
+    * @param flag  -1: all bits on => refresh all
     */
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
     if (model.config.collapseByDefault) collapseSideBar()
   }
 }

@@ -72,7 +72,7 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
     case _ => // do nothing
   }
 
-  private[this] def notifyObservers(flag: Int, model: M): Unit = observers.foreach { o =>
+  private[this] def notifyObservers(flag: Long, model: M): Unit = observers.foreach { o =>
     //    println(s"Notifying: ${o}")
     if (scalajs.js.isUndefined(o)) {
       //      println(s"Found undefined: ${o}}")

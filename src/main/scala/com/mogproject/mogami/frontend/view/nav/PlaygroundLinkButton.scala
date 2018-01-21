@@ -22,12 +22,12 @@ class PlaygroundLinkButton extends WebComponent with SAMObserver[BasePlaygroundM
   //
   // Observer
   //
-  override val samObserveMask: Int = {
+  override val samObserveMask: Long = {
     import ObserveFlag._
     GAME_BRANCH | GAME_POSITION | GAME_COMMENT | CONF_FLIP_TYPE | MENU_DIALOG
   }
 
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
     model.mode.getGameControl.foreach { gc =>
       val builder = ArgumentsBuilder(gc, model.config)
       linkButton.element.asInstanceOf[Anchor].href = builder.toRecordUrl

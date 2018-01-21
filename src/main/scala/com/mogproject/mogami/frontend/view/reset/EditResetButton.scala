@@ -40,7 +40,7 @@ class EditResetButton extends WebComponent with SAMObserver[BasePlaygroundModel]
   private[this] lazy val buttons = keys.map { st =>
     CommandButton(
       classButtonDefaultBlock,
-      onclick := {() =>doAction(EditResetAction(st))},
+      onclick := { () => doAction(EditResetAction(st)) },
       dismissModal
     ).withDynamicTextContent(_.INITIAL_STATE(st))
   }
@@ -50,9 +50,9 @@ class EditResetButton extends WebComponent with SAMObserver[BasePlaygroundModel]
   //
   // Observer
   //
-  override val samObserveMask: Int = ObserveFlag.MODE_EDIT
+  override val samObserveMask: Long = ObserveFlag.MODE_EDIT
 
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
     if (model.mode.isEditMode) {
       if (!initialized) {
         buttons.foreach(e => element.appendChild(div(cls := "col-xs-6 col-sm-4", e.element).render))

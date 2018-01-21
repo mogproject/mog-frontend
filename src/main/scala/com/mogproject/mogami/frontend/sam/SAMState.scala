@@ -8,7 +8,7 @@ trait SAMState[M <: SAMModel] {
 
   def view: SAMView
 
-  def getObserveFlag(newModel: M): Int
+  def getObserveFlag(newModel: M): Long
 
   def render(newModel: M): (SAMState[M], Option[SAMAction[M]])
 

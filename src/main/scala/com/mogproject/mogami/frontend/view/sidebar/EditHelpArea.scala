@@ -55,9 +55,9 @@ class EditHelpArea(implicit imageCache: SVGImageCache) extends WebComponent with
   //
   // Observer
   //
-  override val samObserveMask: Int = ObserveFlag.CURSOR_SELECT | ObserveFlag.MODE_EDIT
+  override val samObserveMask: Long = ObserveFlag.CURSOR_SELECT | ObserveFlag.MODE_EDIT
 
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
     model.mode match {
       case EditMode(_, _, b, _) =>
         model.selectedCursor match {

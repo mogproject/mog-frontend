@@ -25,13 +25,13 @@ case class TextAreaComponent(text: String, numRows: Int, placeholderFunc: Messag
   //
   // Observer
   //
-  override val samObserveMask: Int = ObserveFlag.CONF_MSG_LANG
+  override val samObserveMask: Long = ObserveFlag.CONF_MSG_LANG
 
   private[this] def refresh(): Unit = {
     element.placeholder = placeholderFunc(Messages.get)
   }
 
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
     refresh()
   }
 

@@ -13,11 +13,11 @@ trait DynamicElementLike[T <: Element] extends SAMObserver[BasePlaygroundModel] 
   //
   // Observer
   //
-  override val samObserveMask: Int = ObserveFlag.CONF_MSG_LANG
+  override val samObserveMask: Long = ObserveFlag.CONF_MSG_LANG
 
   def refresh(): Unit
 
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = refresh()
+  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = refresh()
 
   // initialization
   refresh()
