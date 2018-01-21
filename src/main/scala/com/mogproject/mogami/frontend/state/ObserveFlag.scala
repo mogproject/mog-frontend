@@ -22,9 +22,10 @@ trait ObserveFlagLike {
   final val CONF_PIECE_WIDTH = 1L << 8
   final val CONF_PIECE_FACE = 1L << 9
   final val CONF_NEW_BRANCH = 1L << 10
+  final val CONF_SOUND = 1L << 11
 
-  final val CONF_DEV = 1L << 11
-  final val CONF_DEBUG = 1L << 12
+  final val CONF_DEV = 1L << 12
+  final val CONF_DEBUG = 1L << 13
 
   //
   // Mode
@@ -83,6 +84,7 @@ object ObserveFlag extends ObserveFlagLike {
       if (a.pieceWidth != b.pieceWidth) ret |= CONF_PIECE_WIDTH
       if (a.pieceFace != b.pieceFace) ret |= CONF_PIECE_FACE
       if (a.newBranchMode != b.newBranchMode) ret |= CONF_NEW_BRANCH
+      if (a.soundEffectEnabled != b.soundEffectEnabled) ret |= CONF_SOUND
     }
 
     //

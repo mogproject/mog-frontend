@@ -4,6 +4,7 @@ import com.mogproject.mogami.core.{Player, Ptype}
 import com.mogproject.mogami.frontend.model.DeviceType.DeviceType
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.api.WebAudioAPISound
+import com.mogproject.mogami.frontend.model.{EditMode, PlayMode}
 import com.mogproject.mogami.frontend.model.board.cursor.{BoardCursor, Cursor, PlayerCursor}
 import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipDisabled, FlipEnabled}
 import com.mogproject.mogami.frontend.util.PlayerUtil
@@ -187,11 +188,17 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   private[this] lazy val clickSound: Option[WebAudioAPISound] = loadSound("click")
   private[this] lazy val selectSound: Option[WebAudioAPISound] = loadSound("select")
   private[this] lazy val cancelSound: Option[WebAudioAPISound] = loadSound("cancel")
+  private[this] lazy val switchSound: Option[WebAudioAPISound] = loadSound("switch")
+  private[this] lazy val successSound: Option[WebAudioAPISound] = loadSound("success")
+  private[this] lazy val beepSound: Option[WebAudioAPISound] = loadSound("beep")
 
   def prepareSound(): Unit = {
     clickSound
     selectSound
     cancelSound
+    switchSound
+    successSound
+    beepSound
   }
 
   def playSound(sound: Option[WebAudioAPISound]): Unit = {
@@ -224,8 +231,8 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   //
   override val samObserveMask: Long = {
     import ObserveFlag._
-    val modes = MODE_EDIT | GAME_BRANCH | GAME_INFO | GAME_POSITION | GAME_HANDICAP | GAME_INDICATOR | GAME_JUST_MOVED | GAME_NEXT_POS | GAME_PREV_POS
-    val confs = CONF_DEVICE | CONF_LAYOUT | CONF_NUM_AREAS | CONF_FLIP_TYPE | CONF_PIECE_WIDTH | CONF_PIECE_FACE | CONF_MSG_LANG | CONF_RCD_LANG
+    val modes = MODE_TYPE | GAME_BRANCH | GAME_INFO | GAME_POSITION | GAME_HANDICAP | GAME_INDICATOR | GAME_JUST_MOVED | GAME_NEXT_POS | GAME_PREV_POS
+    val confs = CONF_DEVICE | CONF_LAYOUT | CONF_NUM_AREAS | CONF_FLIP_TYPE | CONF_PIECE_WIDTH | CONF_PIECE_FACE | CONF_MSG_LANG | CONF_RCD_LANG | CONF_SOUND
     val cursors = CURSOR_ACTIVE | CURSOR_SELECT | CURSOR_FLASH
     modes | confs | cursors
   }
@@ -243,7 +250,10 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     def check(mask: Long) = areaUpdated || (flag & mask) != 0
 
     // 0. Load Sound
-    if (model.config.soundEffectEnabled) prepareSound()
+    if (isFlagUpdated(flag, CONF_SOUND) && model.config.soundEffectEnabled) prepareSound()
+
+    // 0. Mode Change
+    if (flag != -1L && isFlagUpdated(flag, MODE_TYPE) && model.config.soundEffectEnabled) playSound(switchSound)
 
     // 1. Area
     if (areaUpdated) renderSVGAreas(config.deviceType, config.flipType.numAreas, config.pieceWidth, config.layout)
@@ -262,7 +272,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
           case (DoubleBoard, _, false) => Seq(0, 1).foreach { n => updateSVGArea(n, _.setFlip(n == 1)) }
         }
 
-        if (config.soundEffectEnabled) playSound(selectSound)
+        if (config.soundEffectEnabled) playSound(switchSound)
 
         refreshPhase2(model, flag, areaUpdated)
       })
@@ -361,24 +371,31 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     // 12. Flash Cursor
     if (flag != -1 && isFlagUpdated(flag, CURSOR_FLASH)) {
       model.flashedCursor.foreach { c => updateSVGArea(_.flashCursor(c)) }
+    }
 
-      // play sound
-      if (config.soundEffectEnabled) {
-        (model.mode.modeType, model.selectedCursor, model.flashedCursor) match {
-          case (_, _, Some(PlayerCursor(_))) => playSound(selectSound)
-          case (PlayModeType | EditModeType, Some(_), _) =>
-            playSound(selectSound)
-          case (PlayModeType, None, _) if !isFlagUpdated(flag, GAME_POSITION) && !isFlagUpdated(flag, PROMOTION_DIALOG) =>
-            playSound(cancelSound)
-          case (EditModeType, None, _) if isFlagUpdated(flag, GAME_BRANCH) =>
-            playSound(clickSound)
-          case (EditModeType, None, _) =>
-            playSound(cancelSound)
+    // 13. Move Sound Effect
+    if (flag != 1L && config.soundEffectEnabled) {
+      if (model.flashedCursor.exists(_.isPlayer)) {
+        playSound(switchSound)
+      } else if (isFlagUpdated(flag, GAME_BRANCH)) {
+        mode match {
+          case (PlayMode(gc)) =>
+          case (EditMode(_, _, _, _)) => playSound(clickSound)
           case _ =>
+        }
+      } else {
+        if (mode.modeType == PlayModeType || mode.modeType == EditModeType) {
+          if (isFlagUpdated(flag, PROMOTION_DIALOG)) {
+            playSound(switchSound)
+          } else if (isFlagUpdated(flag, CURSOR_SELECT) && !isFlagUpdated(flag, MODE_TYPE)) {
+            // Cursor selected or canceled
+            playSound(model.selectedCursor.isDefined.fold(selectSound, cancelSound))
+          } else if (isFlagUpdated(flag, CURSOR_FLASH)) {
+            playSound(beepSound)
+          }
         }
       }
     }
-
 
     // 13. Move Effect
     if (flag != -1 && isFlagUpdated(flag, GAME_JUST_MOVED)) {
