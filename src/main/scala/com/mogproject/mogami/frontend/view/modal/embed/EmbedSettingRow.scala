@@ -19,7 +19,7 @@ trait EmbedSettingRow[A] extends WebComponent {
 
   protected def buttonElem: Element
 
-  override def element: Element = div(cls := "row setting-row",
+  override lazy val element: Element = div(cls := "row setting-row",
     div(cls := "setting-row-label " + labelClass, labelElem.element),
     div(cls := buttonClass, buttonElem)
   ).render

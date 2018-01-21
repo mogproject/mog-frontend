@@ -10,7 +10,7 @@ import scalatags.JsDom.all._
   * Command button
   */
 case class CommandButton(className: String,  modifier: Modifier*) extends WebComponent {
-  override def element: Element = button(
+  override lazy val element: Element = button(
     cls := "btn " + className,
     tpe := "button",
     modifier

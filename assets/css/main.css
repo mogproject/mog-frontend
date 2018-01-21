@@ -76,6 +76,10 @@ ul {
   padding: 0 !important;
 }
 
+.modal {
+  overflow-y: auto;
+}
+
 .modal-open {
   padding-right: 0px !important;
 }
