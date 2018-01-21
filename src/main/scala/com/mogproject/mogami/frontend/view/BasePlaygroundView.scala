@@ -91,8 +91,7 @@ trait BasePlaygroundView extends SAMView {
   }
 
   def showEmbedDialog(gameControl: GameControl, config: BasePlaygroundConfiguration): Unit = {
-
-    EmbedDialog(gameControl, config).show()
+    dom.window.setTimeout(() => EmbedDialog(gameControl, config).show(), 100)
   }
 
   //

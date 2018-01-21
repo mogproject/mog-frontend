@@ -22,8 +22,8 @@ case class EmbedCodeArea(ident: String) extends WebComponent {
   private[this] val textCopyButton: CommandButton = CommandButton(
     classButtonDefaultBlock,
     Messages.get.COPY,
-    data("clipboard-target") := "#" + ident,
-    onclick := { () => scalajs.dom.window.setTimeout({ () => textCopyButton.element.asInstanceOf[Button].focus() }, 0) }
+    clipboardTarget(ident),
+    onclick := { () => scalajs.dom.window.setTimeout({ () => textCopyButton.element.asInstanceOf[Button].focus() }, 100) }
   )
 
   override def element: Element = div(
