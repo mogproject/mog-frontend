@@ -17,7 +17,7 @@ case class ResignButton(isSmall: Boolean, confirm: Boolean) extends WebComponent
   private[this] val button = CommandButton(
     classButtonDefault + " " + isSmall.fold("thin-btn btn-resign", classButtonBlock),
     onclick := {() => clickAction()},
-    (!isSmall).option(dismissModalNew)
+    (!isSmall).option(dismissModal)
   )
     .withDynamicTextContent(_.RESIGN, "flag")
 

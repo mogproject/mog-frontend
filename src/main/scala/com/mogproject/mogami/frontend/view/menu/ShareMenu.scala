@@ -29,7 +29,7 @@ class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePl
   lazy val imageLinkButton = new ImageLinkButton
   lazy val sfenStringCopyButton = new SfenStringCopyButton
   lazy val notesViewButton = new NotesViewButton
-  lazy val embedButton: WebComponent = CommandButton(classButtonDefault, onclick := { () => doAction(EmbedDialogAction) }).withDynamicTextContent(_.EMBED_BUTTON)
+  lazy val embedButton: WebComponent = CommandButton(classButtonDefault, dismissModal, onclick := { () => doAction(EmbedDialogAction) }).withDynamicTextContent(_.EMBED_BUTTON)
 
   override lazy val content: JsDom.TypedTag[Div] = div(
     warningLabel.element,

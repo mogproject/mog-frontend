@@ -84,7 +84,7 @@ trait WebComponent {
   //
   // AttrPair shortcuts
   //
-  def dismissModalNew: Modifier = data("dismiss") := "modal"
+  def dismissModal: Modifier = data("dismiss") := "modal"
 
   def clipboardTarget(id: String): Modifier = data("clipboard-target") := "#" + id
 

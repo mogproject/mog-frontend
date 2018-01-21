@@ -91,6 +91,7 @@ trait BasePlaygroundView extends SAMView {
   }
 
   def showEmbedDialog(gameControl: GameControl, config: BasePlaygroundConfiguration): Unit = {
+
     EmbedDialog(gameControl, config).show()
   }
 

@@ -71,7 +71,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
         0
       )
     },
-    dismissModalNew
+    dismissModal
   )
     .withTextContent(move.player.toSymbolString() + (recordLang match {
       case English => move.toWesternNotationString

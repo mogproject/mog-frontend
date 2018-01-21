@@ -3,7 +3,9 @@ package com.mogproject.mogami.frontend.view.modal.embed
 import com.mogproject.mogami.frontend.Messages
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.button.{CommandButton, TextAreaComponent}
+import org.scalajs
 import org.scalajs.dom.Element
+import org.scalajs.dom.html.Button
 
 import scalatags.JsDom.all._
 
@@ -17,7 +19,12 @@ case class EmbedCodeArea(ident: String) extends WebComponent {
     id := ident
   )
 
-  private[this] val textCopyButton = CommandButton(classButtonDefaultBlock, Messages.get.COPY, data("clipboard-target") := "#" + ident)
+  private[this] val textCopyButton: CommandButton = CommandButton(
+    classButtonDefaultBlock,
+    Messages.get.COPY,
+    data("clipboard-target") := "#" + ident,
+    onclick := { () => scalajs.dom.window.setTimeout({ () => textCopyButton.element.asInstanceOf[Button].focus() }, 0) }
+  )
 
   override def element: Element = div(
     textArea.element,

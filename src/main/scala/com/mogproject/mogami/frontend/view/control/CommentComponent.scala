@@ -36,7 +36,7 @@ case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: Stri
   val textClearButton: WebComponent = CommandButton(
     classButtonDefaultBlock,
     onclick := { () => clickAction("") },
-    dismissModalNew
+    dismissModal
   )
     .withDynamicTextContent(_.COMMENT_CLEAR)
     .withDynamicHoverTooltip(_.COMMENT_CLEAR_TOOLTIP, TooltipPlacement.Top)
@@ -44,7 +44,7 @@ case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: Stri
   val textUpdateButton: WebComponent = CommandButton(
     classButtonDefaultBlock,
     onclick := { () => clickAction(textCommentInput.element.value) },
-    dismissModalNew
+    dismissModal
   )
     .withDynamicTextContent(_.COMMENT_UPDATE)
     .withDynamicHoverTooltip(_.COMMENT_UPDATE_TOOLTIP, TooltipPlacement.Top)
