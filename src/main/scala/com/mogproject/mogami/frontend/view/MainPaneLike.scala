@@ -277,7 +277,8 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
           case (DoubleBoard, _, false) => Seq(0, 1).foreach { n => updateSVGArea(n, _.setFlip(n == 1)) }
         }
 
-        if (flag != -1L && config.soundEffectEnabled) playSound(switchSound)
+        // do not play SE when initializing, changing board layout, or changing double board setting
+        if (!isFlagUpdated(flag, CONF_LAYOUT) && !isFlagUpdated(flag, CONF_NUM_AREAS) && config.soundEffectEnabled) playSound(switchSound)
 
         refreshPhase2(model, flag, areaUpdated)
       })
