@@ -252,6 +252,8 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     // 0. Load Sound
     if (isFlagUpdated(flag, CONF_SOUND) && model.config.soundEffectEnabled) prepareSound()
 
+    if (flag != -1L && isFlagUpdated(flag, CONF_SOUND) && model.config.soundEffectEnabled) playSound(successSound)
+
     // 0. Mode Change
     if (flag != -1L && isFlagUpdated(flag, MODE_TYPE) && model.config.soundEffectEnabled) playSound(switchSound)
 
