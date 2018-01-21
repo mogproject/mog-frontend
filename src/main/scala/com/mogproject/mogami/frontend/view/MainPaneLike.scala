@@ -4,7 +4,8 @@ import com.mogproject.mogami.core.{Player, Ptype}
 import com.mogproject.mogami.frontend.model.DeviceType.DeviceType
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.api.WebAudioAPISound
-import com.mogproject.mogami.frontend.model.board.cursor.{BoardCursor, Cursor}
+import com.mogproject.mogami.frontend.model.{EditMode, PlayMode}
+import com.mogproject.mogami.frontend.model.board.cursor.{BoardCursor, Cursor, PlayerCursor}
 import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipDisabled, FlipEnabled}
 import com.mogproject.mogami.frontend.util.PlayerUtil
 import com.mogproject.mogami.util.Implicits._
@@ -178,15 +179,31 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     updateSVGArea(_.flashCursor(cursor))
   }
 
-  private[this] val clickSound: Option[WebAudioAPISound] = BrowserInfo.isSoundSupported.option {
-    val sound = new WebAudioAPISound("assets/mp3/click")
+  private[this] def loadSound(name: String): Option[WebAudioAPISound] = BrowserInfo.isSoundSupported.option {
+    val sound = new WebAudioAPISound(s"assets/mp3/${name}")
     sound.setVolume(100)
     sound
   }
 
-  def playClickSound(): Unit = {
+  private[this] lazy val clickSound: Option[WebAudioAPISound] = loadSound("click")
+  private[this] lazy val selectSound: Option[WebAudioAPISound] = loadSound("select")
+  private[this] lazy val cancelSound: Option[WebAudioAPISound] = loadSound("cancel")
+  private[this] lazy val switchSound: Option[WebAudioAPISound] = loadSound("switch")
+  private[this] lazy val successSound: Option[WebAudioAPISound] = loadSound("success")
+  private[this] lazy val beepSound: Option[WebAudioAPISound] = loadSound("beep")
+
+  def prepareSound(): Unit = {
+    clickSound
+    selectSound
+    cancelSound
+    switchSound
+    successSound
+    beepSound
+  }
+
+  def playSound(sound: Option[WebAudioAPISound]): Unit = {
     Try {
-      clickSound.foreach(_.play())
+      sound.foreach(_.play())
     } match {
       case Success(_) =>
       case Failure(e) => println(e)
@@ -212,25 +229,33 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   //
   // Observer
   //
-  override val samObserveMask: Int = {
+  override val samObserveMask: Long = {
     import ObserveFlag._
-    val modes = MODE_EDIT | GAME_BRANCH | GAME_INFO | GAME_POSITION | GAME_HANDICAP | GAME_INDICATOR | GAME_JUST_MOVED | GAME_NEXT_POS | GAME_PREV_POS
-    val confs = CONF_DEVICE | CONF_LAYOUT | CONF_NUM_AREAS | CONF_FLIP_TYPE | CONF_PIECE_WIDTH | CONF_PIECE_FACE | CONF_MSG_LANG | CONF_RCD_LANG
+    val modes = MODE_TYPE | GAME_BRANCH | GAME_INFO | GAME_POSITION | GAME_HANDICAP | GAME_INDICATOR | GAME_JUST_MOVED | GAME_NEXT_POS | GAME_PREV_POS
+    val confs = CONF_DEVICE | CONF_LAYOUT | CONF_NUM_AREAS | CONF_FLIP_TYPE | CONF_PIECE_WIDTH | CONF_PIECE_FACE | CONF_MSG_LANG | CONF_RCD_LANG | CONF_SOUND
     val cursors = CURSOR_ACTIVE | CURSOR_SELECT | CURSOR_FLASH
     modes | confs | cursors
   }
 
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
     refreshPhase1(model, flag)
   }
 
-  private[this] def refreshPhase1(model: BasePlaygroundModel, flag: Int): Unit = {
+  private[this] def refreshPhase1(model: BasePlaygroundModel, flag: Long): Unit = {
     import ObserveFlag._
 
     lazy val config = model.config
     val areaUpdated = (flag & (CONF_DEVICE | CONF_LAYOUT | CONF_NUM_AREAS)) != 0
 
-    def check(mask: Int) = areaUpdated || (flag & mask) != 0
+    def check(mask: Long) = areaUpdated || (flag & mask) != 0
+
+    // 0. Load Sound
+    if (isFlagUpdated(flag, CONF_SOUND) && model.config.soundEffectEnabled) prepareSound()
+
+    if (flag != -1L && isFlagUpdated(flag, CONF_SOUND) && model.config.soundEffectEnabled) playSound(successSound)
+
+    // 0. Mode Change
+    if (flag != -1L && isFlagUpdated(flag, MODE_TYPE) && model.config.soundEffectEnabled) playSound(switchSound)
 
     // 1. Area
     if (areaUpdated) renderSVGAreas(config.deviceType, config.flipType.numAreas, config.pieceWidth, config.layout)
@@ -249,6 +274,8 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
           case (DoubleBoard, _, false) => Seq(0, 1).foreach { n => updateSVGArea(n, _.setFlip(n == 1)) }
         }
 
+        if (config.soundEffectEnabled) playSound(switchSound)
+
         refreshPhase2(model, flag, areaUpdated)
       })
     } else {
@@ -256,13 +283,13 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     }
   }
 
-  private[this] def refreshPhase2(model: BasePlaygroundModel, flag: Int, areaUpdated: Boolean): Unit = {
+  private[this] def refreshPhase2(model: BasePlaygroundModel, flag: Long, areaUpdated: Boolean): Unit = {
     import ObserveFlag._
 
     lazy val mode = model.mode
     lazy val config = model.config
 
-    def check(mask: Int) = areaUpdated || (flag & mask) != 0
+    def check(mask: Long) = areaUpdated || (flag & mask) != 0
 
     // 4. Indexes
     if (check(CONF_RCD_LANG)) {
@@ -305,13 +332,13 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   }
 
 
-  private[this] def refreshPhase3(model: BasePlaygroundModel, flag: Int, areaUpdated: Boolean): Unit = {
+  private[this] def refreshPhase3(model: BasePlaygroundModel, flag: Long, areaUpdated: Boolean): Unit = {
     import ObserveFlag._
 
     lazy val mode = model.mode
     lazy val config = model.config
 
-    def check(mask: Int) = areaUpdated || (flag & mask) != 0
+    def check(mask: Long) = areaUpdated || (flag & mask) != 0
 
     // 9. Last Move
     if (check(GAME_BRANCH | GAME_POSITION | MODE_EDIT | CONF_FLIP_TYPE)) updateSVGArea(_.drawLastMove(mode.getLastMove))
@@ -344,15 +371,40 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     }
 
     // 12. Flash Cursor
-    if (flag != -1 && isFlagUpdated(flag, CURSOR_FLASH)) model.flashedCursor.foreach { c => updateSVGArea(_.flashCursor(c)) }
+    if (flag != -1 && isFlagUpdated(flag, CURSOR_FLASH)) {
+      model.flashedCursor.foreach { c => updateSVGArea(_.flashCursor(c)) }
+    }
 
+    // 13. Move Sound Effect
+    if (flag != 1L && config.soundEffectEnabled) {
+      if (model.flashedCursor.exists(_.isPlayer)) {
+        playSound(switchSound)
+      } else if (isFlagUpdated(flag, GAME_BRANCH)) {
+        mode match {
+          case (PlayMode(gc)) =>
+          case (EditMode(_, _, _, _)) => playSound(clickSound)
+          case _ =>
+        }
+      } else {
+        if (mode.modeType == PlayModeType || mode.modeType == EditModeType) {
+          if (isFlagUpdated(flag, PROMOTION_DIALOG)) {
+            playSound(switchSound)
+          } else if (isFlagUpdated(flag, CURSOR_SELECT) && !isFlagUpdated(flag, MODE_TYPE)) {
+            // Cursor selected or canceled
+            playSound(model.selectedCursor.isDefined.fold(selectSound, cancelSound))
+          } else if (isFlagUpdated(flag, CURSOR_FLASH)) {
+            playSound(beepSound)
+          }
+        }
+      }
+    }
 
     // 13. Move Effect
     if (flag != -1 && isFlagUpdated(flag, GAME_JUST_MOVED)) {
       mode.getLastMove.foreach { move =>
         if (!model.flashedCursor.flatMap(_.board).contains(move.to)) updateSVGArea(_.flashCursor(BoardCursor(move.to)))
 
-        if (config.soundEffectEnabled) playClickSound()
+        if (config.soundEffectEnabled) playSound(clickSound)
         if (config.visualEffectEnabled) {
           //          updateSVGArea(a => a.board.effect.moveEffector.start(a.board.getRect(move.to)))
           if (move.promote) updateSVGArea(_.board.startPromotionEffect(move.to, move.oldPiece, config.pieceFace))
@@ -361,6 +413,8 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     }
 
     // 14. Move Forward/Backward Effect
-    if (flag != -1 && isFlagUpdated(flag, GAME_NEXT_POS | GAME_PREV_POS) && model.selectedCursor.isDefined) updateSVGArea(_.board.effect.forwardEffector.start((flag & GAME_NEXT_POS) != 0))
+    if (flag != -1 && isFlagUpdated(flag, GAME_NEXT_POS | GAME_PREV_POS) && model.selectedCursor.isDefined) {
+      updateSVGArea(_.board.effect.forwardEffector.start((flag & GAME_NEXT_POS) != 0))
+    }
   }
 }

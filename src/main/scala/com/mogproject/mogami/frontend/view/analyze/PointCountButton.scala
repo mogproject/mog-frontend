@@ -52,9 +52,9 @@ class PointCountButton(isMobile: Boolean) extends WebComponent with SAMObserver[
   //
   // Observer
   //
-  override val samObserveMask: Int = ObserveFlag.GAME_BRANCH | ObserveFlag.GAME_POSITION
+  override val samObserveMask: Long = ObserveFlag.GAME_BRANCH | ObserveFlag.GAME_POSITION
 
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
     clearMessage()
   }
 }

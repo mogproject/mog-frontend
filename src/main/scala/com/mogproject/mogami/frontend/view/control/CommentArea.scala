@@ -33,12 +33,12 @@ case class CommentArea(isDisplayOnly: Boolean, text: String = "") extends WebCom
   //
   // Observer
   //
-  override val samObserveMask: Int = {
+  override val samObserveMask: Long = {
     import ObserveFlag._
     CONF_DEVICE | MODE_EDIT | GAME_COMMENT | GAME_POSITION
   }
 
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
     if (isFlagUpdated(flag, ObserveFlag.CONF_DEVICE)) {
       // set text input height
       commentComponent.textCommentInput.element.rows = isDisplayOnly.fold(model.config.deviceType.isLandscape.fold(10, 2), 5)

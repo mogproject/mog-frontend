@@ -16,7 +16,7 @@ case class ResignButton(isSmall: Boolean, confirm: Boolean) extends WebComponent
 
   private[this] val button = CommandButton(
     classButtonDefault + " " + isSmall.fold("thin-btn btn-resign", classButtonBlock),
-    onclick := {() => clickAction()},
+    onclick := { () => clickAction() },
     (!isSmall).option(dismissModal)
   )
     .withDynamicTextContent(_.RESIGN, "flag")
@@ -36,11 +36,11 @@ case class ResignButton(isSmall: Boolean, confirm: Boolean) extends WebComponent
   //
   // Observer
   //
-  override val samObserveMask: Int = {
+  override val samObserveMask: Long = {
     import ObserveFlag._
     MODE_TYPE | GAME_BRANCH | GAME_POSITION
   }
 
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = setDisabled(!model.mode.canMakeMove)
+  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = setDisabled(!model.mode.canMakeMove)
 
 }

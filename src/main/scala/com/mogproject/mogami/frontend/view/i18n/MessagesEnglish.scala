@@ -118,7 +118,7 @@ case object MessagesEnglish extends Messages {
   override val ADD_CHECKMATE_MOVES: String = "Add Moves to Game"
   override val ADD_CHECKMATE_MOVES_TOOLTIP: String = "Add this solution to the current game record"
 
-  override val CHECKMATE_MOVES_ADDED: String = "Moves are added."
+  override val CHECKMATE_MOVES_ADDED: String = "Moves were added."
   override val TIMEOUT: String = "Timeout"
   override val SEC: String = "sec"
   override val ANALYZING: String = "Analyzing"

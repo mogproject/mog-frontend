@@ -65,9 +65,9 @@ class SideBarLeft(implicit imageCache: SVGImageCache) extends SideBarLike with S
   //
   // Observer
   //
-  override val samObserveMask: Int = ObserveFlag.MODE_EDIT | ObserveFlag.CONF_MSG_LANG
+  override val samObserveMask: Long = ObserveFlag.MODE_EDIT | ObserveFlag.CONF_MSG_LANG
 
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
     if (model.mode.isEditMode) {
       title.innerHTML = Messages.get.EDIT
       editHelpArea.show()

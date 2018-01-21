@@ -63,9 +63,9 @@ class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
   //
   // Observer
   //
-  override val samObserveMask: Int = super.samObserveMask | ObserveFlag.CONF
+  override val samObserveMask: Long = super.samObserveMask | ObserveFlag.CONF
 
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
     super.refresh(model, flag)
 
     val config = model.config

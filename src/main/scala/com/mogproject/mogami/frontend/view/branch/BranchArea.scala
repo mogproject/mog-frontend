@@ -184,12 +184,12 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
   //
   // Observer
   //
-  override val samObserveMask: Int = {
+  override val samObserveMask: Long = {
     import ObserveFlag._
     MODE_TYPE | GAME_BRANCH | GAME_POSITION | CONF_NEW_BRANCH | CONF_RCD_LANG | CONF_MSG_LANG | MENU_DIALOG
   }
 
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
     import ObserveFlag._
 
     /** Do not update if the menu dialog is hidden. */

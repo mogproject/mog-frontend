@@ -125,9 +125,9 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
   // Observer
   //
   /** @note This must be a function in order to be used in inherited classes. */
-  override def samObserveMask: Int = ObserveFlag.MODE_TYPE
+  override def samObserveMask(): Long = ObserveFlag.MODE_TYPE
 
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
     if (visibleMode.contains(model.mode.modeType)) show() else hide()
   }
 }

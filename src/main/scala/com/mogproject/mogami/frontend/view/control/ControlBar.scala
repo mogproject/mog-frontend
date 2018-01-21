@@ -120,7 +120,7 @@ case class ControlBar(barType: ControlBarType) extends WebComponent with SAMObse
         case _ => Nil
       }
 
-      (mvs ++ lst).map {case (pl, ss) => pl.toSymbolString() + ss } .toList
+      (mvs ++ lst).map { case (pl, ss) => pl.toSymbolString() + ss }.toList
     }.getOrElse(Nil)
   }
 
@@ -164,12 +164,12 @@ case class ControlBar(barType: ControlBarType) extends WebComponent with SAMObse
   //
   // Observer
   //
-  override val samObserveMask: Int = {
+  override val samObserveMask: Long = {
     import ObserveFlag._
     GAME_BRANCH | GAME_COMMENT | GAME_POSITION | GAME_BRANCH_CHANGED | CONF_RCD_LANG | MODE_EDIT
   }
 
-  override def refresh(model: BasePlaygroundModel, flag: Int): Unit = {
+  override def refresh(model: BasePlaygroundModel, flag: StateHash): Unit = {
     import ObserveFlag._
 
     model.mode.getGameControl match {
