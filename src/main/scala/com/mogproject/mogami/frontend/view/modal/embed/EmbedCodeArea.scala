@@ -6,7 +6,6 @@ import com.mogproject.mogami.frontend.view.button.{CommandButton, TextAreaCompon
 import org.scalajs
 import org.scalajs.dom.Element
 import org.scalajs.dom.html.Button
-
 import scalatags.JsDom.all._
 
 
@@ -23,10 +22,10 @@ case class EmbedCodeArea(ident: String) extends WebComponent {
     classButtonDefaultBlock,
     Messages.get.COPY,
     clipboardTarget(ident),
-    onclick := { () => scalajs.dom.window.setTimeout({ () => textCopyButton.element.asInstanceOf[Button].focus() }, 100) }
+    onclick := { () => scalajs.dom.window.setTimeout({ () => textCopyButton.element.asInstanceOf[Button].focus() }, 0) }
   )
 
-  override def element: Element = div(
+  override lazy val element: Element = div(
     textArea.element,
     div(cls := "row",
       marginTop := 3,
