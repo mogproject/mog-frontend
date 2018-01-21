@@ -5,6 +5,7 @@ import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.action.PlaygroundAction
 import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.frontend.model.board.cursor.{MouseHoldEvent, _}
+import com.mogproject.mogami.frontend.view.BrowserInfo
 
 /**
   *
@@ -124,6 +125,7 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
           } yield BoardCursor(sq)
         }
         executeMouseDown(model, areaId, cursor)
+      case _ if BrowserInfo.hasTouchEvent => Some(model.copy(newActiveCursor = None))
       case _ => None
     }
   }
