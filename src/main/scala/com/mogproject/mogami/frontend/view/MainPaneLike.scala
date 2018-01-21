@@ -379,9 +379,9 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     if (flag != 1L && config.soundEffectEnabled) {
       if (model.flashedCursor.exists(_.isPlayer)) {
         playSound(switchSound)
-      } else if (isFlagUpdated(flag, GAME_BRANCH)) {
+      } else if (isFlagUpdated(flag, GAME_BRANCH) || isFlagUpdated(flag, GAME_POSITION)) {
         mode match {
-          case (PlayMode(gc)) =>
+          case (PlayMode(_)) if isFlagUpdated(flag, GAME_JUST_MOVED) => playSound(clickSound)
           case (EditMode(_, _, _, _)) => playSound(clickSound)
           case _ =>
         }
@@ -404,7 +404,6 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
       mode.getLastMove.foreach { move =>
         if (!model.flashedCursor.flatMap(_.board).contains(move.to)) updateSVGArea(_.flashCursor(BoardCursor(move.to)))
 
-        if (config.soundEffectEnabled) playSound(clickSound)
         if (config.visualEffectEnabled) {
           //          updateSVGArea(a => a.board.effect.moveEffector.start(a.board.getRect(move.to)))
           if (move.promote) updateSVGArea(_.board.startPromotionEffect(move.to, move.oldPiece, config.pieceFace))
