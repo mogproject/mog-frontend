@@ -13,7 +13,6 @@ class PlaygroundLinkButton extends WebComponent with SAMObserver[BasePlaygroundM
   private[this] lazy val linkButton: WebComponent = WebComponent(a(
     cls := "btn btn-default pg-link-btn",
     tpe := "button",
-    target := "_blank",
     img(src := "assets/ico/mediumtile.png", height := 100.pct)
   )).withDynamicHoverTooltip(_.PLAYGROUND_LINK_TOOLTIP)
 

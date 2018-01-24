@@ -235,22 +235,22 @@ case object MessagesJapanese extends Messages {
     p("Shogi Playground (将棋・プレイグラウンド) は世界中の将棋ファンのためのプラットフォームです。" +
       "このモバイル・フレンドリーなウェブサイトで、棋譜や詰将棋を手軽に管理、解析、共有しましょう。"),
     p("不具合、改善のアイデア等がございましたら ",
-      a(href := FrontendSettings.url.authorContactUrl, target := "_blank", "作者"),
+      a(href := FrontendSettings.url.authorContactUrl, "作者"),
       " までご連絡ください。"),
     br(),
     label("スペシャル・サンクス"),
     ul(
       li(
         "駒画像 - ",
-        a(href := FrontendSettings.url.credit.shineleckomaUrl, target := "_blank", "しんえれ外部駒"),
+        a(href := FrontendSettings.url.credit.shineleckomaUrl, "しんえれ外部駒"),
         " / ",
-        a(href := FrontendSettings.url.credit.hidetchiUrl, target := "_blank", "81 Dojo"),
+        a(href := FrontendSettings.url.credit.hidetchiUrl, "81 Dojo"),
         " / ",
-        a(href := FrontendSettings.url.credit.shogiCzUrl, target := "_blank", "Shogi.cz")
+        a(href := FrontendSettings.url.credit.shogiCzUrl, "Shogi.cz")
       ),
       li(
         "駒用フォント - ",
-        a(href := FrontendSettings.url.credit.loraFontsUrl, target := "_blank", "Lora Fonts")
+        a(href := FrontendSettings.url.credit.loraFontsUrl, "Lora Fonts")
       )
     ),
     br(),

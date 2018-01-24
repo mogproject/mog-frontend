@@ -222,22 +222,22 @@ case object MessagesEnglish extends Messages {
     p("Shogi Playground is a platform for all shogi --Japanese chess-- fans in the world." +
       " This mobile-friendly website enables you to manage, analyze, and share shogi games as well as mate problems."),
     p("If you have any questions, trouble, or suggestion, please tell the ",
-      a(href := FrontendSettings.url.authorContactUrl, target := "_blank", "author"),
+      a(href := FrontendSettings.url.authorContactUrl, "author"),
       ". Your voice matters."),
     br(),
     label("Special Thanks"),
     ul(
       li(
         "Piece Graphics - ",
-        a(href := FrontendSettings.url.credit.shineleckomaUrl, target := "_blank", "shineleckoma"),
+        a(href := FrontendSettings.url.credit.shineleckomaUrl, "shineleckoma"),
         " / ",
-        a(href := FrontendSettings.url.credit.hidetchiUrl, target := "_blank", "81 Dojo"),
+        a(href := FrontendSettings.url.credit.hidetchiUrl, "81 Dojo"),
         " / ",
-        a(href := FrontendSettings.url.credit.shogiCzUrl, target := "_blank", "Shogi.cz")
+        a(href := FrontendSettings.url.credit.shogiCzUrl, "Shogi.cz")
       ),
       li(
         "Piece Fonts - ",
-        a(href := FrontendSettings.url.credit.loraFontsUrl, target := "_blank", "Lora Fonts")
+        a(href := FrontendSettings.url.credit.loraFontsUrl, "Lora Fonts")
       )
     ),
     br(),
