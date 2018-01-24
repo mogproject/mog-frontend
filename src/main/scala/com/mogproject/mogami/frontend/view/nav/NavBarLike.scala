@@ -42,7 +42,7 @@ trait NavBarLike extends WebComponent {
   def classNames: String = "navbar navbar-default navbar-fixed-top"
 
   def brandElem: Element = brandUrl.map { u =>
-    li(cls := "hidden-xs", a(cls := "navbar-brand", href := u, target := "_blank", brandName))
+    li(cls := "hidden-xs", a(cls := "navbar-brand", href := u, brandName))
   }.getOrElse {
     li(cls := "hidden-xs navbar-brand", brandName)
   }.render

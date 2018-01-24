@@ -26,8 +26,7 @@ trait CopyButtonLike extends WebComponent {
     Some(
       WebComponent(a(
         cls := "btn "+ classButtonDefault,
-        tpe := "button",
-        target := "_blank"
+        tpe := "button"
       )).withDynamicTextContent(_.VIEW)
     )
   } else {

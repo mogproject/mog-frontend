@@ -77,7 +77,7 @@ case class EmbedDialog(gameControl: GameControl, config: BasePlaygroundConfigura
 
   override val modalFooter: ElemType = div(footerDefinition, div(cls := "row",
     div(cls := "col-xs-8 col-md-9", textAlign := textAlign.left.v,
-      a(target := "_blank", href := FrontendSettings.url.queryParamDocUrl, msgs.EMBED_REFERENCE)
+      a(href := FrontendSettings.url.queryParamDocUrl, msgs.EMBED_REFERENCE)
     ),
     div(cls := "col-xs-4 col-md-3",
       button(tpe := "button", cls := "btn btn-default btn-block", dismiss, "OK")
