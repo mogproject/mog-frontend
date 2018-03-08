@@ -13,7 +13,7 @@ object FrontendSettings {
     val baseUrl = "https://play.mogproject.com/"
     val authorSiteUrl = "https://mogproject.com"
     val authorContactUrl = "https://twitter.com/mogproject"
-    val donationUrl = "https://www.paypal.me/mogproject"
+    val donationUrl = "https://www.paypal.me/mogproject/5"
     val shogiBotUrl = "https://www.facebook.com/shogibot/"
     val playgroundLiveUrl = "https://live.mogproject.com"
     val queryParamDocUrl = "https://github.com/mogproject/mog-playground/wiki/Query-Parameters"
