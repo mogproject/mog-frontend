@@ -3,7 +3,7 @@ package com.mogproject.mogami.frontend.model
 import com.mogproject.mogami.frontend.LocalStorage
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.DeviceType.DeviceType
-import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipDisabled, FlipEnabled, FlipType}
+import com.mogproject.mogami.frontend.model.board._
 import com.mogproject.mogami.frontend.view.BrowserInfo
 import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGStandardLayout}
 import com.mogproject.mogami.frontend.view.sidebar.{SideBarLeft, SideBarRight}
@@ -18,6 +18,7 @@ case class BasePlaygroundConfiguration(layout: SVGAreaLayout = SVGStandardLayout
                                        pieceWidth: Option[Int] = None,
                                        flipType: FlipType = FlipDisabled,
                                        pieceFace: PieceFace = PieceFace.JapaneseOneCharFace,
+                                       boardIndexType: BoardIndexType = BasePlaygroundConfiguration.defaultBoardIndexType,
                                        newBranchMode: Boolean = false,
                                        messageLang: Language = BasePlaygroundConfiguration.browserLanguage,
                                        recordLang: Language = BasePlaygroundConfiguration.browserLanguage,
@@ -95,6 +96,8 @@ object BasePlaygroundConfiguration {
   lazy val defaultBaseUrl = s"${dom.window.location.protocol}//${dom.window.location.host}${dom.window.location.pathname}"
 
   lazy val defaultDeviceType: DeviceType = DeviceType(BrowserInfo.isMobile, BrowserInfo.isLandscape)
+
+  lazy val defaultBoardIndexType: BoardIndexType = (browserLanguage == Japanese).fold(BoardIndexJapanese, BoardIndexEnglish)
 
   def getSVGAreaSize(deviceType: DeviceType, pieceWidth: Int, layout: SVGAreaLayout, numAreas: Int): Int = {
     val areaWidth = layout.areaWidth(pieceWidth)

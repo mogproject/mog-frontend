@@ -14,6 +14,7 @@ trait ObserveFlagLike {
 
   final val CONF_MSG_LANG = 1L << 1
   final val CONF_RCD_LANG = 1L << 2
+  final val CONF_IDX_TYPE = 1L << 3
 
   final val CONF_DEVICE = 1L << 4
   final val CONF_LAYOUT = 1L << 5
@@ -83,6 +84,7 @@ object ObserveFlag extends ObserveFlagLike {
       }
       if (a.pieceWidth != b.pieceWidth) ret |= CONF_PIECE_WIDTH
       if (a.pieceFace != b.pieceFace) ret |= CONF_PIECE_FACE
+      if (a.boardIndexType != b.boardIndexType) ret |= CONF_IDX_TYPE
       if (a.newBranchMode != b.newBranchMode) ret |= CONF_NEW_BRANCH
       if (a.soundEffectEnabled != b.soundEffectEnabled) ret |= CONF_SOUND
     }
