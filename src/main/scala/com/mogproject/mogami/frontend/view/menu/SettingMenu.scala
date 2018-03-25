@@ -1,10 +1,9 @@
 package com.mogproject.mogami.frontend.view.menu
 
 import com.mogproject.mogami.util.Implicits._
-import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipDisabled}
+import com.mogproject.mogami.frontend.model.board.{BoardIndexType, DoubleBoard, FlipDisabled}
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
-import com.mogproject.mogami.frontend.view.i18n.MessagesEnglish
 import com.mogproject.mogami.frontend.view.setting.{BooleanSelector, DropdownSelector, LanguageSelector}
 import org.scalajs.dom.html.Div
 
@@ -37,6 +36,10 @@ class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
     _.PIECE_GRAPHIC, PieceFace.all.toVector, _.PIECE_GRAPHIC_OPTIONS, v => _.copy(pieceFace = v)
   )
 
+  private[this] lazy val boardIndexTypeSelector = DropdownSelector[BoardIndexType](
+    _.BOARD_INDEX_TYPE, BoardIndexType.all.toVector, _.BOARD_INDEX_TYPE_OPTIONS, v => _.copy(boardIndexType = v)
+  )
+
   private[this] lazy val doubleBoardSelector = BooleanSelector(_.DOUBLE_BOARD_MODE, v => _.copy(flipType = v.fold(DoubleBoard, FlipDisabled)))
   private[this] lazy val visualEffectSelector = BooleanSelector(_.VISUAL_EFFECTS, v => _.copy(visualEffectEnabled = v))
   private[this] lazy val soundEffectSelector = BooleanSelector(_.SOUND_EFFECTS, v => _.copy(soundEffectEnabled = v))
@@ -48,6 +51,7 @@ class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
     boardSizeSelector,
     layoutSelector,
     pieceFaceSelector,
+    boardIndexTypeSelector,
     doubleBoardSelector,
     visualEffectSelector,
     soundEffectSelector,
@@ -73,6 +77,7 @@ class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
     boardSizeSelector.select(config.pieceWidth)
     layoutSelector.select(config.layout)
     pieceFaceSelector.select(config.pieceFace)
+    boardIndexTypeSelector.select(config.boardIndexType)
 
     doubleBoardSelector.updateValue(config.flipType == DoubleBoard)
     visualEffectSelector.updateValue(config.visualEffectEnabled)

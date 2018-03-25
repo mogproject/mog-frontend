@@ -6,7 +6,7 @@ import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.api.WebAudioAPISound
 import com.mogproject.mogami.frontend.model.{EditMode, PlayMode}
 import com.mogproject.mogami.frontend.model.board.cursor.{BoardCursor, Cursor, PlayerCursor}
-import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipDisabled, FlipEnabled}
+import com.mogproject.mogami.frontend.model.board.{BoardIndexJapanese, DoubleBoard, FlipDisabled, FlipEnabled}
 import com.mogproject.mogami.frontend.util.PlayerUtil
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.view.board.{SVGArea, SVGAreaLayout}
@@ -235,7 +235,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   override val samObserveMask: Long = {
     import ObserveFlag._
     val modes = MODE_TYPE | GAME_BRANCH | GAME_INFO | GAME_POSITION | GAME_HANDICAP | GAME_INDICATOR | GAME_JUST_MOVED | GAME_NEXT_POS | GAME_PREV_POS
-    val confs = CONF_DEVICE | CONF_LAYOUT | CONF_NUM_AREAS | CONF_FLIP_TYPE | CONF_PIECE_WIDTH | CONF_PIECE_FACE | CONF_MSG_LANG | CONF_RCD_LANG | CONF_SOUND
+    val confs = CONF_DEVICE | CONF_LAYOUT | CONF_NUM_AREAS | CONF_FLIP_TYPE | CONF_PIECE_WIDTH | CONF_PIECE_FACE | CONF_MSG_LANG | CONF_RCD_LANG | CONF_SOUND | CONF_IDX_TYPE
     val cursors = CURSOR_ACTIVE | CURSOR_SELECT | CURSOR_FLASH
     modes | confs | cursors
   }
@@ -296,15 +296,15 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     def check(mask: Long) = areaUpdated || (flag & mask) != 0
 
     // 4. Indexes
-    if (check(CONF_RCD_LANG)) {
-      if (config.recordLang == Japanese) {
-        downloadImages((1 to 9).map(n => config.layout.board.getJapaneseRankIndexImagePath(n)), () =>
-          updateSVGArea(_.board.drawIndexes(useJapanese = true))
-        )
-      } else {
-        updateSVGArea(_.board.drawIndexes(useJapanese = false))
+    if (check(CONF_IDX_TYPE)) {
+      config.boardIndexType match {
+        case BoardIndexJapanese =>
+          downloadImages((1 to 9).map(n => config.layout.board.getJapaneseRankIndexImagePath(n)), () =>
+            updateSVGArea(_.board.drawIndexes(BoardIndexJapanese))
+          )
+        case x =>
+          updateSVGArea(_.board.drawIndexes(x))
       }
-
     }
 
     // 5. Player Names

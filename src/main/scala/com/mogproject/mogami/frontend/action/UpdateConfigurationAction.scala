@@ -18,6 +18,7 @@ case class UpdateConfigurationAction(f: BasePlaygroundConfiguration => BasePlayg
       (mc.pieceWidth != c.pieceWidth).option(c.pieceWidth),
       (mc.layout != c.layout).option(c.layout),
       (mc.pieceFace != c.pieceFace).option(c.pieceFace),
+      (mc.boardIndexType != c.boardIndexType).option(c.boardIndexType),
       (mc.flipType.numAreas != c.flipType.numAreas).option(c.flipType == DoubleBoard),
       (mc.visualEffectEnabled != c.visualEffectEnabled).option(c.visualEffectEnabled),
       (mc.soundEffectEnabled != c.soundEffectEnabled).option(c.soundEffectEnabled),

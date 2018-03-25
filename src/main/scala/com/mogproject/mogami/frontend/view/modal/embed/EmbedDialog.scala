@@ -1,7 +1,7 @@
 package com.mogproject.mogami.frontend.view.modal.embed
 
 import com.mogproject.mogami.frontend._
-import com.mogproject.mogami.frontend.model.board.FlipEnabled
+import com.mogproject.mogami.frontend.model.board.{BoardIndexType, FlipEnabled}
 import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, English, GameControl, Japanese, Language}
 import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
 import com.mogproject.mogami.frontend.view.i18n.Messages
@@ -51,6 +51,7 @@ case class EmbedDialog(gameControl: GameControl, config: BasePlaygroundConfigura
   private[this] val sizeSelector = DropdownSelector[Int](_.BOARD_SIZE, Vector(22, 25, 30), m => Map(22 -> m.SMALL, 25 -> m.MEDIUM, 30 -> m.LARGE))
   private[this] val layoutSelector = DropdownSelector[SVGAreaLayout](_.LAYOUT, Vector(SVGStandardLayout, SVGCompactLayout, SVGWideLayout), _.LAYOUT_OPTIONS)
   private[this] val pieceFaceSelector = DropdownSelector[PieceFace](_.PIECE_GRAPHIC, PieceFace.all.toVector, _.PIECE_GRAPHIC_OPTIONS)
+  private[this] val boardIndexTypeSelector = DropdownSelector[BoardIndexType](_.BOARD_INDEX_TYPE, BoardIndexType.all.toVector, _.BOARD_INDEX_TYPE_OPTIONS)
   private[this] val flipSelector = BooleanSelector(_.FLIP)
   private[this] val visualEffectSelector = BooleanSelector(_.VISUAL_EFFECTS)
   private[this] val soundEffectSelector = BooleanSelector(_.SOUND_EFFECTS)
@@ -67,6 +68,7 @@ case class EmbedDialog(gameControl: GameControl, config: BasePlaygroundConfigura
       sizeSelector,
       layoutSelector,
       pieceFaceSelector,
+      boardIndexTypeSelector,
       flipSelector,
       visualEffectSelector,
       soundEffectSelector,
@@ -92,6 +94,7 @@ case class EmbedDialog(gameControl: GameControl, config: BasePlaygroundConfigura
       sizeSelector.getValue,
       layoutSelector.getValue,
       pieceFaceSelector.getValue,
+      boardIndexTypeSelector.getValue,
       flipSelector.getValue,
       visualEffectSelector.getValue,
       soundEffectSelector.getValue,
@@ -106,6 +109,7 @@ case class EmbedDialog(gameControl: GameControl, config: BasePlaygroundConfigura
     sizeSelector.select(25)
     layoutSelector.select(config.layout)
     pieceFaceSelector.select(config.pieceFace)
+    boardIndexTypeSelector.select(config.boardIndexType)
     flipSelector.select(config.flipType == FlipEnabled)
     visualEffectSelector.select(config.visualEffectEnabled)
     soundEffectSelector.select(config.soundEffectEnabled)

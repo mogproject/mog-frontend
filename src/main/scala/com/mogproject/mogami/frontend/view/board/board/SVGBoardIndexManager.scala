@@ -1,7 +1,7 @@
 package com.mogproject.mogami.frontend.view.board.board
 
+import com.mogproject.mogami.frontend.model.board.{BoardIndexEnglish, BoardIndexJapanese, BoardIndexNumber, BoardIndexType}
 import com.mogproject.mogami.frontend.view.{SVGImageCache, WebComponent}
-import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom.raw.SVGElement
 
 import scalatags.JsDom.all._
@@ -16,7 +16,7 @@ trait SVGBoardIndexManager {
   private[this] val textClass = "board-index-text"
 
   // local variables
-  private[this] var currentStatus: Option[Boolean] = None
+  private[this] var currentStatus: Option[BoardIndexType] = None
   private[this] var currentFileElements: Seq[SVGElement] = Seq.empty
   private[this] var currentRankElements: Seq[SVGElement] = Seq.empty
 
@@ -35,11 +35,15 @@ trait SVGBoardIndexManager {
     layout.getRankIndexRect(index, isFlipped).toSVGText(('a' + (index - 1)).toChar.toString, false, true, None, cls := textClass)
   }
 
+  private[this] def generateNumberRankIndex(index: Int): TypedTag[SVGElement] = {
+    layout.getRankIndexRect(index, isFlipped).toSVGText(index.toString, false, true, None, cls := textClass)
+  }
+
 
   //
   // Operation
   //
-  def drawIndexes(useJapanese: Boolean = true)(implicit imageCache: SVGImageCache): Unit = if (!currentStatus.contains(useJapanese)) {
+  def drawIndexes(boardIndexType: BoardIndexType)(implicit imageCache: SVGImageCache): Unit = if (!currentStatus.contains(boardIndexType)) {
     clearIndexes()
 
     // filewise
@@ -49,11 +53,15 @@ trait SVGBoardIndexManager {
     }
 
     // rankwise
-    val rankElems = (1 to 9).map(useJapanese.fold(generateJapaneseRankIndex(_), generateWesternRankIndex(_))).map(_.render)
+    val rankElems = (1 to 9).map(boardIndexType match {
+      case BoardIndexJapanese => generateJapaneseRankIndex
+      case BoardIndexEnglish => generateWesternRankIndex
+      case BoardIndexNumber => generateNumberRankIndex
+    }).map(_.render)
     currentRankElements = materializeBackground(rankElems)
 
     // update local variables
-    currentStatus = Some(useJapanese)
+    currentStatus = Some(boardIndexType)
   }
 
   def clearIndexes(): Unit = {

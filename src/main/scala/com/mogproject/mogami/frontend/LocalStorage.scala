@@ -1,6 +1,7 @@
 package com.mogproject.mogami.frontend
 
 import com.mogproject.mogami.frontend.api.LZString
+import com.mogproject.mogami.frontend.model.board.BoardIndexType
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
 import org.scalajs.dom
@@ -13,6 +14,7 @@ import scala.util.{Failure, Success, Try}
 case class LocalStorage(pieceWidth: Option[Option[Int]] = None,
                         layout: Option[SVGAreaLayout] = None,
                         pieceFace: Option[PieceFace] = None,
+                        boardIndexType: Option[BoardIndexType] = None,
                         doubleBoardMode: Option[Boolean] = None,
                         visualEffect: Option[Boolean] = None,
                         soundEffect: Option[Boolean] = None,
@@ -30,6 +32,7 @@ case class LocalStorage(pieceWidth: Option[Option[Int]] = None,
       case None => // do nothing
     }
     pieceFace.foreach(x => setItem("p", x.faceId))
+    boardIndexType.foreach(x => setItem("bi", x.id))
     doubleBoardMode.foreach(x => setItem("double", x))
     visualEffect.foreach(x => setItem("ve", x))
     soundEffect.foreach(x => setItem("se", x))
@@ -48,6 +51,7 @@ object LocalStorage {
       ("sz", s => ls => ls.copy(pieceWidth = Some(Try(s.toInt).toOption))),
       ("layout", s => ls => ls.copy(layout = parseLayout(s))),
       ("p", s => ls => ls.copy(pieceFace = PieceFace.parseString(s))),
+      ("bi", s => ls => ls.copy(boardIndexType = BoardIndexType.parseString(s))),
       ("double", s => ls => ls.copy(doubleBoardMode = parseBooleanString(s))),
       ("ve", s => ls => ls.copy(visualEffect = parseBooleanString(s))),
       ("se", s => ls => ls.copy(soundEffect = parseBooleanString(s))),

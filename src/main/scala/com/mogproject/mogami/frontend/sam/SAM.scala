@@ -33,20 +33,20 @@ class SAM[M <: SAMModel](private[this] var state: SAMState[M]) extends SAMLike {
 
   @tailrec
   private[this] def doActionImpl(action: SAMAction[M]): Unit = {
-    //    SAM.debug(s"doAction: ${action}")
+//    println(s"doAction: ${action}")
 
     val result: Option[M] = action.execute(state.model)
-    //        println(s"result: ${result}")
+//    println(s"result: ${result}")
 
     result match {
       case Some(nextModel) =>
         // process observers
         val flag = state.getObserveFlag(nextModel)
-        //        SAM.debug(s"Observer flag: ${flag}")
+//        println(s"Observer flag: ${flag}")
 
         val (nextState, nextAction) = state.render(nextModel)
-        //        SAM.debug(s"nextState: ${nextState}")
-        //        SAM.debug(s"nextAction: ${nextAction}")
+//        println(s"nextState: ${nextState}")
+//        println(s"nextAction: ${nextAction}")
 
         notifyObservers(flag, nextModel)
 

@@ -44,6 +44,7 @@ case class Arguments(sfen: Option[String] = None,
             case "mlang" => Language.parseString(s).map(lang => sofar.updateConfig(_.copy(messageLang = lang)))
             case "rlang" => Language.parseString(s).map(lang => sofar.updateConfig(_.copy(recordLang = lang)))
             case "p" => PieceFace.parseString(s).map(pf => sofar.updateConfig(_.copy(pieceFace = pf)))
+            case "bi" => BoardIndexType.parseString(s).map(it => sofar.updateConfig(_.copy(boardIndexType = it)))
             case "move" => parseGamePosition(s).map(gp => sofar.copy(gamePosition = gp))
             case "flip" => s.toLowerCase match {
               case "true" => Some(sofar.updateConfig(_.copy(flipType = FlipEnabled)))
@@ -212,6 +213,7 @@ case class ArgumentsBuilderEmbed(gameControl: GameControl) extends ArgumentsBuil
                   pieceWidth: Int,
                   layout: SVGAreaLayout,
                   pieceFace: PieceFace,
+                  boardIndexType: BoardIndexType,
                   isFlipped: Boolean,
                   visualEffectEnabled: Boolean,
                   soundEffectEnabled: Boolean,
@@ -227,6 +229,7 @@ case class ArgumentsBuilderEmbed(gameControl: GameControl) extends ArgumentsBuil
         case SVGWideLayout => "w"
       }),
       "p" -> pieceFace.faceId,
+      "bi" -> boardIndexType.id,
       "ve" -> visualEffectEnabled.toString,
       "se" -> soundEffectEnabled.toString
     ) ++ messageLang.map("mlang" -> _.toString) ++ recordLang.map("rlang" -> _.toString) ++ isFlipped.option("flip" -> "true")
