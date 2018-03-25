@@ -3,6 +3,7 @@ package com.mogproject.mogami.frontend.view.i18n
 import com.mogproject.mogami.frontend.model.io.RecordFormat
 import com.mogproject.mogami.{BranchNo, State}
 import com.mogproject.mogami.frontend.model._
+import com.mogproject.mogami.frontend.model.board.{BoardIndexEnglish, BoardIndexJapanese, BoardIndexNumber, BoardIndexType}
 import com.mogproject.mogami.frontend.{FrontendSettings, PieceFace}
 import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
@@ -172,6 +173,7 @@ case object MessagesJapanese extends Messages {
   override val BOARD_SIZE: String = "盤面サイズ"
   override val LAYOUT: String = "レイアウト"
   override val PIECE_GRAPHIC: String = "駒画像"
+  override val BOARD_INDEX_TYPE: String = "座標表示"
   override val DOUBLE_BOARD_MODE: String = "ダブル将棋盤モード"
   override val VISUAL_EFFECTS: String = "エフェクト"
   override val SOUND_EFFECTS: String = "サウンド"
@@ -219,6 +221,12 @@ case object MessagesJapanese extends Messages {
       ShogiCzFace -> "Shogi.cz"
     )
   }
+
+  override def BOARD_INDEX_TYPE_OPTIONS: Map[BoardIndexType, String] = Map(
+    BoardIndexJapanese -> "日本語",
+    BoardIndexEnglish -> "英語",
+    BoardIndexNumber -> "数字のみ"
+  )
 
   override val HELP: String = "ヘルプ"
   override val HELP_CONTENT: Seq[TypedTag[LI]] = Seq(

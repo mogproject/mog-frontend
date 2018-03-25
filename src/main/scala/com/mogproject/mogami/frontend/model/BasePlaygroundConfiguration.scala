@@ -66,6 +66,7 @@ case class BasePlaygroundConfiguration(layout: SVGAreaLayout = SVGStandardLayout
       layout = ls.layout.getOrElse(layout),
       pieceFace = ls.pieceFace.getOrElse(pieceFace),
       flipType = ls.doubleBoardMode.contains(true).fold(DoubleBoard, flipType),
+      boardIndexType = ls.boardIndexType.getOrElse(boardIndexType),
       visualEffectEnabled = ls.visualEffect.getOrElse(visualEffectEnabled),
       soundEffectEnabled = ls.soundEffect.getOrElse(soundEffectEnabled),
       messageLang = ls.messageLang.getOrElse(messageLang),

@@ -1,5 +1,6 @@
 package com.mogproject.mogami.frontend.view.i18n
 
+import com.mogproject.mogami.frontend.model.board.BoardIndexType
 import com.mogproject.mogami.frontend.model.io.RecordFormat
 import com.mogproject.mogami.{BranchNo, State}
 import com.mogproject.mogami.frontend.{FrontendSettings, PieceFace}
@@ -173,6 +174,7 @@ case object MessagesEnglish extends Messages {
   override val BOARD_SIZE: String = "Board Size"
   override val LAYOUT: String = "Layout"
   override val PIECE_GRAPHIC: String = "Piece Graphic"
+  override val BOARD_INDEX_TYPE: String = "Coordinates"
   override val DOUBLE_BOARD_MODE: String = "Double Board Mode"
   override val VISUAL_EFFECTS: String = "Visual Effects"
   override val SOUND_EFFECTS: String = "Sound Effects"
@@ -205,6 +207,8 @@ case object MessagesEnglish extends Messages {
   )
 
   override val PIECE_GRAPHIC_OPTIONS: Map[PieceFace, String] = PieceFace.all.map(p => p -> p.displayName).toMap
+
+  override val BOARD_INDEX_TYPE_OPTIONS: Map[BoardIndexType, String] = BoardIndexType.all.map(v => v -> v.displayName).toMap
 
   override val HELP: String = "Help"
 

@@ -213,6 +213,7 @@ case class ArgumentsBuilderEmbed(gameControl: GameControl) extends ArgumentsBuil
                   pieceWidth: Int,
                   layout: SVGAreaLayout,
                   pieceFace: PieceFace,
+                  boardIndexType: BoardIndexType,
                   isFlipped: Boolean,
                   visualEffectEnabled: Boolean,
                   soundEffectEnabled: Boolean,
@@ -228,6 +229,7 @@ case class ArgumentsBuilderEmbed(gameControl: GameControl) extends ArgumentsBuil
         case SVGWideLayout => "w"
       }),
       "p" -> pieceFace.faceId,
+      "bi" -> boardIndexType.id,
       "ve" -> visualEffectEnabled.toString,
       "se" -> soundEffectEnabled.toString
     ) ++ messageLang.map("mlang" -> _.toString) ++ recordLang.map("rlang" -> _.toString) ++ isFlipped.option("flip" -> "true")

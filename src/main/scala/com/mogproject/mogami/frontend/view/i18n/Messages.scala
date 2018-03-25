@@ -2,6 +2,7 @@ package com.mogproject.mogami.frontend.view.i18n
 
 import com.mogproject.mogami.{BranchNo, State}
 import com.mogproject.mogami.frontend.Language
+import com.mogproject.mogami.frontend.model.board.BoardIndexType
 import com.mogproject.mogami.frontend.model.io.RecordFormat
 import com.mogproject.mogami.frontend.model.{English, Japanese, PieceFace}
 import com.mogproject.mogami.frontend.view.board.SVGAreaLayout
@@ -249,6 +250,8 @@ trait Messages {
 
   def PIECE_GRAPHIC: String
 
+  def BOARD_INDEX_TYPE: String
+
   def DOUBLE_BOARD_MODE: String
 
   def VISUAL_EFFECTS: String
@@ -274,6 +277,8 @@ trait Messages {
   def LAYOUT_OPTIONS: Map[SVGAreaLayout, String]
 
   def PIECE_GRAPHIC_OPTIONS: Map[PieceFace, String]
+
+  def BOARD_INDEX_TYPE_OPTIONS: Map[BoardIndexType, String]
 
   //
   // Help

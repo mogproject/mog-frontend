@@ -235,7 +235,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   override val samObserveMask: Long = {
     import ObserveFlag._
     val modes = MODE_TYPE | GAME_BRANCH | GAME_INFO | GAME_POSITION | GAME_HANDICAP | GAME_INDICATOR | GAME_JUST_MOVED | GAME_NEXT_POS | GAME_PREV_POS
-    val confs = CONF_DEVICE | CONF_LAYOUT | CONF_NUM_AREAS | CONF_FLIP_TYPE | CONF_PIECE_WIDTH | CONF_PIECE_FACE | CONF_MSG_LANG | CONF_RCD_LANG | CONF_SOUND
+    val confs = CONF_DEVICE | CONF_LAYOUT | CONF_NUM_AREAS | CONF_FLIP_TYPE | CONF_PIECE_WIDTH | CONF_PIECE_FACE | CONF_MSG_LANG | CONF_RCD_LANG | CONF_SOUND | CONF_IDX_TYPE
     val cursors = CURSOR_ACTIVE | CURSOR_SELECT | CURSOR_FLASH
     modes | confs | cursors
   }
