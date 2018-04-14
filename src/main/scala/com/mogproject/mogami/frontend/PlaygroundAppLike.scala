@@ -103,13 +103,14 @@ trait PlaygroundAppLike[M <: BasePlaygroundModel, V <: BasePlaygroundView, S <: 
     }).map { game =>
 
       // update comments
-      val comments = for {
+      val comments = game.comments ++ (for {
         (b, m) <- args.comments
         (pos, c) <- m
         h <- game.getHistoryHash(GamePosition(b, pos))
-      } yield h -> c
+      } yield h -> c)
 
-      game.copy(newGameInfo = args.gameInfo, newComments = game.comments ++ comments)
+      val gameInfo = game.gameInfo.copy(tags = game.gameInfo.tags ++ args.gameInfo.tags)
+      game.copy(newGameInfo = gameInfo, newComments = comments)
     }
   }
 
