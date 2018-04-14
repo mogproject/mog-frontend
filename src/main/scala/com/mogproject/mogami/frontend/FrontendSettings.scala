@@ -1,5 +1,7 @@
 package com.mogproject.mogami.frontend
 
+import scala.concurrent.duration._
+
 /**
   * Project level settings
   */
@@ -37,6 +39,10 @@ object FrontendSettings {
 
     }
 
+  }
+
+  object timeout {
+    val externalRecordDownload: Duration = 30.seconds
   }
 
 }

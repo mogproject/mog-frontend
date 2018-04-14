@@ -19,6 +19,7 @@ import scala.util.{Failure, Success, Try}
 case class Arguments(sfen: Option[String] = None,
                      usen: Option[String] = None,
                      gameInfo: GameInfo = GameInfo(),
+                     externalRecordUrl: Option[String] = None,
                      gamePosition: GamePosition = GamePosition(0, 0),
                      comments: Map[BranchNo, Map[Position, String]] = Map.empty,
                      action: Action = PlayAction,
@@ -41,6 +42,7 @@ case class Arguments(sfen: Option[String] = None,
           x match {
             case "sfen" => Some(sofar.copy(sfen = Some(s)))
             case "u" => Some(sofar.copy(usen = Some(s)))
+            case "r" => Some(sofar.copy(externalRecordUrl = Some(s)))
             case "mlang" => Language.parseString(s).map(lang => sofar.updateConfig(_.copy(messageLang = lang)))
             case "rlang" => Language.parseString(s).map(lang => sofar.updateConfig(_.copy(recordLang = lang)))
             case "p" => PieceFace.parseString(s).map(pf => sofar.updateConfig(_.copy(pieceFace = pf)))
