@@ -3,7 +3,9 @@ package com.mogproject.mogami.frontend.io
 import com.mogproject.mogami.frontend.api.EscapeCodecLibrary._
 import org.scalajs.dom
 import org.scalajs.dom.raw.FileReader
+import org.scalajs.dom.ext.{Ajax, AjaxException}
 
+import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
 
 /**
@@ -25,17 +27,33 @@ object TextReader {
     val r = new FileReader()
     r.onload = evt => {
       val result = evt.target.asInstanceOf[FileReader].result.asInstanceOf[ArrayBuffer]
+      val chars = arrayBuffer2CharSeq(result)
 
-      val len = result.byteLength
-      if (!sizeChecker(len)) {
-        val uints = new Uint8Array(result)
-        val chars = for (i <- 0 until len) yield uints(i).toChar
-        val content = TextReader.decodeCharArray(removeBOM(chars).toArray)
-        val txt = if (replaceNewLine) content.replace("\r", "") else content
-        callback(txt)
+      if (!sizeChecker(chars.length)) {
+        callback(decodeText(chars, replaceNewLine))
       }
     }
     r.readAsArrayBuffer(file)
+  }
+
+  /**
+    * Read text content from URL.
+    *
+    * @param url URL
+    * @return decoded text
+    */
+  def readURL(url: String, timeoutMillis: Int)(implicit context: ExecutionContext): Future[String] = {
+    Ajax.get(url, timeout = timeoutMillis, responseType = "arraybuffer", headers = Map(
+      "Content-Type" -> "application/x-www-form-urlencoded"
+    )).recover {
+      case AjaxException(xhr) => xhr
+    }.map { xhr =>
+      xhr.status match {
+        case x if x / 100 == 2 => decodeText(arrayBuffer2CharSeq(xhr.response.asInstanceOf[ArrayBuffer]))
+        case 0 => throw new IllegalArgumentException(s"Connection error: url=${url}")
+        case _ => throw new IllegalArgumentException(s"Unexpected status: status=${xhr.status}, url=${url}")
+      }
+    }
   }
 
   def encodeCharArray(s: String, encoding: String = "UTF8"): Array[Char] = {
@@ -49,6 +67,24 @@ object TextReader {
     val escaped = EscapeUnicode(encoded)
     val enc = encoding.getOrElse(GetEscapeCodeType(escaped))
     getUnescaper(enc)(escaped)
+  }
+
+  private[this] def decodeText(chars: Seq[Char], replaceNewLine: Boolean = true): String = {
+    val content = TextReader.decodeCharArray(removeBOM(chars).toArray)
+    if (replaceNewLine) content.replace("\r", "") else content
+  }
+
+  /**
+    * Convert ArrayBuffer to Seq of Char
+    *
+    * @param buffer ArrayBuffer
+    * @return
+    */
+  private[this] def arrayBuffer2CharSeq(buffer: ArrayBuffer): Seq[Char] = {
+    val len = buffer.byteLength
+    val bs = new Uint8Array(buffer)
+    val chars = for (i <- 0 until len) yield bs(i).toChar
+    chars
   }
 
   /**
