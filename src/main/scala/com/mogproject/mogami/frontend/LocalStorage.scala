@@ -2,11 +2,10 @@ package com.mogproject.mogami.frontend
 
 import com.mogproject.mogami.frontend.api.LZString
 import com.mogproject.mogami.frontend.model.board.BoardIndexType
-import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
 import org.scalajs.dom
 
-import scala.util.{Failure, Success, Try}
+import scala.util.Try
 
 /**
   * Manages browser's Local Storage
