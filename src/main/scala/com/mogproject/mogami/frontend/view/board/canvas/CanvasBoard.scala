@@ -151,7 +151,11 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, mode: Mode) extends 
   private[this] def drawIndexes(): Unit = {
     for (i <- 1 to 9) {
       drawFileIndex(i)
-      (config.recordLang == Japanese).fold(drawJapaneseRankIndex(i), drawWesternRankIndex(i))
+      config.boardIndexType match {
+        case BoardIndexJapanese => drawJapaneseRankIndex(i)
+        case BoardIndexEnglish => drawWesternRankIndex(i)
+        case BoardIndexNumber => drawNumberRankIndex(i)
+      }
     }
   }
 
@@ -168,6 +172,11 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, mode: Mode) extends 
   private[this] def drawWesternRankIndex(index: Int): Unit = {
     val r = config.layout.board.getRankIndexRect(index, flipped)
     renderText(r, ('a' + (index - 1)).toChar.toString, font.size.INDICATOR, font.DEFAULT, color.TEXT, alignCenter = true)
+  }
+
+  private[this] def drawNumberRankIndex(index: Int): Unit = {
+    val r = config.layout.board.getRankIndexRect(index, flipped)
+    renderText(r, index.toString, font.size.INDICATOR, font.DEFAULT, color.TEXT, alignCenter = true)
   }
 
   private[this] def draw(callback: () => Unit): Unit = {
