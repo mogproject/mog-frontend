@@ -250,6 +250,8 @@ trait Messages {
 
   def PIECE_GRAPHIC: String
 
+  def BOARD_BACKGROUND: String
+
   def BOARD_INDEX_TYPE: String
 
   def DOUBLE_BOARD_MODE: String
@@ -277,6 +279,8 @@ trait Messages {
   def LAYOUT_OPTIONS: Map[SVGAreaLayout, String]
 
   def PIECE_GRAPHIC_OPTIONS: Map[PieceFace, String]
+
+  def BOARD_BACKGROUND_OPTIONS: Map[(String, String, String), String]
 
   def BOARD_INDEX_TYPE_OPTIONS: Map[BoardIndexType, String]
 

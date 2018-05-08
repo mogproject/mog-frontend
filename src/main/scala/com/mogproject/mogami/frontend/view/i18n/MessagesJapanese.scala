@@ -173,6 +173,7 @@ case object MessagesJapanese extends Messages {
   override val BOARD_SIZE: String = "盤面サイズ"
   override val LAYOUT: String = "レイアウト"
   override val PIECE_GRAPHIC: String = "駒画像"
+  override val BOARD_BACKGROUND: String = "盤面背景"
   override val BOARD_INDEX_TYPE: String = "座標表示"
   override val DOUBLE_BOARD_MODE: String = "ダブル将棋盤モード"
   override val VISUAL_EFFECTS: String = "エフェクト"
@@ -221,6 +222,11 @@ case object MessagesJapanese extends Messages {
       ShogiCzFace -> "Shogi.cz"
     )
   }
+
+  override val BOARD_BACKGROUND_OPTIONS: Map[(String, String, String), String] = Map(
+    FrontendSettings.color.defaultTheme -> "デフォルト",
+    FrontendSettings.color.naturalTheme -> "ナチュラル"
+  )
 
   override def BOARD_INDEX_TYPE_OPTIONS: Map[BoardIndexType, String] = Map(
     BoardIndexJapanese -> "日本語",

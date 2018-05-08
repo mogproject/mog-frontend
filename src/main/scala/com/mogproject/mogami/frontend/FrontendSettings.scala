@@ -53,6 +53,9 @@ object FrontendSettings {
     val naturalBackground = "#ffd890"
     val naturalCursor = "#f08000"
     val naturalLastMove = "#ffedcc"
+
+    val defaultTheme = (defaultBackground, defaultCursor, defaultLastMove)
+    val naturalTheme = (naturalBackground, naturalCursor, naturalLastMove)
   }
 
 }

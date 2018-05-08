@@ -31,6 +31,10 @@ trait ObserveFlagLike {
   final val CONF_DEV = 1L << 12
   final val CONF_DEBUG = 1L << 13
 
+  // Note: These flags will invoke MainPanelLike#refresh()
+  final val CONF_ALL = CONF_DEVICE | CONF_LAYOUT | CONF_NUM_AREAS | CONF_FLIP_TYPE | CONF_PIECE_WIDTH | CONF_PIECE_FACE |
+    CONF_MSG_LANG | CONF_RCD_LANG | CONF_SOUND | CONF_IDX_TYPE | CONF_COLOR_BACKGROUND | CONF_COLOR_CURSOR | CONF_COLOR_LAST_MOVE
+
   //
   // Mode
   //
@@ -48,6 +52,9 @@ trait ObserveFlagLike {
   final val GAME_PREV_POS = 1L << 26
   final val GAME_BRANCH_CHANGED = 1L << 27
 
+  // Note: These flags will invoke MainPanelLike#refresh()
+  final val MODE_ALL = MODE_TYPE | GAME_BRANCH | GAME_INFO | GAME_POSITION | GAME_HANDICAP | GAME_INDICATOR | GAME_JUST_MOVED | GAME_NEXT_POS | GAME_PREV_POS
+
   //
   // Menu Dialog (Open/Closed)
   //
@@ -61,6 +68,8 @@ trait ObserveFlagLike {
   final val CURSOR_SELECT = 1L << 61
   final val CURSOR_FLASH = 1L << 62
 
+  // Note: These flags will invoke MainPanelLike#refresh()
+  final val CURSOR_ALL = CURSOR_ACTIVE | CURSOR_SELECT | CURSOR_FLASH
 }
 
 object ObserveFlag extends ObserveFlagLike {
