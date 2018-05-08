@@ -21,11 +21,13 @@ case class SVGHand(layout: SVGHandLayout, foremostElement: SVGElement)(implicit 
   //
   // Elements
   //
+  private[this] val borderBackgrounds: Seq[RectElement] = Seq(layout.whiteBackground, layout.blackBackground).map(_.render)
+
   private[this] val borderElements: Seq[RectElement] = Seq(layout.whiteBorder, layout.blackBorder).map(_.render)
 
   override protected def thresholdElement: Element = borderElements.head
 
-  val elements: Seq[SVGElement] = borderElements
+  val elements: Seq[SVGElement] = borderBackgrounds ++ borderElements
 
   // Utility
   def getRect(piece: Piece): Rect = layout.getRect(piece, isFlipped)
@@ -64,6 +66,10 @@ case class SVGHand(layout: SVGHandLayout, foremostElement: SVGElement)(implicit 
     effect.selectedEffector.stop()
     effect.cursorEffector.stop()
     effect.selectingEffector.stop()
+  }
+
+  def drawBackgroundColor(color: String): Unit = {
+    borderBackgrounds.foreach(_.style.fill = color)
   }
 
   //

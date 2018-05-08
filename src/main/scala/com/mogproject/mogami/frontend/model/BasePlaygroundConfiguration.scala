@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.model
 
-import com.mogproject.mogami.frontend.LocalStorage
+import com.mogproject.mogami.frontend.{FrontendSettings, LocalStorage}
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.DeviceType.DeviceType
 import com.mogproject.mogami.frontend.model.board._
@@ -18,6 +18,9 @@ case class BasePlaygroundConfiguration(layout: SVGAreaLayout = SVGStandardLayout
                                        pieceWidth: Option[Int] = None,
                                        flipType: FlipType = FlipDisabled,
                                        pieceFace: PieceFace = PieceFace.JapaneseOneCharFace,
+                                       colorBackground: String = FrontendSettings.color.defaultBackground,
+                                       colorCursor: String = FrontendSettings.color.defaultCursor,
+                                       colorLastMove: String = FrontendSettings.color.defaultLastMove,
                                        boardIndexType: BoardIndexType = BasePlaygroundConfiguration.defaultBoardIndexType,
                                        newBranchMode: Boolean = false,
                                        messageLang: Language = BasePlaygroundConfiguration.browserLanguage,

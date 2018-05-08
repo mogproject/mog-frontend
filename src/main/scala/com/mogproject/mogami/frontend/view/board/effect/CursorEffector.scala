@@ -9,6 +9,6 @@ import scalatags.JsDom.all._
 /**
   * Cursor effect
   */
-case class CursorEffector[T <: EffectorTarget](target: T) extends BackgroundEffectorLike[Rect, T] {
-  override def generateElements(x: Rect): Seq[TypedTag[SVGElement]] = Seq(x.shrink(12).toSVGRect(cls := "board-cursor"))
+case class CursorEffector[T <: EffectorTarget](target: T) extends BackgroundEffectorLike[(Rect, String), T] {
+  override def generateElements(x: (Rect, String)): Seq[TypedTag[SVGElement]] = Seq(x._1.shrink(12).toSVGRect(cls := "board-cursor", style := s"stroke:${x._2};"))
 }

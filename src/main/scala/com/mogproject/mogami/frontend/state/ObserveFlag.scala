@@ -22,6 +22,9 @@ trait ObserveFlagLike {
   final val CONF_FLIP_TYPE = 1L << 7
   final val CONF_PIECE_WIDTH = 1L << 8
   final val CONF_PIECE_FACE = 1L << 9
+  final val CONF_COLOR_BACKGROUND = 1L << 30
+  final val CONF_COLOR_CURSOR = 1L << 31
+  final val CONF_COLOR_LAST_MOVE = 1L << 32
   final val CONF_NEW_BRANCH = 1L << 10
   final val CONF_SOUND = 1L << 11
 
@@ -84,6 +87,9 @@ object ObserveFlag extends ObserveFlagLike {
       }
       if (a.pieceWidth != b.pieceWidth) ret |= CONF_PIECE_WIDTH
       if (a.pieceFace != b.pieceFace) ret |= CONF_PIECE_FACE
+      if (a.colorBackground != b.colorBackground) ret |= CONF_COLOR_BACKGROUND
+      if (a.colorCursor != b.colorCursor) ret |= CONF_COLOR_CURSOR
+      if (a.colorLastMove != b.colorLastMove) ret |= CONF_COLOR_LAST_MOVE
       if (a.boardIndexType != b.boardIndexType) ret |= CONF_IDX_TYPE
       if (a.newBranchMode != b.newBranchMode) ret |= CONF_NEW_BRANCH
       if (a.soundEffectEnabled != b.soundEffectEnabled) ret |= CONF_SOUND

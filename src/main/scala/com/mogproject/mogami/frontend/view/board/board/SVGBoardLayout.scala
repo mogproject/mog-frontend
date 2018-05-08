@@ -59,6 +59,8 @@ case class SVGBoardLayout(offset: Coord, pieceWidth: Int, pieceHeight: Int) {
 
   def boardBorder: TypedTag[RectElement] = boardBorderRect.toSVGRect(cls := "board-border")
 
+  def boardBackground: TypedTag[RectElement] = boardBorderRect.toSVGRect()
+
   def boardLineRects: Seq[Rect] = for {
     i <- 1 to 8
     r <- Seq(Rect(getCoord(0, i), BOARD_WIDTH, 0), Rect(getCoord(i, 0), 0, BOARD_HEIGHT))

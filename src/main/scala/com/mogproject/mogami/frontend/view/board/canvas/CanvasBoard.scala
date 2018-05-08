@@ -4,7 +4,7 @@ import com.mogproject.mogami._
 import com.mogproject.mogami.frontend.Mode
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.board._
-import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, Japanese}
+import com.mogproject.mogami.frontend.model.BasePlaygroundConfiguration
 import com.mogproject.mogami.frontend.util.PlayerUtil
 import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
 import org.scalajs.dom
@@ -39,7 +39,6 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, mode: Mode) extends 
     /** @note should match with svg.css */
     final val BORDER = "#000000"
     final val TEXT = "#000000"
-    final val LAST_MOVE = "#e0e0e0"
     final val PLAYER = "#eeeeee"
     final val HAND_NUMBER_FILL = "#f3f372"
     final val HAND_NUMBER_STROKE = "#333333"
@@ -82,7 +81,11 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, mode: Mode) extends 
         case Right(h) => Seq(config.layout.hand.getRect(h.toPiece, r), config.layout.board.getRect(mv.to, r))
       }
     }
-    rs.foreach(renderRect(_, Some(color.LAST_MOVE)))
+    rs.foreach(renderRect(_, Some(config.colorLastMove)))
+  }
+
+  private[this] def drawBackgroundColor(): Unit = {
+    Seq(config.layout.board.boardBorderRect, config.layout.hand.blackRect, config.layout.hand.whiteRect).foreach(renderRect(_, Some(config.colorBackground)))
   }
 
   private[this] def drawForeground(): Unit = {
@@ -185,6 +188,7 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, mode: Mode) extends 
 
     /** @note drawing order matters */
     drawBackground()
+    drawBackgroundColor()
     drawLastMove(true)
     drawForeground()
 
@@ -220,6 +224,7 @@ case class CanvasBoard(config: BasePlaygroundConfiguration, mode: Mode) extends 
 
     /** @note drawing order matters */
     drawBackground()
+    drawBackgroundColor()
     drawLastMove(false)
     drawForeground()
 

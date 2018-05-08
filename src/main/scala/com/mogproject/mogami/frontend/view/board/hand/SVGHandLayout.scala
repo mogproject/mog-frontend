@@ -51,5 +51,8 @@ case class SVGHandLayout(center: Coord, blackOffset: Coord, pieceWidth: Int, pie
 
   def blackBorder: TypedTag[RectElement] = generateBorder(blackRect)
 
+  def whiteBackground: TypedTag[RectElement] = generateBorder(whiteRect)
+
+  def blackBackground: TypedTag[RectElement] = generateBorder(blackRect)
 }
 

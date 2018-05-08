@@ -37,6 +37,8 @@ case class SVGBoxLayout(centerX: Int,
 
   val boxBorder: TypedTag[RectElement] = boxRect.toSVGRect(cls := "board-border")
 
+  val boxBackground: TypedTag[RectElement] = boxRect.toSVGRect()
+
   val boxShadow: Seq[TypedTag[RectElement]] = Seq(labelRect, shadowRect).map(_.toSVGRect(cls := "box-label"))
 
   val boxLabelText: TypedTag[SVGTextElement] = {

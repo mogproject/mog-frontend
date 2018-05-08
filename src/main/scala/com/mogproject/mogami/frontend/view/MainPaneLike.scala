@@ -253,18 +253,21 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     def check(mask: Long) = areaUpdated || (flag & mask) != 0
 
     // 0. Load Sound
-    if (isFlagUpdated(flag, CONF_SOUND) && model.config.soundEffectEnabled) prepareSound()
+    if (isFlagUpdated(flag, CONF_SOUND) && config.soundEffectEnabled) prepareSound()
 
-    if (flag != -1L && isFlagUpdated(flag, CONF_SOUND) && model.config.soundEffectEnabled) playSound(successSound)
+    if (flag != -1L && isFlagUpdated(flag, CONF_SOUND) && config.soundEffectEnabled) playSound(successSound)
 
     // 0. Mode Change
-    if (flag != -1L && isFlagUpdated(flag, MODE_TYPE) && model.config.soundEffectEnabled) playSound(switchSound)
+    if (flag != -1L && isFlagUpdated(flag, MODE_TYPE) && config.soundEffectEnabled) playSound(switchSound)
 
     // 1. Area
     if (areaUpdated) renderSVGAreas(config.deviceType, config.flipType.numAreas, config.pieceWidth, config.layout)
 
     // 2. Piece Width
     if (check(CONF_PIECE_WIDTH)) resizeSVGAreas(config.deviceType, config.pieceWidth, config.layout)
+
+    // 2. Board Colors
+    if (check(CONF_COLOR_BACKGROUND)) updateSVGArea(_.drawBackgroundColor(config.colorBackground))
 
     // 3. Flip
     if (check(CONF_FLIP_TYPE)) {
@@ -345,7 +348,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     def check(mask: Long) = areaUpdated || (flag & mask) != 0
 
     // 9. Last Move
-    if (check(GAME_BRANCH | GAME_POSITION | MODE_EDIT | CONF_FLIP_TYPE)) updateSVGArea(_.drawLastMove(mode.getLastMove))
+    if (check(GAME_BRANCH | GAME_POSITION | MODE_EDIT | CONF_FLIP_TYPE | CONF_COLOR_LAST_MOVE)) updateSVGArea(_.drawLastMove(mode.getLastMove, config.colorLastMove))
 
     // 10. Active Cursor
     if ((flag & CURSOR_ACTIVE) != 0) {
@@ -354,7 +357,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
 
       // draw new cursor
       model.activeCursor match {
-        case Some((n, c)) => updateSVGArea(n, _.drawCursor(c))
+        case Some((n, c)) => updateSVGArea(n, _.drawCursor(c, config.colorCursor))
         case None => // do nothing
       }
     }
@@ -371,7 +374,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
       updateSVGArea(_.unselect())
 
       // draw new cursor
-      model.selectedCursor.map(_._2).foreach { c => updateSVGArea(_.select(c, config.visualEffectEnabled, legalMoves)) }
+      model.selectedCursor.map(_._2).foreach { c => updateSVGArea(_.select(c, config.visualEffectEnabled, legalMoves, config.colorCursor)) }
     }
 
     // 12. Flash Cursor

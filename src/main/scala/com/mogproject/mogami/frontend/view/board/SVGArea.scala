@@ -28,7 +28,7 @@ case class SVGArea(areaId: Int, layout: SVGAreaLayout)(implicit imageCache: SVGI
     * Transparent foremost rect element for each SVG regions.
     *
     * @note `touchend` event will not fire if an SVG element is removed from dom while being touched. To prevent this,
-    *      Create a region-wide rectangle element as foremost in order to manage user interactions.
+    *       Create a region-wide rectangle element as foremost in order to manage user interactions.
     */
   private[this] lazy val boardForemostElement: SVGRectElement = Rect(Coord(0, 0), layout.viewBoxBottomRight.x, layout.viewBoxBottomRight.y).toSVGRect(
     svgAttrs.fillOpacity := 0
@@ -105,25 +105,25 @@ case class SVGArea(areaId: Int, layout: SVGAreaLayout)(implicit imageCache: SVGI
     box.effect.cursorEffector.stop()
   }
 
-  def select(cursor: Cursor, effectEnabled: Boolean, legalMoves: Set[Square]): Unit = {
+  def select(cursor: Cursor, effectEnabled: Boolean, legalMoves: Set[Square], color: String): Unit = {
     cursor match {
       case BoardCursor(sq) =>
         val r = board.getRect(sq)
-        board.effect.selectedEffector.start(r)
+        board.effect.selectedEffector.start((r, color))
         if (effectEnabled) {
           //          board.effect.selectingEffector.start(r)
           board.effect.legalMoveEffector.start(legalMoves.toSeq)
         }
       case HandCursor(h) =>
         val r = hand.getRect(h)
-        hand.effect.selectedEffector.start(r)
+        hand.effect.selectedEffector.start((r, color))
         if (effectEnabled) {
           //          hand.effect.selectingEffector.start(r)
           board.effect.legalMoveEffector.start(legalMoves.toSeq)
         }
       case BoxCursor(pt) =>
         val r = box.getPieceRect(pt)
-        box.effect.selectedEffector.start(r)
+        box.effect.selectedEffector.start((r, color))
       //        if (effectEnabled) box.effect.selectingEffector.start(r)
       case _ =>
     }
@@ -135,12 +135,12 @@ case class SVGArea(areaId: Int, layout: SVGAreaLayout)(implicit imageCache: SVGI
     box.unselect()
   }
 
-  def drawCursor(cursor: Cursor): Unit = {
+  def drawCursor(cursor: Cursor, color: String): Unit = {
     cursor match {
-      case BoardCursor(sq) => board.effect.cursorEffector.start(board.getRect(sq))
-      case HandCursor(h) => hand.effect.cursorEffector.start(hand.getRect(h))
-      case BoxCursor(pt) => box.effect.cursorEffector.start(box.layout.getRect(pt))
-      case PlayerCursor(pl) => player.effect.cursorEffector.start(player.getRect(pl))
+      case BoardCursor(sq) => board.effect.cursorEffector.start((board.getRect(sq), color))
+      case HandCursor(h) => hand.effect.cursorEffector.start((hand.getRect(h), color))
+      case BoxCursor(pt) => box.effect.cursorEffector.start((box.layout.getRect(pt), color))
+      case PlayerCursor(pl) => player.effect.cursorEffector.start((player.getRect(pl), color))
     }
   }
 
@@ -153,7 +153,7 @@ case class SVGArea(areaId: Int, layout: SVGAreaLayout)(implicit imageCache: SVGI
     }
   }
 
-  def drawLastMove(lastMove: Option[Move]): Unit = {
+  def drawLastMove(lastMove: Option[Move], color: String): Unit = {
     board.effect.lastMoveEffector.stop()
     hand.effect.lastMoveEffector.stop()
 
@@ -161,13 +161,19 @@ case class SVGArea(areaId: Int, layout: SVGAreaLayout)(implicit imageCache: SVGI
       case Some(mv) =>
         mv.moveFrom match {
           case Left(sq) =>
-            board.effect.lastMoveEffector.start(Seq(sq, mv.to).map(board.getRect))
+            board.effect.lastMoveEffector.start((Seq(sq, mv.to).map(board.getRect), color))
           case Right(h) =>
-            board.effect.lastMoveEffector.start(Seq(board.getRect(mv.to)))
-            hand.effect.lastMoveEffector.start(Seq(hand.getRect(h)))
+            board.effect.lastMoveEffector.start((Seq(board.getRect(mv.to)), color))
+            hand.effect.lastMoveEffector.start((Seq(hand.getRect(h)), color))
         }
       case None =>
     }
+  }
+
+  def drawBackgroundColor(color: String): Unit = {
+    board.drawBackgroundColor(color)
+    hand.drawBackgroundColor(color)
+    box.drawBackgroundColor(color)
   }
 
   def showBox(): Unit = WebComponent.showElement(svgBox)
