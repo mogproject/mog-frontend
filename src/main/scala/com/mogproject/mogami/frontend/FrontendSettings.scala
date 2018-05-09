@@ -45,4 +45,17 @@ object FrontendSettings {
     val externalRecordDownload: Duration = 30.seconds
   }
 
+  object color {
+    val defaultBackground = "#ffffff"
+    val defaultCursor = "#e1b265"
+    val defaultLastMove = "#e0e0e0"
+
+    val naturalBackground = "#ffd890"
+    val naturalCursor = "#f08000"
+    val naturalLastMove = "#ffedcc"
+
+    val defaultTheme = (defaultBackground, defaultCursor, defaultLastMove)
+    val naturalTheme = (naturalBackground, naturalCursor, naturalLastMove)
+  }
+
 }

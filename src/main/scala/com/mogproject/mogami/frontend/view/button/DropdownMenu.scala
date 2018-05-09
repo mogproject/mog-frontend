@@ -56,8 +56,10 @@ case class DropdownMenu[A](items: Vector[A],
   // Operations
   //
   def select(item: A): Unit = {
-    value = item
-    refresh()
+    if (items.contains(item)) {
+      value = item
+      refresh()
+    }
   }
 
   def getValue: A = value

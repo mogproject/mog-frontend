@@ -174,6 +174,7 @@ case object MessagesEnglish extends Messages {
   override val BOARD_SIZE: String = "Board Size"
   override val LAYOUT: String = "Layout"
   override val PIECE_GRAPHIC: String = "Piece Graphic"
+  override val BOARD_BACKGROUND: String = "Board Background"
   override val BOARD_INDEX_TYPE: String = "Coordinates"
   override val DOUBLE_BOARD_MODE: String = "Double Board Mode"
   override val VISUAL_EFFECTS: String = "Visual Effects"
@@ -207,6 +208,11 @@ case object MessagesEnglish extends Messages {
   )
 
   override val PIECE_GRAPHIC_OPTIONS: Map[PieceFace, String] = PieceFace.all.map(p => p -> p.displayName).toMap
+
+  override val BOARD_BACKGROUND_OPTIONS: Map[(String, String, String), String] = Map(
+    FrontendSettings.color.defaultTheme -> "Default",
+    FrontendSettings.color.naturalTheme -> "Natural"
+  )
 
   override val BOARD_INDEX_TYPE_OPTIONS: Map[BoardIndexType, String] = BoardIndexType.all.map(v => v -> v.displayName).toMap
 

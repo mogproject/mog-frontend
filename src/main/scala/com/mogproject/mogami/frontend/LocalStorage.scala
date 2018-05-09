@@ -13,6 +13,9 @@ import scala.util.Try
 case class LocalStorage(pieceWidth: Option[Option[Int]] = None,
                         layout: Option[SVGAreaLayout] = None,
                         pieceFace: Option[PieceFace] = None,
+                        colorBackground: Option[String] = None,
+                        colorCursor: Option[String] = None,
+                        colorLastMove: Option[String] = None,
                         boardIndexType: Option[BoardIndexType] = None,
                         doubleBoardMode: Option[Boolean] = None,
                         visualEffect: Option[Boolean] = None,
@@ -31,6 +34,9 @@ case class LocalStorage(pieceWidth: Option[Option[Int]] = None,
       case None => // do nothing
     }
     pieceFace.foreach(x => setItem("p", x.faceId))
+    colorBackground.foreach(x => setItem("colorbg", x))
+    colorCursor.foreach(x => setItem("colorcs", x))
+    colorLastMove.foreach(x => setItem("colorlm", x))
     boardIndexType.foreach(x => setItem("bi", x.id))
     doubleBoardMode.foreach(x => setItem("double", x))
     visualEffect.foreach(x => setItem("ve", x))
@@ -50,6 +56,9 @@ object LocalStorage {
       ("sz", s => ls => ls.copy(pieceWidth = Some(Try(s.toInt).toOption))),
       ("layout", s => ls => ls.copy(layout = parseLayout(s))),
       ("p", s => ls => ls.copy(pieceFace = PieceFace.parseString(s))),
+      ("colorbg", s => ls => ls.copy(colorBackground = parseColor(s))),
+      ("colorcs", s => ls => ls.copy(colorCursor = parseColor(s))),
+      ("colorlm", s => ls => ls.copy(colorLastMove = parseColor(s))),
       ("bi", s => ls => ls.copy(boardIndexType = BoardIndexType.parseString(s))),
       ("double", s => ls => ls.copy(doubleBoardMode = parseBooleanString(s))),
       ("ve", s => ls => ls.copy(visualEffect = parseBooleanString(s))),
@@ -71,6 +80,14 @@ object LocalStorage {
     case "c" => Some(SVGCompactLayout)
     case "w" => Some(SVGWideLayout)
     case _ => None
+  }
+
+  private[this] def parseColor(s: String): Option[String] = {
+    val pattern = """^[0-9A-Fa-f]{6}$""".r
+    s match {
+      case pattern() => Some("#" + s.toLowerCase())
+      case _ => None
+    }
   }
 
   def loadImage(url: String, imageVersion: Int): Option[String] = {

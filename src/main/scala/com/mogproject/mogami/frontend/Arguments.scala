@@ -32,7 +32,7 @@ case class Arguments(sfen: Option[String] = None,
     @tailrec
     def f(sofar: Arguments, ls: List[List[String]]): Arguments = ls match {
       case (x :: s :: Nil) :: xs =>
-        (if (x.startsWith("c")) {
+        (if (x.startsWith("c") && !x.startsWith("co")) {
           // Comments
           parseGamePosition(x.drop(1)) map { pos =>
             val c = sofar.comments.updated(pos.branch, sofar.comments.getOrElse(pos.branch, Map.empty).updated(pos.position, s))
@@ -46,6 +46,9 @@ case class Arguments(sfen: Option[String] = None,
             case "mlang" => Language.parseString(s).map(lang => sofar.updateConfig(_.copy(messageLang = lang)))
             case "rlang" => Language.parseString(s).map(lang => sofar.updateConfig(_.copy(recordLang = lang)))
             case "p" => PieceFace.parseString(s).map(pf => sofar.updateConfig(_.copy(pieceFace = pf)))
+            case "colorbg" => parseColor(s).map(c => sofar.updateConfig(_.copy(colorBackground = c)))
+            case "colorcs" => parseColor(s).map(c => sofar.updateConfig(_.copy(colorCursor = c)))
+            case "colorlm" => parseColor(s).map(c => sofar.updateConfig(_.copy(colorLastMove = c)))
             case "bi" => BoardIndexType.parseString(s).map(it => sofar.updateConfig(_.copy(boardIndexType = it)))
             case "move" => parseGamePosition(s).map(gp => sofar.copy(gamePosition = gp))
             case "flip" => s.toLowerCase match {
@@ -111,6 +114,14 @@ case class Arguments(sfen: Option[String] = None,
     s.toLowerCase match {
       case "true" => Some(true)
       case "false" => Some(false)
+      case _ => None
+    }
+  }
+
+  private[this] def parseColor(s: String): Option[String] = {
+    val pattern = """^[0-9A-Fa-f]{6}$""".r
+    s match {
+      case pattern() => Some("#" + s.toLowerCase())
       case _ => None
     }
   }

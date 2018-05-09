@@ -27,9 +27,11 @@ case class SVGBoard(layout: SVGBoardLayout, foremostElement: SVGElement)(implici
   //
   private[this] val borderElement: RectElement = boardBorder.render
 
-  override protected def thresholdElement: Element = borderElement
+  private[this] val borderBackground: RectElement = boardBackground.render
 
-  val elements: Seq[SVGElement] = borderElement +: (boardLines ++ boardCircles).map(_.render)
+  val elements: Seq[SVGElement] = borderBackground +: borderElement +: (boardLines ++ boardCircles).map(_.render)
+
+  override protected def thresholdElement: Element = borderElement
 
   //
   // Utility
@@ -67,6 +69,9 @@ case class SVGBoard(layout: SVGBoardLayout, foremostElement: SVGElement)(implici
     effect.pieceFlipEffector.start(PieceFlipAttribute(square, oldPiece, oldPiece.promoted, pieceFace), () => showPiece(square))
   }
 
+  def drawBackgroundColor(color: String): Unit = {
+    borderBackground.style.fill = color
+  }
 
   //
   // Effect

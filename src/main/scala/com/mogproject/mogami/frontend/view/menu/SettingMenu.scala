@@ -36,6 +36,13 @@ class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
     _.PIECE_GRAPHIC, PieceFace.all.toVector, _.PIECE_GRAPHIC_OPTIONS, v => _.copy(pieceFace = v)
   )
 
+  private[this] lazy val boardColorSelector = DropdownSelector[(String, String, String)](
+    _.BOARD_BACKGROUND, Vector(
+      FrontendSettings.color.defaultTheme,
+      FrontendSettings.color.naturalTheme
+    ), _.BOARD_BACKGROUND_OPTIONS, v => _.copy(colorBackground = v._1, colorCursor = v._2, colorLastMove = v._3)
+  )
+
   private[this] lazy val boardIndexTypeSelector = DropdownSelector[BoardIndexType](
     _.BOARD_INDEX_TYPE, BoardIndexType.all.toVector, _.BOARD_INDEX_TYPE_OPTIONS, v => _.copy(boardIndexType = v)
   )
@@ -51,6 +58,7 @@ class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
     boardSizeSelector,
     layoutSelector,
     pieceFaceSelector,
+    boardColorSelector,
     boardIndexTypeSelector,
     doubleBoardSelector,
     visualEffectSelector,
@@ -77,6 +85,7 @@ class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
     boardSizeSelector.select(config.pieceWidth)
     layoutSelector.select(config.layout)
     pieceFaceSelector.select(config.pieceFace)
+    boardColorSelector.select((config.colorBackground, config.colorCursor, config.colorLastMove))
     boardIndexTypeSelector.select(config.boardIndexType)
 
     doubleBoardSelector.updateValue(config.flipType == DoubleBoard)

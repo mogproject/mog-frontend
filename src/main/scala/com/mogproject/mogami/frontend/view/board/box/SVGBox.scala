@@ -6,6 +6,7 @@ import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.view.board.effect._
 import org.scalajs.dom.Element
 import org.scalajs.dom.raw.SVGElement
+import org.scalajs.dom.svg.RectElement
 
 
 /**
@@ -20,6 +21,8 @@ case class SVGBox(layout: SVGBoxLayout, foremostElement: SVGElement) extends SVG
   //
   // Elements
   //
+  private[this] val boxBackgroundElement: RectElement = layout.boxBackground.render
+
   private[this] val borderElements: Seq[SVGElement] = (layout.boxShadow ++ Seq(layout.boxBorder, layout.boxLabelText)).map(_.render)
 
   override def clientPos2Cursor(clientX: Double, clientY: Double): Option[Cursor] = {
@@ -31,12 +34,19 @@ case class SVGBox(layout: SVGBoxLayout, foremostElement: SVGElement) extends SVG
 
   override protected def thresholdElement: Element = borderElements.head
 
-  val elements: Seq[SVGElement] = borderElements
+  val elements: Seq[SVGElement] = boxBackgroundElement +: borderElements
 
+  //
+  // Operation
+  //
   def unselect(): Unit = {
     effect.selectedEffector.stop()
     effect.cursorEffector.stop()
     effect.selectingEffector.stop()
+  }
+
+  def drawBackgroundColor(color: String): Unit = {
+    boxBackgroundElement.style.fill = color
   }
 
   //
