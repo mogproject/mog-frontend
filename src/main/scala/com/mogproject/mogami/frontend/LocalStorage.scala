@@ -83,9 +83,9 @@ object LocalStorage {
   }
 
   private[this] def parseColor(s: String): Option[String] = {
-    val reg = """^[0-9A-Za-z]{6}$""".r
+    val pattern = """^[0-9A-Fa-f]{6}$""".r
     s match {
-      case reg() => Some("#" + s.toLowerCase())
+      case pattern() => Some("#" + s.toLowerCase())
       case _ => None
     }
   }
