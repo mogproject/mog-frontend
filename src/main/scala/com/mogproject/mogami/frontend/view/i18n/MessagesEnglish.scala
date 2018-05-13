@@ -55,7 +55,7 @@ case object MessagesEnglish extends Messages {
   override val RECORD_URL: String = "Record URL"
   override val SNAPSHOT_URL: String = "Snapshot URL"
   override val SHORTEN_URL: String = "Shorten URL"
-  override val SHORTEN_URL_TOOLTIP: String = "Create a short URL by Google URL Shortener"
+  override val SHORTEN_URL_TOOLTIP: String = "Create a short URL by kifu.co"
   override val SHORTEN_URL_CREATING: String = "creating"
   override val SNAPSHOT_IMAGE: String = "Snapshot Image"
   override val IMAGE_SIZE: String = "Image Size"

@@ -56,7 +56,7 @@ case object MessagesJapanese extends Messages {
   override val RECORD_URL: String = "棋譜 URL"
   override val SNAPSHOT_URL: String = "局面 URL"
   override val SHORTEN_URL: String = "短縮 URL"
-  override val SHORTEN_URL_TOOLTIP: String = "Google URL Shortener を利用して短縮 URL を生成"
+  override val SHORTEN_URL_TOOLTIP: String = "kifu.co を利用して短縮 URL を生成"
   override val SHORTEN_URL_CREATING: String = "作成中"
   override val SNAPSHOT_IMAGE: String = "局面画像生成"
   override val IMAGE_SIZE: String = "画像サイズ"

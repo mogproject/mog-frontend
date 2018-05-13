@@ -31,12 +31,9 @@ object FrontendSettings {
 
   object api {
 
-    object google {
-
-      object URLShortener {
-        var apiKey: String = "" // needs to be overridden
-      }
-
+    object playground {
+      val apiVersion = 1
+      val apiUrl = "https://kifu.co"
     }
 
   }
