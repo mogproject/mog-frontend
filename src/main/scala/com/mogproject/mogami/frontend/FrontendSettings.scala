@@ -36,14 +36,6 @@ object FrontendSettings {
       val apiUrl = "https://kifu.co"
     }
 
-    object google {
-
-      object URLShortener {
-        var apiKey: String = "" // needs to be overridden
-      }
-
-    }
-
   }
 
   object timeout {
