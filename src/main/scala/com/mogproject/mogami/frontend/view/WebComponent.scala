@@ -2,6 +2,7 @@ package com.mogproject.mogami.frontend.view
 
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.action.PlaygroundAction
+import com.mogproject.mogami.frontend.api.bootstrap.Tooltip
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 import com.mogproject.mogami.frontend.view.event.PointerHoldSensor
 import com.mogproject.mogami.frontend.view.i18n.{DynamicComponentLike, DynamicHoverTooltipLike, DynamicPlaceholderLike, Messages}
@@ -42,7 +43,9 @@ trait WebComponent {
   def enableElement(): Unit = setDisabled(false)
 
   def setDisabled(disabled: Boolean): Unit = element match {
-    case e: HTMLElement => e.disabled = disabled
+    case e: HTMLElement =>
+      Tooltip.hideToolTip(e)
+      e.disabled = disabled
     case _ =>
   }
 
