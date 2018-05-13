@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view.button
 
-import com.mogproject.mogami.frontend.api.google.URLShortener
+import com.mogproject.mogami.frontend.api.playground.URLShortener
 import com.mogproject.mogami.frontend._
 import org.scalajs.dom.Element
 import scalatags.JsDom.all._

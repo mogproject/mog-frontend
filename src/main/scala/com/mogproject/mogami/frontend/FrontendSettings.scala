@@ -31,6 +31,11 @@ object FrontendSettings {
 
   object api {
 
+    object playground {
+      val apiVersion = 1
+      val apiUrl = "https://kifu.co"
+    }
+
     object google {
 
       object URLShortener {
