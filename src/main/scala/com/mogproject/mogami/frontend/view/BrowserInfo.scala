@@ -28,7 +28,7 @@ object BrowserInfo {
   /** true if the device accepts touches */
   lazy val hasTouchEvent: Boolean = dom.window.hasOwnProperty("ontouchstart")
 
-  lazy val isMobile: Boolean = dom.window.screen.width < 768
+  lazy val isMobile: Boolean = math.min(dom.window.screen.width, dom.window.screen.height) < 768
 
   var isAnimationSupported: Boolean = true
 
