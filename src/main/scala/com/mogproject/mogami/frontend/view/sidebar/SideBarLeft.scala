@@ -1,12 +1,13 @@
 package com.mogproject.mogami.frontend.view.sidebar
 
 import com.mogproject.mogami.frontend._
+import com.mogproject.mogami.frontend.action.CopyAllMovesAction
 import com.mogproject.mogami.frontend.view.SVGImageCache
 import com.mogproject.mogami.frontend.view.branch.BranchArea
+import com.mogproject.mogami.frontend.view.button.CommandButton
 import com.mogproject.mogami.frontend.view.control.{ControlBar, ControlBarType}
 import com.mogproject.mogami.frontend.view.i18n.Messages
 import org.scalajs.dom.html.{Div, Heading}
-
 import scalatags.JsDom.all._
 
 /**
@@ -18,7 +19,12 @@ class SideBarLeft(implicit imageCache: SVGImageCache) extends SideBarLike with S
 
   override protected val outputClass: String = "sidebar-left hidden-xs"
 
-  lazy val controlBar = ControlBar(ControlBarType.LongList)
+  private[this] lazy val controlBar = ControlBar(ControlBarType.LongList)
+
+  private[this] lazy val copyMovesButton: WebComponent = CommandButton(
+    classButtonDefault + " " + classButtonThin,
+    onclick := { () => doAction(CopyAllMovesAction) }
+  ).withDynamicTextContent(_.COPY_ALL_MOVES)
 
   lazy val branchArea = BranchArea(isMobile = false)
 
@@ -31,7 +37,8 @@ class SideBarLeft(implicit imageCache: SVGImageCache) extends SideBarLike with S
     cls := "sidebar-left-content",
     div(
       cls := "long-select",
-      controlBar.element
+      controlBar.element,
+      copyMovesButton.element
     ),
     branchArea.element,
     editHelpArea.element
@@ -60,6 +67,13 @@ class SideBarLeft(implicit imageCache: SVGImageCache) extends SideBarLike with S
   override def expandSideBar(): Unit = if (isCollapsed) {
     super.expandSideBar()
     content.style.marginLeft = SideBarLeft.EXPANDED_MARGIN
+  }
+
+  //
+  // Action
+  //
+  def copyAllMoves(txt: String): Unit = {
+    copyMovesButton.element.setAttribute("data-clipboard-text", txt)
   }
 
   //

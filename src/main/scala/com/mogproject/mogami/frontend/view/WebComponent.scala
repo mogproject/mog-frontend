@@ -78,6 +78,8 @@ trait WebComponent {
   //
   def classButtonDefault: String = "btn-default"
 
+  def classButtonThin: String = "thin-btn"
+
   def classButtonBlock: String = "btn-block"
 
   def classButtonDefaultBlock: String = classButtonDefault + " " + classButtonBlock

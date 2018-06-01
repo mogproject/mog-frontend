@@ -3,6 +3,7 @@ package com.mogproject.mogami.frontend.model
 import com.mogproject.mogami.core.move.IllegalMove
 import com.mogproject.mogami.core.state.State.PromotionFlag
 import com.mogproject.mogami.frontend.model.io.{CSA, KI2, KIF, RecordFormat}
+import com.mogproject.mogami.frontend.view.i18n.RecordMessages
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.{GamePosition, _}
 
@@ -80,16 +81,13 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
 
   def getDisplayingHand: HandType = getDisplayingIllegalMove.map(mv => getDisplayingState.makeNextPosition(mv.move)._2).getOrElse(getDisplayingState.hand)
 
-  /** last status position => cannot move */
-  private[this] val finalizedGameStatus = Seq(GameStatus.Mated, GameStatus.Uchifuzume, GameStatus.PerpetualCheck, GameStatus.Drawn)
-
   /**
     * Get the game status of a displaying position.
     *
     * @return
     */
   def getDisplayingGameStatus: GameStatus = {
-    if (isAdditionalPosition || (isLastStatusPosition && finalizedGameStatus.contains(displayBranch.status))) {
+    if (isAdditionalPosition || (isLastStatusPosition && GameControl.finalizedGameStatus.contains(displayBranch.status))) {
       displayBranch.status
     } else {
       GameStatus.Playing
@@ -196,4 +194,59 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
     case KIF => game.toKifString
     case KI2 => game.toKi2String
   }
+
+  /**
+    * Creates and returns the representation of all moves
+    *
+    * @param recordLang record language
+    * @return Seq of (optional index, move representation, has comment?, has fork?)
+    */
+  def getAllMoveRepresentation(recordLang: Language): Seq[(Option[Int], String, Boolean, Boolean)] = {
+    val messages = RecordMessages.get(recordLang)
+
+    game.withBranch(displayBranchNo) { br =>
+      val xs = (messages.INITIAL_STATE +: getMoveStringList(recordLang)).zipWithIndex.map { case (m, i) =>
+        val pos = GamePosition(displayBranchNo, i + game.trunk.offset)
+        ((i != 0).option(pos.position), m, game.hasComment(pos), game.hasFork(pos))
+      }
+
+      val suffix = messages.SPECIAL_MOVES.get(br.status).map((None, _, false, false))
+      xs ++ suffix
+    }.getOrElse(Nil)
+  }
+
+  /**
+    * Create move description
+    *
+    * @param recordLang language
+    * @return
+    */
+  private[this] def getMoveStringList(recordLang: Language): List[String] = {
+    val f: Move => (Player, String) = mv => mv.player -> (recordLang match {
+      case Japanese => mv.toJapaneseNotationString
+      case English => mv.toWesternNotationString
+    })
+    val g: SpecialMove => String = recordLang match {
+      case Japanese => _.toJapaneseNotationString
+      case English => _.toWesternNotationString
+    }
+    game.withBranch(displayBranchNo) { br =>
+      val lastTurn = br.lastState.turn
+      val mvs = displayMoves.map(f)
+      val lst: List[(Player, String)] = br.status match {
+        case GameStatus.Resigned | GameStatus.TimedUp => List(lastTurn -> g(br.finalAction.get))
+        case GameStatus.IllegallyMoved => g(br.finalAction.get).split("\n").toList.take(1).map(lastTurn -> _)
+        case _ => Nil
+      }
+
+      (mvs ++ lst).map { case (pl, ss) => pl.toSymbolString() + ss }.toList
+    }.getOrElse(Nil)
+  }
+}
+
+object GameControl {
+
+  /** last status position => cannot move */
+  protected val finalizedGameStatus = Seq(GameStatus.Mated, GameStatus.Uchifuzume, GameStatus.PerpetualCheck, GameStatus.Drawn)
+
 }

@@ -295,7 +295,12 @@ trait Messages {
 
   def ABOUT_CONTENT: Seq[Frag]
 
+  //
+  // Moves
+  //
   def MOVES: String
+
+  def COPY_ALL_MOVES: String
 
   def TRUNK: String
 

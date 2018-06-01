@@ -20,7 +20,7 @@ case class NavBar(isMobile: Boolean, embeddedMode: Boolean) extends NavBarLike w
     availableModes,
     (_: Messages) => Map[ModeType, String](PlayModeType -> "Play", ViewModeType -> "View", EditModeType -> "Edit").filterKeys(availableModes.contains),
     (mt: ModeType) => doAction(ChangeModeAction(mt, confirmed = false)),
-    Seq("thin-btn", "mode-select"),
+    Seq(classButtonThin, "mode-select"),
     Seq.empty
   )
 

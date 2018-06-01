@@ -13,3 +13,5 @@ case class AnalyzeResultMessage(analyzeResult: AnalyzeResult) extends Message
 case class CopyResultMessage(format: RecordFormat) extends Message
 
 case class HandleDialogMessage(dialog: Dialog, open: Boolean = true) extends Message
+
+case class CopyAllMovesMessage(text: String) extends Message

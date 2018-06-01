@@ -18,7 +18,7 @@ class FlipButton extends WebComponent with SAMObserver[BasePlaygroundModel] {
   private[this] var value: FlipType = FlipDisabled
 
   override lazy val element: Button = CommandButton(
-    "btn-toggle thin-btn",
+    "btn-toggle " + classButtonThin,
     onclick := { () => doAction(UpdateConfigurationAction(c => c.copy(flipType = !c.flipType))) }
   ).withDynamicTextContent(_.FLIP, "retweet").element.asInstanceOf[Button]
 

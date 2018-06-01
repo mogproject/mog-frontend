@@ -15,7 +15,7 @@ import scalatags.JsDom.all._
 case class ResignButton(isSmall: Boolean, confirm: Boolean) extends WebComponent with SAMObserver[BasePlaygroundModel] {
 
   private[this] val button = CommandButton(
-    classButtonDefault + " " + isSmall.fold("thin-btn btn-resign", classButtonBlock),
+    classButtonDefault + " " + isSmall.fold(classButtonThin + " btn-resign", classButtonBlock),
     onclick := { () => clickAction() },
     (!isSmall).option(dismissModal)
   )
