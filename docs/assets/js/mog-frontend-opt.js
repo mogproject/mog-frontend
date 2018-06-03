@@ -21,4 +21,3 @@ var x=Q({G:0},"java.lang.String",{G:1,b:1,d:1,U:1,e:1},void 0,void 0,function(a)
 0)===a&&1/a!==1/-0}),F=Q({N:0},"java.lang.Long",{N:1,i:1,b:1,d:1,e:1},void 0,void 0,function(a){return!!(a&&a.a&&a.a.f.y)}),z=Q({O:0},"java.lang.Short",{O:1,i:1,b:1,d:1,e:1},void 0,void 0,function(a){return a<<16>>16===a&&1/a!==1/-0});function Y(){this.r=this.t=0}Y.prototype=new pa;Y.prototype.constructor=Y;Y.prototype.z=function(){R();var a=this.t,b=this.r;return b===a>>31?""+a:0>b?"-"+qa(-a|0,0!==a?~b:-b|0):qa(a,b)};function L(a,b){var c=new Y;c.t=a;c.r=b;return c}
 Y.prototype.x=function(){return this.t^this.r};Y.prototype.a=Q({y:0},"scala.scalajs.runtime.RuntimeLong",{y:1,i:1,b:1,d:1,e:1});
 }).call(this);
-//# sourceMappingURL=mog-frontend-opt.js.map
