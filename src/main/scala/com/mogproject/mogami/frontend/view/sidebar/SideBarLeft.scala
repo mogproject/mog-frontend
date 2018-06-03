@@ -19,7 +19,7 @@ class SideBarLeft(implicit imageCache: SVGImageCache) extends SideBarLike with S
 
   override protected val outputClass: String = "sidebar-left hidden-xs"
 
-  private[this] lazy val controlBar = ControlBar(ControlBarType.LongList)
+  lazy val controlBar = ControlBar(ControlBarType.LongList)
 
   private[this] lazy val copyMovesButton: WebComponent = CommandButton(
     classButtonDefault + " " + classButtonThin,

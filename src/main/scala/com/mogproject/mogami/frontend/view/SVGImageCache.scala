@@ -1,7 +1,6 @@
 package com.mogproject.mogami.frontend.view
 
 import com.mogproject.mogami.frontend.{FrontendSettings, LocalStorage}
-import org.scalajs.dom
 import org.scalajs.dom.ext.{Ajax, AjaxException}
 import org.scalajs.dom.raw.{Blob, BlobPropertyBag, URL}
 
@@ -52,27 +51,32 @@ class SVGImageCache {
     * @return
     */
   private[this] def downloadImage(url: String, timeout: Int): Future[String] = {
-    processingUrls += url
+    if (FrontendSettings.imageDownloadEnabled) {
+      processingUrls += url
 
-    // check Local Storage
-    LocalStorage.loadImage(url, FrontendSettings.imageVersion) match {
-      case Some(data) => Future(createObjectURL(url, data))
-      case None =>
-        Ajax.get(url, timeout = timeout).recover {
-          case AjaxException(xhr) => xhr
-        } map { xhr =>
-          xhr.status match {
-            case 200 => xhr.responseText
-            case _ =>
-              val msg = s"Failed to download image: url=${url} status=${xhr.status}"
-              println(msg)
-              throw new RuntimeException(msg)
+      // check Local Storage
+      LocalStorage.loadImage(url, FrontendSettings.imageVersion) match {
+        case Some(data) => Future(createObjectURL(url, data))
+        case None =>
+          Ajax.get(url, timeout = timeout).recover {
+            case AjaxException(xhr) => xhr
+          } map { xhr =>
+            xhr.status match {
+              case 200 => xhr.responseText
+              case _ =>
+                val msg = s"Failed to download image: url=${url} status=${xhr.status}"
+                println(msg)
+                throw new RuntimeException(msg)
+            }
+          } map { data =>
+            // save to Local Storage
+            LocalStorage.saveImage(url, FrontendSettings.imageVersion, data)
+            createObjectURL(url, data)
           }
-        } map { data =>
-          // save to Local Storage
-          LocalStorage.saveImage(url, FrontendSettings.imageVersion, data)
-          createObjectURL(url, data)
-        }
+      }
+    } else {
+      // for testing / benchmark
+      Future("")
     }
   }
 

@@ -1,0 +1,8 @@
+2018-06-03
+==========
+
+# START: benchNavigateGame (loop=10, bench=5)
+
+- avg: 4.089s, min: 3.872s, max: 4.763s [3.920, 3.872, 3.991, 3.901, 4.763]
+
+# END  : benchNavigateGame

@@ -11,6 +11,8 @@ object FrontendSettings {
 
   val imageVersion = 4
 
+  var imageDownloadEnabled = true
+
   object url {
     val baseUrl = "https://play.mogproject.com/"
     val authorSiteUrl = "https://mogproject.com"
