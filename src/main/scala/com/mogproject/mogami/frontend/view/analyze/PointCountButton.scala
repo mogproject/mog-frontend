@@ -46,7 +46,7 @@ class PointCountButton(isMobile: Boolean) extends WebComponent with SAMObserver[
   }
 
   def clearMessage(): Unit = {
-    countMessage.innerHTML = ""
+    if (countMessage.innerHTML.nonEmpty) countMessage.innerHTML = ""
   }
 
   //

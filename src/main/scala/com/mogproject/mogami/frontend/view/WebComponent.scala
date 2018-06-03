@@ -43,7 +43,7 @@ trait WebComponent {
   def enableElement(): Unit = setDisabled(false)
 
   def setDisabled(disabled: Boolean): Unit = element match {
-    case e: HTMLElement =>
+    case e: HTMLElement if !e.disabled.contains(disabled) =>
       Tooltip.hideToolTip(e)
       e.disabled = disabled
     case _ =>

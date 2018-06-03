@@ -157,7 +157,8 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
     val forks = game.getForks(gamePosition)
 
     if (forks.isEmpty) {
-      forksButtons.innerHTML = isMobile.fold(Messages.get.NO_FORKS, "")
+      val msg = isMobile.fold(Messages.get.NO_FORKS, "")
+      if (forksButtons.innerHTML != msg) forksButtons.innerHTML = msg
     } else {
       val nextMove = game.getMove(gamePosition).map(_ -> gamePosition.branch)
 
@@ -198,7 +199,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
         case Some(gc) =>
           show()
 
-          if (model.menuDialogOpen || isFlagUpdated(flag, MODE_TYPE | GAME_BRANCH | GAME_POSITION | CONF_RCD_LANG | CONF_MSG_LANG)) {
+          if (model.menuDialogOpen || isFlagUpdated(flag, MODE_TYPE | GAME_BRANCH | CONF_RCD_LANG | CONF_MSG_LANG)) {
             updateBranchList(gc.game.branches.length, gc.gamePosition.branch)
           }
           if (model.menuDialogOpen || isFlagUpdated(flag, MODE_TYPE | GAME_BRANCH | GAME_POSITION | CONF_RCD_LANG)) {

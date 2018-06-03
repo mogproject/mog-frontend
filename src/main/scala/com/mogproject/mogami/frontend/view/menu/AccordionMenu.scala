@@ -52,21 +52,23 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
     )
   ).render
 
+  private[this] val panelHeading = div(
+    cls := "panel-heading",
+    id := s"heading${ident}",
+    role := "button",
+    data("toggle") := "collapse",
+    data("target") := s"#collapse${ident}",
+    data("parent") := "#accordion",
+    titleElemHeading
+  ).render
+
   override lazy val element: Div = {
     val elem = div(
       cls := "panel",
       data("toggle") := "tooltip",
       data("placement") := "left",
       marginBottom := 5.px,
-      div(
-        cls := "panel-heading",
-        id := s"heading${ident}",
-        role := "button",
-        data("toggle") := "collapse",
-        data("target") := s"#collapse${ident}",
-        data("parent") := "#accordion",
-        titleElemHeading
-      ),
+      panelHeading,
       mainElem
     ).render
 
@@ -117,6 +119,10 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
 
   def expandContent(): Unit = {
     if (labelArea.isVisible) getJQueryElem.collapse("show")
+  }
+
+  def isExpanded: Boolean = {
+    panelHeading.getAttribute("aria-expanded") == "true"
   }
 
   initialize()
