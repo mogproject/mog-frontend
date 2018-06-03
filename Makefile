@@ -50,5 +50,9 @@ merge:
 	git merge master
 	git push
 
-.PHONY: build test console clean local local_mobile server publish publish-commit
+bench:
+	${SBT} 'set logLevel := Level.Error' 'set scalaJSStage in Global := FullOptStage' 'test:run-main com.mogproject.mogami.frontend.bench.BenchmarkJS'
+
+
+.PHONY: build test console clean local local_mobile server publish publish-commit merge bench
 

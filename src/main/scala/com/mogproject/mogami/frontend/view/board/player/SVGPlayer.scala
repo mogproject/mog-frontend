@@ -127,7 +127,7 @@ case class SVGPlayer(layout: SVGPlayerLayout, foremostElement: SVGElement)(impli
   def refreshIndicators(): Unit = {
     indicators.foreach {
       case (pl, ind) =>
-        indicatorTextElements.getFirst(pl).textContent = ind.map(_.text).getOrElse("")
+        indicatorTextElements.getFirst(pl).textContent = ind.map(_.text).getOrElse("") // Notes: possibly a performance bottleneck
         indicatorBackgrounds.get(pl).foreach(WebComponent.setClass(_, ind.map(_.className).getOrElse("indicator-none")))
     }
   }

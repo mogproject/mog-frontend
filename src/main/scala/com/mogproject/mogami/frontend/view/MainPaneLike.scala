@@ -52,9 +52,9 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
 
   private[this] val svgAreas: mutable.ListBuffer[SVGArea] = mutable.ListBuffer.empty
 
-  private[this] val controlBar: ControlBar = ControlBar((isMobile || embeddedMode).fold(ControlBarType.Small, ControlBarType.Normal))
+  val controlBar: ControlBar = ControlBar((isMobile || embeddedMode).fold(ControlBarType.Small, ControlBarType.Normal))
 
-  private[this] val commentArea: CommentArea = CommentArea(isDisplayOnly = isMobile || embeddedMode)
+  val commentArea: CommentArea = CommentArea(isDisplayOnly = isMobile || embeddedMode)
 
   private[this] val mainArea = div().render
 
@@ -63,11 +63,11 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     mainArea
   ).render
 
-  private[this] val sideBarRight: Option[SideBarRight] = (!isMobile && !embeddedMode).option(new SideBarRight {
+  val sideBarRight: Option[SideBarRight] = (!isMobile && !embeddedMode).option(new SideBarRight {
     override def getMenuPane: MenuPane = getSite().menuPane
   })
 
-  private[this] val sideBarLeft: Option[SideBarLeft] = (!isMobile && !embeddedMode).option(new SideBarLeft)
+  val sideBarLeft: Option[SideBarLeft] = (!isMobile && !embeddedMode).option(new SideBarLeft)
 
   private[this] val sidebars: Seq[SideBarLike] = sideBarRight.toSeq ++ sideBarLeft
 
@@ -384,8 +384,8 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
         playSound(switchSound)
       } else if (isFlagUpdated(flag, GAME_BRANCH) || isFlagUpdated(flag, GAME_JUST_MOVED)) {
         mode match {
-          case (PlayMode(_)) =>
-          case (EditMode(_, _, _, _)) => playSound(clickSound)
+          case PlayMode(_, _) =>
+          case EditMode(_, _, _, _, _) => playSound(clickSound)
           case _ =>
         }
       } else {

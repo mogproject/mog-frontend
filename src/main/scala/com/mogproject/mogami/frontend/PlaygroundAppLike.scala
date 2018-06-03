@@ -54,8 +54,8 @@ trait PlaygroundAppLike[M <: BasePlaygroundModel, V <: BasePlaygroundView, S <: 
       val isSnapshot = game.trunk.moves.isEmpty && game.trunk.finalAction.isEmpty && game.branches.isEmpty
 
       val mode = isSnapshot.fold(
-        PlayMode(GameControl(game, 0, 0)),
-        ViewMode(GameControl(game, args.gamePosition.branch, math.max(0, args.gamePosition.position - game.trunk.offset)))
+        PlayMode(GameControl(game, 0, 0), None),
+        ViewMode(GameControl(game, args.gamePosition.branch, math.max(0, args.gamePosition.position - game.trunk.offset)), None)
       )
 
       // verify config

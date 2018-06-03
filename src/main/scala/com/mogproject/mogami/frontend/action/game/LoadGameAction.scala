@@ -19,7 +19,7 @@ case class LoadGameAction(game: Game) extends PlaygroundAction {
     game.stateCache.refresh(validHashes)
     if (model.config.isDebug) printStateCacheInfo(game, "Refreshed state hashes. After: numKeys=")
 
-    Some(model.copy(newMode = ViewMode(GameControl(newGame))))
+    Some(model.copy(newMode = ViewMode(GameControl(newGame), None)))
   }
 
   private[this] def printStateCacheInfo(game: Game, message: String):Unit = {

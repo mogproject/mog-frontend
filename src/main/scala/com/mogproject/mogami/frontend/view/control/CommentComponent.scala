@@ -70,9 +70,15 @@ case class CommentComponent(isDisplayOnly: Boolean, isModal: Boolean, text: Stri
   }
 
   def refreshButtonDisabled(): Unit = {
-    Tooltip.hideToolTip(textClearButton.element)
-    Tooltip.hideToolTip(textUpdateButton.element)
-    textClearButton.setDisabled(textCommentInput.element.value.isEmpty)
-    textUpdateButton.disableElement()
+    (textClearButton.isDisabled, textCommentInput.element.value.isEmpty) match {
+      case (true, true) => // do nothing
+      case (true, false) => textClearButton.setDisabled(false)
+      case (false, true) => Tooltip.hideToolTip(textClearButton.element); textClearButton.setDisabled(true)
+      case (false, false) => // do nothing
+    }
+    if (!textUpdateButton.isDisabled) {
+      Tooltip.hideToolTip(textUpdateButton.element)
+      textUpdateButton.disableElement()
+    }
   }
 }

@@ -24,8 +24,8 @@ class ModeSpec extends FlatSpec with MustMatchers with GeneratorDrivenPropertyCh
 
     val g = Game(tr.updateFinalAction(Some(IllegalMove(mv))))
 
-    PlayMode(GameControl(g, 0, 5)).getBoardPieces.get(Square(2, 6)) mustBe Some(Piece(BLACK, PAWN))
-    PlayMode(GameControl(g, 0, 6)).getBoardPieces.get(Square(2, 6)) mustBe Some(Piece(BLACK, PAWN))
+    PlayMode(GameControl(g, 0, 5), None).getBoardPieces.get(Square(2, 6)) mustBe Some(Piece(BLACK, PAWN))
+    PlayMode(GameControl(g, 0, 6), None).getBoardPieces.get(Square(2, 6)) mustBe Some(Piece(BLACK, PAWN))
   }
 
   "Mode#getHandPieces" must "work with illegal states" in StateCache.withCache { implicit cache =>
@@ -39,8 +39,8 @@ class ModeSpec extends FlatSpec with MustMatchers with GeneratorDrivenPropertyCh
 
     val g = Game(tr.updateFinalAction(Some(IllegalMove(mv))))
 
-    PlayMode(GameControl(g, 0, 5)).getHandPieces.get(Hand(BLACK, PAWN)) mustBe Some(0)
-    PlayMode(GameControl(g, 0, 6)).getHandPieces.get(Hand(BLACK, PAWN)) mustBe Some(0)
+    PlayMode(GameControl(g, 0, 5), None).getHandPieces.get(Hand(BLACK, PAWN)) mustBe Some(0)
+    PlayMode(GameControl(g, 0, 6), None).getHandPieces.get(Hand(BLACK, PAWN)) mustBe Some(0)
   }
 
 }

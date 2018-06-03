@@ -43,7 +43,7 @@ trait WebComponent {
   def enableElement(): Unit = setDisabled(false)
 
   def setDisabled(disabled: Boolean): Unit = element match {
-    case e: HTMLElement =>
+    case e: HTMLElement if !e.disabled.contains(disabled) =>
       Tooltip.hideToolTip(e)
       e.disabled = disabled
     case _ =>
@@ -242,17 +242,18 @@ object WebComponent {
     //    }
   }
 
+  // Notes: Use `if` statements to improve performance.
   def showElement(elem: Element, displayStyle: StylePair[Element, String]): Unit = elem match {
-    case e: HTMLElement => e.style.display = displayStyle.v
-    case e: SVGElement => e.setAttribute("visibility", "visible")
+    case e: HTMLElement if e.style.display != displayStyle.v => e.style.display = displayStyle.v
+    case e: SVGElement if e.getAttribute("visibility") != "visible" => e.setAttribute("visibility", "visible")
     case _ =>
   }
 
   def showElement(elem: Element): Unit = showElement(elem, display.block)
 
   def hideElement(elem: Element): Unit = elem match {
-    case e: HTMLElement => e.style.display = display.none.v
-    case e: SVGElement => e.setAttribute("visibility", "hidden")
+    case e: HTMLElement if e.style.display != display.none.v => e.style.display = display.none.v
+    case e: SVGElement if e.getAttribute("visibility") != "hidden" => e.setAttribute("visibility", "hidden")
     case _ =>
   }
 

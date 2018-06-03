@@ -45,7 +45,11 @@ case class LocalStorage(pieceWidth: Option[Option[Int]] = None,
     recordLang.foreach(x => setItem("rlang", x))
   }
 
-  private[this] def setItem(key: String, item: Any): Unit = dom.window.localStorage.setItem(key, item.toString)
+  private[this] def setItem(key: String, item: Any): Unit = try {
+    dom.window.localStorage.setItem(key, item.toString)
+  } catch {
+    case _: RuntimeException => // do nothing
+  }
 
   private[this] def clearItem(key: String): Unit = dom.window.localStorage.removeItem(key)
 }
@@ -90,10 +94,17 @@ object LocalStorage {
     }
   }
 
+  /**
+    * Load image from LocalStorage
+    *
+    * @param url          URL to the image
+    * @param imageVersion image version
+    * @return encoded image data
+    */
   def loadImage(url: String, imageVersion: Int): Option[String] = {
     val key = "i:" + url
     val ret = for {
-      compressed <- Option(dom.window.localStorage.getItem(key))
+      compressed <- Try(dom.window.localStorage.getItem(key)).toOption
       data = LZString.decompressFromUTF16(compressed)
       tokens = data.split(";", 2) if tokens.size == 2
       v <- Try(tokens.head.toInt).toOption if imageVersion == v // check version
@@ -101,7 +112,13 @@ object LocalStorage {
       tokens(1)
     }
 
-    if (ret.isEmpty) dom.window.localStorage.removeItem(key)
+    if (ret.isEmpty) {
+      try {
+        dom.window.localStorage.removeItem(key)
+      } catch {
+        case _: RuntimeException => // Failed to remove item.
+      }
+    }
     ret
   }
 

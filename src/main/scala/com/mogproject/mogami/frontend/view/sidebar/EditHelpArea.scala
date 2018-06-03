@@ -59,7 +59,7 @@ class EditHelpArea(implicit imageCache: SVGImageCache) extends WebComponent with
 
   override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
     model.mode match {
-      case EditMode(_, _, b, _) =>
+      case EditMode(_, _, b, _, _) =>
         model.selectedCursor match {
           case Some((_, BoardCursor(sq))) => b.get(sq).foreach(p => renderAttributes(p.ptype, model.config.pieceFace))
           case _ => clearAttributes()

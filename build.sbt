@@ -21,7 +21,10 @@ lazy val root = (project in file("."))
 
     jsDependencies ++= Seq(
       RuntimeDOM,
-      ProvidedJS / "assets/js/ecl_new.js" % Test
+      "org.webjars" % "jquery" % "1.12.4" / "jquery.js" % Test,
+      ProvidedJS / "assets/js/ecl_new.js" % Test,
+      ProvidedJS / "assets/js/bootstrap.min.js" % Test,
+      ProvidedJS / "assets/js/clipboard.min.js" % Test
     )
   )
   .dependsOn(mogCore)

@@ -47,7 +47,7 @@ trait ObserveFlagLike {
   final val GAME_POSITION = 1L << 21
   final val GAME_INDICATOR = 1L << 22
   final val GAME_HANDICAP = 1L << 23
-  final val GAME_JUST_MOVED = 1L << 24
+  final val GAME_JUST_MOVED = 1L << 24 // Transition to the next move
   final val GAME_NEXT_POS = 1L << 25
   final val GAME_PREV_POS = 1L << 26
   final val GAME_BRANCH_CHANGED = 1L << 27
@@ -132,7 +132,7 @@ object ObserveFlag extends ObserveFlagLike {
       }
 
       (a, b) match {
-        case (EditMode(_, t1, b1, h1), EditMode(_, t2, b2, h2)) if t1 != t2 || b1 != b2 || h1 != h2 => ret |= GAME_BRANCH
+        case (EditMode(_, t1, b1, h1, _), EditMode(_, t2, b2, h2, _)) if t1 != t2 || b1 != b2 || h1 != h2 => ret |= GAME_BRANCH
         case _ =>
       }
 

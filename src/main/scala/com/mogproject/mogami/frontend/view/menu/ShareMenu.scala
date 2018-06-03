@@ -10,6 +10,7 @@ import org.scalajs.dom.html.Div
 
 import scalatags.JsDom
 import scalatags.JsDom.all._
+import org.scalajs.dom
 
 /**
   *
@@ -62,6 +63,10 @@ class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePl
   }
 
   override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
+    setTimer(model, flag)
+  }
+
+  private[this] def refreshImpl(model: BasePlaygroundModel, flag: Long): Unit = {
 
     /** Do not update if the menu dialog is hidden. */
     if (!model.config.deviceType.isMobile || model.menuDialogOpen) {
@@ -77,6 +82,19 @@ class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePl
         notesViewButton.updateValue(builder.toNotesViewUrl)
       }
     }
+  }
+
+  //
+  // Lazy refreshment
+  //
+  private[this] var currentTimer: Option[Int] = None
+
+  private[this] def setTimer(model: BasePlaygroundModel, flag: Long): Unit = {
+    currentTimer.foreach { t =>
+      // cancel previous timer
+      dom.window.clearTimeout(t)
+    }
+    currentTimer = Some(dom.window.setTimeout(() => refreshImpl(model, flag), 300))
   }
 
 }
