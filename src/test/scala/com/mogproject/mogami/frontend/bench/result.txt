@@ -10,3 +10,7 @@
 #benchNavigateGame (loop=10, bench=5):
 
 - avg: 3.010s, min: 2.981s, max: 3.055s [3.055, 2.994, 3.033, 2.987, 2.981]
+
+#benchNavigateGame (loop=10, bench=5):
+
+- avg: 2.923s, min: 2.885s, max: 2.962s [2.906, 2.962, 2.916, 2.885, 2.945]
