@@ -302,22 +302,35 @@ trait Messages {
 
   def COPY_ALL_MOVES: String
 
+  def COPY_ALL_MOVES_TOOLTIP: String
+
   def TRUNK: String
 
   //
   // Modal
   //
   def CONFIRMATION: String
+
   def GAME_INFORMATION: String
+
   def PLAYER_NAMES: String
+
   def UPDATE: String
+
   def ASK_PROMOTE: String
+
   def YES: String
+
   def NO: String
+
   def ASK_RESIGN: String
+
   def IMAGE_DOWNLOAD_FAILURE: String
+
   def ASK_EDIT: String
+
   def ASK_DELETE_BRANCH(branchNo: BranchNo): String
+
   def INVALID_STATE: String
 }
 
