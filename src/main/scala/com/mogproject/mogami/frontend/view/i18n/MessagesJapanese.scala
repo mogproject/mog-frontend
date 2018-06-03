@@ -278,6 +278,7 @@ case object MessagesJapanese extends Messages {
 
   override val MOVES: String = "棋譜"
   override val COPY_ALL_MOVES: String = "全ての指し手をコピー"
+  override val COPY_ALL_MOVES_TOOLTIP: String = "全ての指し手をテキストとしてコピー"
   override val TRUNK: String = "本譜"
 
   override val CONFIRMATION: String = "確認"
