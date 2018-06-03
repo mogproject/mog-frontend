@@ -384,8 +384,8 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
         playSound(switchSound)
       } else if (isFlagUpdated(flag, GAME_BRANCH) || isFlagUpdated(flag, GAME_JUST_MOVED)) {
         mode match {
-          case PlayMode(_) =>
-          case EditMode(_, _, _, _) => playSound(clickSound)
+          case PlayMode(_, _) =>
+          case EditMode(_, _, _, _, _) => playSound(clickSound)
           case _ =>
         }
       } else {

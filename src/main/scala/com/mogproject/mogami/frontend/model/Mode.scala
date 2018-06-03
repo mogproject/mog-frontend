@@ -13,7 +13,8 @@ sealed abstract class Mode(val modeType: ModeType,
                            val playable: Set[Player],
                            val playerSelectable: Boolean,
                            val forwardAvailable: Boolean,
-                           val boxAvailable: Boolean) {
+                           val boxAvailable: Boolean,
+                           isHandicappedHint: Option[Boolean]) {
   def boardCursorAvailable: Boolean = playable.nonEmpty
 
   //
@@ -49,17 +50,17 @@ sealed abstract class Mode(val modeType: ModeType,
   }
 
   def isPrevious(mode: Mode): Boolean = (this, mode) match {
-    case (ViewMode(a), ViewMode(b)) => a.displayPosition == b.displayPosition - 1
+    case (ViewMode(a, _), ViewMode(b, _)) => a.displayPosition == b.displayPosition - 1
     case _ => false
   }
 
   def isNext(mode: Mode): Boolean = (this, mode) match {
-    case (ViewMode(a), ViewMode(b)) => a.displayPosition == b.displayPosition + 1
+    case (ViewMode(a, _), ViewMode(b, _)) => a.displayPosition == b.displayPosition + 1
     case _ => false
   }
 
   def isJustMoved(mode: Mode): Boolean = this match {
-    case EditMode(_, _, b, h) => b != mode.getBoardPieces || h != mode.getHandPieces
+    case EditMode(_, _, b, h, _) => b != mode.getBoardPieces || h != mode.getHandPieces
     case _ =>
       (getGameControl, mode.getGameControl) match {
         case (Some(a), Some(b)) =>
@@ -72,10 +73,10 @@ sealed abstract class Mode(val modeType: ModeType,
 
   def getPlayerNames: Map[Player, String] = {
     val g = this match {
-      case PlayMode(gc) => gc.game.gameInfo
-      case ViewMode(gc) => gc.game.gameInfo
-      case LiveMode(_, gc) => gc.game.gameInfo
-      case EditMode(gi, _, _, _) => gi
+      case PlayMode(gc, _) => gc.game.gameInfo
+      case ViewMode(gc, _) => gc.game.gameInfo
+      case LiveMode(_, gc, _) => gc.game.gameInfo
+      case EditMode(gi, _, _, _, _) => gi
     }
     PlayerUtil.getPlayerNames(g)
   }
@@ -86,24 +87,24 @@ sealed abstract class Mode(val modeType: ModeType,
   }
 
   def getTurn: Player = this match {
-    case PlayMode(gc) => gc.getDisplayingTurn
-    case ViewMode(gc) => gc.getDisplayingTurn
-    case LiveMode(_, gc) => gc.getDisplayingTurn
-    case EditMode(_, t, _, _) => t
+    case PlayMode(gc, _) => gc.getDisplayingTurn
+    case ViewMode(gc, _) => gc.getDisplayingTurn
+    case LiveMode(_, gc, _) => gc.getDisplayingTurn
+    case EditMode(_, t, _, _, _) => t
   }
 
   def getBoardPieces: BoardType = this match {
-    case PlayMode(gc) => gc.getDisplayingBoard
-    case ViewMode(gc) => gc.getDisplayingBoard
-    case LiveMode(_, gc) => gc.getDisplayingBoard
-    case EditMode(_, _, b, _) => b
+    case PlayMode(gc, _) => gc.getDisplayingBoard
+    case ViewMode(gc, _) => gc.getDisplayingBoard
+    case LiveMode(_, gc, _) => gc.getDisplayingBoard
+    case EditMode(_, _, b, _, _) => b
   }
 
   def getHandPieces: HandType = this match {
-    case PlayMode(gc) => gc.getDisplayingHand
-    case ViewMode(gc) => gc.getDisplayingHand
-    case LiveMode(_, gc) => gc.getDisplayingHand
-    case EditMode(_, _, _, h) => h
+    case PlayMode(gc, _) => gc.getDisplayingHand
+    case ViewMode(gc, _) => gc.getDisplayingHand
+    case LiveMode(_, gc, _) => gc.getDisplayingHand
+    case EditMode(_, _, _, h, _) => h
   }
 
   lazy val getBoxPieces: Map[Ptype, Int] = {
@@ -116,17 +117,17 @@ sealed abstract class Mode(val modeType: ModeType,
   }
 
   def getGameControl: Option[GameControl] = this match {
-    case PlayMode(gc) => Some(gc)
-    case ViewMode(gc) => Some(gc)
-    case LiveMode(_, gc) => Some(gc)
-    case EditMode(_, _, _, _) => None
+    case PlayMode(gc, _) => Some(gc)
+    case ViewMode(gc, _) => Some(gc)
+    case LiveMode(_, gc, _) => Some(gc)
+    case EditMode(_, _, _, _, _) => None
   }
 
   def getGameInfo: GameInfo = this match {
-    case PlayMode(gc) => gc.game.gameInfo
-    case ViewMode(gc) => gc.game.gameInfo
-    case LiveMode(_, gc) => gc.game.gameInfo
-    case EditMode(gi, _, _, _) => gi
+    case PlayMode(gc, _) => gc.game.gameInfo
+    case ViewMode(gc, _) => gc.game.gameInfo
+    case LiveMode(_, gc, _) => gc.game.gameInfo
+    case EditMode(gi, _, _, _, _) => gi
   }
 
   def getLegalMoves(moveFrom: MoveFrom): Set[Square] = {
@@ -141,7 +142,7 @@ sealed abstract class Mode(val modeType: ModeType,
 
   def getLastMove: Option[Move] = getGameControl.flatMap(_.getDisplayingLastMove)
 
-  def isHandicapped: Boolean = {
+  lazy val isHandicapped: Boolean = isHandicappedHint.getOrElse {
     val bp = getBoxPieces.filter(_._2 > 0)
     bp.nonEmpty && !bp.contains(KING)
   }
@@ -150,27 +151,31 @@ sealed abstract class Mode(val modeType: ModeType,
   // Setters
   //
   def setGameControl(gameControl: GameControl): Mode = this match {
-    case x@PlayMode(_) => x.copy(gameControl = gameControl)
-    case x@ViewMode(_) => x.copy(gameControl = gameControl)
-    case x@LiveMode(_, _) => x.copy(gameControl = gameControl)
-    case EditMode(_, _, _, _) => this
+    case x@PlayMode(_, _) => x.copy(gameControl = gameControl, isHandicappedHint = Some(isHandicapped))
+    case x@ViewMode(_, _) => x.copy(gameControl = gameControl, isHandicappedHint = Some(isHandicapped))
+    case x@LiveMode(_, _, _) => x.copy(gameControl = gameControl, isHandicappedHint = Some(isHandicapped))
+    case EditMode(_, _, _, _, _) => this
   }
 
   def updateGameControl(f: GameControl => GameControl): Option[Mode] = getGameControl.map(gc => setGameControl(f(gc)))
 }
 
-case class PlayMode(gameControl: GameControl) extends Mode(PlayModeType, Player.constructor.toSet, true, false, false) {
+case class PlayMode(gameControl: GameControl, isHandicappedHint: Option[Boolean])
+  extends Mode(PlayModeType, Player.constructor.toSet, true, false, false, isHandicappedHint) {
 
 }
 
-case class ViewMode(gameControl: GameControl) extends Mode(ViewModeType, Set.empty, true, true, false) {
+case class ViewMode(gameControl: GameControl, isHandicappedHint: Option[Boolean])
+  extends Mode(ViewModeType, Set.empty, true, true, false, isHandicappedHint) {
 
 }
 
-case class EditMode(gameInfo: GameInfo, turn: Player, board: BoardType, hand: HandType) extends Mode(EditModeType, Player.constructor.toSet, true, false, true) {
+case class EditMode(gameInfo: GameInfo, turn: Player, board: BoardType, hand: HandType, isHandicappedHint: Option[Boolean])
+  extends Mode(EditModeType, Player.constructor.toSet, true, false, true, isHandicappedHint) {
 
 }
 
-case class LiveMode(player: Option[Player], gameControl: GameControl) extends Mode(LiveModeType, player.toSet, false, false, false) {
+case class LiveMode(player: Option[Player], gameControl: GameControl, isHandicappedHint: Option[Boolean])
+  extends Mode(LiveModeType, player.toSet, false, false, false, isHandicappedHint) {
 
 }

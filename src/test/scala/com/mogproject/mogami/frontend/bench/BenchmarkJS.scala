@@ -23,9 +23,9 @@ object BenchmarkJS extends scalajs.js.JSApp with TestData {
     setupSAM(recordUsen01)
 
     benchNavigateGame()
-    //    benchNavigateGamePhase1()
-    //    benchNavigateGamePhase2()
-    //    benchNavigateGamePhase3()
+    benchNavigateGamePhase1()
+    benchNavigateGamePhase2()
+    benchNavigateGamePhase3()
 
     benchViewRefresh("benchRefreshMainPane", _.website.mainPane.refresh)
     benchViewRefresh("benchRefreshShareMenu", _.website.shareMenu.refresh)
@@ -67,7 +67,7 @@ object BenchmarkJS extends scalajs.js.JSApp with TestData {
 
 
   private[this] def setupSAM(usen: String): Unit = {
-    val mode = PlayMode(GameControl(Game.parseUsenString(usen)))
+    val mode = PlayMode(GameControl(Game.parseUsenString(usen)), None)
     val config = BasePlaygroundConfiguration(visualEffectEnabled = false)
     val model = TestModel(mode, config)
     val view = TestView(false, false, false, false, false, div().render)
@@ -90,7 +90,7 @@ object BenchmarkJS extends scalajs.js.JSApp with TestData {
   }
 
   private[this] def benchNavigateGamePhase1(): Unit = {
-    val mode = PlayMode(GameControl(Game.parseUsenString(recordUsen01)))
+    val mode = PlayMode(GameControl(Game.parseUsenString(recordUsen01)), None)
     val config = BasePlaygroundConfiguration(visualEffectEnabled = false)
     val model = TestModel(mode, config)
 
@@ -103,7 +103,7 @@ object BenchmarkJS extends scalajs.js.JSApp with TestData {
   }
 
   private[this] def benchNavigateGamePhase2(): Unit = {
-    val mode = PlayMode(GameControl(Game.parseUsenString(recordUsen01)))
+    val mode = PlayMode(GameControl(Game.parseUsenString(recordUsen01)), None)
     val config = BasePlaygroundConfiguration(visualEffectEnabled = false)
     val model = TestModel(mode, config)
     val view = TestView(false, false, false, false, false, div().render)
@@ -122,7 +122,7 @@ object BenchmarkJS extends scalajs.js.JSApp with TestData {
   }
 
   private[this] def benchNavigateGamePhase3(): Unit = {
-    val mode = PlayMode(GameControl(Game.parseUsenString(recordUsen01)))
+    val mode = PlayMode(GameControl(Game.parseUsenString(recordUsen01)), None)
     val config = BasePlaygroundConfiguration(visualEffectEnabled = false)
     val model = TestModel(mode, config)
     val view = TestView(false, false, false, false, false, div().render)
@@ -141,7 +141,7 @@ object BenchmarkJS extends scalajs.js.JSApp with TestData {
   }
 
   private[this] def benchViewRefresh(label: String, refreshFunc: TestView => (TestModel, Long) => Unit): Unit = {
-    val mode = PlayMode(GameControl(Game.parseUsenString(recordUsen01)))
+    val mode = PlayMode(GameControl(Game.parseUsenString(recordUsen01)), None)
     val config = BasePlaygroundConfiguration(visualEffectEnabled = false)
     val model = TestModel(mode, config)
     val view = TestView(false, false, false, false, false, div().render)

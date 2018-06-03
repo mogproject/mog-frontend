@@ -132,7 +132,7 @@ object ObserveFlag extends ObserveFlagLike {
       }
 
       (a, b) match {
-        case (EditMode(_, t1, b1, h1), EditMode(_, t2, b2, h2)) if t1 != t2 || b1 != b2 || h1 != h2 => ret |= GAME_BRANCH
+        case (EditMode(_, t1, b1, h1, _), EditMode(_, t2, b2, h2, _)) if t1 != t2 || b1 != b2 || h1 != h2 => ret |= GAME_BRANCH
         case _ =>
       }
 

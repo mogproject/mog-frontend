@@ -12,7 +12,7 @@ import com.mogproject.mogami.frontend.model.board.cursor.BoardCursor
 case class EditAttributeAction(promoted: Boolean, rotated: Boolean) extends PlaygroundAction {
   override def execute(model: BasePlaygroundModel): Option[BasePlaygroundModel] = {
     (model.mode, model.selectedCursor) match {
-      case (m@EditMode(_, _, b, _), Some((areaId, BoardCursor(sq)))) =>
+      case (m@EditMode(_, _, b, _, _), Some((areaId, BoardCursor(sq)))) =>
         b.get(sq).map { p =>
           val owner = (model.config.isAreaFlipped(areaId) ^ rotated).fold(WHITE, BLACK)
           val ptype = promoted.fold(p.ptype.promoted, p.ptype.demoted)

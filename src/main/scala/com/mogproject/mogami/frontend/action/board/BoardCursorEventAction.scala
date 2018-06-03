@@ -53,8 +53,8 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
       //
       // Player (Editing)
       //
-      case (Some(PlayerCursor(pl)), EditMode(gi, t, b, h)) if pl != t =>
-        Some(newModel.copy(newMode = EditMode(gi, pl, b, h)))
+      case (Some(PlayerCursor(pl)), x@EditMode(_, t, _, _, _)) if pl != t =>
+        Some(newModel.copy(newMode = x.copy(turn = pl)))
       //
       // Player (Playing/Viewing)
       //
@@ -83,12 +83,12 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
       //
       // Invoke (Playing)
       //
-      case (Some(BoardCursor(sq)), PlayMode(gc)) if newModel.selectedCursor.isDefined =>
+      case (Some(BoardCursor(sq)), PlayMode(gc, _)) if newModel.selectedCursor.isDefined =>
         makeMove(gc, newModel.copy(newSelectedCursor = None), areaId, newModel.selectedCursor.get._2.moveFrom, sq, newModel.config.newBranchMode)
       //
       // Invoke (Live)
       //
-      case (Some(BoardCursor(sq)), LiveMode(pl, gc)) if newModel.selectedCursor.isDefined =>
+      case (Some(BoardCursor(sq)), LiveMode(pl, gc, _)) if newModel.selectedCursor.isDefined =>
         makeMove(gc, newModel.copy(newSelectedCursor = None), areaId, newModel.selectedCursor.get._2.moveFrom, sq, newBranchMode = false)
       //
       // Deselect
@@ -157,7 +157,7 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
 
   private[this] def invokeForward(model: BasePlaygroundModel, areaId: Int, square: Square): Option[BasePlaygroundModel] = {
     model.mode match {
-      case m@ViewMode(gc) =>
+      case m@ViewMode(gc, _) =>
         val isForward = model.config.isAreaFlipped(areaId) ^ square.file < 5
         val nextGC = isForward.fold(gc.withNextDisplayPosition, gc.withPreviousDisplayPosition)
         Some(model.copy(newMode = m.setGameControl(nextGC)))

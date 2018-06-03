@@ -65,6 +65,7 @@ class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePl
 
     /** Do not update if the menu dialog is hidden. */
     if (!model.config.deviceType.isMobile || model.menuDialogOpen) {
+//    if ((!model.config.deviceType.isMobile || model.menuDialogOpen) && isExpanded) {
       super.refresh(model, flag)
 
       model.mode.getGameControl.foreach { gc =>
