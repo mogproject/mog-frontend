@@ -24,7 +24,7 @@ class SideBarLeft(implicit imageCache: SVGImageCache) extends SideBarLike with S
   private[this] lazy val copyMovesButton: WebComponent = CommandButton(
     classButtonDefault + " " + classButtonThin,
     onclick := { () => doAction(CopyAllMovesAction) }
-  ).withDynamicTextContent(_.COPY_ALL_MOVES).withDynamicHoverTooltip(_.COPY_ALL_MOVES_TOOLTIP)
+  ).withDynamicTextContent(_.COPY_ALL_MOVES)
 
   lazy val branchArea = BranchArea(isMobile = false)
 
