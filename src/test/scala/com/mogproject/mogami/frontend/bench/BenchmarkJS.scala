@@ -22,7 +22,7 @@ object BenchmarkJS extends scalajs.js.JSApp with TestData {
 
     setupSAM(recordUsen01)
 
-    //    benchNavigateGame()
+    benchNavigateGame()
     //    benchNavigateGamePhase1()
     //    benchNavigateGamePhase2()
     //    benchNavigateGamePhase3()
