@@ -28,7 +28,7 @@ trait NavBarLike extends WebComponent {
   lazy val resignButton: ResignButton = ResignButton(isSmall = true, confirm = false)
 
   lazy val menuButton: WebComponent = CommandButton(
-    classButtonDefault + " thin-btn menu-btn",
+    classButtonDefault + " " + classButtonThin + " menu-btn",
     onclick := { () => doAction(MenuDialogAction(true)) }
   ).withTextContent(MessagesEnglish.MENU, "menu-hamburger")
 

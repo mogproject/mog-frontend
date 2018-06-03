@@ -260,6 +260,7 @@ case object MessagesEnglish extends Messages {
   )
 
   override val MOVES: String = "Moves"
+  override val COPY_ALL_MOVES: String = "Copy All Moves"
   override val TRUNK: String = "Trunk"
 
   override val CONFIRMATION: String = "Confirmation"

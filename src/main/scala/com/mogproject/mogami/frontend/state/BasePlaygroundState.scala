@@ -35,6 +35,8 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
         view.renderAnalyzeResult(result, newModel.config.recordLang)
       case CopyResultMessage(format) =>
         newModel.mode.getGameControl.foreach { gc => view.website.manageMenu.saveLoadButton.renderRecord(gc.getRecord(format)) }
+      case CopyAllMovesMessage(text) =>
+        newModel.mode.getGameControl.foreach { gc => view.website.mainPane.copyAllMoves(text) }
       case HandleDialogMessage(dialog, open) => dialog match {
         case PromotionDialog(rawMove, rotate) =>
           view.askPromote(newModel.config.pieceFace, rawMove, rotate)

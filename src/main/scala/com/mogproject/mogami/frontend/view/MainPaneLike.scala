@@ -213,6 +213,8 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     }
   }
 
+  def copyAllMoves(text: String): Unit = sideBarLeft.foreach(_.copyAllMoves(text))
+
   //
   // Image cache
   //
