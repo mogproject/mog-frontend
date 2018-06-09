@@ -85,9 +85,11 @@ class SideBarLeft(implicit imageCache: SVGImageCache) extends SideBarLike with S
     if (model.mode.isEditMode) {
       title.innerHTML = Messages.get.EDIT
       editHelpArea.show()
+      copyMovesButton.hide()
     } else {
       title.innerHTML = Messages.get.MOVES
       editHelpArea.hide()
+      copyMovesButton.show()
     }
   }
 }
