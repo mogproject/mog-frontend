@@ -31,6 +31,9 @@ make server
 make local
 ```
 
+Or if you are using `tmux`, run `./scripts/tmux_start.sh`.
+
+
 ### Mobile Testing
 
 ```
