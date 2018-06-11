@@ -8,7 +8,7 @@ import com.mogproject.mogami.frontend.model._
   *
   */
 case class AddMovesAction(moves: Seq[Move]) extends PlaygroundAction {
-  override def execute(model: BasePlaygroundModel): Option[BasePlaygroundModel] = {
+  override def execute(model: PlaygroundModel): Option[PlaygroundModel] = {
     val m = model.mode
     m.getGameControl.flatMap { gc =>
       val basePosition = gc.gamePosition
@@ -19,7 +19,7 @@ case class AddMovesAction(moves: Seq[Move]) extends PlaygroundAction {
       } map { gc =>
         // go back to the original position
         val nextGC = gc.copy(displayPosition = basePosition.position)
-        model.copy(newMode = m.setGameControl(nextGC))
+        model.copy(mode = m.setGameControl(nextGC))
       }
     }
   }

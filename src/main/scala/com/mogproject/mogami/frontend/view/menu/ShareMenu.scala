@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.view.menu
 
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.dialog.EmbedDialogAction
-import com.mogproject.mogami.frontend.model.{BasePlaygroundModel, PlayModeType, ViewModeType}
+import com.mogproject.mogami.frontend.model.{PlaygroundModel, PlayModeType, ViewModeType}
 import com.mogproject.mogami.frontend.view.button.CommandButton
 import com.mogproject.mogami.frontend.view.common.WarningLabel
 import com.mogproject.mogami.frontend.view.share._
@@ -15,7 +15,7 @@ import org.scalajs.dom
 /**
   *
   */
-class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
+class ShareMenu(isMobile: Boolean) extends AccordionMenu with PlaygroundSAMObserver {
 
   override lazy val ident: String = "Share"
 
@@ -62,18 +62,18 @@ class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePl
     GAME_BRANCH | GAME_INFO | GAME_POSITION | GAME_COMMENT | CONF_FLIP_TYPE | MENU_DIALOG
   }
 
-  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
+  override def refresh(model: PlaygroundModel, flag: Long): Unit = {
     setTimer(model, flag)
   }
 
-  private[this] def refreshImpl(model: BasePlaygroundModel, flag: Long): Unit = {
+  private[this] def refreshImpl(model: PlaygroundModel, flag: Long): Unit = {
 
     /** Do not update if the menu dialog is hidden. */
     if (!model.config.deviceType.isMobile || model.menuDialogOpen) {
       super.refresh(model, flag)
 
       model.mode.getGameControl.foreach { gc =>
-        val builder = ArgumentsBuilder(gc, model.config)
+        val builder = PlaygroundArgumentsBuilder(gc, model.config)
         recordCopyButton.updateValue(builder.toRecordUrl)
         if (builder.commentOmitted) warningLabel.show() else warningLabel.hide()
         snapshotCopyButton.updateValue(builder.toSnapshotUrl)
@@ -89,7 +89,7 @@ class ShareMenu(isMobile: Boolean) extends AccordionMenu with SAMObserver[BasePl
   //
   private[this] var currentTimer: Option[Int] = None
 
-  private[this] def setTimer(model: BasePlaygroundModel, flag: Long): Unit = {
+  private[this] def setTimer(model: PlaygroundModel, flag: Long): Unit = {
     currentTimer.foreach { t =>
       // cancel previous timer
       dom.window.clearTimeout(t)

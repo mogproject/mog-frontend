@@ -15,7 +15,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-case class ControlBar(barType: ControlBarType) extends WebComponent with SAMObserver[BasePlaygroundModel] {
+case class ControlBar(barType: ControlBarType) extends WebComponent with PlaygroundSAMObserver {
 
   private[this] val LONG_LIST_SIZE = 29
 
@@ -111,7 +111,7 @@ case class ControlBar(barType: ControlBarType) extends WebComponent with SAMObse
     GAME_BRANCH | GAME_COMMENT | GAME_POSITION | GAME_BRANCH_CHANGED | CONF_RCD_LANG | MODE_EDIT
   }
 
-  override def refresh(model: BasePlaygroundModel, flag: StateHash): Unit = {
+  override def refresh(model: PlaygroundModel, flag: StateHash): Unit = {
     import ObserveFlag._
 
     model.mode.getGameControl match {

@@ -4,9 +4,10 @@ import com.mogproject.mogami.core.{Player, Ptype}
 import com.mogproject.mogami.frontend.model.DeviceType.DeviceType
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.api.WebAudioAPISound
-import com.mogproject.mogami.frontend.model.{EditMode, PlayMode}
+import com.mogproject.mogami.frontend.model.{EditMode, PlayMode, PlaygroundModel}
 import com.mogproject.mogami.frontend.model.board.cursor.{BoardCursor, Cursor, PlayerCursor}
 import com.mogproject.mogami.frontend.model.board.{BoardIndexJapanese, DoubleBoard, FlipDisabled, FlipEnabled}
+import com.mogproject.mogami.frontend.sam.PlaygroundSAMObserver
 import com.mogproject.mogami.frontend.util.PlayerUtil
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.view.board.{SVGArea, SVGAreaLayout}
@@ -14,6 +15,7 @@ import com.mogproject.mogami.frontend.view.control.{CommentArea, ControlBar, Con
 import com.mogproject.mogami.frontend.view.menu.MenuPane
 import com.mogproject.mogami.frontend.view.modal.AlertDialog
 import com.mogproject.mogami.frontend.view.sidebar.{SideBarLeft, SideBarLike, SideBarRight}
+import com.mogproject.mogami.frontend.view.system.{BrowserInfo, SVGImageCache}
 import org.scalajs.dom
 import org.scalajs.dom.Element
 import org.scalajs.dom.html.Div
@@ -27,7 +29,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObserver[BasePlaygroundModel] {
+trait MainPaneLike extends WebComponent with Observer[SideBarLike] with PlaygroundSAMObserver {
   def isMobile: Boolean
 
   def embeddedMode: Boolean
@@ -158,13 +160,13 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
       case e: HTMLElement =>
         pieceWidth match {
           case Some(pw) =>
-            val w = BasePlaygroundConfiguration.getSVGAreaSize(deviceType, pw, layout, svgAreas.size)
+            val w = PlaygroundConfiguration.getSVGAreaSize(deviceType, pw, layout, svgAreas.size)
             e.style.maxWidth = w.px
-            e.style.minWidth = BasePlaygroundConfiguration.getSVGAreaSize(deviceType, BasePlaygroundConfiguration.MIN_PIECE_WIDTH, layout, svgAreas.size).px
+            e.style.minWidth = PlaygroundConfiguration.getSVGAreaSize(deviceType, PlaygroundConfiguration.MIN_PIECE_WIDTH, layout, svgAreas.size).px
             e.style.width = w.px
           case None =>
-            e.style.maxWidth = BasePlaygroundConfiguration.getMaxSVGAreaSize(deviceType, BasePlaygroundConfiguration.MAX_PIECE_WIDTH, layout, svgAreas.size).px
-            e.style.minWidth = BasePlaygroundConfiguration.getSVGAreaSize(deviceType, BasePlaygroundConfiguration.MIN_PIECE_WIDTH, layout, svgAreas.size).px
+            e.style.maxWidth = PlaygroundConfiguration.getMaxSVGAreaSize(deviceType, PlaygroundConfiguration.MAX_PIECE_WIDTH, layout, svgAreas.size).px
+            e.style.minWidth = PlaygroundConfiguration.getSVGAreaSize(deviceType, PlaygroundConfiguration.MIN_PIECE_WIDTH, layout, svgAreas.size).px
             e.style.width = 100.pct
         }
       case _ =>
@@ -236,11 +238,11 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   //
   override val samObserveMask: Long = ObserveFlag.MODE_ALL | ObserveFlag.CONF_ALL | ObserveFlag.CURSOR_ALL
 
-  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
+  override def refresh(model: PlaygroundModel, flag: Long): Unit = {
     refreshPhase1(model, flag)
   }
 
-  private[this] def refreshPhase1(model: BasePlaygroundModel, flag: Long): Unit = {
+  private[this] def refreshPhase1(model: PlaygroundModel, flag: Long): Unit = {
     import ObserveFlag._
 
     lazy val config = model.config
@@ -286,7 +288,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
     }
   }
 
-  private[this] def refreshPhase2(model: BasePlaygroundModel, flag: Long, areaUpdated: Boolean): Unit = {
+  private[this] def refreshPhase2(model: PlaygroundModel, flag: Long, areaUpdated: Boolean): Unit = {
     import ObserveFlag._
 
     lazy val mode = model.mode
@@ -335,7 +337,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with SAMObser
   }
 
 
-  private[this] def refreshPhase3(model: BasePlaygroundModel, flag: Long, areaUpdated: Boolean): Unit = {
+  private[this] def refreshPhase3(model: PlaygroundModel, flag: Long, areaUpdated: Boolean): Unit = {
     import ObserveFlag._
 
     lazy val mode = model.mode

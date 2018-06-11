@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.view.setting
 
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.UpdateConfigurationAction
-import com.mogproject.mogami.frontend.model.BasePlaygroundConfiguration
+import com.mogproject.mogami.frontend.model.PlaygroundConfiguration
 import com.mogproject.mogami.frontend.view.button.RadioButton
 import org.scalajs.dom.Element
 
@@ -11,7 +11,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-case class BooleanSelector(labelFunc: Messages => String, f: Boolean => BasePlaygroundConfiguration => BasePlaygroundConfiguration) extends WebComponent {
+case class BooleanSelector(labelFunc: Messages => String, f: Boolean => PlaygroundConfiguration => PlaygroundConfiguration) extends WebComponent {
   private[this] val labelElem = WebComponent.dynamicLabel(labelFunc, marginTop := 6.px)
 
   private[this] val button = RadioButton(

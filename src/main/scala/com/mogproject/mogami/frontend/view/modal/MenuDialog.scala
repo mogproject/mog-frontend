@@ -11,7 +11,7 @@ import scalatags.JsDom.all._
 /**
   * Menu dialog
   */
-case class MenuDialog(menuPane: MenuPane) extends ModalLike with SAMObserver[BasePlaygroundModel] {
+case class MenuDialog(menuPane: MenuPane) extends ModalLike with PlaygroundSAMObserver {
 
   override def getTitle(messages: Messages): Frag = WebComponent.dynamicSpan(_.MENU).element
 
@@ -59,7 +59,7 @@ case class MenuDialog(menuPane: MenuPane) extends ModalLike with SAMObserver[Bas
   //
   override val samObserveMask: Long = ObserveFlag.MENU_DIALOG
 
-  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
+  override def refresh(model: PlaygroundModel, flag: Long): Unit = {
     if (model.menuDialogOpen) show() else hide()
   }
 }

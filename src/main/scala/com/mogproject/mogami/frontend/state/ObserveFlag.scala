@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.state
 
-import com.mogproject.mogami.frontend.model.{BasePlaygroundModel, EditMode, HandleDialogMessage, PromotionDialog}
+import com.mogproject.mogami.frontend.model.{PlaygroundModel, EditMode, HandleDialogMessage, PromotionDialog}
 
 /**
   *
@@ -73,7 +73,7 @@ trait ObserveFlagLike {
 }
 
 object ObserveFlag extends ObserveFlagLike {
-  def getObserveFlag(oldModel: BasePlaygroundModel, newModel: BasePlaygroundModel): Long = {
+  def getObserveFlag(oldModel: PlaygroundModel, newModel: PlaygroundModel): Long = {
     var ret: Long = 0
 
     //

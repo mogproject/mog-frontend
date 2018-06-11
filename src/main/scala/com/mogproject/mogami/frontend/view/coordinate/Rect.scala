@@ -1,11 +1,10 @@
 package com.mogproject.mogami.frontend.view.coordinate
 
-import com.mogproject.mogami.frontend.view.SVGImageCache
+import com.mogproject.mogami.frontend.view.system.SVGImageCache
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom.raw.{SVGImageElement, SVGLineElement}
 import org.scalajs.dom.svg
 import org.scalajs.dom.svg.RectElement
-
 import scalatags.JsDom.all._
 import scalatags.JsDom.svgTags
 import scalatags.JsDom.svgAttrs

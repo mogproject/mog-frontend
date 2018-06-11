@@ -2,14 +2,14 @@ package com.mogproject.mogami.frontend.action.game
 
 import com.mogproject.mogami.Game
 import com.mogproject.mogami.frontend.action.PlaygroundAction
-import com.mogproject.mogami.frontend.model.{BasePlaygroundModel, GameControl, ViewMode}
+import com.mogproject.mogami.frontend.model.{PlaygroundModel, GameControl, ViewMode}
 import com.mogproject.mogami.frontend.util.PlayerUtil
 
 /**
   *
   */
 case class LoadGameAction(game: Game) extends PlaygroundAction {
-  override def execute(model: BasePlaygroundModel): Option[BasePlaygroundModel] = {
+  override def execute(model: PlaygroundModel): Option[PlaygroundModel] = {
     // replace empty player names with None's
     val newGame = game.copy(newGameInfo = PlayerUtil.normalizeGameInfo(game.gameInfo))
 
@@ -19,7 +19,7 @@ case class LoadGameAction(game: Game) extends PlaygroundAction {
     game.stateCache.refresh(validHashes)
     if (model.config.isDebug) printStateCacheInfo(game, "Refreshed state hashes. After: numKeys=")
 
-    Some(model.copy(newMode = ViewMode(GameControl(newGame), None)))
+    Some(model.copy(mode = ViewMode(GameControl(newGame), None)))
   }
 
   private[this] def printStateCacheInfo(game: Game, message: String):Unit = {

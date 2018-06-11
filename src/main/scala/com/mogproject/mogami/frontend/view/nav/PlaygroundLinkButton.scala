@@ -9,7 +9,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class PlaygroundLinkButton extends WebComponent with SAMObserver[BasePlaygroundModel] {
+class PlaygroundLinkButton extends WebComponent with PlaygroundSAMObserver {
   private[this] lazy val linkButton: WebComponent = WebComponent(a(
     cls := "btn btn-default pg-link-btn",
     tpe := "button",
@@ -26,9 +26,9 @@ class PlaygroundLinkButton extends WebComponent with SAMObserver[BasePlaygroundM
     GAME_BRANCH | GAME_POSITION | GAME_COMMENT | CONF_FLIP_TYPE | MENU_DIALOG
   }
 
-  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
+  override def refresh(model: PlaygroundModel, flag: Long): Unit = {
     model.mode.getGameControl.foreach { gc =>
-      val builder = ArgumentsBuilder(gc, model.config)
+      val builder = PlaygroundArgumentsBuilder(gc, model.config)
       linkButton.element.asInstanceOf[Anchor].href = builder.toRecordUrl
     }
   }

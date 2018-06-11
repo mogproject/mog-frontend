@@ -1,9 +1,9 @@
 package com.mogproject.mogami.frontend.view.i18n
 
 import com.mogproject.mogami.frontend.api.bootstrap.Tooltip
-import com.mogproject.mogami.frontend.sam.SAM
+import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.view.tooltip.TooltipEnabled
-import com.mogproject.mogami.frontend.view.{BrowserInfo, WebComponent}
+import com.mogproject.mogami.frontend.view.system.BrowserInfo
 import org.scalajs.dom.Element
 
 
@@ -23,7 +23,7 @@ trait DynamicHoverTooltipLike extends TooltipEnabled with DynamicElementLike[Ele
     // disable if the browser detects touch features
     if (BrowserInfo.hasTouchEvent) {
       element.removeAttribute("data-toggle")
-      SAM.removeObserver(this)
+      PlaygroundSAM.removeObserver(this)
     } else {
       Tooltip.enableHoverToolTip(element)
     }

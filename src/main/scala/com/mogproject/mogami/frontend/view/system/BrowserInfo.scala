@@ -1,7 +1,7 @@
-package com.mogproject.mogami.frontend.view
+package com.mogproject.mogami.frontend.view.system
 
-import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.api.{MobileScreen, MobileWindow}
+import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom
 
 import scala.scalajs.js.UndefOr

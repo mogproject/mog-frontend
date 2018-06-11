@@ -9,20 +9,13 @@ import com.mogproject.mogami.frontend.view.i18n.Messages
 /**
   *
   */
-trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] extends SAMState[M] {
-  def model: M
+case class PlaygroundState(model: PlaygroundModel, view: BasePlaygroundView) extends SAMState[PlaygroundModel] {
 
-  def view: V
+  override def getObserveFlag(newModel: PlaygroundModel): Long = ObserveFlag.getObserveFlag(model, newModel)
 
-  def adapter(m: M, b: BasePlaygroundModel): M
+  override def render(newModel: PlaygroundModel): (SAMState[PlaygroundModel], Option[SAMAction[PlaygroundModel]]) = renderImpl(newModel)
 
-  def copy(model: M = model, view: V = view): BasePlaygroundState[M, V]
-
-  override def getObserveFlag(newModel: M): Long = ObserveFlag.getObserveFlag(model, newModel)
-
-  override def render(newModel: M): (SAMState[M], Option[SAMAction[M]]) = renderImpl(newModel, renderAll = false)
-
-  private[this] def renderImpl(newModel: M, renderAll: Boolean): (BasePlaygroundState[M, V], Option[SAMAction[M]]) = {
+  private[this] def renderImpl(newModel: PlaygroundModel): (PlaygroundState, Option[SAMAction[PlaygroundModel]]) = {
     // update message lang
     Messages.setLanguage(newModel.config.messageLang)
 
@@ -56,10 +49,7 @@ trait BasePlaygroundState[M <: BasePlaygroundModel, V <: BasePlaygroundView] ext
       }
     }
 
-    (this.copy(model = adapter(newModel, newModel.copy(newFlashedCursor = None, newMessageBox = None))), None)
+    (this.copy(model = newModel.copy(flashedCursor = None, messageBox = None)), None)
   }
 
-  override def initialize(): Unit = {
-    renderImpl(model, renderAll = true)
-  }
 }

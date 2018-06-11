@@ -22,7 +22,7 @@ import scalatags.JsDom.all._
 /**
   * Branch buttons on Left Sidebar for PC/tablet, or Menu Modal for mobile
   */
-case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[BasePlaygroundModel] {
+case class BranchArea(isMobile: Boolean) extends WebComponent with PlaygroundSAMObserver {
 
   /** HTML elements */
   private[this] lazy val changeBranchButton: HTMLSelectElement = select(
@@ -190,13 +190,13 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
     MODE_TYPE | GAME_BRANCH | GAME_POSITION | CONF_NEW_BRANCH | CONF_RCD_LANG | CONF_MSG_LANG | MENU_DIALOG
   }
 
-  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
+  override def refresh(model: PlaygroundModel, flag: Long): Unit = {
     import ObserveFlag._
 
     /** Do not update if the menu dialog is hidden. */
     if (!model.config.deviceType.isMobile || model.menuDialogOpen) {
       model.mode.getGameControl match {
-        case Some(gc) =>
+        case Some(gc) if !model.mode.isLiveMode =>
           show()
 
           if (model.menuDialogOpen || isFlagUpdated(flag, MODE_TYPE | GAME_BRANCH | CONF_RCD_LANG | CONF_MSG_LANG)) {
@@ -212,7 +212,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with SAMObserver[B
             if (model.mode.modeType == PlayModeType) showEditMenu() else hideEditMenu()
           }
 
-        case None =>
+        case _ =>
           hide()
       }
     }

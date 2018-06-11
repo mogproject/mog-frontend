@@ -2,18 +2,20 @@ package com.mogproject.mogami.frontend.view.sidebar
 
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.CopyAllMovesAction
-import com.mogproject.mogami.frontend.view.SVGImageCache
+import com.mogproject.mogami.frontend.model.PlaygroundModel
+import com.mogproject.mogami.frontend.sam.PlaygroundSAMObserver
 import com.mogproject.mogami.frontend.view.branch.BranchArea
 import com.mogproject.mogami.frontend.view.button.CommandButton
 import com.mogproject.mogami.frontend.view.control.{ControlBar, ControlBarType}
 import com.mogproject.mogami.frontend.view.i18n.Messages
+import com.mogproject.mogami.frontend.view.system.SVGImageCache
 import org.scalajs.dom.html.{Div, Heading}
 import scalatags.JsDom.all._
 
 /**
   *
   */
-class SideBarLeft(implicit imageCache: SVGImageCache) extends SideBarLike with SAMObserver[BasePlaygroundModel] {
+class SideBarLeft(implicit imageCache: SVGImageCache) extends SideBarLike with PlaygroundSAMObserver {
 
   override val EXPANDED_WIDTH: Int = SideBarLeft.EXPANDED_WIDTH
 
@@ -81,7 +83,7 @@ class SideBarLeft(implicit imageCache: SVGImageCache) extends SideBarLike with S
   //
   override val samObserveMask: Long = ObserveFlag.MODE_EDIT | ObserveFlag.CONF_MSG_LANG
 
-  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
+  override def refresh(model: PlaygroundModel, flag: Long): Unit = {
     if (model.mode.isEditMode) {
       title.innerHTML = Messages.get.EDIT
       editHelpArea.show()

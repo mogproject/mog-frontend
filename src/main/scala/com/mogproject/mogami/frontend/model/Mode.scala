@@ -24,6 +24,8 @@ sealed abstract class Mode(val modeType: ModeType,
 
   def isEditMode: Boolean = modeType == EditModeType
 
+  def isLiveMode: Boolean = modeType == LiveModeType
+
   def canActivate(cursor: Cursor): Boolean = cursor match {
     case BoardCursor(_) => boardCursorAvailable
     case HandCursor(_) => boardCursorAvailable

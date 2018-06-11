@@ -7,9 +7,10 @@ import com.mogproject.mogami.frontend.io.TextReader
 import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.frontend.model.board.{DoubleBoard, FlipDisabled}
 import com.mogproject.mogami.frontend.model.io.{CSA, KI2, KIF, RecordFormat}
-import com.mogproject.mogami.frontend.state.BasePlaygroundState
-import com.mogproject.mogami.frontend.view.{BasePlaygroundView, BrowserInfo}
+import com.mogproject.mogami.frontend.state.PlaygroundState
+import com.mogproject.mogami.frontend.view.BasePlaygroundView
 import com.mogproject.mogami.frontend.view.board.{SVGCompactLayout, SVGStandardLayout}
+import com.mogproject.mogami.frontend.view.system.BrowserInfo
 import org.scalajs.dom
 import org.scalajs.dom.Element
 import org.scalajs.dom.html.Div
@@ -22,20 +23,14 @@ import scala.scalajs.js.JSApp
 /**
   *
   */
-trait PlaygroundAppLike[M <: BasePlaygroundModel, V <: BasePlaygroundView, S <: BasePlaygroundState[M, V]] extends JSApp {
+trait PlaygroundAppLike extends JSApp {
 
-  def createModel(mode: Mode, config: BasePlaygroundConfiguration): M
-
-  def createView(config: BasePlaygroundConfiguration, rootElem: Element): V
-
-  def createState(model: M, view: V): S
-
-  def samAdapter: (M, BasePlaygroundModel) => M
+  def createView(config: PlaygroundConfiguration, rootElem: Element): BasePlaygroundView
 
   override def main(): Unit = {
 
     // get args
-    val args = Arguments()
+    val args = PlaygroundArguments()
       .loadLocalStorage()
       .parseQueryString(dom.window.location.search)
     if (args.config.isDebug) {
@@ -65,7 +60,7 @@ trait PlaygroundAppLike[M <: BasePlaygroundModel, V <: BasePlaygroundView, S <: 
       )
 
       // create model
-      val model = createModel(mode, verifiedConfig)
+      val model = PlaygroundModel(mode, verifiedConfig)
 
       // create view
       val rootElem = dom.document.getElementById("app").asInstanceOf[Div]
@@ -83,8 +78,7 @@ trait PlaygroundAppLike[M <: BasePlaygroundModel, V <: BasePlaygroundView, S <: 
           // initialize state
           if (verifiedConfig.isDebug) println("Initializing...")
 
-          PlaygroundSAM.initialize(samAdapter)
-          SAM.initialize(createState(model, view))
+          PlaygroundSAM.initialize(PlaygroundState(model, view))
 
           // hide loading message and show the main contents
           if (verifiedConfig.isDebug) println("Finished initialization.")
@@ -94,7 +88,7 @@ trait PlaygroundAppLike[M <: BasePlaygroundModel, V <: BasePlaygroundView, S <: 
     }
   }
 
-  private[this] def createGameFromArgs(args: Arguments): Future[Game] = {
+  private[this] def createGameFromArgs(args: PlaygroundArguments): Future[Game] = {
     ((args.externalRecordUrl, args.usen, args.sfen) match {
       case (Some(r), _, _) => loadExternalRecord(r, args.config.freeMode, args.config.isDebug)
       case (None, Some(u), _) => Future(Game.parseUsenString(u, args.config.freeMode)) // parse USEN string
@@ -127,12 +121,12 @@ trait PlaygroundAppLike[M <: BasePlaygroundModel, V <: BasePlaygroundView, S <: 
     }
   }
 
-  private[this] def addMessage(msg: String) = {
-    import scalatags.JsDom.all._
-    dom.document.getElementById("messageWindow").appendChild(p(msg).render)
-  }
+  //  private[this] def addMessage(msg: String) = {
+  //    import scalatags.JsDom.all._
+  //    dom.document.getElementById("messageWindow").appendChild(p(msg).render)
+  //  }
 
-  private[this] def clearMessageWindow() = {
+  private[this] def clearMessageWindow(): Unit = {
     dom.document.getElementById("messageWindow").textContent = ""
   }
 }

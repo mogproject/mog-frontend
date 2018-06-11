@@ -1,14 +1,14 @@
-package com.mogproject.mogami.frontend.view
+package com.mogproject.mogami.frontend.view.system
 
-import com.mogproject.mogami.frontend.{FrontendSettings, LocalStorage}
+import com.mogproject.mogami.frontend.FrontendSettings
 import org.scalajs.dom.ext.{Ajax, AjaxException}
 import org.scalajs.dom.raw.{Blob, BlobPropertyBag, URL}
 
 import scala.collection.mutable
-import scala.scalajs.js
-import scala.util.{Failure, Success}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.scalajs.js
+import scala.util.{Failure, Success}
 
 /**
   * SVG Image Cache
@@ -55,7 +55,7 @@ class SVGImageCache {
       processingUrls += url
 
       // check Local Storage
-      LocalStorage.loadImage(url, FrontendSettings.imageVersion) match {
+      PlaygroundLocalStorage.loadImage(url, FrontendSettings.imageVersion) match {
         case Some(data) => Future(createObjectURL(url, data))
         case None =>
           Ajax.get(url, timeout = timeout).recover {
@@ -70,7 +70,7 @@ class SVGImageCache {
             }
           } map { data =>
             // save to Local Storage
-            LocalStorage.saveImage(url, FrontendSettings.imageVersion, data)
+            PlaygroundLocalStorage.saveImage(url, FrontendSettings.imageVersion, data)
             createObjectURL(url, data)
           }
       }

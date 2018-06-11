@@ -2,12 +2,12 @@ package com.mogproject.mogami.frontend.view.board.board
 
 import com.mogproject.mogami.frontend.model.PieceFace
 import com.mogproject.mogami.frontend.model.board.cursor.{BoardCursor, Cursor}
-import com.mogproject.mogami.frontend.view.SVGImageCache
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.{Piece, Square}
 import com.mogproject.mogami.frontend.view.board.Flippable
 import com.mogproject.mogami.frontend.view.board.effect._
 import com.mogproject.mogami.frontend.view.coordinate.Rect
+import com.mogproject.mogami.frontend.view.system.SVGImageCache
 import org.scalajs.dom.raw.SVGElement
 import org.scalajs.dom.svg.RectElement
 import org.scalajs.dom.Element

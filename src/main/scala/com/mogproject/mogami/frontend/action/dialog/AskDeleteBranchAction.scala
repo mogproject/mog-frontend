@@ -1,9 +1,9 @@
 package com.mogproject.mogami.frontend.action.dialog
 
 import com.mogproject.mogami.frontend.action.PlaygroundAction
-import com.mogproject.mogami.frontend.model.{AskDeleteBranchDialog, BasePlaygroundModel, HandleDialogMessage}
+import com.mogproject.mogami.frontend.model.{AskDeleteBranchDialog, PlaygroundModel, HandleDialogMessage}
 
 
 object AskDeleteBranchAction  extends PlaygroundAction {
-  override def execute(model: BasePlaygroundModel): Option[BasePlaygroundModel] = Some(model.copy(newMessageBox = Some(HandleDialogMessage(AskDeleteBranchDialog))))
+  override def execute(model: PlaygroundModel): Option[PlaygroundModel] = Some(model.copy(messageBox = Some(HandleDialogMessage(AskDeleteBranchDialog))))
 }

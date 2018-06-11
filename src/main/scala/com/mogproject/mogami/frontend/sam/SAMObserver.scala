@@ -16,6 +16,4 @@ trait SAMObserver[M <: SAMModel] {
 
   protected def isFlagUpdated(flag: Long, mask: Long): Boolean = (flag & mask) != 0
 
-  SAM.addObserver(this)
-
 }

@@ -4,11 +4,11 @@ import com.mogproject.mogami._
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.Rect
 import com.mogproject.mogami.frontend.model.PieceFace
-import com.mogproject.mogami.frontend.view.{SVGImageCache, WebComponent}
+import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.board.effect.EffectorTarget
+import com.mogproject.mogami.frontend.view.system.SVGImageCache
 import org.scalajs.dom.Element
 import org.scalajs.dom.raw.{SVGImageElement, SVGTextElement}
-
 import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
 

@@ -5,10 +5,11 @@ import com.mogproject.mogami.core.Player.{BLACK, WHITE}
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.board.BoardIndicator
 import com.mogproject.mogami.frontend.model.board.cursor.{Cursor, PlayerCursor}
-import com.mogproject.mogami.frontend.view.{SVGImageCache, WebComponent}
+import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.board.{Flippable, SymmetricElement}
 import com.mogproject.mogami.frontend.view.board.effect.{CursorEffector, EffectorTarget, FlashEffector}
 import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
+import com.mogproject.mogami.frontend.view.system.SVGImageCache
 import org.scalajs.dom.{Element, svg}
 import org.scalajs.dom.raw.{SVGElement, SVGImageElement}
 import org.scalajs.dom.svg.RectElement

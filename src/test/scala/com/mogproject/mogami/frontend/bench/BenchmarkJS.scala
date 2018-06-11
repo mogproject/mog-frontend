@@ -2,10 +2,10 @@ package com.mogproject.mogami.frontend.bench
 
 import com.mogproject.mogami._
 import com.mogproject.mogami.core.state.StateCache.Implicits.DefaultStateCache
-import com.mogproject.mogami.frontend.{PlaygroundSAM, SAM, TestSettings}
+import com.mogproject.mogami.frontend.{PlaygroundSAM, TestSettings}
 import com.mogproject.mogami.frontend.action.UpdateGameControlAction
-import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, GameControl, PlayMode, TestModel}
-import com.mogproject.mogami.frontend.state.{BasePlaygroundState, ObserveFlag, TestState}
+import com.mogproject.mogami.frontend.model.{GameControl, PlayMode, PlaygroundConfiguration, PlaygroundModel}
+import com.mogproject.mogami.frontend.state.{ObserveFlag, PlaygroundState}
 import com.mogproject.mogami.frontend.view.TestView
 import scalatags.JsDom.all.div
 
@@ -68,13 +68,12 @@ object BenchmarkJS extends scalajs.js.JSApp with TestData {
 
   private[this] def setupSAM(usen: String): Unit = {
     val mode = PlayMode(GameControl(Game.parseUsenString(usen)), None)
-    val config = BasePlaygroundConfiguration(visualEffectEnabled = false)
-    val model = TestModel(mode, config)
+    val config = PlaygroundConfiguration(visualEffectEnabled = false)
+    val model = PlaygroundModel(mode, config)
     val view = TestView(false, false, false, false, false, div().render)
-    val state = TestState(model, view)
+    val state = PlaygroundState(model, view)
 
-    PlaygroundSAM.initialize(TestModel.adapter)
-    SAM.initialize(state)
+    PlaygroundSAM.initialize(state)
   }
 
   //
@@ -91,8 +90,8 @@ object BenchmarkJS extends scalajs.js.JSApp with TestData {
 
   private[this] def benchNavigateGamePhase1(): Unit = {
     val mode = PlayMode(GameControl(Game.parseUsenString(recordUsen01)), None)
-    val config = BasePlaygroundConfiguration(visualEffectEnabled = false)
-    val model = TestModel(mode, config)
+    val config = PlaygroundConfiguration(visualEffectEnabled = false)
+    val model = PlaygroundModel(mode, config)
 
     runBench("benchNavigateGamePhase1", 10, 3, 5) {
       UpdateGameControlAction(_.withFirstDisplayPosition).execute(model)
@@ -104,16 +103,16 @@ object BenchmarkJS extends scalajs.js.JSApp with TestData {
 
   private[this] def benchNavigateGamePhase2(): Unit = {
     val mode = PlayMode(GameControl(Game.parseUsenString(recordUsen01)), None)
-    val config = BasePlaygroundConfiguration(visualEffectEnabled = false)
-    val model = TestModel(mode, config)
+    val config = PlaygroundConfiguration(visualEffectEnabled = false)
+    val model = PlaygroundModel(mode, config)
     val view = TestView(false, false, false, false, false, div().render)
-    val initState: BasePlaygroundState[TestModel, TestView] = TestState(model, view)
-    var state: BasePlaygroundState[TestModel, TestView] = TestState(model, view)
+    val initState: PlaygroundState = PlaygroundState(model, view)
+    var state: PlaygroundState = PlaygroundState(model, view)
 
     runBench("benchNavigateGamePhase2", 10, 3, 5) {
       state = initState
       (1 to 163) foreach { _ =>
-        val nextModel = TestModel.adapter(state.model, UpdateGameControlAction(_.withNextDisplayPosition).execute(state.model).get)
+        val nextModel = UpdateGameControlAction(_.withNextDisplayPosition).execute(state.model).get
         state.getObserveFlag(nextModel)
         // flag = 1<<21 + 1<<22 + 1<<24
         state = state.copy(model = nextModel)
@@ -123,16 +122,16 @@ object BenchmarkJS extends scalajs.js.JSApp with TestData {
 
   private[this] def benchNavigateGamePhase3(): Unit = {
     val mode = PlayMode(GameControl(Game.parseUsenString(recordUsen01)), None)
-    val config = BasePlaygroundConfiguration(visualEffectEnabled = false)
-    val model = TestModel(mode, config)
+    val config = PlaygroundConfiguration(visualEffectEnabled = false)
+    val model = PlaygroundModel(mode, config)
     val view = TestView(false, false, false, false, false, div().render)
-    val initState: BasePlaygroundState[TestModel, TestView] = TestState(model, view)
-    var state: BasePlaygroundState[TestModel, TestView] = TestState(model, view)
+    val initState: PlaygroundState = PlaygroundState(model, view)
+    var state: PlaygroundState = PlaygroundState(model, view)
 
     runBench("benchNavigateGamePhase3", 10, 3, 5) {
       state = initState
       (1 to 163) foreach { _ =>
-        val nextModel = TestModel.adapter(state.model, UpdateGameControlAction(_.withNextDisplayPosition).execute(state.model).get)
+        val nextModel = UpdateGameControlAction(_.withNextDisplayPosition).execute(state.model).get
         state.getObserveFlag(nextModel)
         state.render(nextModel)
         state = state.copy(model = nextModel)
@@ -140,13 +139,13 @@ object BenchmarkJS extends scalajs.js.JSApp with TestData {
     }
   }
 
-  private[this] def benchViewRefresh(label: String, refreshFunc: TestView => (TestModel, Long) => Unit): Unit = {
+  private[this] def benchViewRefresh(label: String, refreshFunc: TestView => (PlaygroundModel, Long) => Unit): Unit = {
     val mode = PlayMode(GameControl(Game.parseUsenString(recordUsen01)), None)
-    val config = BasePlaygroundConfiguration(visualEffectEnabled = false)
-    val model = TestModel(mode, config)
+    val config = PlaygroundConfiguration(visualEffectEnabled = false)
+    val model = PlaygroundModel(mode, config)
     val view = TestView(false, false, false, false, false, div().render)
     val models = (1 to 163).scanLeft(model) { case (m, _) =>
-      TestModel.adapter(m, UpdateGameControlAction(_.withNextDisplayPosition).execute(m).get)
+      UpdateGameControlAction(_.withNextDisplayPosition).execute(m).get
     }
     import ObserveFlag._
     val flag = GAME_POSITION | GAME_INDICATOR | GAME_JUST_MOVED
