@@ -19,7 +19,7 @@ class SettingMenu extends AccordionMenu with PlaygroundSAMObserver {
   override def getTitle(messages: Messages): String = messages.SETTINGS
 
   override lazy val icon: String = "wrench"
-  override lazy val visibleMode = Set(PlayModeType, ViewModeType, EditModeType)
+  override lazy val visibleMode = Set(PlayModeType, ViewModeType, EditModeType, LiveModeType)
 
   //
   // Elements
