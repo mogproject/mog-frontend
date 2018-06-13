@@ -17,7 +17,6 @@ class SAMEnvironment[M <: SAMModel]() {
   private[this] var state: SAMState[M] = _
 
   def initialize(state: SAMState[M]): Unit = {
-    state.view.initialize()
     this.state = state
     notifyObservers(-1, state.model) // -1: all bits on
   }

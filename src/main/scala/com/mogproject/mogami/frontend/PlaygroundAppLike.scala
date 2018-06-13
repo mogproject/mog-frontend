@@ -65,6 +65,7 @@ trait PlaygroundAppLike extends JSApp {
       // create view
       val rootElem = dom.document.getElementById("app").asInstanceOf[Div]
       val view = createView(verifiedConfig, rootElem)
+      view.initialize()
 
       // handle special actions
       args.action match {
