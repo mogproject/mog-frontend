@@ -8,7 +8,9 @@ import org.scalajs.dom.Element
 /**
   *
   */
-case class MainPane(isMobile: Boolean, embeddedMode: Boolean, override val getSite: () => PlaygroundSiteLike) extends MainPaneLike
+case class MainPane(isMobile: Boolean, embeddedMode: Boolean, override val getSite: () => PlaygroundSiteLike) extends MainPaneLike {
+  override val commentAreaEnabled = true
+}
 
 case class Footer(isDev: Boolean, isDebug: Boolean) extends FooterLike
 
