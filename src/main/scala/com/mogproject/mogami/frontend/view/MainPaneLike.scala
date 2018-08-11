@@ -34,7 +34,9 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with Playgrou
 
   def embeddedMode: Boolean
 
-  def commentAreaEnabled: Boolean
+  lazy val commentArea: CommentArea = CommentArea(isDisplayOnly = isMobile || embeddedMode)
+
+  protected lazy val additionalComponents: Seq[WebComponent] = Seq(commentArea)
 
   def getSite: () => PlaygroundSiteLike
 
@@ -57,8 +59,6 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with Playgrou
   private[this] val svgAreas: mutable.ListBuffer[SVGArea] = mutable.ListBuffer.empty
 
   val controlBar: ControlBar = ControlBar((isMobile || embeddedMode).fold(ControlBarType.Small, ControlBarType.Normal))
-
-  lazy val commentArea: CommentArea = CommentArea(isDisplayOnly = isMobile || embeddedMode)
 
   private[this] val mainArea = div().render
 
@@ -126,7 +126,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with Playgrou
         }
       ),
       controlBar.element,
-      commentAreaEnabled.option(commentArea.element)
+      additionalComponents.map(_.element)
     )
   }
 
@@ -139,7 +139,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with Playgrou
           svgAreas.head.element
         ),
         controlBar.element,
-        commentAreaEnabled.option(commentArea.element)
+        additionalComponents.map(_.element)
       )
     )
   }
@@ -150,7 +150,10 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with Playgrou
         id := "main-area",
         div(cls := "row",
           div(cls := "col-xs-6", svgAreas.head.element),
-          div(cls := "col-xs-6 main-second", (svgAreas.size > 1).fold(svgAreas(1).element, commentAreaEnabled.option(commentArea.element)))
+          div(cls := "col-xs-6 main-second", (svgAreas.size > 1).fold(
+            svgAreas(1).element,
+            additionalComponents.map(_.element)
+          ))
         ),
         controlBar.element
       )
