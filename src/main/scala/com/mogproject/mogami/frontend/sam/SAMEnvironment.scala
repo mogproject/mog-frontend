@@ -43,6 +43,8 @@ class SAMEnvironment[M <: SAMModel]() {
     }
   }
 
+  def getState: SAMState[M] = state
+
   private[this] val observers: ListBuffer[SAMObserver[M]] = ListBuffer.empty
 
   def addObserver[N <: SAMModel](observer: SAMObserver[N]): Unit = observer match {

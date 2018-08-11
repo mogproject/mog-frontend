@@ -3,7 +3,6 @@ package com.mogproject.mogami.frontend.action.game
 import com.mogproject.mogami.core.move.Resign
 import com.mogproject.mogami.frontend.action.PlaygroundAction
 import com.mogproject.mogami.frontend.model.PlaygroundModel
-import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 
 /**
   * Resign
@@ -14,7 +13,6 @@ object ResignAction extends PlaygroundAction {
       gc <- model.mode.getGameControl
       g <- gc.makeSpecialMove(Resign(), moveForward = true)
     } yield {
-      PlaygroundSAM.callbackResign()
       model.copy(mode = model.mode.setGameControl(g))
     }
   }

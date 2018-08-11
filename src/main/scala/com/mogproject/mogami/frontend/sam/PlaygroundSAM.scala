@@ -1,6 +1,5 @@
 package com.mogproject.mogami.frontend.sam
 
-import com.mogproject.mogami.Move
 import com.mogproject.mogami.frontend.action.PlaygroundAction
 import com.mogproject.mogami.frontend.model.PlaygroundModel
 
@@ -22,17 +21,5 @@ object PlaygroundSAM {
 
   def removeObserver(observer: SAMObserver[PlaygroundModel]): Unit = env.removeObserver(observer)
 
-  //
-  // Callbacks
-  //
-  private[this] var makeMoveCallback: Move => Unit = { _ => {} }
-  private[this] var resignCallback: () => Unit = () => {}
-
-  def setMakeMoveCallback(f: Move => Unit): Unit = makeMoveCallback = f
-
-  def setResignCallback(f: () => Unit): Unit = resignCallback = f
-
-  def callbackMakeMove(move: Move): Unit = makeMoveCallback(move)
-
-  def callbackResign(): Unit = resignCallback()
+  def getState: SAMState[PlaygroundModel] = env.getState
 }

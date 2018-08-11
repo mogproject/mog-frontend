@@ -5,7 +5,6 @@ import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.action.PlaygroundAction
 import com.mogproject.mogami.frontend.model._
 import com.mogproject.mogami.frontend.model.board.cursor.{MouseHoldEvent, _}
-import com.mogproject.mogami.frontend.sam.PlaygroundSAM
 import com.mogproject.mogami.frontend.view.system.BrowserInfo
 
 /**
@@ -149,7 +148,6 @@ case class BoardCursorEventAction(cursorEvent: CursorEvent) extends PlaygroundAc
     candidates.length match {
       case 0 => Some(newModel)
       case 1 =>
-        PlaygroundSAM.callbackMakeMove(candidates.head) // callback
         Some(newModel.copy(newModel.mode.setGameControl(gc.makeMove(candidates.head, newBranchMode, moveForward = true).get)))
       case 2 =>
         val isFlipped = newModel.config.isAreaFlipped(areaId) ^ candidates.head.player.isWhite
