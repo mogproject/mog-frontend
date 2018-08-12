@@ -5,15 +5,17 @@ import com.mogproject.mogami.frontend.model.board.BoardIndicator
 import com.mogproject.mogami.frontend.model.board.cursor._
 import com.mogproject.mogami.frontend.util.PlayerUtil
 import com.mogproject.mogami.util.MapUtil
+import com.mogproject.mogami.util.Implicits._
 
 /**
   *
   */
 sealed abstract class Mode(val modeType: ModeType,
-                           val playable: Set[Player],
                            val playerSelectable: Boolean,
                            val boxAvailable: Boolean,
                            isHandicappedHint: Option[Boolean]) {
+  def playable: Set[Player]
+
   def forwardAvailable: Boolean
 
   def boardCursorAvailable: Boolean = playable.nonEmpty && (!isLiveMode || isLivePlaying)
@@ -176,21 +178,26 @@ sealed abstract class Mode(val modeType: ModeType,
 }
 
 case class PlayMode(gameControl: GameControl, isHandicappedHint: Option[Boolean])
-  extends Mode(PlayModeType, Player.constructor.toSet, true, false, isHandicappedHint) {
+  extends Mode(PlayModeType, true, false, isHandicappedHint) {
+  override lazy val playable = Player.constructor.toSet
   override lazy val forwardAvailable = false
 }
 
 case class ViewMode(gameControl: GameControl, isHandicappedHint: Option[Boolean])
-  extends Mode(ViewModeType, Set.empty, true, false, isHandicappedHint) {
+  extends Mode(ViewModeType, true, false, isHandicappedHint) {
+  override lazy val playable = Set.empty
   override lazy val forwardAvailable = true
 }
 
 case class EditMode(gameInfo: GameInfo, turn: Player, board: BoardType, hand: HandType, isHandicappedHint: Option[Boolean])
-  extends Mode(EditModeType, Player.constructor.toSet, true, true, isHandicappedHint) {
+  extends Mode(EditModeType, true, true, isHandicappedHint) {
+  override lazy val playable = Player.constructor.toSet
   override lazy val forwardAvailable = true
 }
 
 case class LiveMode(player: Option[Player], online: Map[Player, Boolean], gameControl: GameControl, isHandicappedHint: Option[Boolean])
-  extends Mode(LiveModeType, player.toSet, false, false, isHandicappedHint) {
+  extends Mode(LiveModeType, false, false, isHandicappedHint) {
   override def forwardAvailable = !isLivePlaying
+
+  override def playable: Set[Player] = isLivePlaying.fold(player.toSet, Set.empty)
 }
