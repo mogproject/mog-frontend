@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.state
 
-import com.mogproject.mogami.frontend.model.{PlaygroundModel, EditMode, HandleDialogMessage, PromotionDialog}
+import com.mogproject.mogami.frontend.model._
 
 /**
   *
@@ -22,9 +22,9 @@ trait ObserveFlagLike {
   final val CONF_FLIP_TYPE = 1L << 7
   final val CONF_PIECE_WIDTH = 1L << 8
   final val CONF_PIECE_FACE = 1L << 9
-  final val CONF_COLOR_BACKGROUND = 1L << 30
-  final val CONF_COLOR_CURSOR = 1L << 31
-  final val CONF_COLOR_LAST_MOVE = 1L << 32
+  final val CONF_COLOR_BACKGROUND = 1L << 50
+  final val CONF_COLOR_CURSOR = 1L << 51
+  final val CONF_COLOR_LAST_MOVE = 1L << 52
   final val CONF_NEW_BRANCH = 1L << 10
   final val CONF_SOUND = 1L << 11
 
@@ -40,17 +40,18 @@ trait ObserveFlagLike {
   //
   final val MODE_TYPE = 1L << 16
   final val MODE_EDIT = 1L << 17
+  final val MODE_LIVE_TURN = 1 << 18
 
-  final val GAME_BRANCH = 1L << 18 // Includes Trunk. Check {turn, board, hand} in Edit Mode
-  final val GAME_INFO = 1L << 19
-  final val GAME_COMMENT = 1L << 20
-  final val GAME_POSITION = 1L << 21
-  final val GAME_INDICATOR = 1L << 22
-  final val GAME_HANDICAP = 1L << 23
-  final val GAME_JUST_MOVED = 1L << 24 // Transition to the next move
-  final val GAME_NEXT_POS = 1L << 25
-  final val GAME_PREV_POS = 1L << 26
-  final val GAME_BRANCH_CHANGED = 1L << 27
+  final val GAME_BRANCH = 1L << 20 // Includes Trunk. Check {turn, board, hand} in Edit Mode
+  final val GAME_INFO = 1L << 21
+  final val GAME_COMMENT = 1L << 22
+  final val GAME_POSITION = 1L << 23
+  final val GAME_INDICATOR = 1L << 24
+  final val GAME_HANDICAP = 1L << 25
+  final val GAME_JUST_MOVED = 1L << 26 // Transition to the next move
+  final val GAME_NEXT_POS = 1L << 27
+  final val GAME_PREV_POS = 1L << 28
+  final val GAME_BRANCH_CHANGED = 1L << 29
 
   // Note: These flags will invoke MainPanelLike#refresh()
   final val MODE_ALL = MODE_TYPE | GAME_BRANCH | GAME_INFO | GAME_POSITION | GAME_HANDICAP | GAME_INDICATOR | GAME_JUST_MOVED | GAME_NEXT_POS | GAME_PREV_POS
@@ -58,8 +59,8 @@ trait ObserveFlagLike {
   //
   // Menu Dialog (Open/Closed)
   //
-  final val MENU_DIALOG = 1L << 28
-  final val PROMOTION_DIALOG = 1L << 29
+  final val MENU_DIALOG = 1L << 30
+  final val PROMOTION_DIALOG = 1L << 31
 
   //
   // Cursor
@@ -133,6 +134,7 @@ object ObserveFlag extends ObserveFlagLike {
 
       (a, b) match {
         case (EditMode(_, t1, b1, h1, _), EditMode(_, t2, b2, h2, _)) if t1 != t2 || b1 != b2 || h1 != h2 => ret |= GAME_BRANCH
+        case (LiveMode(p1, _, _), LiveMode(p2, _, _)) if p1 != p2 => ret |= MODE_LIVE_TURN
         case _ =>
       }
 

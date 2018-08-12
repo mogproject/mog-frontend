@@ -38,7 +38,7 @@ case class ResignButton(isSmall: Boolean, confirm: Boolean) extends WebComponent
   //
   override val samObserveMask: Long = {
     import ObserveFlag._
-    MODE_TYPE | GAME_BRANCH | GAME_POSITION
+    MODE_TYPE | MODE_LIVE_TURN | GAME_BRANCH | GAME_POSITION
   }
 
   override def refresh(model: PlaygroundModel, flag: Long): Unit = setDisabled(!model.mode.canMakeMove)
