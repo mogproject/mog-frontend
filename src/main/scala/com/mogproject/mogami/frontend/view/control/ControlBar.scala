@@ -125,10 +125,17 @@ case class ControlBar(barType: ControlBarType) extends WebComponent with Playgro
         recordSelector.selectedIndex = gc.displayPosition
 
         if (barType != ControlBarType.LongList) {
-          controlInputStepBackward.setDisabled(gc.isFirstDisplayPosition)
-          controlInputBackward.setDisabled(gc.isFirstDisplayPosition)
-          controlInputForward.setDisabled(gc.isLastDisplayPosition)
-          controlInputStepForward.setDisabled(gc.isLastDisplayPosition)
+          if (model.mode.isLivePlaying) {
+            controlInputStepBackward.setDisabled(true)
+            controlInputBackward.setDisabled(true)
+            controlInputForward.setDisabled(true)
+            controlInputStepForward.setDisabled(true)
+          } else {
+            controlInputStepBackward.setDisabled(gc.isFirstDisplayPosition)
+            controlInputBackward.setDisabled(gc.isFirstDisplayPosition)
+            controlInputForward.setDisabled(gc.isLastDisplayPosition)
+            controlInputStepForward.setDisabled(gc.isLastDisplayPosition)
+          }
         }
       case None =>
         hide()

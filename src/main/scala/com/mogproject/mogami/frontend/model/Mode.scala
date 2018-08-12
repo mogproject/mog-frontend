@@ -51,6 +51,11 @@ sealed abstract class Mode(val modeType: ModeType,
     !isViewMode && getGameControl.exists(_.getDisplayingGameStatus == GameStatus.Playing) && playable.contains(getTurn)
   }
 
+  def isLivePlaying: Boolean = this match {
+    case LiveMode(Some(_), gc, _) => gc.game.trunk.status == GameStatus.Playing
+    case _ => false
+  }
+
   def isPrevious(mode: Mode): Boolean = (this, mode) match {
     case (ViewMode(a, _), ViewMode(b, _)) => a.displayPosition == b.displayPosition - 1
     case _ => false
