@@ -1,5 +1,6 @@
 SBT = sbt
 OPEN = open
+PYTHON = python3
 APP_NAME = mog-frontend
 PROD_RSC = docs
 TEST_ASS = assets
@@ -30,7 +31,7 @@ local_mobile:
 	${OPEN} http://localhost:${DEV_PORT}/index-dev-debug.html?device=1
 
 server:
-	python -m 'http.server' ${DEV_PORT}
+	${PYTHON} -m 'http.server' ${DEV_PORT}
 
 publish: test
 	${SBT} test:fullOptJS

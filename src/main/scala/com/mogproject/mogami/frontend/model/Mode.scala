@@ -50,8 +50,13 @@ sealed abstract class Mode(val modeType: ModeType,
     }
   }
 
+  /**
+    * Checks if the player can make move or resign.
+    *
+    * @return true is one can make move
+    */
   def canMakeMove: Boolean = {
-    !isViewMode && getGameControl.exists(_.getDisplayingGameStatus == GameStatus.Playing) && playable.contains(getTurn)
+    getGameControl.exists(_.getDisplayingGameStatus == GameStatus.Playing) && playable.contains(getTurn)
   }
 
   def isLivePlaying: Boolean = this match {
@@ -179,19 +184,19 @@ sealed abstract class Mode(val modeType: ModeType,
 
 case class PlayMode(gameControl: GameControl, isHandicappedHint: Option[Boolean])
   extends Mode(PlayModeType, true, false, isHandicappedHint) {
-  override lazy val playable = Player.constructor.toSet
+  override lazy val playable: Set[Player] = Player.constructor.toSet
   override lazy val forwardAvailable = false
 }
 
 case class ViewMode(gameControl: GameControl, isHandicappedHint: Option[Boolean])
   extends Mode(ViewModeType, true, false, isHandicappedHint) {
-  override lazy val playable = Set.empty
+  override lazy val playable: Set[Player] = Set.empty
   override lazy val forwardAvailable = true
 }
 
 case class EditMode(gameInfo: GameInfo, turn: Player, board: BoardType, hand: HandType, isHandicappedHint: Option[Boolean])
   extends Mode(EditModeType, true, true, isHandicappedHint) {
-  override lazy val playable = Player.constructor.toSet
+  override lazy val playable: Set[Player] = Player.constructor.toSet
   override lazy val forwardAvailable = true
 }
 
