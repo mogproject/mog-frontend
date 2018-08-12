@@ -5,7 +5,7 @@ import com.mogproject.mogami.frontend.model.DeviceType.DeviceType
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.api.WebAudioAPISound
 import com.mogproject.mogami.frontend.model.{EditMode, PlayMode, PlaygroundModel}
-import com.mogproject.mogami.frontend.model.board.cursor.{BoardCursor, Cursor, PlayerCursor}
+import com.mogproject.mogami.frontend.model.board.cursor.{BoardCursor, Cursor}
 import com.mogproject.mogami.frontend.model.board.{BoardIndexJapanese, DoubleBoard, FlipDisabled, FlipEnabled}
 import com.mogproject.mogami.frontend.sam.PlaygroundSAMObserver
 import com.mogproject.mogami.frontend.util.PlayerUtil
@@ -311,6 +311,11 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with Playgrou
         case x =>
           updateSVGArea(_.board.drawIndexes(x))
       }
+    }
+
+    // 4.5 Player Background
+    if (check(MODE_LIVE_ONLINE)) {
+      updateSVGArea(_.player.drawOnlineStatus(mode.isOnline(Player.BLACK), mode.isOnline(Player.WHITE)))
     }
 
     // 5. Player Names

@@ -53,19 +53,19 @@ sealed abstract class Mode(val modeType: ModeType,
   }
 
   def isLivePlaying: Boolean = this match {
-    case LiveMode(Some(_), gc, _) => gc.game.trunk.status == GameStatus.Playing
+    case LiveMode(Some(_), _, gc, _) => gc.game.trunk.status == GameStatus.Playing
     case _ => false
   }
 
   def isPrevious(mode: Mode): Boolean = (this, mode) match {
     case (ViewMode(a, _), ViewMode(b, _)) => a.displayPosition == b.displayPosition - 1
-    case (LiveMode(_, a, _), LiveMode(_, b, _)) => a.displayPosition == b.displayPosition - 1
+    case (LiveMode(_, _, a, _), LiveMode(_, _, b, _)) => a.displayPosition == b.displayPosition - 1
     case _ => false
   }
 
   def isNext(mode: Mode): Boolean = (this, mode) match {
     case (ViewMode(a, _), ViewMode(b, _)) => a.displayPosition == b.displayPosition + 1
-    case (LiveMode(_, a, _), LiveMode(_, b, _)) => a.displayPosition == b.displayPosition + 1
+    case (LiveMode(_, _, a, _), LiveMode(_, _, b, _)) => a.displayPosition == b.displayPosition + 1
     case _ => false
   }
 
@@ -81,11 +81,16 @@ sealed abstract class Mode(val modeType: ModeType,
       }
   }
 
+  def isOnline(player: Player): Boolean = this match {
+    case LiveMode(_, onl, _, _) => onl.getOrElse(player, true)
+    case _ => true
+  }
+
   def getPlayerNames: Map[Player, String] = {
     val g = this match {
       case PlayMode(gc, _) => gc.game.gameInfo
       case ViewMode(gc, _) => gc.game.gameInfo
-      case LiveMode(_, gc, _) => gc.game.gameInfo
+      case LiveMode(_, _, gc, _) => gc.game.gameInfo
       case EditMode(gi, _, _, _, _) => gi
     }
     PlayerUtil.getPlayerNames(g)
@@ -99,21 +104,21 @@ sealed abstract class Mode(val modeType: ModeType,
   def getTurn: Player = this match {
     case PlayMode(gc, _) => gc.getDisplayingTurn
     case ViewMode(gc, _) => gc.getDisplayingTurn
-    case LiveMode(_, gc, _) => gc.getDisplayingTurn
+    case LiveMode(_, _, gc, _) => gc.getDisplayingTurn
     case EditMode(_, t, _, _, _) => t
   }
 
   def getBoardPieces: BoardType = this match {
     case PlayMode(gc, _) => gc.getDisplayingBoard
     case ViewMode(gc, _) => gc.getDisplayingBoard
-    case LiveMode(_, gc, _) => gc.getDisplayingBoard
+    case LiveMode(_, _, gc, _) => gc.getDisplayingBoard
     case EditMode(_, _, b, _, _) => b
   }
 
   def getHandPieces: HandType = this match {
     case PlayMode(gc, _) => gc.getDisplayingHand
     case ViewMode(gc, _) => gc.getDisplayingHand
-    case LiveMode(_, gc, _) => gc.getDisplayingHand
+    case LiveMode(_, _, gc, _) => gc.getDisplayingHand
     case EditMode(_, _, _, h, _) => h
   }
 
@@ -129,14 +134,14 @@ sealed abstract class Mode(val modeType: ModeType,
   def getGameControl: Option[GameControl] = this match {
     case PlayMode(gc, _) => Some(gc)
     case ViewMode(gc, _) => Some(gc)
-    case LiveMode(_, gc, _) => Some(gc)
+    case LiveMode(_, _, gc, _) => Some(gc)
     case EditMode(_, _, _, _, _) => None
   }
 
   def getGameInfo: GameInfo = this match {
     case PlayMode(gc, _) => gc.game.gameInfo
     case ViewMode(gc, _) => gc.game.gameInfo
-    case LiveMode(_, gc, _) => gc.game.gameInfo
+    case LiveMode(_, _, gc, _) => gc.game.gameInfo
     case EditMode(gi, _, _, _, _) => gi
   }
 
@@ -163,7 +168,7 @@ sealed abstract class Mode(val modeType: ModeType,
   def setGameControl(gameControl: GameControl): Mode = this match {
     case x@PlayMode(_, _) => x.copy(gameControl = gameControl, isHandicappedHint = Some(isHandicapped))
     case x@ViewMode(_, _) => x.copy(gameControl = gameControl, isHandicappedHint = Some(isHandicapped))
-    case x@LiveMode(_, _, _) => x.copy(gameControl = gameControl, isHandicappedHint = Some(isHandicapped))
+    case x@LiveMode(_, _, _, _) => x.copy(gameControl = gameControl, isHandicappedHint = Some(isHandicapped))
     case EditMode(_, _, _, _, _) => this
   }
 
@@ -185,7 +190,7 @@ case class EditMode(gameInfo: GameInfo, turn: Player, board: BoardType, hand: Ha
   override lazy val forwardAvailable = true
 }
 
-case class LiveMode(player: Option[Player], gameControl: GameControl, isHandicappedHint: Option[Boolean])
+case class LiveMode(player: Option[Player], online: Map[Player, Boolean], gameControl: GameControl, isHandicappedHint: Option[Boolean])
   extends Mode(LiveModeType, player.toSet, false, false, isHandicappedHint) {
   override def forwardAvailable = !isLivePlaying
 }

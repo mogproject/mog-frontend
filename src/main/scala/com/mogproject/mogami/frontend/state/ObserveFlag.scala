@@ -41,6 +41,7 @@ trait ObserveFlagLike {
   final val MODE_TYPE = 1L << 16
   final val MODE_EDIT = 1L << 17
   final val MODE_LIVE_TURN = 1 << 18
+  final val MODE_LIVE_ONLINE = 1 << 19
 
   final val GAME_BRANCH = 1L << 20 // Includes Trunk. Check {turn, board, hand} in Edit Mode
   final val GAME_INFO = 1L << 21
@@ -54,7 +55,7 @@ trait ObserveFlagLike {
   final val GAME_BRANCH_CHANGED = 1L << 29
 
   // Note: These flags will invoke MainPanelLike#refresh()
-  final val MODE_ALL = MODE_TYPE | GAME_BRANCH | GAME_INFO | GAME_POSITION | GAME_HANDICAP | GAME_INDICATOR | GAME_JUST_MOVED | GAME_NEXT_POS | GAME_PREV_POS
+  final val MODE_ALL = MODE_TYPE | GAME_BRANCH | GAME_INFO | GAME_POSITION | GAME_HANDICAP | GAME_INDICATOR | GAME_JUST_MOVED | GAME_NEXT_POS | GAME_PREV_POS | MODE_LIVE_ONLINE
 
   //
   // Menu Dialog (Open/Closed)
@@ -71,6 +72,8 @@ trait ObserveFlagLike {
 
   // Note: These flags will invoke MainPanelLike#refresh()
   final val CURSOR_ALL = CURSOR_ACTIVE | CURSOR_SELECT | CURSOR_FLASH
+
+  // @note Reserve 1L << 63 for INITIALIZATION_ONLY
 }
 
 object ObserveFlag extends ObserveFlagLike {
@@ -134,7 +137,9 @@ object ObserveFlag extends ObserveFlagLike {
 
       (a, b) match {
         case (EditMode(_, t1, b1, h1, _), EditMode(_, t2, b2, h2, _)) if t1 != t2 || b1 != b2 || h1 != h2 => ret |= GAME_BRANCH
-        case (LiveMode(p1, _, _), LiveMode(p2, _, _)) if p1 != p2 => ret |= MODE_LIVE_TURN
+        case (LiveMode(p1, o1, _, _), LiveMode(p2, o2, _, _)) =>
+          if (p1 != p2) ret |= MODE_LIVE_TURN
+          if (o1 != o2) ret |= MODE_LIVE_ONLINE
         case _ =>
       }
 
