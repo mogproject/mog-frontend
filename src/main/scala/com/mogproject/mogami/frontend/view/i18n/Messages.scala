@@ -14,7 +14,7 @@ import scalatags.JsDom.{Frag, TypedTag}
 /**
   * Message definitions
   */
-trait Messages {
+trait Messages extends MessagesLike {
 
   //
   // Nav
@@ -308,16 +308,27 @@ trait Messages {
   // Modal
   //
   def CONFIRMATION: String
+
   def GAME_INFORMATION: String
+
   def PLAYER_NAMES: String
+
   def UPDATE: String
+
   def ASK_PROMOTE: String
+
   def YES: String
+
   def NO: String
+
   def ASK_RESIGN: String
+
   def IMAGE_DOWNLOAD_FAILURE: String
+
   def ASK_EDIT: String
+
   def ASK_DELETE_BRANCH(branchNo: BranchNo): String
+
   def INVALID_STATE: String
 }
 

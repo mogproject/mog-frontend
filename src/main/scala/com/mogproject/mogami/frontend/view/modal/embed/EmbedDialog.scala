@@ -2,7 +2,7 @@ package com.mogproject.mogami.frontend.view.modal.embed
 
 import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.model.board.{BoardIndexType, FlipEnabled}
-import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, English, GameControl, Japanese, Language}
+import com.mogproject.mogami.frontend.model.{PlaygroundConfiguration, English, GameControl, Japanese, Language}
 import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGCompactLayout, SVGStandardLayout, SVGWideLayout}
 import com.mogproject.mogami.frontend.view.i18n.Messages
 import com.mogproject.mogami.frontend.view.modal.ModalLike
@@ -13,7 +13,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-case class EmbedDialog(gameControl: GameControl, config: BasePlaygroundConfiguration) extends ModalLike {
+case class EmbedDialog(gameControl: GameControl, config: PlaygroundConfiguration) extends ModalLike {
   // Message lang is determined when the class is instantiated.
   private[this] val msgs: Messages = Messages.get
 
@@ -86,7 +86,7 @@ case class EmbedDialog(gameControl: GameControl, config: BasePlaygroundConfigura
     )
   ))
 
-  private[this] val builder = ArgumentsBuilderEmbed(gameControl)
+  private[this] val builder = PlaygroundArgumentsBuilderEmbed(gameControl)
 
   private[this] def updateEmbedCode(): Unit = {
     val s = builder.toEmbedCode(

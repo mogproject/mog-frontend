@@ -9,7 +9,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-case class TextAreaComponent(text: String, numRows: Int, placeholderFunc: Messages => String, modifier: Modifier*) extends WebComponent with SAMObserver[BasePlaygroundModel] {
+case class TextAreaComponent(text: String, numRows: Int, placeholderFunc: Messages => String, modifier: Modifier*) extends WebComponent with PlaygroundSAMObserver {
 
   // todo: refactor tooltip options
   override lazy val element: TextArea = textarea(
@@ -31,7 +31,7 @@ case class TextAreaComponent(text: String, numRows: Int, placeholderFunc: Messag
     element.placeholder = placeholderFunc(Messages.get)
   }
 
-  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
+  override def refresh(model: PlaygroundModel, flag: Long): Unit = {
     refresh()
   }
 

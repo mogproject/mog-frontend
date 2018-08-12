@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.view.event
 
-import com.mogproject.mogami.frontend.view.BrowserInfo
+import com.mogproject.mogami.frontend.view.system.BrowserInfo
 import org.scalajs.dom.raw.HTMLElement
 import org.scalajs.dom.{MouseEvent, TouchEvent}
 

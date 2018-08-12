@@ -1,20 +1,20 @@
 package com.mogproject.mogami.frontend.action
 
 import com.mogproject.mogami.util.Implicits._
-import com.mogproject.mogami.frontend.LocalStorage
 import com.mogproject.mogami.frontend.model.board.DoubleBoard
-import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, BasePlaygroundModel}
+import com.mogproject.mogami.frontend.model.{PlaygroundConfiguration, PlaygroundModel}
+import com.mogproject.mogami.frontend.view.system.PlaygroundLocalStorage
 
 /**
   *
   */
-case class UpdateConfigurationAction(f: BasePlaygroundConfiguration => BasePlaygroundConfiguration) extends PlaygroundAction {
-  override def execute(model: BasePlaygroundModel): Option[BasePlaygroundModel] = {
+case class UpdateConfigurationAction(f: PlaygroundConfiguration => PlaygroundConfiguration) extends PlaygroundAction {
+  override def execute(model: PlaygroundModel): Option[PlaygroundModel] = {
     val mc = model.config
     val c = f(mc)
 
     // save settings to Local Storage (only updates)
-    LocalStorage(
+    PlaygroundLocalStorage(
       (mc.pieceWidth != c.pieceWidth).option(c.pieceWidth),
       (mc.layout != c.layout).option(c.layout),
       (mc.pieceFace != c.pieceFace).option(c.pieceFace),
@@ -29,6 +29,6 @@ case class UpdateConfigurationAction(f: BasePlaygroundConfiguration => BasePlayg
       (mc.recordLang != c.recordLang).option(c.recordLang)
     ).save()
 
-    Some(model.copy(newConfig = c, newSelectedCursor = None))
+    Some(model.copy(config = c, selectedCursor = None))
   }
 }

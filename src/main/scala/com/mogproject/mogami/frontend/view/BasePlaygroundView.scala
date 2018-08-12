@@ -9,7 +9,7 @@ import com.mogproject.mogami.frontend.model.analyze._
 import com.mogproject.mogami.frontend.sam.{PlaygroundSAM, SAMView}
 import com.mogproject.mogami.frontend.view.menu.MenuPane
 import com.mogproject.mogami.frontend._
-import com.mogproject.mogami.frontend.model.{BasePlaygroundConfiguration, GameControl}
+import com.mogproject.mogami.frontend.model.{PlaygroundConfiguration, GameControl}
 import com.mogproject.mogami.frontend.view.board.canvas.CanvasBoard
 import com.mogproject.mogami.frontend.view.i18n.Messages
 import com.mogproject.mogami.frontend.view.modal._
@@ -90,7 +90,7 @@ trait BasePlaygroundView extends SAMView {
     CommentDialog(text).show()
   }
 
-  def showEmbedDialog(gameControl: GameControl, config: BasePlaygroundConfiguration): Unit = {
+  def showEmbedDialog(gameControl: GameControl, config: PlaygroundConfiguration): Unit = {
     EmbedDialog(gameControl, config).show()
   }
 
@@ -105,7 +105,7 @@ trait BasePlaygroundView extends SAMView {
   //
   // Image action
   //
-  def drawAsImage(config: BasePlaygroundConfiguration, mode: Mode): Unit = {
+  def drawAsImage(config: PlaygroundConfiguration, mode: Mode): Unit = {
     dom.window.document.body.style.backgroundColor = "black"
 
     val t = "Snapshot - Shogi Playground"

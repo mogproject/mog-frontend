@@ -12,7 +12,7 @@ import scalatags.JsDom.all._
 /**
   * Resign button
   */
-case class ResignButton(isSmall: Boolean, confirm: Boolean) extends WebComponent with SAMObserver[BasePlaygroundModel] {
+case class ResignButton(isSmall: Boolean, confirm: Boolean) extends WebComponent with PlaygroundSAMObserver {
 
   private[this] val button = CommandButton(
     classButtonDefault + " " + isSmall.fold(classButtonThin + " btn-resign", classButtonBlock),
@@ -38,9 +38,9 @@ case class ResignButton(isSmall: Boolean, confirm: Boolean) extends WebComponent
   //
   override val samObserveMask: Long = {
     import ObserveFlag._
-    MODE_TYPE | GAME_BRANCH | GAME_POSITION
+    MODE_TYPE | MODE_LIVE_TURN | GAME_BRANCH | GAME_POSITION
   }
 
-  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = setDisabled(!model.mode.canMakeMove)
+  override def refresh(model: PlaygroundModel, flag: Long): Unit = setDisabled(!model.mode.canMakeMove)
 
 }

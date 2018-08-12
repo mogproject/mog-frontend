@@ -15,7 +15,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-case class ControlBar(barType: ControlBarType) extends WebComponent with SAMObserver[BasePlaygroundModel] {
+case class ControlBar(barType: ControlBarType) extends WebComponent with PlaygroundSAMObserver {
 
   private[this] val LONG_LIST_SIZE = 29
 
@@ -111,7 +111,7 @@ case class ControlBar(barType: ControlBarType) extends WebComponent with SAMObse
     GAME_BRANCH | GAME_COMMENT | GAME_POSITION | GAME_BRANCH_CHANGED | CONF_RCD_LANG | MODE_EDIT
   }
 
-  override def refresh(model: BasePlaygroundModel, flag: StateHash): Unit = {
+  override def refresh(model: PlaygroundModel, flag: StateHash): Unit = {
     import ObserveFlag._
 
     model.mode.getGameControl match {
@@ -125,10 +125,17 @@ case class ControlBar(barType: ControlBarType) extends WebComponent with SAMObse
         recordSelector.selectedIndex = gc.displayPosition
 
         if (barType != ControlBarType.LongList) {
-          controlInputStepBackward.setDisabled(gc.isFirstDisplayPosition)
-          controlInputBackward.setDisabled(gc.isFirstDisplayPosition)
-          controlInputForward.setDisabled(gc.isLastDisplayPosition)
-          controlInputStepForward.setDisabled(gc.isLastDisplayPosition)
+          if (model.mode.isLivePlaying) {
+            controlInputStepBackward.setDisabled(true)
+            controlInputBackward.setDisabled(true)
+            controlInputForward.setDisabled(true)
+            controlInputStepForward.setDisabled(true)
+          } else {
+            controlInputStepBackward.setDisabled(gc.isFirstDisplayPosition)
+            controlInputBackward.setDisabled(gc.isFirstDisplayPosition)
+            controlInputForward.setDisabled(gc.isLastDisplayPosition)
+            controlInputStepForward.setDisabled(gc.isLastDisplayPosition)
+          }
         }
       case None =>
         hide()

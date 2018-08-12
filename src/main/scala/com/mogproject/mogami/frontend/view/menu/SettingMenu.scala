@@ -13,13 +13,13 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
+class SettingMenu extends AccordionMenu with PlaygroundSAMObserver {
   override lazy val ident: String = "Settings"
 
   override def getTitle(messages: Messages): String = messages.SETTINGS
 
   override lazy val icon: String = "wrench"
-  override lazy val visibleMode = Set(PlayModeType, ViewModeType, EditModeType)
+  override lazy val visibleMode = Set(PlayModeType, ViewModeType, EditModeType, LiveModeType)
 
   //
   // Elements
@@ -77,7 +77,7 @@ class SettingMenu extends AccordionMenu with SAMObserver[BasePlaygroundModel] {
   //
   override val samObserveMask: Long = super.samObserveMask | ObserveFlag.CONF
 
-  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
+  override def refresh(model: PlaygroundModel, flag: Long): Unit = {
     super.refresh(model, flag)
 
     val config = model.config

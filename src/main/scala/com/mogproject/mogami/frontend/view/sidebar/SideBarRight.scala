@@ -10,7 +10,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-trait SideBarRight extends SideBarLike with Observer[AccordionMenu] with SAMObserver[BasePlaygroundModel] {
+trait SideBarRight extends SideBarLike with Observer[AccordionMenu] with PlaygroundSAMObserver {
 
   def getMenuPane: MenuPane
 
@@ -32,7 +32,7 @@ trait SideBarRight extends SideBarLike with Observer[AccordionMenu] with SAMObse
     span(cls := "glyphicon glyphicon-plus")
   ).render
 
-  override def content: Div = div(
+  override lazy val content: Div = div(
     titleExpanded,
     titleCollapsed,
     getMenuPane.element
@@ -69,7 +69,7 @@ trait SideBarRight extends SideBarLike with Observer[AccordionMenu] with SAMObse
     * @param model model
     * @param flag  -1: all bits on => refresh all
     */
-  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
+  override def refresh(model: PlaygroundModel, flag: Long): Unit = {
     if (model.config.collapseByDefault) collapseSideBar()
   }
 }

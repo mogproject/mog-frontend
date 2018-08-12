@@ -5,10 +5,11 @@ import com.mogproject.mogami.core.Player.{BLACK, WHITE}
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.board.BoardIndicator
 import com.mogproject.mogami.frontend.model.board.cursor.{Cursor, PlayerCursor}
-import com.mogproject.mogami.frontend.view.{SVGImageCache, WebComponent}
+import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.board.{Flippable, SymmetricElement}
 import com.mogproject.mogami.frontend.view.board.effect.{CursorEffector, EffectorTarget, FlashEffector}
 import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
+import com.mogproject.mogami.frontend.view.system.SVGImageCache
 import org.scalajs.dom.{Element, svg}
 import org.scalajs.dom.raw.{SVGElement, SVGImageElement}
 import org.scalajs.dom.svg.RectElement
@@ -32,6 +33,8 @@ case class SVGPlayer(layout: SVGPlayerLayout, foremostElement: SVGElement)(impli
 
   private[this] val indicators: mutable.Map[Player, Option[BoardIndicator]] = mutable.Map(Player.constructor.map(_ -> None): _*)
 
+  private[this] val onlineStatus: mutable.Map[Player, Boolean] = mutable.Map(Player.constructor.map(_ -> true): _*)
+
   //
   // Utility
   //
@@ -40,7 +43,9 @@ case class SVGPlayer(layout: SVGPlayerLayout, foremostElement: SVGElement)(impli
   //
   // Elements
   //
-  private[this] val borderElements: Seq[RectElement] = layout.borders.map(_.render)
+  private[this] val borderElements: SymmetricElement[RectElement] = SymmetricElement { pl =>
+    layout.getNameRect(pl).toSVGRect().render
+  }
 
   private[this] val symbolElements: SymmetricElement[SVGImageElement] = SymmetricElement { pl =>
     layout.getSymbolArea(pl).toSVGImage("", rotated = pl.isWhite).render
@@ -72,14 +77,14 @@ case class SVGPlayer(layout: SVGPlayerLayout, foremostElement: SVGElement)(impli
     layout.getIndicatorTextArea(pl).toSVGText("", pl.isWhite, true, Some((fs, fc, false)), cls := "indicator-text").render
   }
 
-  val elements: Seq[SVGElement] = borderElements ++ indicatorBackgrounds.values ++ symbolElements.values ++ nameElementsWrapper.values ++ indicatorTextElements.values
+  val elements: Seq[SVGElement] = Seq(borderElements, indicatorBackgrounds, symbolElements, nameElementsWrapper, indicatorTextElements).flatMap(_.values)
 
   override protected def thresholdElement: Element = symbolElements.values.head
 
   override def clientPos2Cursor(clientX: Double, clientY: Double): Option[Cursor] = {
     (for {
-      (pl, elem) <- Player.constructor.zip(borderElements)
-      r = elem.getBoundingClientRect()
+      pl <- Player.constructor
+      r = borderElements.getFirst(pl).getBoundingClientRect()
       if r.left <= clientX && clientX <= r.right && r.top <= clientY && clientY <= r.bottom
     } yield PlayerCursor(getFlippedPlayer(pl))).headOption
   }
@@ -89,6 +94,7 @@ case class SVGPlayer(layout: SVGPlayerLayout, foremostElement: SVGElement)(impli
   //
   override def setFlip(flip: Boolean): Unit = {
     super.setFlip(flip)
+    refreshOnlineStatus()
     drawSymbols()
     refreshNames()
     refreshIndicators()
@@ -129,6 +135,18 @@ case class SVGPlayer(layout: SVGPlayerLayout, foremostElement: SVGElement)(impli
       case (pl, ind) =>
         indicatorTextElements.getFirst(pl).textContent = ind.map(_.text).getOrElse("") // Notes: possibly a performance bottleneck
         indicatorBackgrounds.get(pl).foreach(WebComponent.setClass(_, ind.map(_.className).getOrElse("indicator-none")))
+    }
+  }
+
+  def drawOnlineStatus(blackOnline: Boolean, whiteOnline: Boolean): Unit = {
+    onlineStatus(BLACK) = blackOnline
+    onlineStatus(WHITE) = whiteOnline
+    refreshOnlineStatus()
+  }
+
+  def refreshOnlineStatus(): Unit = {
+    onlineStatus.foreach { case (pl, st) =>
+      WebComponent.setClass(borderElements.getFirst(pl), st.fold("player-border", "player-border-offline"))
     }
   }
 

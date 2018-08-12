@@ -2,17 +2,17 @@ package com.mogproject.mogami.frontend.view.board
 
 import com.mogproject.mogami.frontend.model.board.cursor._
 import com.mogproject.mogami.{Move, Piece, Square}
-import com.mogproject.mogami.frontend.view.{SVGImageCache, WebComponent}
+import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.board.board.SVGBoard
 import com.mogproject.mogami.frontend.view.board.box.SVGBox
 import com.mogproject.mogami.frontend.view.board.hand.SVGHand
 import com.mogproject.mogami.frontend.view.board.player.SVGPlayer
 import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
+import com.mogproject.mogami.frontend.view.system.SVGImageCache
 import org.scalajs.dom
 import org.scalajs.dom.Element
 import org.scalajs.dom.html.Div
 import org.scalajs.dom.raw._
-
 import scalatags.JsDom.all._
 import scalatags.JsDom.svgAttrs
 import scalatags.JsDom.svgTags.svg

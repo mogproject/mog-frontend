@@ -6,16 +6,16 @@ import com.mogproject.mogami.frontend._
 import com.mogproject.mogami.frontend.action.board.EditAttributeAction
 import com.mogproject.mogami.frontend.model.EditMode
 import com.mogproject.mogami.frontend.model.board.cursor.BoardCursor
-import com.mogproject.mogami.frontend.view.{SVGImageCache, WebComponent}
+import com.mogproject.mogami.frontend.view.WebComponent
 import com.mogproject.mogami.frontend.view.button.PieceFaceButton
+import com.mogproject.mogami.frontend.view.system.SVGImageCache
 import org.scalajs.dom.html.Div
-
 import scalatags.JsDom.all._
 
 /**
   *
   */
-class EditHelpArea(implicit imageCache: SVGImageCache) extends WebComponent with SAMObserver[BasePlaygroundModel] {
+class EditHelpArea(implicit imageCache: SVGImageCache) extends WebComponent with PlaygroundSAMObserver {
 
   final val ATTRIBUTE_BUTTON_HEIGHT: Int = 64
 
@@ -57,7 +57,7 @@ class EditHelpArea(implicit imageCache: SVGImageCache) extends WebComponent with
   //
   override val samObserveMask: Long = ObserveFlag.CURSOR_SELECT | ObserveFlag.MODE_EDIT
 
-  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
+  override def refresh(model: PlaygroundModel, flag: Long): Unit = {
     model.mode match {
       case EditMode(_, _, b, _, _) =>
         model.selectedCursor match {

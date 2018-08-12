@@ -3,16 +3,13 @@ package com.mogproject.mogami.frontend.view
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.action.ChangeModeAction
 import com.mogproject.mogami.frontend._
-import com.mogproject.mogami.frontend.model.TestModel
-import com.mogproject.mogami.frontend.sam.SAMObserver
-import com.mogproject.mogami.frontend.state.ObserveFlag
 import com.mogproject.mogami.frontend.view.button.RadioButton
 import com.mogproject.mogami.frontend.view.nav.NavBarLike
 
 /**
   *
   */
-case class NavBar(isMobile: Boolean, embeddedMode: Boolean) extends NavBarLike with SAMObserver[TestModel] {
+case class NavBar(isMobile: Boolean, embeddedMode: Boolean) extends NavBarLike with PlaygroundSAMObserver {
 
   private[this] def availableModes: Seq[ModeType] = Seq(PlayModeType, ViewModeType) ++ (!embeddedMode).option(EditModeType)
 
@@ -31,7 +28,7 @@ case class NavBar(isMobile: Boolean, embeddedMode: Boolean) extends NavBarLike w
   //
   override val samObserveMask: Long = ObserveFlag.MODE_TYPE
 
-  override def refresh(model: TestModel, flag: Long): Unit = {
+  override def refresh(model: PlaygroundModel, flag: Long): Unit = {
     val modeType = model.mode.modeType
     modeButton.select(modeType)
     replaceClass(navElem, "nav-bg-", s"nav-bg-${modeType.toString.take(4).toLowerCase()}")

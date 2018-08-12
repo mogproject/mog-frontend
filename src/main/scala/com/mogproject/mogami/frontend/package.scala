@@ -2,23 +2,23 @@ package com.mogproject.mogami
 
 package object frontend {
 
-  val SAM = com.mogproject.mogami.frontend.sam.SAM
   val PlaygroundSAM = com.mogproject.mogami.frontend.sam.PlaygroundSAM
 
   type SAMModel = com.mogproject.mogami.frontend.sam.SAMModel
   type SAMAction[M <: SAMModel] = com.mogproject.mogami.frontend.sam.SAMAction[M]
   type SAMState[M <: SAMModel] = com.mogproject.mogami.frontend.sam.SAMState[M]
   type SAMView = com.mogproject.mogami.frontend.sam.SAMView
+  type SAMEnvironment[M <: SAMModel] = com.mogproject.mogami.frontend.sam.SAMEnvironment[M]
 
-  type BasePlaygroundModel = com.mogproject.mogami.frontend.model.BasePlaygroundModel
+  type PlaygroundModel = com.mogproject.mogami.frontend.model.PlaygroundModel
 
   type GameControl = com.mogproject.mogami.frontend.model.GameControl
   val GameControl = com.mogproject.mogami.frontend.model.GameControl
 
-  type BasePlaygroundConfiguration = com.mogproject.mogami.frontend.model.BasePlaygroundConfiguration
-  val BasePlaygroundConfiguration = com.mogproject.mogami.frontend.model.BasePlaygroundConfiguration
+  type PlaygroundConfiguration = com.mogproject.mogami.frontend.model.PlaygroundConfiguration
+  val PlaygroundConfiguration = com.mogproject.mogami.frontend.model.PlaygroundConfiguration
 
-  type SAMObserver[M <: SAMModel] = com.mogproject.mogami.frontend.sam.SAMObserver[M]
+  type PlaygroundSAMObserver = com.mogproject.mogami.frontend.sam.PlaygroundSAMObserver
   val ObserveFlag = com.mogproject.mogami.frontend.state.ObserveFlag
 
   type Coord = com.mogproject.mogami.frontend.view.coordinate.Coord

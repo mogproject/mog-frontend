@@ -10,7 +10,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-case class CommentArea(isDisplayOnly: Boolean, text: String = "") extends WebComponent with SAMObserver[BasePlaygroundModel] {
+case class CommentArea(isDisplayOnly: Boolean, text: String = "") extends WebComponent with PlaygroundSAMObserver {
 
   //
   // Elements
@@ -38,7 +38,7 @@ case class CommentArea(isDisplayOnly: Boolean, text: String = "") extends WebCom
     CONF_DEVICE | MODE_EDIT | GAME_COMMENT | GAME_POSITION
   }
 
-  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
+  override def refresh(model: PlaygroundModel, flag: Long): Unit = {
     if (isFlagUpdated(flag, ObserveFlag.CONF_DEVICE)) {
       // set text input height
       commentComponent.textCommentInput.element.rows = isDisplayOnly.fold(model.config.deviceType.isLandscape.fold(10, 2), 5)

@@ -11,7 +11,7 @@ import scalatags.JsDom.all._
 /**
   *
   */
-class PointCountButton(isMobile: Boolean) extends WebComponent with SAMObserver[BasePlaygroundModel] {
+class PointCountButton(isMobile: Boolean) extends WebComponent with PlaygroundSAMObserver {
 
   private[this] val countButton = CommandButton(
     classButtonDefaultBlock,
@@ -54,7 +54,7 @@ class PointCountButton(isMobile: Boolean) extends WebComponent with SAMObserver[
   //
   override val samObserveMask: Long = ObserveFlag.GAME_BRANCH | ObserveFlag.GAME_POSITION
 
-  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
+  override def refresh(model: PlaygroundModel, flag: Long): Unit = {
     clearMessage()
   }
 }

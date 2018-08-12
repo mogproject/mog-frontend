@@ -1,44 +1,25 @@
 package com.mogproject.mogami.frontend.sam
 
 import com.mogproject.mogami.frontend.action.PlaygroundAction
-import com.mogproject.mogami.frontend.model.BasePlaygroundModel
+import com.mogproject.mogami.frontend.model.PlaygroundModel
+
 
 /**
   *
   */
-trait PlaygroundSAMLike {
-  def doAction(action: PlaygroundAction): Unit = {}
-}
-
-class PlaygroundSAM[M <: BasePlaygroundModel](adapter: (M, BasePlaygroundModel) => M) extends PlaygroundSAMLike {
-
-  override def doAction(action: PlaygroundAction): Unit = {
-//    SAM.debug(s"doAction: ${action}")
-
-    SAM.doAction(new SAMAction[M] {
-      override def execute(model: M): Option[M] = {
-        val result = action.execute(model)
-        result.map(adapter(model, _))
-      }
-    })
-  }
-}
-
 object PlaygroundSAM {
-  private[this] var samImpl: PlaygroundSAMLike = new PlaygroundSAMLike {}
+  private[this] val env: SAMEnvironment[PlaygroundModel] = new SAMEnvironment[PlaygroundModel]()
 
-  def initialize[M <: BasePlaygroundModel](adapter: (M, BasePlaygroundModel) => M): Unit = {
-    samImpl = new PlaygroundSAM(adapter)
-  }
+  //
+  // Environment accessors
+  //
+  def initialize(state: SAMState[PlaygroundModel]): Unit = env.initialize(state)
 
-  /**
-    * Do action with an adapter
-    *
-    * @param action action
-    */
-  def doAction[M <: SAMModel](action: SAMAction[M]): Unit = action match {
-    case a: PlaygroundAction => samImpl.doAction(a)
-    case a => SAM.doAction(a)
-  }
+  def doAction(action: PlaygroundAction): Unit = env.doAction(action)
 
+  def addObserver(observer: SAMObserver[PlaygroundModel]): Unit = env.addObserver(observer)
+
+  def removeObserver(observer: SAMObserver[PlaygroundModel]): Unit = env.removeObserver(observer)
+
+  def getState: SAMState[PlaygroundModel] = env.getState
 }

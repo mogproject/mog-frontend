@@ -3,7 +3,8 @@ package com.mogproject.mogami.frontend.view.board.effect
 import com.mogproject.mogami.frontend.action.UpdateConfigurationAction
 import com.mogproject.mogami.frontend.api.AnimateElementExtended
 import com.mogproject.mogami.frontend.sam.PlaygroundSAM
-import com.mogproject.mogami.frontend.view.{BrowserInfo, WebComponent}
+import com.mogproject.mogami.frontend.view.WebComponent
+import com.mogproject.mogami.frontend.view.system.BrowserInfo
 import org.scalajs.dom
 import org.scalajs.dom.raw.SVGElement
 

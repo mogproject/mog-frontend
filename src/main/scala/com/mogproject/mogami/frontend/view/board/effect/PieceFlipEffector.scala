@@ -1,12 +1,11 @@
 package com.mogproject.mogami.frontend.view.board.effect
 
 import com.mogproject.mogami.frontend.model.PieceFace
-import com.mogproject.mogami.frontend.view.SVGImageCache
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.{Piece, Square}
 import com.mogproject.mogami.frontend.view.board.board.SVGBoard
+import com.mogproject.mogami.frontend.view.system.SVGImageCache
 import org.scalajs.dom.raw.SVGElement
-
 import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
 import scalatags.JsDom.svgTags.animateTransform

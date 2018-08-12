@@ -1,12 +1,12 @@
 package com.mogproject.mogami.frontend.model
 
-import com.mogproject.mogami.frontend.{FrontendSettings, LocalStorage}
+import com.mogproject.mogami.frontend.FrontendSettings
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.DeviceType.DeviceType
 import com.mogproject.mogami.frontend.model.board._
-import com.mogproject.mogami.frontend.view.BrowserInfo
 import com.mogproject.mogami.frontend.view.board.{SVGAreaLayout, SVGStandardLayout}
 import com.mogproject.mogami.frontend.view.sidebar.{SideBarLeft, SideBarRight}
+import com.mogproject.mogami.frontend.view.system.{BrowserInfo, PlaygroundLocalStorage}
 import org.scalajs.dom
 
 import scala.scalajs.js.UndefOr
@@ -14,26 +14,26 @@ import scala.scalajs.js.UndefOr
 /**
   * Base configuration for Playground framework
   */
-case class BasePlaygroundConfiguration(layout: SVGAreaLayout = SVGStandardLayout,
-                                       pieceWidth: Option[Int] = None,
-                                       flipType: FlipType = FlipDisabled,
-                                       pieceFace: PieceFace = PieceFace.JapaneseOneCharFace,
-                                       colorBackground: String = FrontendSettings.color.defaultBackground,
-                                       colorCursor: String = FrontendSettings.color.defaultCursor,
-                                       colorLastMove: String = FrontendSettings.color.defaultLastMove,
-                                       boardIndexType: BoardIndexType = BasePlaygroundConfiguration.defaultBoardIndexType,
-                                       newBranchMode: Boolean = false,
-                                       messageLang: Language = BasePlaygroundConfiguration.browserLanguage,
-                                       recordLang: Language = BasePlaygroundConfiguration.browserLanguage,
-                                       visualEffectEnabled: Boolean = true,
-                                       soundEffectEnabled: Boolean = false,
-                                       baseUrl: String = BasePlaygroundConfiguration.defaultBaseUrl,
-                                       deviceType: DeviceType = BasePlaygroundConfiguration.defaultDeviceType,
-                                       freeMode: Boolean = false, // the turn never changes when this parameter is true
-                                       embeddedMode: Boolean = false,
-                                       isDev: Boolean = false,
-                                       isDebug: Boolean = false
-                                      ) {
+case class PlaygroundConfiguration(layout: SVGAreaLayout = SVGStandardLayout,
+                                   pieceWidth: Option[Int] = None,
+                                   flipType: FlipType = FlipDisabled,
+                                   pieceFace: PieceFace = PieceFace.JapaneseOneCharFace,
+                                   colorBackground: String = FrontendSettings.color.defaultBackground,
+                                   colorCursor: String = FrontendSettings.color.defaultCursor,
+                                   colorLastMove: String = FrontendSettings.color.defaultLastMove,
+                                   boardIndexType: BoardIndexType = PlaygroundConfiguration.defaultBoardIndexType,
+                                   newBranchMode: Boolean = false,
+                                   messageLang: Language = PlaygroundConfiguration.browserLanguage,
+                                   recordLang: Language = PlaygroundConfiguration.browserLanguage,
+                                   visualEffectEnabled: Boolean = true,
+                                   soundEffectEnabled: Boolean = false,
+                                   baseUrl: String = PlaygroundConfiguration.defaultBaseUrl,
+                                   deviceType: DeviceType = PlaygroundConfiguration.defaultDeviceType,
+                                   freeMode: Boolean = false, // the turn never changes when this parameter is true
+                                   embeddedMode: Boolean = false,
+                                   isDev: Boolean = false,
+                                   isDebug: Boolean = false
+                                  ) extends ConfigurationLike[PlaygroundConfiguration] {
 
   def isAreaFlipped(areaId: Int): Boolean = flipType match {
     case FlipDisabled => false
@@ -52,18 +52,19 @@ case class BasePlaygroundConfiguration(layout: SVGAreaLayout = SVGStandardLayout
     parseFlip(List.empty)
   }
 
-  def updateScreenOrientation(): BasePlaygroundConfiguration = {
+  def updateScreenOrientation(): PlaygroundConfiguration = {
     this.copy(deviceType = DeviceType(deviceType.isMobile, BrowserInfo.isLandscape))
   }
 
   def collapseByDefault: Boolean = {
-    val pw = pieceWidth.getOrElse(BasePlaygroundConfiguration.MIN_PIECE_WIDTH)
-    val aw = BasePlaygroundConfiguration.getSVGAreaSize(deviceType, pw, layout, flipType.numAreas)
+    val pw = pieceWidth.getOrElse(PlaygroundConfiguration.MIN_PIECE_WIDTH)
+    val aw = PlaygroundConfiguration.getSVGAreaSize(deviceType, pw, layout, flipType.numAreas)
     !deviceType.isMobile && BrowserInfo.getClientWidth < aw + SideBarLeft.EXPANDED_WIDTH + SideBarRight.EXPANDED_WIDTH
   }
 
-  def loadLocalStorage(): BasePlaygroundConfiguration = {
-    val ls = LocalStorage.load()
+  override def loadLocalStorage(): PlaygroundConfiguration = {
+    val ls = PlaygroundLocalStorage.load()
+
     this.copy(
       pieceWidth = ls.pieceWidth.getOrElse(pieceWidth),
       layout = ls.layout.getOrElse(layout),
@@ -79,9 +80,10 @@ case class BasePlaygroundConfiguration(layout: SVGAreaLayout = SVGStandardLayout
       recordLang = ls.recordLang.getOrElse(recordLang)
     )
   }
+
 }
 
-object BasePlaygroundConfiguration {
+object PlaygroundConfiguration {
 
   /** used for limiting automatic board scaling */
   final val MIN_PIECE_WIDTH: Int = 15

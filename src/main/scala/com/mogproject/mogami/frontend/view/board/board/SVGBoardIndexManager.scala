@@ -1,9 +1,9 @@
 package com.mogproject.mogami.frontend.view.board.board
 
 import com.mogproject.mogami.frontend.model.board.{BoardIndexEnglish, BoardIndexJapanese, BoardIndexNumber, BoardIndexType}
-import com.mogproject.mogami.frontend.view.{SVGImageCache, WebComponent}
+import com.mogproject.mogami.frontend.view.WebComponent
+import com.mogproject.mogami.frontend.view.system.SVGImageCache
 import org.scalajs.dom.raw.SVGElement
-
 import scalatags.JsDom.all._
 import scalatags.JsDom.TypedTag
 

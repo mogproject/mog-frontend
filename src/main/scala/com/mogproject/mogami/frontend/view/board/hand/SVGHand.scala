@@ -3,10 +3,10 @@ package com.mogproject.mogami.frontend.view.board.hand
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami._
 import com.mogproject.mogami.frontend.model.board.cursor.{Cursor, HandCursor}
-import com.mogproject.mogami.frontend.view.SVGImageCache
 import com.mogproject.mogami.frontend.view.board.Flippable
 import com.mogproject.mogami.frontend.view.board.effect._
 import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
+import com.mogproject.mogami.frontend.view.system.SVGImageCache
 import org.scalajs.dom.{ClientRect, Element}
 import org.scalajs.dom.raw.SVGElement
 import org.scalajs.dom.svg.RectElement

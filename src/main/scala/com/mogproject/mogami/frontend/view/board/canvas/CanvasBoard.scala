@@ -4,7 +4,7 @@ import com.mogproject.mogami._
 import com.mogproject.mogami.frontend.Mode
 import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.model.board._
-import com.mogproject.mogami.frontend.model.BasePlaygroundConfiguration
+import com.mogproject.mogami.frontend.model.PlaygroundConfiguration
 import com.mogproject.mogami.frontend.util.PlayerUtil
 import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
 import org.scalajs.dom
@@ -16,7 +16,7 @@ import scalatags.JsDom.all._
 /**
   * For PNG image creation
   */
-case class CanvasBoard(config: BasePlaygroundConfiguration, mode: Mode) extends CanvasRenderer {
+case class CanvasBoard(config: PlaygroundConfiguration, mode: Mode) extends CanvasRenderer {
   private[this] val gameControl = mode.getGameControl.get
 
   private[this] val canvasWidth = config.layout.viewBoxBottomRight.x

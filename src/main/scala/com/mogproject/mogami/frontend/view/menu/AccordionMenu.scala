@@ -1,10 +1,10 @@
 package com.mogproject.mogami.frontend.view.menu
 
+import com.mogproject.mogami.frontend.model.PlaygroundModel
 import com.mogproject.mogami.frontend.{BootstrapJQuery, _}
 import com.mogproject.mogami.frontend.view.Observable
 import org.scalajs.dom.html.Div
 import com.mogproject.mogami.util.Implicits._
-
 import scalatags.JsDom.TypedTag
 import scalatags.JsDom.all._
 import org.scalajs.jquery.jQuery
@@ -15,7 +15,7 @@ import scala.scalajs.js
 /**
   *
   */
-trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAMObserver[BasePlaygroundModel] {
+trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with PlaygroundSAMObserver {
 
   def ident: String
 
@@ -133,7 +133,7 @@ trait AccordionMenu extends WebComponent with Observable[AccordionMenu] with SAM
   /** @note This must be a function in order to be used in inherited classes. */
   override def samObserveMask(): Long = ObserveFlag.MODE_TYPE
 
-  override def refresh(model: BasePlaygroundModel, flag: Long): Unit = {
+  override def refresh(model: PlaygroundModel, flag: Long): Unit = {
     if (visibleMode.contains(model.mode.modeType)) show() else hide()
   }
 }

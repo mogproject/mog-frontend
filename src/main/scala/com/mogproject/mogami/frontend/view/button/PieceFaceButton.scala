@@ -2,10 +2,9 @@ package com.mogproject.mogami.frontend.view.button
 
 import com.mogproject.mogami.Ptype
 import com.mogproject.mogami.frontend._
-import com.mogproject.mogami.frontend.view.SVGImageCache
 import com.mogproject.mogami.frontend.view.board.SVGStandardLayout
+import com.mogproject.mogami.frontend.view.system.SVGImageCache
 import org.scalajs.dom.Element
-
 import scalatags.JsDom.{Modifier, svgAttrs, svgTags}
 import scalatags.JsDom.all._
 
