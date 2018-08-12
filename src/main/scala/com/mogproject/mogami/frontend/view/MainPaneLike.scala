@@ -366,7 +366,7 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with Playgrou
     }
 
     // 11. Selected Cursor
-    if ((!mode.isViewMode || model.selectedCursor.isEmpty) && (flag & CURSOR_SELECT) != 0) {
+    if ((!mode.isViewMode || model.selectedCursor.isEmpty) && (!mode.isLiveMode || mode.isLivePlaying) && (flag & CURSOR_SELECT) != 0) {
       val legalMoves = for {
         (_, c) <- model.selectedCursor.toSet if config.visualEffectEnabled && !c.isBox
         from = c.moveFrom
