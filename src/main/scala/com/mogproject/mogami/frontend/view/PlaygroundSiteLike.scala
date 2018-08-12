@@ -31,7 +31,7 @@ trait PlaygroundSiteLike extends WebComponent {
   lazy val resetMenu: ResetMenu = new ResetMenu
   lazy val settingMenu: SettingMenu = new SettingMenu
   lazy val gameHelpMenu: GameHelpMenu = new GameHelpMenu
-  lazy val aboutMenu: AboutMenu = new AboutMenu
+  lazy val aboutMenu: AccordionMenu = new AboutMenu // can be overridden by another About class
 
   lazy val menuPane: MenuPane = if (isMobile) {
     MenuPane(Seq(shareMenu, manageMenu, actionMenu, branchMenu, analyzeMenu, resetMenu, settingMenu, gameHelpMenu, aboutMenu))
