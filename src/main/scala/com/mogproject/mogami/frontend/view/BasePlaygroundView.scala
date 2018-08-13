@@ -99,7 +99,7 @@ trait BasePlaygroundView extends SAMView {
   //
   def drawNotes(game: Game, recordLang: Language)(implicit stateCache: StateCache): Unit = {
     dom.window.document.head.appendChild(link(rel := "stylesheet", tpe := "text/css", href := "assets/css/notesview.css").render)
-    dom.window.document.body.innerHTML = game.trunk.toHtmlString(recordLang == Japanese, game.comments)
+    dom.window.document.body.innerHTML = game.trunk.toHtmlString(recordLang == Japanese, game.comments, Some(FrontendSettings.notes.numColumns))
   }
 
   //

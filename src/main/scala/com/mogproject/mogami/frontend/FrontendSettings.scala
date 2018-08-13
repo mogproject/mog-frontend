@@ -57,4 +57,7 @@ object FrontendSettings {
     val naturalTheme = (naturalBackground, naturalCursor, naturalLastMove)
   }
 
+  object notes {
+    val numColumns = 2
+  }
 }
