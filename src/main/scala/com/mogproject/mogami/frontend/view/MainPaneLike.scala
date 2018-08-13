@@ -75,16 +75,21 @@ trait MainPaneLike extends WebComponent with Observer[SideBarLike] with Playgrou
 
   private[this] val sidebars: Seq[SideBarLike] = sideBarRight.toSeq ++ sideBarLeft
 
-  override lazy val element: Element = div(
-    if (isMobile || embeddedMode) {
-      mainContent
-    } else {
-      div(cls := "row no-margin no-overflow",
-        sidebars.map(_.element),
+  override lazy val element: Element = {
+    // make sure to instantiate additional components
+    additionalComponents
+
+    div(
+      if (isMobile || embeddedMode) {
         mainContent
-      )
-    }
-  ).render
+      } else {
+        div(cls := "row no-margin no-overflow",
+          sidebars.map(_.element),
+          mainContent
+        )
+      }
+    ).render
+  }
 
   /**
     * Initialize or reload main boards

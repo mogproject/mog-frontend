@@ -15,7 +15,6 @@ case class CommentArea(isDisplayOnly: Boolean, text: String = "") extends WebCom
   //
   // Elements
   //
-
   val commentComponent = CommentComponent(isDisplayOnly, isModal = false, text)
 
   // Layout
