@@ -9,7 +9,8 @@ DEV_PORT = 8001
 TARGET = target/scala-2.12/${APP_NAME}-test-
 COPY_PROD = cp -f ${TARGET}opt.js ${TARGET}opt.js.map  ${PROD_ASS}/js/ && cp -rf ${TEST_ASS}/* ${PROD_ASS}/
 REMOVE_MAPPING = sed -i '' -e '/\/\/\# sourceMappingURL.*/d' ${PROD_ASS}/js/${APP_NAME}*-opt.js
-UGLIFY_CSS = rm -f ${PROD_ASS}/css/* && uglifycss ${TEST_ASS}/css/* > ${PROD_ASS}/css/pg.min.css
+UGLIFY_CSS = rm -f ${PROD_ASS}/css/* && uglifycss ${TEST_ASS}/css/[bmps]* > ${PROD_ASS}/css/pg.min.css && uglifycss ${TEST_ASS}/css/notesview.css > ${PROD_ASS}/css/notesview.css
+
 
 build:
 	${SBT} test:fastOptJS
