@@ -59,5 +59,6 @@ object FrontendSettings {
 
   object notes {
     val numColumns = 2
+    val mobileCutOffCharacters = 80
   }
 }
