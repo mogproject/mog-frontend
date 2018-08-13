@@ -1,7 +1,9 @@
 package com.mogproject.mogami.frontend.view
 
 import com.mogproject.mogami._
+import com.mogproject.mogami.core.game.Game.CommentType
 import com.mogproject.mogami.core.state.StateCache
+import com.mogproject.mogami.util.Implicits._
 import com.mogproject.mogami.frontend.action.{ChangeModeAction, UpdateConfigurationAction, UpdateGameControlAction}
 import com.mogproject.mogami.frontend.api.Clipboard
 import com.mogproject.mogami.frontend.api.Clipboard.Event
@@ -9,14 +11,13 @@ import com.mogproject.mogami.frontend.model.analyze._
 import com.mogproject.mogami.frontend.sam.{PlaygroundSAM, SAMView}
 import com.mogproject.mogami.frontend.view.menu.MenuPane
 import com.mogproject.mogami.frontend._
-import com.mogproject.mogami.frontend.model.{PlaygroundConfiguration, GameControl}
+import com.mogproject.mogami.frontend.model.{GameControl, PlaygroundConfiguration}
 import com.mogproject.mogami.frontend.view.board.canvas.CanvasBoard
 import com.mogproject.mogami.frontend.view.i18n.Messages
 import com.mogproject.mogami.frontend.view.modal._
 import com.mogproject.mogami.frontend.view.modal.embed.EmbedDialog
 import org.scalajs.dom
 import org.scalajs.dom.{Element, UIEvent}
-
 import scalatags.JsDom.all._
 
 /**
@@ -99,7 +100,12 @@ trait BasePlaygroundView extends SAMView {
   //
   def drawNotes(game: Game, recordLang: Language)(implicit stateCache: StateCache): Unit = {
     dom.window.document.head.appendChild(link(rel := "stylesheet", tpe := "text/css", href := "assets/css/notesview.css").render)
-    dom.window.document.body.innerHTML = game.trunk.toHtmlString(recordLang == Japanese, game.comments, Some(FrontendSettings.notes.numColumns))
+    // truncate comments in the mobile screen
+    val comments: CommentType = website.isMobile.when[CommentType](_.map { case (h, c) =>
+      h -> (if (c.length > FrontendSettings.notes.mobileCutOffCharacters) c.take(FrontendSettings.notes.mobileCutOffCharacters) + " ..." else c)
+    })(game.comments)
+    val numColumns = website.isMobile.fold(1, FrontendSettings.notes.numColumns)
+    dom.window.document.body.innerHTML = game.trunk.toHtmlString(recordLang == Japanese, comments, Some(numColumns))
   }
 
   //
