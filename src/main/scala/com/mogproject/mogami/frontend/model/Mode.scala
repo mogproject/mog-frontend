@@ -197,7 +197,7 @@ case class ViewMode(gameControl: GameControl, isHandicappedHint: Option[Boolean]
 case class EditMode(gameInfo: GameInfo, turn: Player, board: BoardType, hand: HandType, isHandicappedHint: Option[Boolean])
   extends Mode(EditModeType, true, true, isHandicappedHint) {
   override lazy val playable: Set[Player] = Player.constructor.toSet
-  override lazy val forwardAvailable = true
+  override lazy val forwardAvailable = false
 }
 
 case class LiveMode(player: Option[Player], online: Map[Player, Boolean], gameControl: GameControl, isHandicappedHint: Option[Boolean])
