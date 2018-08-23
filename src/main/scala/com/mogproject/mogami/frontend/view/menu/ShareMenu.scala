@@ -63,6 +63,7 @@ class ShareMenu(isMobile: Boolean) extends AccordionMenu with PlaygroundSAMObser
   }
 
   override def refresh(model: PlaygroundModel, flag: Long): Unit = {
+    super.refresh(model, flag)
     setTimer(model, flag)
   }
 
@@ -70,8 +71,6 @@ class ShareMenu(isMobile: Boolean) extends AccordionMenu with PlaygroundSAMObser
 
     /** Do not update if the menu dialog is hidden. */
     if (!model.config.deviceType.isMobile || model.menuDialogOpen) {
-      super.refresh(model, flag)
-
       model.mode.getGameControl.foreach { gc =>
         val builder = PlaygroundArgumentsBuilder(gc, model.config)
         recordCopyButton.updateValue(builder.toRecordUrl)
