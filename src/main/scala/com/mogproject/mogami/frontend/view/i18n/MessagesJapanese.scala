@@ -95,6 +95,10 @@ case object MessagesJapanese extends Messages {
   override val FILE_NAME: String = "ファイル名"
   override val BROWSE: String = "選択"
   override val LOADING: String = "読み込み中"
+  override val LOAD_FROM_URL: String = "URL 読み込み"
+  override val LOAD_FROM_URL_PLACEHOLDER: String = "ここに URL を貼り付けてください"
+  override val LOAD_FROM_URL_TOOLTIP: String = "URL の内容を棋譜として読み込み"
+  override val DOWNLOADING: String = "ダウンロード中"
 
   override def LOADING_TEXT(format: RecordFormat): String = s"${format} 形式として読み込み中..."
 
@@ -108,6 +112,8 @@ case object MessagesJapanese extends Messages {
   override val LOAD_INFO_MOVES: String = "手"
   override val LOAD_INFO_BRANCHES: String = "変化"
   override val LOAD_FAILURE: String = ERROR
+  override val INVALID_URL: String = "不正な URL フォーマットです"
+  override val INVALID_URL_SUFFIX: String = "URL の末尾は .csa, .kif, .ki2 のいずれかである必要があります"
 
   override val ACTION: String = "特殊な指し手"
   override val RESIGN: String = "投了"

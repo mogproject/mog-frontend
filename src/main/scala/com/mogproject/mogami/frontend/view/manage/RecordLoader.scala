@@ -6,9 +6,13 @@ import com.mogproject.mogami.frontend.action.dialog.MenuDialogAction
 import com.mogproject.mogami.frontend.action.game.LoadGameAction
 import com.mogproject.mogami.frontend.model.io.{CSA, KI2, KIF, RecordFormat}
 import com.mogproject.mogami.core.state.StateCache.Implicits.DefaultStateCache
+import com.mogproject.mogami.frontend.FrontendSettings
+import com.mogproject.mogami.frontend.io.TextReader
 import com.mogproject.mogami.frontend.view.i18n.Messages
+import org.scalajs.dom
 
 import scala.util.{Failure, Success, Try}
+import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
   *
@@ -70,4 +74,30 @@ trait RecordLoader {
     ss.mkString("(", ", ", ")")
   }
 
+  protected def loadRecordUrl(url: String, freeMode: Boolean): Unit = {
+    TextReader.readURL(url, FrontendSettings.timeout.externalRecordDownload.toMillis.toInt).onComplete {
+      case Success(content) =>
+        displayUrlLoadMessage(Messages.get.LOADING + "...")
+
+        // TODO: simplify
+        dom.window.setTimeout(() => {
+          Try(RecordFormat.detect(content) match {
+            case CSA => Game.parseCsaString(content, freeMode)
+            case KIF => Game.parseKifString(content, freeMode)
+            case KI2 => Game.parseKi2String(content, freeMode)
+          }) match {
+            case Success(g) =>
+              displayUrlLoadMessage(s"${Messages.get.LOAD_SUCCESS} ${getLoadInfo(g)}")
+              doAction(LoadGameAction(g))
+              doAction(MenuDialogAction(false), 1000) // close menu modal after 1 sec (mobile)
+
+            case Failure(e) =>
+              abortUrlLoad(s"[${Messages.get.ERROR}] ${e.getMessage}")
+          }
+        }, 500)
+
+      case Failure(e) =>
+        abortUrlLoad(s"[${Messages.get.ERROR}] ${e.getMessage}")
+    }
+  }
 }

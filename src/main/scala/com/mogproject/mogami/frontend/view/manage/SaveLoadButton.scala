@@ -1,5 +1,7 @@
 package com.mogproject.mogami.frontend.view.manage
 
+import java.net.URI
+
 import com.mogproject.mogami.frontend.action.manage.{CopyRecordAction, SaveRecordAction}
 import com.mogproject.mogami.frontend.io.TextReader
 import com.mogproject.mogami.frontend.model.io.{KIF, RecordFormat}
@@ -11,6 +13,8 @@ import org.scalajs.dom.html._
 
 import scala.util.{Failure, Success, Try}
 import scalatags.JsDom.all._
+
+import scala.scalajs.js
 
 /**
   *
@@ -98,7 +102,7 @@ class SaveLoadButton(isMobile: Boolean, freeMode: Boolean) extends WebComponent 
 
   private[this] val fileSaveFormat: DropdownMenu[RecordFormat] = DropdownMenu(
     RecordFormat.all,
-    (m: Messages) => RecordFormat.all.map { k => k -> k.toString}.toMap,
+    (m: Messages) => RecordFormat.all.map { k => k -> k.toString }.toMap,
     dropdownClass = "input-group-btn",
     labelClass = "dropdown-record",
     dropdownHeader = Some(_.FORMAT)
@@ -128,6 +132,58 @@ class SaveLoadButton(isMobile: Boolean, freeMode: Boolean) extends WebComponent 
   }
 
   //
+  // elements #4: Load from URL
+  //
+  private[this] lazy val urlLoadInput: InputComponent = InputComponent(
+    (m: Messages) => m.LOAD_FROM_URL_PLACEHOLDER,
+    onchange := { () => if (urlLoadInput.element.value.isEmpty) urlLoadButton.disableElement() else clearUrlLoad() }
+  )
+
+  private[this] lazy val urlLoadButton: WebComponent = CommandButton(
+    classButtonDefaultBlock,
+    onclick := { () =>
+      // validate
+      Some(urlLoadInput.element.value).flatMap {
+        case url if !Seq(".csa", ".kif", ".ki2").exists(url.toLowerCase().endsWith) =>
+          displayUrlLoadMessage(Messages.get.INVALID_URL_SUFFIX)
+          None
+        case url if Try(new URI(url)).toOption.exists(_.isAbsolute) =>
+          // ok
+          Some(url)
+        case url if Try(new URI("http://" + url)).toOption.exists(_.isAbsolute) =>
+          // complement
+          val u = "http://" + url
+          urlLoadInput.element.value = u
+          Some(u)
+        case _ =>
+          displayUrlLoadMessage(Messages.get.INVALID_URL)
+          None
+      } map { url =>
+        displayUrlLoadMessage(Messages.get.DOWNLOADING + "...")
+        urlLoadButton.disableElement()
+        dom.window.setTimeout(() => readUrl(url), 500)
+      }
+    }
+  )
+    .withDynamicTextContent(_.LOAD)
+    .withDynamicHoverTooltip(_.LOAD_FROM_URL_TOOLTIP)
+
+  private[this] lazy val urlLoadMessage: Div = div(
+    cls := "col-sm-9 col-xs-8 text-muted",
+    marginTop := 6
+  ).render
+
+  private[this] lazy val urlClearButton: WebComponent = CommandButton(
+    classButtonDefaultBlock, onclick := { () =>
+      displayUrlLoadMessage("")
+      urlLoadInput.element.value = ""
+      displayUrlInputTooltip(Messages.get.TEXT_CLEARED)
+    }
+  )
+    .withDynamicTextContent(_.TEXT_CLEAR)
+    .withDynamicHoverTooltip(_.TEXT_CLEAR_TOOLTIP)
+
+  //
   // layout
   //
   override lazy val element: Div = {
@@ -152,6 +208,20 @@ class SaveLoadButton(isMobile: Boolean, freeMode: Boolean) extends WebComponent 
         cls := "row",
         marginTop := 3,
         div(cls := "col-xs-5 col-sm-3", textClearButton.element)
+      ),
+      br(),
+      WebComponent.dynamicLabel(_.LOAD_FROM_URL).element,
+      urlLoadInput.element,
+      div(
+        cls := "row",
+        marginTop := 3,
+        div(cls := "col-xs-5 col-sm-3", urlLoadButton.element),
+        urlLoadMessage
+      ),
+      div(
+        cls := "row",
+        marginTop := 3,
+        div(cls := "col-xs-5 col-sm-3", urlClearButton.element)
       ),
       br(),
       WebComponent.dynamicLabel(_.SAVE_TO_FILE_CLIPBOARD).element,
@@ -202,6 +272,10 @@ class SaveLoadButton(isMobile: Boolean, freeMode: Boolean) extends WebComponent 
     clearTextLoad()
   }
 
+  private[this] def readUrl(url: String): Unit = {
+    loadRecordUrl(url, freeMode)
+  }
+
   //
   // messaging
   //
@@ -221,10 +295,28 @@ class SaveLoadButton(isMobile: Boolean, freeMode: Boolean) extends WebComponent 
     Tooltip.display(textLoadInput.element, message, 2000)
   }
 
+  protected def displayUrlLoadMessage(message: String): Unit = {
+    urlLoadMessage.innerHTML = message
+  }
+
+  protected def displayUrlInputTooltip(message: String): Unit = {
+    Tooltip.display(urlLoadInput.element, message, 2000)
+  }
+
+  protected def displayUrlLoadTooltip(message: String): Unit = {
+    Tooltip.display(urlLoadButton.element, message, 2000)
+  }
+
   private[this] def abortFileLoad(message: String): Unit = {
     displayFileLoadMessage(message)
     displayFileLoadTooltip(Messages.get.LOAD_FAILURE)
     clearFileLoad()
+  }
+
+  protected def abortUrlLoad(message: String): Unit = {
+    displayUrlLoadMessage(message)
+    displayUrlLoadTooltip(Messages.get.LOAD_FAILURE)
+    clearUrlLoad()
   }
 
   private[this] def clearFileLoad(): Unit = {
@@ -233,6 +325,10 @@ class SaveLoadButton(isMobile: Boolean, freeMode: Boolean) extends WebComponent 
 
   private[this] def clearTextLoad(): Unit = {
     textLoadButton.enableElement()
+  }
+
+  private[this] def clearUrlLoad(): Unit = {
+    urlLoadButton.enableElement()
   }
 
   //

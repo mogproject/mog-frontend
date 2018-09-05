@@ -163,6 +163,18 @@ trait Messages extends MessagesLike {
 
   def LOAD_FAILURE: String
 
+  def LOAD_FROM_URL: String
+
+  def LOAD_FROM_URL_PLACEHOLDER: String
+
+  def LOAD_FROM_URL_TOOLTIP: String
+
+  def DOWNLOADING: String
+
+  def INVALID_URL: String
+
+  def INVALID_URL_SUFFIX: String
+
   //
   // Branch
   //
