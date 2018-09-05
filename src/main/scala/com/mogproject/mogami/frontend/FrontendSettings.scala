@@ -35,7 +35,7 @@ object FrontendSettings {
 
     object playground {
       val apiVersion = 1
-      val apiUrl = "https://kifu.co"
+      var apiUrl = "https://kifu.co"
     }
 
   }
