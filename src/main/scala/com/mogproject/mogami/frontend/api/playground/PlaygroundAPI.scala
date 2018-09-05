@@ -1,5 +1,8 @@
 package com.mogproject.mogami.frontend.api.playground
 
+import java.nio.charset.StandardCharsets
+import java.util.Base64
+
 import com.mogproject.mogami.frontend.FrontendSettings
 import org.scalajs.dom.ext.{Ajax, AjaxException}
 import play.api.libs.json.{Json, Reads, Writes}
@@ -35,6 +38,39 @@ case class UrlShortenRequest(longUrl: String) extends PlaygroundAPIRequest
 case class UrlShortenResponse(id: String, longUrl: String, imageUrl: String) extends PlaygroundAPIResponse
 
 /**
+  * Request
+  *
+  * @param url Target URL
+  */
+case class RecordDownloadRequest(url: String) extends PlaygroundAPIRequest
+
+/**
+  * Response
+  *
+  * @param data  Base64-encoded data
+  * @param error Error message if exists
+  */
+case class RecordDownloadResponse(data: String, error: String) extends PlaygroundAPIResponse {
+  override def toString: String = {
+    if (data.length > 100) {
+      s"RecordDownloadResponse(${data.take(20)}...,${error})"
+    } else {
+      super.toString
+    }
+  }
+
+  /**
+    * Decodes the Base64-encoded data.
+    *
+    * @return Array of Chars
+    * @note Base64 string is encoded with ISO-8859_1
+    */
+  def toDecodedCharArray: Array[Char] = {
+    new String(Base64.getDecoder.decode(data), StandardCharsets.ISO_8859_1).toCharArray
+  }
+}
+
+/**
   * API handler
   *
   * @param apiUrl        URL to the API server
@@ -44,6 +80,8 @@ case class UrlShortenResponse(id: String, longUrl: String, imageUrl: String) ext
 case class PlaygroundAPI(apiUrl: String, apiVersion: Int, timeoutMillis: Int = 5000) {
   implicit val urlShortenRequestWrites: Writes[UrlShortenRequest] = Json.writes[UrlShortenRequest]
   implicit val urlShortenResponseReads: Reads[UrlShortenResponse] = Json.reads[UrlShortenResponse]
+  implicit val recordDownloadRequestWrites: Writes[RecordDownloadRequest] = Json.writes[RecordDownloadRequest]
+  implicit val recordDownloadResponseReads: Reads[RecordDownloadResponse] = Json.reads[RecordDownloadResponse]
 
   private[this] def process[Request <: PlaygroundAPIRequest, Response <: PlaygroundAPIResponse]
   (path: String, request: Request)
@@ -80,6 +118,10 @@ case class PlaygroundAPI(apiUrl: String, apiVersion: Int, timeoutMillis: Int = 5
 
   def shortenUrl(longUrl: String): Future[Option[UrlShortenResponse]] = {
     process[UrlShortenRequest, UrlShortenResponse]("shorten", UrlShortenRequest(legalizeUrl(longUrl)))
+  }
+
+  def downloadRecord(url: String): Future[Option[RecordDownloadResponse]] = {
+    process[RecordDownloadRequest, RecordDownloadResponse]("download", RecordDownloadRequest(url))
   }
 
 }

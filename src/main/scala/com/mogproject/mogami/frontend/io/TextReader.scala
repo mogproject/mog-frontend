@@ -1,9 +1,9 @@
 package com.mogproject.mogami.frontend.io
 
 import com.mogproject.mogami.frontend.api.EscapeCodecLibrary._
+import com.mogproject.mogami.frontend.api.playground.RecordDownloader
 import org.scalajs.dom
 import org.scalajs.dom.raw.FileReader
-import org.scalajs.dom.ext.{Ajax, AjaxException}
 
 import scala.concurrent.{ExecutionContext, Future}
 import scala.scalajs.js.typedarray.{ArrayBuffer, Uint8Array}
@@ -43,18 +43,9 @@ object TextReader {
     * @return decoded text
     */
   def readURL(url: String, timeoutMillis: Int)(implicit context: ExecutionContext): Future[String] = {
-    Ajax.get(url, timeout = timeoutMillis, responseType = "arraybuffer", headers = Map(
-      "Content-Type" -> "application/x-www-form-urlencoded"
-    )).recover {
-      case AjaxException(xhr) => xhr
-    }.map { xhr =>
-      xhr.status match {
-        case x if x / 100 == 2 => decodeText(arrayBuffer2CharSeq(xhr.response.asInstanceOf[ArrayBuffer]))
-        case 0 => throw new IllegalArgumentException(s"Connection error: url=${url}")
-        case _ => throw new IllegalArgumentException(s"Unexpected status: status=${xhr.status}, url=${url}")
-      }
-    }
+    RecordDownloader.downloadRecord(url, timeoutMillis).map(decodeText(_))
   }
+
 
   def encodeCharArray(s: String, encoding: String = "UTF8"): Array[Char] = {
     val escaped = getEscaper(encoding)(s)
