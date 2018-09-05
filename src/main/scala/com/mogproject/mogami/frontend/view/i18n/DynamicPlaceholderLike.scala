@@ -11,7 +11,7 @@ trait DynamicPlaceholderLike extends DynamicElementLike[Input] {
 
   def getPlaceholder(messages: Messages): String
 
-  def refresh(): Unit = {
+  override def refresh(): Unit = {
     element match {
       case elem: Input => elem.placeholder = getPlaceholder(Messages.get)
       case _ =>

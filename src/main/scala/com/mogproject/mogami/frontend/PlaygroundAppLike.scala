@@ -59,6 +59,9 @@ trait PlaygroundAppLike extends JSApp {
         flipType = (args.config.embeddedMode && args.config.flipType == DoubleBoard).fold(FlipDisabled, args.config.flipType)
       )
 
+      // update message lang
+      Messages.setLanguage(args.config.messageLang)
+
       // create model
       val model = PlaygroundModel(mode, verifiedConfig)
 
@@ -109,6 +112,7 @@ trait PlaygroundAppLike extends JSApp {
     }
   }
 
+  // TODO: integrate into com.mogproject.mogami.frontend.view.manage.RecordLoader
   private[this] def loadExternalRecord(url: String, freeMode: Boolean, isDebug: Boolean): Future[Game] = {
     // download external file
     println(s"Downloading: ${url}")

@@ -14,8 +14,6 @@ import org.scalajs.dom.html._
 import scala.util.{Failure, Success, Try}
 import scalatags.JsDom.all._
 
-import scala.scalajs.js
-
 /**
   *
   */
