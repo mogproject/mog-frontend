@@ -94,6 +94,11 @@ case object MessagesEnglish extends Messages {
   override val FILE_NAME: String = "File Name"
   override val BROWSE: String = "Browse"
   override val LOADING: String = "Loading"
+  override val LOAD_FROM_URL: String = "Load from URL"
+  override val LOAD_FROM_URL_PLACEHOLDER: String = "Paste your URL here."
+  override val LOAD_FROM_URL_TOOLTIP: String = "Load record from URL"
+  override val DOWNLOADING: String = "Downloading"
+  override val URL_CLEAR_TOOLTIP: String = "Clear the URL area"
 
   override def LOADING_TEXT(format: RecordFormat): String = s"Loading as ${format} Format..."
 
@@ -108,6 +113,8 @@ case object MessagesEnglish extends Messages {
   override val LOAD_INFO_MOVES: String = "moves"
   override val LOAD_INFO_BRANCHES: String = "branch(es)"
   override val LOAD_FAILURE: String = "Failed!"
+  override val INVALID_URL: String = "Invalid URL format."
+  override val INVALID_URL_SUFFIX: String = "URL must end with .csa, .kif or .ki2."
 
   override val ACTION: String = "Action"
   override val RESIGN: String = "Resign"
