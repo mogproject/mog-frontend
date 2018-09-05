@@ -175,6 +175,8 @@ trait Messages extends MessagesLike {
 
   def INVALID_URL_SUFFIX: String
 
+  def URL_CLEAR_TOOLTIP: String
+
   //
   // Branch
   //

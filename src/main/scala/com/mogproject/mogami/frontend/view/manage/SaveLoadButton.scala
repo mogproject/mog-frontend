@@ -179,7 +179,9 @@ class SaveLoadButton(isMobile: Boolean, freeMode: Boolean) extends WebComponent 
     }
   )
     .withDynamicTextContent(_.TEXT_CLEAR)
-    .withDynamicHoverTooltip(_.TEXT_CLEAR_TOOLTIP)
+    .withDynamicHoverTooltip(_.URL_CLEAR_TOOLTIP)
+
+  lazy val externalUrlCopyButton = new ExternalUrlCopyButton
 
   //
   // layout
@@ -220,6 +222,10 @@ class SaveLoadButton(isMobile: Boolean, freeMode: Boolean) extends WebComponent 
         cls := "row",
         marginTop := 3,
         div(cls := "col-xs-5 col-sm-3", urlClearButton.element)
+      ),
+      div(
+        marginTop := 3,
+        externalUrlCopyButton.element
       ),
       br(),
       WebComponent.dynamicLabel(_.SAVE_TO_FILE_CLIPBOARD).element,

@@ -98,6 +98,7 @@ case object MessagesEnglish extends Messages {
   override val LOAD_FROM_URL_PLACEHOLDER: String = "Paste your URL here."
   override val LOAD_FROM_URL_TOOLTIP: String = "Load record from URL"
   override val DOWNLOADING: String = "Downloading"
+  override val URL_CLEAR_TOOLTIP: String = "Clear the URL area"
 
   override def LOADING_TEXT(format: RecordFormat): String = s"Loading as ${format} Format..."
 

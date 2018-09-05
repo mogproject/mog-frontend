@@ -99,6 +99,7 @@ case object MessagesJapanese extends Messages {
   override val LOAD_FROM_URL_PLACEHOLDER: String = "ここに URL を貼り付けてください"
   override val LOAD_FROM_URL_TOOLTIP: String = "URL の内容を棋譜として読み込み"
   override val DOWNLOADING: String = "ダウンロード中"
+  override val URL_CLEAR_TOOLTIP: String = "URL の入力を消去"
 
   override def LOADING_TEXT(format: RecordFormat): String = s"${format} 形式として読み込み中..."
 

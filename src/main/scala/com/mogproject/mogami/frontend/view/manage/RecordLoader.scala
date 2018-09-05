@@ -13,6 +13,7 @@ import org.scalajs.dom
 
 import scala.util.{Failure, Success, Try}
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.scalajs.js.URIUtils.encodeURIComponent
 
 /**
   *
@@ -88,6 +89,7 @@ trait RecordLoader {
           }) match {
             case Success(g) =>
               displayUrlLoadMessage(s"${Messages.get.LOAD_SUCCESS} ${getLoadInfo(g)}")
+              externalUrlCopyButton.updateValue(getExternalSharingUrl(url))
               doAction(LoadGameAction(g))
               doAction(MenuDialogAction(false), 1000) // close menu modal after 1 sec (mobile)
 
@@ -99,5 +101,9 @@ trait RecordLoader {
       case Failure(e) =>
         abortUrlLoad(s"[${Messages.get.ERROR}] ${e.getMessage}")
     }
+  }
+
+  private[this] def getExternalSharingUrl(externalUrl: String): String = {
+    FrontendSettings.url.baseUrl + "?r=" + encodeURIComponent(externalUrl)
   }
 }
