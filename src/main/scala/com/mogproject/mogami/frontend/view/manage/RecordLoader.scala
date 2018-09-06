@@ -90,6 +90,7 @@ trait RecordLoader {
             case Success(g) =>
               displayUrlLoadMessage(s"${Messages.get.LOAD_SUCCESS} ${getLoadInfo(g)}")
               externalUrlCopyButton.updateValue(getExternalSharingUrl(url))
+              urlLoadInput.showTooltip(Messages.get.LOAD_SUCCESS)
               doAction(LoadGameAction(g))
               doAction(MenuDialogAction(false), 1000) // close menu modal after 1 sec (mobile)
 

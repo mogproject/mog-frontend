@@ -276,6 +276,8 @@ object WebComponent {
     jQuery(elem).addClass(classNames.mkString(" "))
   }
 
-  def glyph(glyphicon: String): TypedTag[Span] = span(cls := s"glyphicon glyphicon-${glyphicon}", aria.hidden := true)
+  def glyph(glyphicon: String, modifier: Modifier*): TypedTag[Span] = {
+    span(Seq(cls := s"glyphicon glyphicon-${glyphicon}", aria.hidden := true) ++ modifier: _*)
+  }
 
 }
