@@ -72,7 +72,7 @@ class SaveLoadButton(isMobile: Boolean, freeMode: Boolean) extends WebComponent 
     .withDynamicHoverTooltip(_.LOAD_FROM_TEXT_TOOLTIP)
 
   private[this] lazy val textLoadMessage: Div = div(
-    cls := "col-sm-9 col-xs-8 text-muted",
+    cls := "col-sm-9 col-xs-7 text-muted",
     marginTop := 6
   ).render
 
@@ -132,16 +132,23 @@ class SaveLoadButton(isMobile: Boolean, freeMode: Boolean) extends WebComponent 
   //
   // elements #4: Load from URL
   //
-  private[this] lazy val urlLoadInput: InputComponent = InputComponent(
+  protected lazy val urlLoadInput: InputComponent = InputComponent(
     (m: Messages) => m.LOAD_FROM_URL_PLACEHOLDER,
-    onchange := { () => if (urlLoadInput.element.value.isEmpty) urlLoadButton.disableElement() else clearUrlLoad() }
+    (s: String) => urlLoadButton.setDisabled(s.isEmpty),
+    () => displayUrlLoadMessage(""),
+    onchange := { () => if (urlLoadInput.getValue.isEmpty) urlLoadButton.disableElement() else clearUrlLoad() }
   )
 
   private[this] lazy val urlLoadButton: WebComponent = CommandButton(
     classButtonDefaultBlock,
+    disabled := true,
     onclick := { () =>
+      urlLoadButton.disableElement()
+
       // validate
-      Some(urlLoadInput.element.value).flatMap {
+      urlLoadInput.updateValue(urlLoadInput.getValue.trim)
+
+      Some(urlLoadInput.getValue).flatMap {
         case url if !Seq(".csa", ".kif", ".ki2").exists(url.toLowerCase().endsWith) =>
           displayUrlLoadMessage(Messages.get.INVALID_URL_SUFFIX)
           None
@@ -151,14 +158,13 @@ class SaveLoadButton(isMobile: Boolean, freeMode: Boolean) extends WebComponent 
         case url if Try(new URI("http://" + url)).toOption.exists(_.isAbsolute) =>
           // complement
           val u = "http://" + url
-          urlLoadInput.element.value = u
+          urlLoadInput.updateValue(u)
           Some(u)
         case _ =>
           displayUrlLoadMessage(Messages.get.INVALID_URL)
           None
       } map { url =>
         displayUrlLoadMessage(Messages.get.DOWNLOADING + "...")
-        urlLoadButton.disableElement()
         dom.window.setTimeout(() => readUrl(url), 500)
       }
     }
@@ -167,19 +173,9 @@ class SaveLoadButton(isMobile: Boolean, freeMode: Boolean) extends WebComponent 
     .withDynamicHoverTooltip(_.LOAD_FROM_URL_TOOLTIP)
 
   private[this] lazy val urlLoadMessage: Div = div(
-    cls := "col-sm-9 col-xs-8 text-muted",
+    cls := "col-sm-9 col-xs-7 text-muted",
     marginTop := 6
   ).render
-
-  private[this] lazy val urlClearButton: WebComponent = CommandButton(
-    classButtonDefaultBlock, onclick := { () =>
-      displayUrlLoadMessage("")
-      urlLoadInput.element.value = ""
-      displayUrlInputTooltip(Messages.get.TEXT_CLEARED)
-    }
-  )
-    .withDynamicTextContent(_.TEXT_CLEAR)
-    .withDynamicHoverTooltip(_.URL_CLEAR_TOOLTIP)
 
   lazy val externalUrlCopyButton = new ExternalUrlCopyButton
 
@@ -211,17 +207,14 @@ class SaveLoadButton(isMobile: Boolean, freeMode: Boolean) extends WebComponent 
       ),
       br(),
       WebComponent.dynamicLabel(_.LOAD_FROM_URL).element,
-      urlLoadInput.element,
+      div(
+        urlLoadInput.element
+      ),
       div(
         cls := "row",
         marginTop := 3,
         div(cls := "col-xs-5 col-sm-3", urlLoadButton.element),
         urlLoadMessage
-      ),
-      div(
-        cls := "row",
-        marginTop := 3,
-        div(cls := "col-xs-5 col-sm-3", urlClearButton.element)
       ),
       div(
         marginTop := 3,
@@ -273,7 +266,7 @@ class SaveLoadButton(isMobile: Boolean, freeMode: Boolean) extends WebComponent 
 
   private[this] def readRecordText(format: RecordFormat, text: String): Unit = {
     loadRecordText(format, text, freeMode)
-    clearTextLoad()
+    textLoadButton.disableElement()
   }
 
   private[this] def readUrl(url: String): Unit = {
@@ -325,10 +318,6 @@ class SaveLoadButton(isMobile: Boolean, freeMode: Boolean) extends WebComponent 
 
   private[this] def clearFileLoad(): Unit = {
     fileLoadButton.disabled = false
-  }
-
-  private[this] def clearTextLoad(): Unit = {
-    textLoadButton.enableElement()
   }
 
   private[this] def clearUrlLoad(): Unit = {
