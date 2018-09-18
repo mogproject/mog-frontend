@@ -314,6 +314,10 @@ trait Messages extends MessagesLike {
   //
   def MOVES: String
 
+  def MOVE: String
+
+  def TIME: String
+
   def COPY_ALL_MOVES: String
 
   def TRUNK: String
