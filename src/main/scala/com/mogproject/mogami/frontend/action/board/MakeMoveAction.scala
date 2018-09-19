@@ -11,7 +11,9 @@ case class MakeMoveAction(move: Move) extends PlaygroundAction {
   override def execute(model: PlaygroundModel): Option[PlaygroundModel] = {
     val m = model.mode
     m.getGameControl.map { gc =>
-      model.copy(m.setGameControl(gc.makeMove(move, model.config.newBranchMode, moveForward = true).get))
+      model.copy(m.setGameControl(gc.makeMove(move, model.config.newBranchMode, moveForward = true).getOrElse(
+        throw new IllegalArgumentException(s"Failed to make move: ${move}")
+      )))
     }
   }
 }

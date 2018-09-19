@@ -266,7 +266,7 @@ class SaveLoadButton(isMobile: Boolean, freeMode: Boolean) extends WebComponent 
 
   private[this] def readRecordText(format: RecordFormat, text: String): Unit = {
     loadRecordText(format, text, freeMode)
-    textLoadButton.disableElement()
+    textLoadButton.enableElement()
   }
 
   private[this] def readUrl(url: String): Unit = {
