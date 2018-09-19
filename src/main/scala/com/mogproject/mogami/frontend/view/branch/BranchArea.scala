@@ -187,7 +187,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with PlaygroundSAM
   //
   override val samObserveMask: Long = {
     import ObserveFlag._
-    MODE_TYPE | GAME_BRANCH | GAME_POSITION | CONF_NEW_BRANCH | CONF_RCD_LANG | CONF_MSG_LANG | MENU_DIALOG
+    MODE_TYPE | GAME_BRANCH | GAME_BRANCH_CHANGED | GAME_POSITION | CONF_NEW_BRANCH | CONF_RCD_LANG | CONF_MSG_LANG | MENU_DIALOG
   }
 
   override def refresh(model: PlaygroundModel, flag: Long): Unit = {
@@ -199,7 +199,7 @@ case class BranchArea(isMobile: Boolean) extends WebComponent with PlaygroundSAM
         case Some(gc) if !model.mode.isLiveMode =>
           show()
 
-          if (model.menuDialogOpen || isFlagUpdated(flag, MODE_TYPE | GAME_BRANCH | CONF_RCD_LANG | CONF_MSG_LANG)) {
+          if (model.menuDialogOpen || isFlagUpdated(flag, MODE_TYPE | GAME_BRANCH | GAME_BRANCH_CHANGED | CONF_RCD_LANG | CONF_MSG_LANG)) {
             updateBranchList(gc.game.branches.length, gc.gamePosition.branch)
           }
           if (model.menuDialogOpen || isFlagUpdated(flag, MODE_TYPE | GAME_BRANCH | GAME_POSITION | CONF_RCD_LANG)) {
