@@ -177,8 +177,11 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
   }
 
   private[this] def makeMoveOnCurrentBranch(move: Move, offset: Int): Option[GameControl] = {
-    game.truncated(gamePosition).updateBranch(displayBranchNo)(_.makeMove(move)).map { g =>
-      this.copy(game = g, displayPosition = displayPosition + offset)
+    // If display position is before the branching point, update the trunk.
+    val nextBranchNo = (statusPosition < game.getBranch(displayBranchNo).get.offset).fold(0, displayBranchNo)
+
+    game.truncated(gamePosition.copy(branch = nextBranchNo)).updateBranch(nextBranchNo)(_.makeMove(move)).map { g =>
+      this.copy(game = g, displayBranchNo = nextBranchNo, displayPosition = displayPosition + offset)
     }
   }
 
