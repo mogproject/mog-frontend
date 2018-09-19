@@ -30,7 +30,7 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
 
   private[this] def getLastStatusPosition(branchNo: BranchNo): Int = {
     val br = game.getBranch(branchNo).getOrElse(game.trunk)
-    br.moves.length + (displayBranchNo == 0).fold(0, br.offset - game.trunk.offset)
+    br.moves.length + (branchNo == 0).fold(0, br.offset - game.trunk.offset)
   }
 
   private[this] def getLastDisplayPosition(branchNo: BranchNo): Int = {
