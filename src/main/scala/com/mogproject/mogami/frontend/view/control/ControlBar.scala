@@ -11,34 +11,35 @@ import com.mogproject.mogami.frontend.view.common.datagrid.DataGrid
 import com.mogproject.mogami.util.Implicits._
 import org.scalajs.dom.raw.{HTMLElement, HTMLSelectElement}
 import scalatags.JsDom.all._
+import org.scalajs.dom.Event
 
 /**
   *
   */
 case class ControlBar(barType: ControlBarType) extends WebComponent with PlaygroundSAMObserver {
 
-  private[this] val LONG_LIST_SIZE = 29
-
   //
   // Elements
   //
-  private[this] val recordSelector: HTMLSelectElement = {
-    val (c, sz) = barType match {
-      case ControlBarType.LongList => ("control-long", Some(LONG_LIST_SIZE))
+  private[this] lazy val recordSelector: HTMLSelectElement = {
+    barType match {
+      case ControlBarType.LongList => throw new IllegalArgumentException("Unexpected initialization for LongList.")
       case _ =>
         val cc = barType match {
           case ControlBarType.Normal => ""
           case ControlBarType.Small => " control-small"
           case _ => throw new RuntimeException("unexpected bar type")
         }
-        ("rect-select" + cc, None)
+        select(
+          cls := "form-control rect-select" + cc,
+          onchange := { e: Event =>
+            e.target match {
+              case elem: HTMLSelectElement => doAction(UpdateGameControlAction(_.copy(displayPosition = elem.selectedIndex)))
+              case _ => // do nothing
+            }
+          }
+        ).render
     }
-
-    select(
-      cls := "form-control " + c,
-      sz.map(size := _),
-      onchange := (() => PlaygroundSAM.doAction(UpdateGameControlAction(gc => gc.copy(displayPosition = getSelectedIndex))))
-    ).render
   }
 
   private[this] def createControlInput(glyph: String, clickAction: PlaygroundAction, holdCheck: Option[() => Boolean]): WebComponent = {
@@ -83,11 +84,10 @@ case class ControlBar(barType: ControlBarType) extends WebComponent with Playgro
     )
   ).render
 
-  private[this] lazy val dataGrid = new DataGrid[ControlBarRow](
-    Seq(_ => "#", _ => "", _ => "", _.MOVE, _.TIME),
-    Seq("move-list-index", "move-list-flag", "move-list-flag", "move-list-move", "move-list-time"),
+  private[this] lazy val dataGrid = new DataGrid[MoveListData](
+    MoveListColumn.columns,
     20,
-    _.foreach(index => PlaygroundSAM.doAction(UpdateGameControlAction(gc => gc.copy(displayPosition = index))))
+    index => PlaygroundSAM.doAction(UpdateGameControlAction(gc => gc.copy(displayPosition = index)))
   )
 
   override val element: HTMLElement = barType match {
@@ -98,9 +98,6 @@ case class ControlBar(barType: ControlBarType) extends WebComponent with Playgro
   //
   // Utility
   //
-  private[this] def getSelectedIndex: Int = recordSelector.selectedIndex
-
-
   private[this] def createRecordContent(gc: GameControl, recordLang: Language): String = {
     gc.getAllMoveRepresentation(recordLang).map {
       case (i, s, hasComment, hasFork, _) => // ignore elapsed time
@@ -110,9 +107,9 @@ case class ControlBar(barType: ControlBarType) extends WebComponent with Playgro
     }.mkString
   }
 
-  private[this] def createRecordData(gc: GameControl, recordLang: Language): Seq[ControlBarRow] = {
+  private[this] def createRecordData(gc: GameControl, recordLang: Language): Seq[MoveListData] = {
     gc.getAllMoveRepresentation(recordLang).map {
-      case (i, s, hasComment, hasFork, elapsedTime) => ControlBarRow(i, hasComment, hasFork, s, elapsedTime)
+      case (i, s, hasComment, hasFork, elapsedTime) => MoveListData(i, hasComment, hasFork, s, elapsedTime)
     }
   }
 
@@ -143,9 +140,6 @@ case class ControlBar(barType: ControlBarType) extends WebComponent with Playgro
           dataGrid.selectRow(gc.displayPosition)
         } else {
           recordSelector.selectedIndex = gc.displayPosition
-        }
-
-        if (barType != ControlBarType.LongList) {
           if (model.mode.isLivePlaying) {
             controlInputStepBackward.setDisabled(true)
             controlInputBackward.setDisabled(true)

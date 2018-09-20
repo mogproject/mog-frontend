@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.model
 
-import com.mogproject.mogami.core.move.IllegalMove
+import com.mogproject.mogami.core.move.{DeclareWin, IllegalMove}
 import com.mogproject.mogami.core.state.State.PromotionFlag
 import com.mogproject.mogami.frontend.model.io.{CSA, KI2, KIF, RecordFormat}
 import com.mogproject.mogami.frontend.view.i18n.RecordMessages
@@ -132,6 +132,37 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
     game.deleteBranch(branchNo).map(g => gc.copy(game = g)).getOrElse(this)
   }
 
+  /**
+    * Update elapsed time information at the currently displaying position.
+    *
+    * @param elapsedTime elapsed time or None (when removing)
+    * @return
+    */
+  def setElapsedTime(elapsedTime: Option[Int]): Option[GameControl] = {
+    game.updateBranch(effectiveBranchNo) { br =>
+      val index = displayPosition - 1
+      br.finalAction match {
+        case _ if index < 0 =>
+          None // Cannot set elapsed time to the initial state
+        case _ if index < br.moves.length =>
+          Some(br.copy(moves = br.moves.updated(index, br.moves(index).copy(elapsedTime = elapsedTime)))(game.stateCache))
+        case Some(sp) =>
+          // TODO: refactor by adding SpecialMove#setElapsedTime
+          val nextSp = sp match {
+            case IllegalMove(mv) => IllegalMove(mv.copy(elapsedTime = elapsedTime))
+            case Resign(_) => Resign(elapsedTime)
+            case TimeUp(_) => TimeUp(elapsedTime)
+            case DeclareWin(_) => DeclareWin(elapsedTime)
+            case x => x
+          }
+
+          Some(br.copy(finalAction = Some(nextSp))(game.stateCache))
+        case _ =>
+          None //Unexpected
+      }
+    }.map { g => this.copy(game = g) }
+  }
+
   //
   // move operations
   //
@@ -177,8 +208,7 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
   }
 
   private[this] def makeMoveOnCurrentBranch(move: Move, offset: Int): Option[GameControl] = {
-    // If display position is before the branching point, update the trunk.
-    val nextBranchNo = (statusPosition < game.getBranch(displayBranchNo).get.offset).fold(0, displayBranchNo)
+    val nextBranchNo = effectiveBranchNo
 
     game.truncated(gamePosition.copy(branch = nextBranchNo)).updateBranch(nextBranchNo)(_.makeMove(move)).map { g =>
       this.copy(game = g, displayBranchNo = nextBranchNo, displayPosition = displayPosition + offset)
@@ -235,9 +265,9 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
     )
     val g: SpecialMove => (String, Option[Int]) = mv => (
       recordLang match {
-      case Japanese => mv.toJapaneseNotationString
-      case English => mv.toWesternNotationString
-    },
+        case Japanese => mv.toJapaneseNotationString
+        case English => mv.toWesternNotationString
+      },
       mv.getElapsedTime
     )
 
