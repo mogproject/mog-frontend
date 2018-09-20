@@ -238,7 +238,7 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
       case Japanese => mv.toJapaneseNotationString
       case English => mv.toWesternNotationString
     },
-      None // FIXME: mv.getElapsedTime
+      mv.getElapsedTime
     )
 
     game.withBranch(displayBranchNo) { br =>

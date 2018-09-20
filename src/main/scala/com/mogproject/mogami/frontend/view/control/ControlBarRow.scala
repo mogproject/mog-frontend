@@ -17,7 +17,7 @@ case class ControlBarRow(index: Option[Int],
     hasComment.fold("*", "") -> "move-list-flag",
     hasFork.fold("+", "") -> "move-list-flag",
     move -> ("mv move-list-move" + (elapsedTime.nonEmpty && isLongJapaneseNotation(move)).fold(s" mv-${move.length}char", "")),
-    elapsedTime.map(x => f"${x / 60}:${x % 60}%02d").getOrElse("") -> "move-list-time"
+    formattedTime.getOrElse("") -> "move-list-time"
   )
 
   /**
@@ -27,5 +27,12 @@ case class ControlBarRow(index: Option[Int],
     */
   private[this] def isLongJapaneseNotation(mv: String): Boolean = {
     (mv(1).toInt >= 128) && mv.length >= 7
+  }
+
+  /**
+    * @return "min:sec"
+    */
+  private[this] def formattedTime: Option[String] = {
+    elapsedTime.map(x => f"${x / 60}:${x % 60}%02d")
   }
 }
