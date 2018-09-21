@@ -206,6 +206,10 @@ object WebComponent {
     apply(div(modifier: _*)).withDynamicInnerElements(f)
   }
 
+  def dynamicTableHeaderCellElement(f: Messages => String, modifier: Modifier*): WebComponent = {
+    apply(th(modifier: _*)).withDynamicTextContent(f)
+  }
+
   //
   // Utility Functions
   //

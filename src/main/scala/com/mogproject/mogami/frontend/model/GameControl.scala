@@ -1,6 +1,6 @@
 package com.mogproject.mogami.frontend.model
 
-import com.mogproject.mogami.core.move.IllegalMove
+import com.mogproject.mogami.core.move.{DeclareWin, IllegalMove}
 import com.mogproject.mogami.core.state.State.PromotionFlag
 import com.mogproject.mogami.frontend.model.io.{CSA, KI2, KIF, RecordFormat}
 import com.mogproject.mogami.frontend.view.i18n.RecordMessages
@@ -132,6 +132,37 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
     game.deleteBranch(branchNo).map(g => gc.copy(game = g)).getOrElse(this)
   }
 
+  /**
+    * Update elapsed time information at the currently displaying position.
+    *
+    * @param elapsedTime elapsed time or None (when removing)
+    * @return
+    */
+  def setElapsedTime(elapsedTime: Option[Int]): Option[GameControl] = {
+    game.updateBranch(effectiveBranchNo) { br =>
+      val index = displayPosition - 1
+      br.finalAction match {
+        case _ if index < 0 =>
+          None // Cannot set elapsed time to the initial state
+        case _ if index < br.moves.length =>
+          Some(br.copy(moves = br.moves.updated(index, br.moves(index).copy(elapsedTime = elapsedTime)))(game.stateCache))
+        case Some(sp) =>
+          // TODO: refactor by adding SpecialMove#setElapsedTime
+          val nextSp = sp match {
+            case IllegalMove(mv) => IllegalMove(mv.copy(elapsedTime = elapsedTime))
+            case Resign(_) => Resign(elapsedTime)
+            case TimeUp(_) => TimeUp(elapsedTime)
+            case DeclareWin(_) => DeclareWin(elapsedTime)
+            case x => x
+          }
+
+          Some(br.copy(finalAction = Some(nextSp))(game.stateCache))
+        case _ =>
+          None //Unexpected
+      }
+    }.map { g => this.copy(game = g) }
+  }
+
   //
   // move operations
   //
@@ -177,8 +208,7 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
   }
 
   private[this] def makeMoveOnCurrentBranch(move: Move, offset: Int): Option[GameControl] = {
-    // If display position is before the branching point, update the trunk.
-    val nextBranchNo = (statusPosition < game.getBranch(displayBranchNo).get.offset).fold(0, displayBranchNo)
+    val nextBranchNo = effectiveBranchNo
 
     game.truncated(gamePosition.copy(branch = nextBranchNo)).updateBranch(nextBranchNo)(_.makeMove(move)).map { g =>
       this.copy(game = g, displayBranchNo = nextBranchNo, displayPosition = displayPosition + offset)
@@ -202,18 +232,18 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
     * Creates and returns the representation of all moves
     *
     * @param recordLang record language
-    * @return Seq of (optional index, move representation, has comment?, has fork?)
+    * @return Seq of (optional index, move representation, has comment?, has fork?, time)
     */
-  def getAllMoveRepresentation(recordLang: Language): Seq[(Option[Int], String, Boolean, Boolean)] = {
+  def getAllMoveRepresentation(recordLang: Language): Seq[(Option[Int], String, Boolean, Boolean, Option[Int])] = {
     val messages = RecordMessages.get(recordLang)
 
     game.withBranch(displayBranchNo) { br =>
-      val xs = (messages.INITIAL_STATE +: getMoveStringList(recordLang)).zipWithIndex.map { case (m, i) =>
+      val xs = ((messages.INITIAL_STATE, None) +: getMoveStringList(recordLang)).zipWithIndex.map { case ((m, t), i) =>
         val pos = GamePosition(displayBranchNo, i + game.trunk.offset)
-        ((i != 0).option(pos.position), m, game.hasComment(pos), game.hasFork(pos))
+        ((i != 0).option(pos.position), m, game.hasComment(pos), game.hasFork(pos), t)
       }
 
-      val suffix = messages.SPECIAL_MOVES.get(br.status).map((None, _, false, false))
+      val suffix = messages.SPECIAL_MOVES.get(br.status).map((None, _, false, false, None))
       xs ++ suffix
     }.getOrElse(Nil)
   }
@@ -224,25 +254,37 @@ case class GameControl(game: Game, displayBranchNo: BranchNo = 0, displayPositio
     * @param recordLang language
     * @return
     */
-  private[this] def getMoveStringList(recordLang: Language): List[String] = {
-    val f: Move => (Player, String) = mv => mv.player -> (recordLang match {
-      case Japanese => mv.toJapaneseNotationString
-      case English => mv.toWesternNotationString
-    })
-    val g: SpecialMove => String = recordLang match {
-      case Japanese => _.toJapaneseNotationString
-      case English => _.toWesternNotationString
-    }
+  private[this] def getMoveStringList(recordLang: Language): List[(String, Option[Int])] = {
+    val f: Move => (Player, String, Option[Int]) = mv => (
+      mv.player,
+      recordLang match {
+        case Japanese => mv.toJapaneseNotationString
+        case English => mv.toWesternNotationString
+      },
+      mv.elapsedTime
+    )
+    val g: SpecialMove => (String, Option[Int]) = mv => (
+      recordLang match {
+        case Japanese => mv.toJapaneseNotationString
+        case English => mv.toWesternNotationString
+      },
+      mv.getElapsedTime
+    )
+
     game.withBranch(displayBranchNo) { br =>
       val lastTurn = br.lastState.turn
       val mvs = displayMoves.map(f)
-      val lst: List[(Player, String)] = br.status match {
-        case GameStatus.Resigned | GameStatus.TimedUp => List(lastTurn -> g(br.finalAction.get))
-        case GameStatus.IllegallyMoved => g(br.finalAction.get).split("\n").toList.take(1).map(lastTurn -> _)
+      val lst: List[(Player, String, Option[Int])] = br.status match {
+        case GameStatus.Resigned | GameStatus.TimedUp =>
+          val ret = g(br.finalAction.get)
+          List((lastTurn, ret._1, ret._2))
+        case GameStatus.IllegallyMoved =>
+          val ret = g(br.finalAction.get)
+          ret._1.split("\n").toList.take(1).map(m => (lastTurn, m, ret._2))
         case _ => Nil
       }
 
-      (mvs ++ lst).map { case (pl, ss) => pl.toSymbolString() + ss }.toList
+      (mvs ++ lst).map { case (pl, ss, tm) => (pl.toSymbolString() + ss, tm) }.toList
     }.getOrElse(Nil)
   }
 }

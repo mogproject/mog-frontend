@@ -39,6 +39,7 @@ trait ObserveFlagLike {
   // Mode
   //
   final val MODE_TYPE = 1L << 16
+  /** Mode change involving Edit Mode. i.e. X -> Edit or Edit -> X */
   final val MODE_EDIT = 1L << 17
   final val MODE_LIVE_TURN = 1 << 18
   final val MODE_LIVE_ONLINE = 1 << 19
