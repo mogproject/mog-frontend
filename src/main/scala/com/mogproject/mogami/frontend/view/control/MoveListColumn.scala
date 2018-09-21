@@ -12,7 +12,7 @@ import scala.util.Try
   */
 object MoveListColumn {
   private[this] val indexColumn = DataColumn[MoveListData](
-    _ => "*",
+    _ => "#",
     _.index.map(_.toString).getOrElse(""),
     "move-list-index",
     _ => "move-list-index"
