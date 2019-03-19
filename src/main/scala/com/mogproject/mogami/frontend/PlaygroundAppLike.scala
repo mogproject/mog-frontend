@@ -23,11 +23,11 @@ import scala.scalajs.js.JSApp
 /**
   *
   */
-trait PlaygroundAppLike {
+trait PlaygroundAppLike extends JSApp {
 
   def createView(config: PlaygroundConfiguration, rootElem: Element): BasePlaygroundView
 
-  def main(args: Array[String]): Unit = {
+  override def main(): Unit = {
 
     // get args
     val args = PlaygroundArguments()
