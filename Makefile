@@ -5,14 +5,17 @@ APP_NAME = mog-frontend
 PROD_RSC = docs
 TEST_ASS = assets
 PROD_ASS = ${PROD_RSC}/assets
+DEV_ASS = src/test/resources/assets
 DEV_PORT = 8001
 TARGET = target/scala-2.12/${APP_NAME}-test-
+COPY_DEV = cp -rf ${TEST_ASS}/* ${DEV_ASS}/
 COPY_PROD = cp -f ${TARGET}opt.js ${TARGET}opt.js.map  ${PROD_ASS}/js/ && cp -rf ${TEST_ASS}/* ${PROD_ASS}/
 REMOVE_MAPPING = sed -i '' -e '/\/\/\# sourceMappingURL.*/d' ${PROD_ASS}/js/${APP_NAME}*-opt.js
 UGLIFY_CSS = rm -f ${PROD_ASS}/css/* && uglifycss ${TEST_ASS}/css/[bmps]* > ${PROD_ASS}/css/pg.min.css && uglifycss ${TEST_ASS}/css/notesview.css > ${PROD_ASS}/css/notesview.css
 
 
 build:
+	${COPY_DEV}
 	${SBT} test:fastOptJS
 
 test:
@@ -22,7 +25,7 @@ console:
 	${SBT} test:console
 
 clean:
-	rm -rf ~/.sbt/0.13/staging/*/mog-*
+	rm -rf ~/.sbt/1.0/staging/*/mog-*
 	${SBT} clean
 
 local:
