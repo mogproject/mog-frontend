@@ -19,8 +19,11 @@ lazy val root = (project in file("."))
 
     skip in packageJSDependencies := false,
 
+    jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv(),
+
+    scalaJSUseMainModuleInitializer := true,
+    
     jsDependencies ++= Seq(
-      RuntimeDOM,
       "org.webjars" % "jquery" % "1.12.4" / "jquery.js" % Test,
       ProvidedJS / "assets/js/ecl_new.js" % Test,
       ProvidedJS / "assets/js/bootstrap.min.js" % Test,
