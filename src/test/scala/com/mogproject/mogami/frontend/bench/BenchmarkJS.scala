@@ -14,10 +14,10 @@ import scalatags.JsDom.all.div
   *
   * run `make clean && make bench` in the project root directory
   */
-object BenchmarkJS extends TestData {
+object BenchmarkJS extends scalajs.js.JSApp with TestData {
   TestSettings
 
-  def main(args: Array[String]): Unit = {
+  def main(): Unit = {
     print("\n" * 6)
 
     setupSAM(recordUsen01)
