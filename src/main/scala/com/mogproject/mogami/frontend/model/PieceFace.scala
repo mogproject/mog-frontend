@@ -42,6 +42,8 @@ object PieceFace {
 
   case object ShogiCzFace extends PieceFace("cz1", "Shogi.cz", false)
 
+  case object ShogiCzBlackAndWhiteFace extends PieceFace("cz2", "Shogi.cz B&W", false)
+
 
   val all = Seq(
     JapaneseOneCharFace,
@@ -51,6 +53,7 @@ object PieceFace {
     JapaneseOneCharHidetchiRyokoFace,
     WesternOneCharFace,
     HidetchiInternational,
-    ShogiCzFace
+    ShogiCzFace,
+    ShogiCzBlackAndWhiteFace
   )
 }

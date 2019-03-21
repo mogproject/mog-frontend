@@ -226,7 +226,8 @@ case object MessagesJapanese extends Messages {
       JapaneseOneCharHidetchiRyokoFace -> "日本語 5",
       WesternOneCharFace -> "西洋 1",
       HidetchiInternational -> "Hidetchi 国際駒",
-      ShogiCzFace -> "Shogi.cz"
+      ShogiCzFace -> "Shogi.cz",
+      ShogiCzBlackAndWhiteFace -> "Shogi.cz 白黒"
     )
   }
 
