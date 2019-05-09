@@ -19,7 +19,9 @@ trait FooterLike extends WebComponent {
       a(href := FrontendSettings.url.donationUrl, "Donate $5"),
       br,
       "Try ", a(href := FrontendSettings.url.shogiBotUrl, "Shogi Bot"),
-      " and ", a(href := FrontendSettings.url.playgroundLiveUrl, "Shogi Playground Live!")
+      " and ", a(href := FrontendSettings.url.playgroundLiveUrl, "Shogi Playground Live!"),
+      " - ",
+      a(href := "./privacy/", "Privacy Policy")
     ))
   ).render
 
