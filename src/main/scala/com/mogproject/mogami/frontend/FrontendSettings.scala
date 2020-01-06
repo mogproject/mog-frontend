@@ -7,7 +7,7 @@ import scala.concurrent.duration._
   */
 object FrontendSettings {
 
-  val currentYear = 2019
+  val currentYear = 2020
 
   val imageVersion = 4
 
