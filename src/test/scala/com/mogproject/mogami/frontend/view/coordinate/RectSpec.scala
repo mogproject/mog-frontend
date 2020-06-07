@@ -1,9 +1,9 @@
 package com.mogproject.mogami.frontend.view.coordinate
 
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
-import org.scalatest.{FlatSpec, MustMatchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.must.Matchers
 
-class RectSpec extends FlatSpec with MustMatchers with GeneratorDrivenPropertyChecks {
+class RectSpec extends AnyFlatSpec with Matchers {
 
   "Rect#getSVGTextStartPoint" must "return the text start point" in {
     val r = Rect(Coord(12, 34), 567, 890)

@@ -135,7 +135,7 @@ sealed abstract class Mode(val modeType: ModeType,
 
     val a = b.values.map(_.ptype.demoted).foldLeft(Map.empty[Ptype, Int]) { case (m, pt) => MapUtil.incrementMap(m, pt) }
     val used = h.foldLeft(a) { case (m, (h, n)) => m.updated(h.ptype, m.getOrElse(h.ptype, 0) + n) }
-    MapUtil.mergeMaps(State.capacity, used)(_ - _, 0).mapValues(math.max(0, _))
+    MapUtil.mergeMaps(State.capacity, used)(_ - _, 0).view.mapValues(math.max(0, _)).toMap
   }
 
   def getGameControl: Option[GameControl] = this match {

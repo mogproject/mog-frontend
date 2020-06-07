@@ -1,25 +1,32 @@
 enablePlugins(ScalaJSPlugin)
 
 lazy val root = (project in file("."))
+  .enablePlugins(JSDependenciesPlugin)
   .settings(
     inThisBuild(List(
       organization := "com.mogproject",
-      scalaVersion := "2.12.0"
+      scalaVersion := "2.13.2"
     )),
     name := "mog-frontend",
     libraryDependencies ++= Seq(
-      "org.scala-js" %%% "scalajs-dom" % "0.9.1",
-      "be.doeraene" %%% "scalajs-jquery" % "0.9.1",
-      "com.lihaoyi" %%% "scalatags" % "0.6.2",
-      "com.typesafe.play" %%% "play-json" % "2.6.1",
-      "org.scalatest" %%% "scalatest" % "3.0.1" % Test,
-      "org.scalacheck" %%% "scalacheck" % "1.13.4" % Test
+      "org.scala-js" %%% "scalajs-dom" % "1.0.0",
+      "be.doeraene" %%% "scalajs-jquery" % "1.0.0",
+      "com.lihaoyi" %%% "scalatags" % "0.9.1",
+      "com.typesafe.play" %%% "play-json" % "2.9.0",
+      "org.scala-js" %% "scalajs-env-jsdom-nodejs" % "1.0.0",
+      "org.scalatest" %%% "scalatest" % "3.1.2" % Test,
+      "org.scalacheck" %%% "scalacheck" % "1.14.3" % Test,
+      "org.scalatestplus" %%% "scalacheck-1-14" % "3.1.2.0" % Test
     ),
     scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation", "-feature"),
 
+    scalaJSUseMainModuleInitializer := false,
+
+    Test / scalaJSUseTestModuleInitializer := false,
+
     skip in packageJSDependencies := false,
 
-    jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv(),
+    jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv(),
 
     jsDependencies ++= Seq(
       "org.webjars" % "jquery" % "1.12.4" / "jquery.js" % Test,

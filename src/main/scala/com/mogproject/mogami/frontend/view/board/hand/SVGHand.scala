@@ -37,7 +37,7 @@ case class SVGHand(layout: SVGHandLayout, foremostElement: SVGElement)(implicit 
   override def clientPos2Cursor(clientX: Double, clientY: Double): Option[Cursor] = {
     val numRooms = layout.numRows * layout.numColumns
 
-    (borderElements.zipWithIndex.toStream.flatMap { case (r, i) =>
+    (borderElements.zipWithIndex.to(LazyList).flatMap { case (r, i) =>
       clientRect2Index(clientX, clientY, r.getBoundingClientRect()).map(i -> _)
     }.headOption match {
       case (Some((0, sortId))) if sortId >= numRooms - 7 => Some(Player.WHITE -> Ptype.inHand(numRooms - sortId - 1))

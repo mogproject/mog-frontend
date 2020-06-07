@@ -7,11 +7,11 @@ import com.mogproject.mogami.core.{Piece, Square}
 import com.mogproject.mogami.core.game.{Branch, Game}
 import com.mogproject.mogami.core.move.{IllegalMove, MoveBuilderCsa}
 import com.mogproject.mogami.core.state.StateCache
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
-import org.scalatest.{FlatSpec, MustMatchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.must.Matchers
 
 
-class ModeSpec extends FlatSpec with MustMatchers with GeneratorDrivenPropertyChecks {
+class ModeSpec extends AnyFlatSpec with Matchers {
 
   "Mode#getBoardPieces" must "work with illegal states" in StateCache.withCache { implicit cache =>
     val tr = Branch()

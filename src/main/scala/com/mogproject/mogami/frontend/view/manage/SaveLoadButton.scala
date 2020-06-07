@@ -31,7 +31,6 @@ class SaveLoadButton(isMobile: Boolean, freeMode: Boolean) extends WebComponent 
     display := "none",
     onchange := { () =>
       displayFileLoadMessage(Messages.get.LOADING + "...")
-      fileLoadButton.disabled = true
       dom.window.setTimeout(() => readSingleFile(fileName => content => loadRecord(fileName, content, freeMode)), 500)
     }
   ).render
@@ -317,7 +316,7 @@ class SaveLoadButton(isMobile: Boolean, freeMode: Boolean) extends WebComponent 
   }
 
   private[this] def clearFileLoad(): Unit = {
-    fileLoadButton.disabled = false
+    //
   }
 
   private[this] def clearUrlLoad(): Unit = {

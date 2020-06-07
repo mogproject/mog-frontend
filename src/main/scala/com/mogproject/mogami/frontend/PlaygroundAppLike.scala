@@ -17,17 +17,18 @@ import org.scalajs.dom.html.Div
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.scalajs.js.JSApp
+import scala.scalajs.js.annotation.JSExport
 
 
 /**
   *
   */
-trait PlaygroundAppLike extends JSApp {
+trait PlaygroundAppLike {
 
   def createView(config: PlaygroundConfiguration, rootElem: Element): BasePlaygroundView
 
-  override def main(): Unit = {
+  @JSExport
+  def main(): Unit = {
 
     // get args
     val args = PlaygroundArguments()

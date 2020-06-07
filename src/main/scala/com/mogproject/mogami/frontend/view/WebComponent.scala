@@ -10,10 +10,9 @@ import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement
 import com.mogproject.mogami.frontend.view.tooltip.TooltipPlacement.TooltipPlacement
 import org.scalajs.dom
 import org.scalajs.dom.html.{Button, Input, Span}
-import org.scalajs.dom.raw.{HTMLElement, SVGElement}
+import org.scalajs.dom.raw.{HTMLButtonElement, HTMLElement, HTMLFieldSetElement, HTMLOptionElement, HTMLSelectElement, HTMLTextAreaElement, SVGElement}
 import org.scalajs.dom.{Element, Node, Text}
 import org.scalajs.jquery.jQuery
-
 import scalatags.JsDom.TypedTag
 import scalatags.JsDom.Modifier
 import scalatags.JsDom.all.{button => btn, _}
@@ -43,14 +42,30 @@ trait WebComponent {
   def enableElement(): Unit = setDisabled(false)
 
   def setDisabled(disabled: Boolean): Unit = element match {
-    case e: HTMLElement if !e.disabled.contains(disabled) =>
+    case e: HTMLSelectElement if e.disabled != disabled =>
+      Tooltip.hideToolTip(e)
+      e.disabled = disabled
+    case e: HTMLOptionElement if e.disabled != disabled =>
+      Tooltip.hideToolTip(e)
+      e.disabled = disabled
+    case e: HTMLButtonElement if e.disabled != disabled =>
+      Tooltip.hideToolTip(e)
+      e.disabled = disabled
+    case e: HTMLTextAreaElement if e.disabled != disabled =>
+      Tooltip.hideToolTip(e)
+      e.disabled = disabled
+    case e: HTMLFieldSetElement if e.disabled != disabled =>
       Tooltip.hideToolTip(e)
       e.disabled = disabled
     case _ =>
   }
 
   def isDisabled: Boolean = element match {
-    case e: HTMLElement => e.disabled.contains(true)
+    case e: HTMLSelectElement => e.disabled
+    case e: HTMLOptionElement => e.disabled
+    case e: HTMLButtonElement => e.disabled
+    case e: HTMLTextAreaElement => e.disabled
+    case e: HTMLFieldSetElement => e.disabled
     case _ => false
   }
 

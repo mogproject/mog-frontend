@@ -61,7 +61,7 @@ case class GameInfoDialog(gameInfo: GameInfo, isHandicapped: Boolean) extends Mo
   )
 
   override def initialize(dialog: JQuery): Unit = {
-    dialog.on("show.bs.modal", () ⇒ {
+    dialog.on("show.bs.modal", () => {
       // todo: this doesn't work
       inputNames(BLACK).focus()
     })

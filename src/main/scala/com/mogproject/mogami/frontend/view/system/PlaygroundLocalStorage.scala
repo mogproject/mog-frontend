@@ -92,7 +92,7 @@ object PlaygroundLocalStorage extends LocalStorageIOLike[PlaygroundLocalStorage]
   }
 
   def saveImage(url: String, imageVersion: Int, data: String): Unit = {
-    val s = imageVersion + ";" + data
+    val s = s"${imageVersion};${data}"
     val compressed = LZString.compressToUTF16(s)
     dom.window.localStorage.setItem("i:" + url, compressed)
   }

@@ -102,7 +102,7 @@ case class ControlBar(barType: ControlBarType) extends WebComponent with Playgro
     gc.getAllMoveRepresentation(recordLang).map {
       case (i, s, hasComment, hasFork, _) => // ignore elapsed time
         val symbolMark = hasFork.fold("+", hasComment.fold("*", ""))
-        val index = i.map(_ + ": ").getOrElse("")
+        val index = i.map(ii => s"${ii}: ").getOrElse("")
         option(symbolMark + index + s)
     }.mkString
   }

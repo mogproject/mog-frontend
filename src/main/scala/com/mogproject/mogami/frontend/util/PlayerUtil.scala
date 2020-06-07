@@ -9,8 +9,8 @@ import com.mogproject.mogami.frontend.model.{English, Japanese}
   */
 object PlayerUtil {
 
-  val blackTag = 'blackName
-  val whiteTag = 'whiteName
+  val blackTag = Symbol("blackName")
+  val whiteTag = Symbol("whiteName")
   val tagNames: Map[Player, Symbol] = Map(BLACK -> blackTag, WHITE -> whiteTag)
 
   def normalizeGameInfo(gameInfo: GameInfo): GameInfo = {

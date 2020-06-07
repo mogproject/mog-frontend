@@ -30,7 +30,7 @@ case class MenuDialog(menuPane: MenuPane) extends ModalLike with PlaygroundSAMOb
   private[this] def createDialog(): BootstrapJQuery = {
     val e = jQuery(elem)
 
-    e.on("hidden.bs.modal", () ⇒ {
+    e.on("hidden.bs.modal", () => {
       // Hide all tooltips
       Tooltip.hideAllToolTip()
 

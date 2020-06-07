@@ -72,8 +72,8 @@ case class PlaygroundArguments(sfen: Option[String] = None,
               case "2" => Some(sofar.updateConfig(_.copy(deviceType = DeviceType.MobileLandscape)))
               case _ => None
             }
-            case "bn" => Some(sofar.copy(gameInfo = sofar.gameInfo.updated('blackName, s)))
-            case "wn" => Some(sofar.copy(gameInfo = sofar.gameInfo.updated('whiteName, s)))
+            case "bn" => Some(sofar.copy(gameInfo = sofar.gameInfo.updated(Symbol("blackName"), s)))
+            case "wn" => Some(sofar.copy(gameInfo = sofar.gameInfo.updated(Symbol("whiteName"), s)))
             case "free" => parseBoolean(s).map(b => sofar.updateConfig(_.copy(freeMode = b)))
             case "embed" => parseBoolean(s).map(b => sofar.updateConfig(_.copy(embeddedMode = b)))
             case "ve" => parseBoolean(s).map(b => sofar.updateConfig(_.copy(visualEffectEnabled = b)))

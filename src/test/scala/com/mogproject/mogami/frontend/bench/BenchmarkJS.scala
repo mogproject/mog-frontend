@@ -14,7 +14,7 @@ import scalatags.JsDom.all.div
   *
   * run `make clean && make bench` in the project root directory
   */
-object BenchmarkJS extends scalajs.js.JSApp with TestData {
+object BenchmarkJS extends TestData {
   TestSettings
 
   def main(): Unit = {

@@ -43,7 +43,7 @@ object TextReader {
     * @return decoded text
     */
   def readURL(url: String, timeoutMillis: Int)(implicit context: ExecutionContext): Future[String] = {
-    RecordDownloader.downloadRecord(url, timeoutMillis).map(decodeText(_))
+    RecordDownloader.downloadRecord(url, timeoutMillis).map(s => decodeText(s.toIndexedSeq))
   }
 
 

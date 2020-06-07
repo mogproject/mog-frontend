@@ -1,10 +1,10 @@
 package com.mogproject.mogami.frontend.action.board
 
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
-import org.scalatest.{FlatSpec, MustMatchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.must.Matchers
 
 
-class CursorAdjustableSpec extends FlatSpec with MustMatchers with GeneratorDrivenPropertyChecks {
+class CursorAdjustableSpec extends AnyFlatSpec with Matchers {
   val TestCursorAdjustable = new CursorAdjustable {}
   "CursorAdjustable#categorizeMovement" must "return integers" in {
     val result = for {

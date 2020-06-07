@@ -1,8 +1,9 @@
 package com.mogproject.mogami.frontend.view.control
 
-import org.scalatest.{FlatSpec, MustMatchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.must.Matchers
 
-class MoveListColumnSpec extends FlatSpec with MustMatchers {
+class MoveListColumnSpec extends AnyFlatSpec with Matchers {
   "MoveListColumn#validateElapsedTime" must "validate time expression" in {
     MoveListColumn.validateElapsedTime("") mustBe None
     MoveListColumn.validateElapsedTime("0") mustBe Some(0)

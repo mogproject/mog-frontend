@@ -18,7 +18,7 @@ trait SVGAreaEventHandler extends PointerMoveSensor with PointerHoldSensor {
     * @return None if the position is out of interests
     */
   private[this] def getCursor(clientX: Double, clientY: Double): Option[Cursor] = {
-    Seq(board, hand, player, box).toStream.flatMap(t => t.clientPos2Cursor(clientX, clientY)).headOption
+    Seq(board, hand, player, box).to(LazyList).flatMap(t => t.clientPos2Cursor(clientX, clientY)).headOption
   }
 
   override protected def pointerMoveAction(clientX: Double, clientY: Double): Unit = doAction(BoardCursorEventAction(MouseMoveEvent(areaId, getCursor(clientX, clientY))))

@@ -17,7 +17,7 @@ trait PlaygroundArgumentsBuilderLike {
 
   private[this] lazy val displayingState: State = gameControl.getDisplayingState
 
-  private[this] def toGamePosition(branchNo: BranchNo, pos: Position) = (branchNo == 0).fold("", branchNo + ".") + pos
+  private[this] def toGamePosition(branchNo: BranchNo, pos: Position) = (branchNo == 0).fold("", s"${branchNo}.") + pos
 
   private[this] lazy val gameParams: Seq[(String, String)] = Seq("u" -> gameControl.game.toUsenString) ++ config.freeMode.option("free" -> "true")
 
@@ -59,7 +59,7 @@ trait PlaygroundArgumentsBuilderLike {
   def toNotesViewUrl: String = createUrl(notesViewActionParams ++ recordParams(createFullUrl = false))
 
   private[this] def gameInfoParams: Seq[(String, String)] = {
-    val params = List(("bn", 'blackName), ("wn", 'whiteName))
+    val params = List(("bn", Symbol("blackName")), ("wn", Symbol("whiteName")))
     params.flatMap { case (q, k) => gameControl.game.gameInfo.tags.get(k).map((q, _)) }
   }
 
