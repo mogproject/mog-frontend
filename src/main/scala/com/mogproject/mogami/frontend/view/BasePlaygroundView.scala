@@ -98,14 +98,15 @@ trait BasePlaygroundView extends SAMView {
   //
   // Notes action
   //
-  def drawNotes(game: Game, recordLang: Language)(implicit stateCache: StateCache): Unit = {
+  def drawNotes(game: Game, recordLang: Language, withCommentOnly: Boolean)(implicit stateCache: StateCache): Unit = {
     dom.window.document.head.appendChild(link(rel := "stylesheet", tpe := "text/css", href := "assets/css/notesview.css").render)
     // truncate comments in the mobile screen
     val comments: CommentType = website.isMobile.when[CommentType](_.map { case (h, c) =>
       h -> (if (c.length > FrontendSettings.notes.mobileCutOffCharacters) c.take(FrontendSettings.notes.mobileCutOffCharacters) + " ..." else c)
     })(game.comments)
     val numColumns = website.isMobile.fold(1, FrontendSettings.notes.numColumns)
-    dom.window.document.body.innerHTML = game.trunk.toHtmlString(recordLang == Japanese, comments, Some(numColumns))
+    val content = game.trunk.toHtmlString(recordLang == Japanese, comments, Some(numColumns), withCommentOnly)
+    dom.window.document.body.innerHTML = if (content.isEmpty) p(cls := "shogi-page", Messages.get.NO_POSITIONS_WITH_COMMENT).toString() else content
   }
 
   //

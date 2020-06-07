@@ -31,6 +31,7 @@ case class PlaygroundConfiguration(layout: SVGAreaLayout = SVGStandardLayout,
                                    deviceType: DeviceType = PlaygroundConfiguration.defaultDeviceType,
                                    freeMode: Boolean = false, // the turn never changes when this parameter is true
                                    embeddedMode: Boolean = false,
+                                   withCommentOnly: Boolean = false, // valid only for Notes View
                                    isDev: Boolean = false,
                                    isDebug: Boolean = false
                                   ) extends ConfigurationLike[PlaygroundConfiguration] {

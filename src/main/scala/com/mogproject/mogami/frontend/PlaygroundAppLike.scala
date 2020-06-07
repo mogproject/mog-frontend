@@ -74,7 +74,7 @@ trait PlaygroundAppLike {
       // handle special actions
       args.action match {
         case NotesAction =>
-          view.drawNotes(game, verifiedConfig.recordLang)
+          view.drawNotes(game, verifiedConfig.recordLang, verifiedConfig.withCommentOnly)
         case ImageAction =>
           // todo: support compact layout
           val conf = if (verifiedConfig.layout == SVGCompactLayout) verifiedConfig.copy(layout = SVGStandardLayout) else verifiedConfig

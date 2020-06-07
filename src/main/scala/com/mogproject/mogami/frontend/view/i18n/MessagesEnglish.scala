@@ -286,4 +286,7 @@ case object MessagesEnglish extends Messages {
   override def ASK_DELETE_BRANCH(branchNo: BranchNo): String = s"Branch#${branchNo} will be deleted. Comments on this branch will also be removed. Are you sure?"
 
   override val INVALID_STATE: String = "Invalid state."
+
+  override val WITH_COMMENT_ONLY: String = "Show positions with a comment only"
+  override val NO_POSITIONS_WITH_COMMENT: String = "No positions with a comment."
 }
