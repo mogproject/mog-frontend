@@ -4,7 +4,9 @@ import com.mogproject.mogami._
 import com.mogproject.mogami.core.state.StateCache.Implicits.DefaultStateCache
 import com.mogproject.mogami.frontend.{PlaygroundSAM, TestSettings}
 import com.mogproject.mogami.frontend.action.UpdateGameControlAction
-import com.mogproject.mogami.frontend.model.{GameControl, PlayMode, PlaygroundConfiguration, PlaygroundModel}
+import com.mogproject.mogami.frontend.model.DeviceType.PC
+import com.mogproject.mogami.frontend.model.board.BoardIndexNumber
+import com.mogproject.mogami.frontend.model.{English, GameControl, PlayMode, PlaygroundConfiguration, PlaygroundModel}
 import com.mogproject.mogami.frontend.state.{ObserveFlag, PlaygroundState}
 import com.mogproject.mogami.frontend.view.TestView
 import scalatags.JsDom.all.div
@@ -17,7 +19,7 @@ import scalatags.JsDom.all.div
 object BenchmarkJS extends TestData {
   TestSettings
 
-  def main(): Unit = {
+  def main(args: Array[String]): Unit = {
     print("\n" * 6)
 
     setupSAM(recordUsen01)
@@ -68,7 +70,14 @@ object BenchmarkJS extends TestData {
 
   private[this] def setupSAM(usen: String): Unit = {
     val mode = PlayMode(GameControl(Game.parseUsenString(usen)), None)
-    val config = PlaygroundConfiguration(visualEffectEnabled = false)
+    val config = PlaygroundConfiguration(
+      boardIndexType = BoardIndexNumber,
+      messageLang = English,
+      recordLang = English,
+      baseUrl = "",
+      deviceType = PC,
+      visualEffectEnabled = false
+    )
     val model = PlaygroundModel(mode, config)
     val view = TestView(false, false, false, false, false, div().render)
     val state = PlaygroundState(model, view)

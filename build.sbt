@@ -13,7 +13,6 @@ lazy val root = (project in file("."))
       "be.doeraene" %%% "scalajs-jquery" % "1.0.0",
       "com.lihaoyi" %%% "scalatags" % "0.9.1",
       "com.typesafe.play" %%% "play-json" % "2.9.0",
-      "org.scala-js" %% "scalajs-env-jsdom-nodejs" % "1.0.0",
       "org.scalatest" %%% "scalatest" % "3.1.2" % Test,
       "org.scalacheck" %%% "scalacheck" % "1.14.3" % Test,
       "org.scalatestplus" %%% "scalacheck-1-14" % "3.1.2.0" % Test
@@ -22,11 +21,13 @@ lazy val root = (project in file("."))
 
     scalaJSUseMainModuleInitializer := false,
 
-    Test / scalaJSUseTestModuleInitializer := false,
+    Test / scalaJSUseMainModuleInitializer := sys.env.get("BENCHMARK").contains("true"),
+
+    Test / scalaJSUseTestModuleInitializer := sys.env.get("UNITTEST").contains("true"),
 
     skip in packageJSDependencies := false,
 
-    jsEnv := new org.scalajs.jsenv.nodejs.NodeJSEnv(),
+    jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv(),
 
     jsDependencies ++= Seq(
       "org.webjars" % "jquery" % "1.12.4" / "jquery.js" % Test,

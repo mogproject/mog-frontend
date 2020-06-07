@@ -19,7 +19,7 @@ build:
 	${SBT} test:fastOptJS
 
 test:
-	${SBT} test
+	UNITTEST=true ${SBT} test
 
 console:
 	${SBT} test:console
@@ -56,7 +56,7 @@ merge:
 	git push
 
 bench:
-	${SBT} 'set logLevel := Level.Error' 'set scalaJSStage in Global := FullOptStage' 'test:run-main com.mogproject.mogami.frontend.bench.BenchmarkJS'
+	BENCHMARK=true ${SBT} 'set logLevel := Level.Error' 'set scalaJSStage in Global := FullOptStage' 'test:run'
 
 
 .PHONY: build test console clean local local_mobile server publish publish-commit merge bench
