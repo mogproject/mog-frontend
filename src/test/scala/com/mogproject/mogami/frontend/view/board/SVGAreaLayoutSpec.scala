@@ -3,10 +3,10 @@ package com.mogproject.mogami.frontend.view.board
 import com.mogproject.mogami.core.Player.{BLACK, WHITE}
 import com.mogproject.mogami.frontend.view.board.player.SVGPlayerLayout
 import com.mogproject.mogami.frontend.view.coordinate.{Coord, Rect}
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
-import org.scalatest.{FlatSpec, MustMatchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.must.Matchers
 
-class SVGAreaLayoutSpec extends FlatSpec with MustMatchers with GeneratorDrivenPropertyChecks {
+class SVGAreaLayoutSpec extends AnyFlatSpec with Matchers {
 
   "SVGStandardLayout#board" must "have intended coordinates" in {
     SVGStandardLayout.board.center mustBe Coord(1024, 1341)

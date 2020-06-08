@@ -1,9 +1,9 @@
 package com.mogproject.mogami.frontend.io
 
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
-import org.scalatest.{FlatSpec, MustMatchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.must.Matchers
 
-class TextReaderSpec extends FlatSpec with MustMatchers with GeneratorDrivenPropertyChecks {
+class TextReaderSpec extends AnyFlatSpec with Matchers{
 
   val utf8Text = TextReader.encodeCharArray("あいうえお", "UTF8")
   val sjisText = TextReader.encodeCharArray("あいうえお", "SJIS")

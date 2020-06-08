@@ -301,6 +301,24 @@ ul {
 }
 
 /*
+ * Checkbox
+ */
+
+input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.checkbox-wrapper {
+  margin-right: -110px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.checkbox-text {
+  padding-left: 10px;
+}
+
+/*
  * Footer
  */
 

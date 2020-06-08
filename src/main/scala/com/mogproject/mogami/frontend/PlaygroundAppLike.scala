@@ -17,17 +17,18 @@ import org.scalajs.dom.html.Div
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.scalajs.js.JSApp
+import scala.scalajs.js.annotation.JSExport
 
 
 /**
   *
   */
-trait PlaygroundAppLike extends JSApp {
+trait PlaygroundAppLike {
 
   def createView(config: PlaygroundConfiguration, rootElem: Element): BasePlaygroundView
 
-  override def main(): Unit = {
+  @JSExport
+  def main(): Unit = {
 
     // get args
     val args = PlaygroundArguments()
@@ -73,7 +74,7 @@ trait PlaygroundAppLike extends JSApp {
       // handle special actions
       args.action match {
         case NotesAction =>
-          view.drawNotes(game, verifiedConfig.recordLang)
+          view.drawNotes(game, verifiedConfig.recordLang, verifiedConfig.withCommentOnly)
         case ImageAction =>
           // todo: support compact layout
           val conf = if (verifiedConfig.layout == SVGCompactLayout) verifiedConfig.copy(layout = SVGStandardLayout) else verifiedConfig

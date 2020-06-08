@@ -2,10 +2,10 @@ package com.mogproject.mogami.frontend
 
 import com.mogproject.mogami.core.game.Game
 import com.mogproject.mogami.core.state.StateCache
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
-import org.scalatest.{FlatSpec, MustMatchers}
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.must.Matchers
 
-class PlaygroundArgumentsSpec extends FlatSpec with MustMatchers with GeneratorDrivenPropertyChecks {
+class PlaygroundArgumentsSpec extends AnyFlatSpec with Matchers {
   "Arguments#parseQueryString" must "create configuration" in {
     PlaygroundArguments().parseQueryString("") mustBe PlaygroundArguments()
     PlaygroundArguments().parseQueryString("?mlang=en") mustBe PlaygroundArguments(config = PlaygroundConfiguration(messageLang = English))
@@ -16,7 +16,7 @@ class PlaygroundArgumentsSpec extends FlatSpec with MustMatchers with GeneratorD
   }
 }
 
-class PlaygroundArgumentsBuilderSpec extends FlatSpec with MustMatchers with GeneratorDrivenPropertyChecks  {
+class PlaygroundArgumentsBuilderSpec extends AnyFlatSpec with Matchers {
   "ArgumentsBuilder#toRecordUrl" must "include comments" in StateCache.withCache { implicit cache =>
     val g = Game.parseUsenString("~0.6y20io5t21im.~0.7ku2jm6fu3om.~0.7ku2jm7ga2o6.")
     val comments = Map(

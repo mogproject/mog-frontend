@@ -3,9 +3,12 @@ package com.mogproject.mogami.frontend
 import com.mogproject.mogami.frontend.view.TestView
 import org.scalajs.dom.Element
 
+import scala.scalajs.js.annotation.JSExportTopLevel
+
 /**
   * Entry point for testing
   */
+@JSExportTopLevel("App")
 object App extends PlaygroundAppLike {
 
   TestSettings

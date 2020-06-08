@@ -7,7 +7,7 @@ TEST_ASS = assets
 PROD_ASS = ${PROD_RSC}/assets
 DEV_ASS = src/test/resources/assets
 DEV_PORT = 8001
-TARGET = target/scala-2.12/${APP_NAME}-test-
+TARGET = target/scala-2.13/${APP_NAME}-test-
 COPY_DEV = cp -rf ${TEST_ASS}/* ${DEV_ASS}/
 COPY_PROD = cp -f ${TARGET}opt.js ${TARGET}opt.js.map  ${PROD_ASS}/js/ && cp -rf ${TEST_ASS}/* ${PROD_ASS}/
 REMOVE_MAPPING = sed -i '' -e '/\/\/\# sourceMappingURL.*/d' ${PROD_ASS}/js/${APP_NAME}*-opt.js
@@ -19,7 +19,7 @@ build:
 	${SBT} test:fastOptJS
 
 test:
-	${SBT} test
+	UNITTEST=true ${SBT} test
 
 console:
 	${SBT} test:console
@@ -56,7 +56,7 @@ merge:
 	git push
 
 bench:
-	${SBT} 'set logLevel := Level.Error' 'set scalaJSStage in Global := FullOptStage' 'test:run-main com.mogproject.mogami.frontend.bench.BenchmarkJS'
+	BENCHMARK=true ${SBT} 'set logLevel := Level.Error' 'set scalaJSStage in Global := FullOptStage' 'test:run'
 
 
 .PHONY: build test console clean local local_mobile server publish publish-commit merge bench

@@ -31,6 +31,7 @@ case class PlaygroundConfiguration(layout: SVGAreaLayout = SVGStandardLayout,
                                    deviceType: DeviceType = PlaygroundConfiguration.defaultDeviceType,
                                    freeMode: Boolean = false, // the turn never changes when this parameter is true
                                    embeddedMode: Boolean = false,
+                                   withCommentOnly: Boolean = false, // valid only for Notes View
                                    isDev: Boolean = false,
                                    isDebug: Boolean = false
                                   ) extends ConfigurationLike[PlaygroundConfiguration] {
@@ -92,6 +93,13 @@ object PlaygroundConfiguration {
   lazy val browserLanguage: Language = {
     def f(n: UndefOr[String]): Option[String] = n.toOption.flatMap(Option.apply)
 
+    /* (nodejs compatible)
+    n.toOption.flatMap(Option.apply)
+
+    val nav = dom.window.navigator.asInstanceOf[UndefOr[com.mogproject.mogami.frontend.api.Navigator]].toOption
+    val lang: Option[String] = nav.flatMap(n => (n.languages.toOption.flatMap(_.headOption) ++
+      f(n.language) ++ f(n.userLanguage) ++ f(n.browserLanguage)).headOption)
+     */
     val nav = dom.window.navigator.asInstanceOf[com.mogproject.mogami.frontend.api.Navigator]
     val firstLang = nav.languages.toOption.flatMap(_.headOption)
     val lang: Option[String] = (firstLang ++ f(nav.language) ++ f(nav.userLanguage) ++ f(nav.browserLanguage)).headOption
@@ -102,6 +110,10 @@ object PlaygroundConfiguration {
     }
   }
 
+  /* (nodejs compatible)
+  import org.scalajs.dom.raw.Location
+  lazy val defaultBaseUrl = dom.window.location.asInstanceOf[UndefOr[Location]].map(loc => s"${loc.protocol}//${loc.host}${loc.pathname}").getOrElse("")
+  */
   lazy val defaultBaseUrl = s"${dom.window.location.protocol}//${dom.window.location.host}${dom.window.location.pathname}"
 
   lazy val defaultDeviceType: DeviceType = DeviceType(BrowserInfo.isMobile, BrowserInfo.isLandscape)

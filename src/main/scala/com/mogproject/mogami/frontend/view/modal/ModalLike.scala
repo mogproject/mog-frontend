@@ -59,7 +59,7 @@ trait ModalLike {
 
   def show(): Unit = {
     val dialog = jQuery(elem)
-    dialog.on("hidden.bs.modal", () ⇒ {
+    dialog.on("hidden.bs.modal", () => {
       // Hide all tooltips
       Tooltip.hideAllToolTip()
 

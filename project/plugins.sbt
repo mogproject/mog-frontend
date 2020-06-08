@@ -1,6 +1,5 @@
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.26")
+addSbtPlugin("org.scala-js" % "sbt-scalajs"        % "1.0.0")
+addSbtPlugin("org.scala-js" % "sbt-jsdependencies" % "1.0.0")
 
-// addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.6.0")
-
-// addSbtPlugin("com.eed3si9n" % "sbt-sh" % "0.1.0")
+libraryDependencies += "org.scala-js" %% "scalajs-env-jsdom-nodejs" % "1.1.0"
 

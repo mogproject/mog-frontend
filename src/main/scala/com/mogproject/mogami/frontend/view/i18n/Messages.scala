@@ -348,6 +348,13 @@ trait Messages extends MessagesLike {
   def ASK_DELETE_BRANCH(branchNo: BranchNo): String
 
   def INVALID_STATE: String
+
+  //
+  // Notes View
+  //
+  def WITH_COMMENT_ONLY: String
+
+  def NO_POSITIONS_WITH_COMMENT: String
 }
 
 object Messages {
