@@ -227,7 +227,9 @@ case object MessagesJapanese extends Messages {
       WesternOneCharFace -> "西洋 1",
       HidetchiInternational -> "Hidetchi 国際駒",
       ShogiCzFace -> "Shogi.cz",
-      ShogiCzBlackAndWhiteFace -> "Shogi.cz 白黒"
+      ShogiCzBlackAndWhiteFace -> "Shogi.cz 白黒",
+      InternationalizedPlastic -> "国際駒 1",
+      InternationalizedWood -> "国際駒 2"
     )
   }
 
@@ -268,7 +270,9 @@ case object MessagesJapanese extends Messages {
         " / ",
         a(href := FrontendSettings.url.credit.hidetchiUrl, "81 Dojo"),
         " / ",
-        a(href := FrontendSettings.url.credit.shogiCzUrl, "Shogi.cz")
+        a(href := FrontendSettings.url.credit.shogiCzUrl, "Shogi.cz"),
+        " / ",
+        a(href := FrontendSettings.url.credit.couchTomatoUrl, "CouchTomato87")
       ),
       li(
         "駒用フォント - ",

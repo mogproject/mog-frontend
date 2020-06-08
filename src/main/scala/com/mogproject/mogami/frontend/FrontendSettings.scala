@@ -27,6 +27,7 @@ object FrontendSettings {
       val hidetchiUrl = "http://81dojo.com/"
       val shogiCzUrl = "http://www.shogi.cz/en/"
       val loraFontsUrl = "https://github.com/cyrealtype/Lora-Cyrillic"
+      val couchTomatoUrl = "https://github.com/CouchTomato87/InternationalizedPieces/tree/master/Shogi"
     }
 
   }
