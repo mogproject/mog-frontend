@@ -250,7 +250,9 @@ case object MessagesEnglish extends Messages {
         " / ",
         a(href := FrontendSettings.url.credit.hidetchiUrl, "81 Dojo"),
         " / ",
-        a(href := FrontendSettings.url.credit.shogiCzUrl, "Shogi.cz")
+        a(href := FrontendSettings.url.credit.shogiCzUrl, "Shogi.cz"),
+        " / ",
+        a(href := FrontendSettings.url.credit.couchTomatoUrl, "CouchTomato87")
       ),
       li(
         "Piece Fonts - ",
