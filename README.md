@@ -10,6 +10,15 @@ npm install uglifycss
 make test
 ```
 
+### Support for older Java versions
+
+Create `.sbtopts` in the project directory and specify the path to your Java 1.8 directory.
+
+```
+-java-home
+~/Library/Java/JavaVirtualMachines/corretto-1.8.0_352/Contents/Home
+```
+
 ### Local Testing
 
 - Terminal 1:

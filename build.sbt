@@ -27,7 +27,9 @@ lazy val root = (project in file("."))
 
     skip in packageJSDependencies := false,
 
-    jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv(),
+    jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv(
+      org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv.Config().withArgs(List("--dns-result-order=ipv4first"))
+    ),
 
     jsDependencies ++= Seq(
       "org.webjars" % "jquery" % "1.12.4" / "jquery.js" % Test,

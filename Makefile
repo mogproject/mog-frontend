@@ -18,7 +18,7 @@ build:
 	${COPY_DEV}
 	${SBT} test:fastOptJS
 
-test:
+test: build
 	UNITTEST=true ${SBT} test
 
 console:
