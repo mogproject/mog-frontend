@@ -38,5 +38,5 @@ lazy val root = (project in file("."))
   )
   .dependsOn(mogCore)
 
-lazy val mogCore = ProjectRef(uri("git://github.com/mogproject/mog-core-scala.git#master"), "mogCoreJS")
+lazy val mogCore = ProjectRef(uri("ssh://git@github.com/mogproject/mog-core-scala.git#master"), "mogCoreJS")
 
