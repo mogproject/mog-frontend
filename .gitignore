@@ -40,3 +40,6 @@ script/out/
 # testing html
 x.html
 
+# for sbt
+.sbtopts
+
