@@ -43,3 +43,6 @@ x.html
 # for sbt
 .sbtopts
 
+# BSP (Build Server Protocol) metadata
+.bsp/
+

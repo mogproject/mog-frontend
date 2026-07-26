@@ -13,10 +13,9 @@ COPY_PROD = cp -f ${TARGET}opt.js ${TARGET}opt.js.map  ${PROD_ASS}/js/ && cp -rf
 REMOVE_MAPPING = sed -i '' -e '/\/\/\# sourceMappingURL.*/d' ${PROD_ASS}/js/${APP_NAME}*-opt.js
 UGLIFY_CSS = rm -f ${PROD_ASS}/css/* && uglifycss ${TEST_ASS}/css/[bmps]* > ${PROD_ASS}/css/pg.min.css && uglifycss ${TEST_ASS}/css/notesview.css > ${PROD_ASS}/css/notesview.css
 
-
 build:
 	${COPY_DEV}
-	${SBT} test:fastOptJS
+	${SBT} "Test / fastOptJS"
 
 test: build
 	UNITTEST=true ${SBT} test
@@ -56,8 +55,6 @@ merge:
 	git push
 
 bench:
-	BENCHMARK=true ${SBT} 'set logLevel := Level.Error' 'set scalaJSStage in Global := FullOptStage' 'test:run'
-
+	BENCHMARK=true ${SBT} 'set logLevel := Level.Error' 'set Global / scalaJSStage := FullOptStage' 'test:run'
 
 .PHONY: build test console clean local local_mobile server publish publish-commit merge bench
-

@@ -57,7 +57,7 @@ class ShareMenu(isMobile: Boolean) extends AccordionMenu with PlaygroundSAMObser
   //
   // Observer
   //
-  override val samObserveMask: Long = super.samObserveMask | {
+  override val samObserveMask: Long = super.samObserveMask() | {
     import ObserveFlag._
     GAME_BRANCH | GAME_INFO | GAME_POSITION | GAME_COMMENT | CONF_FLIP_TYPE | MENU_DIALOG
   }

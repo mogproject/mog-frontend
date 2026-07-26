@@ -24,7 +24,7 @@ tmux select-window -t ${APP_NAME} >/dev/null 2>&1 || tmux new-window -n ${APP_NA
 tmux select-pane -t ${APP_NAME}.2 >/dev/null 2>&1 || {
     tmux split-window -h -t ${APP_NAME} -c ${APP_ROOT} 'sbt' 
     tmux swap-pane -D -t ${APP_NAME}.0
-    tmux send-keys -t ${APP_NAME}.0 '~test:fastOptJS' 'C-m'
+    tmux send-keys -t ${APP_NAME}.0 'Test / fastOptJS' 'C-m'
 
     tmux split-window -v -t ${APP_NAME}.0 -c ${APP_ROOT} 'make server'
     tmux select-pane -t ${APP_NAME}.2

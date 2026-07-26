@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      NODE_OPTIONS: --no-deprecation
+
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - name: Set up JDK 19
+        uses: actions/setup-java@v5.6.0
+        with:
+          distribution: temurin
+          java-version: '19'
+          cache: sbt
+
+      - name: Set up sbt
+        uses: coursier/setup-action@v3.0.0
+        with:
+          apps: sbt
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7.0.0
+        with:
+          node-version: '20'
+
+      - name: Install Node dependencies
+        run: npm install jsdom@22 uglify-js uglifycss
+
+      - name: Run test build
+        run: make test

@@ -9,7 +9,7 @@ import play.api.libs.json.{Json, Reads, Writes}
 
 import scala.util.Try
 import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
 /**
   * General request

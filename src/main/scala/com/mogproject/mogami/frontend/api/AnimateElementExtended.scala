@@ -12,7 +12,6 @@ import scala.scalajs.js.annotation.JSGlobal
 @js.native
 @JSGlobal
 class AnimateElementExtended extends SVGElement {
-  @js.native
   def beginElement(): Unit = js.native
 
 }
