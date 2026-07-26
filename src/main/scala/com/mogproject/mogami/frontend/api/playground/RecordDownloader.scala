@@ -3,7 +3,7 @@ package com.mogproject.mogami.frontend.api.playground
 import com.mogproject.mogami.frontend.FrontendSettings
 
 import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 
 /**
   *

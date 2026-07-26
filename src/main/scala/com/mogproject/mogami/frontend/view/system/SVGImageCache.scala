@@ -5,8 +5,8 @@ import org.scalajs.dom.ext.{Ajax, AjaxException}
 import org.scalajs.dom.raw.{Blob, BlobPropertyBag, URL}
 
 import scala.collection.mutable
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js
 import scala.util.{Failure, Success}
 

@@ -12,7 +12,7 @@ import com.mogproject.mogami.frontend.view.i18n.Messages
 import org.scalajs.dom
 
 import scala.util.{Failure, Success, Try}
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js.URIUtils.encodeURIComponent
 
 /**

@@ -16,8 +16,9 @@ import org.scalajs.dom.Element
 import org.scalajs.dom.html.Div
 
 import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.scalajs.concurrent.JSExecutionContext.Implicits.queue
 import scala.scalajs.js.annotation.JSExport
+import scala.util.{Failure, Success}
 
 
 /**
@@ -90,6 +91,14 @@ trait PlaygroundAppLike {
           rootElem.style.display = scalatags.JsDom.all.display.block.v
           clearMessageWindow()
       }
+    }.onComplete {
+      case Success(_) =>
+      case Failure(e) =>
+        println(s"Initialization failed: ${e}")
+        val msgElem = dom.document.getElementById("messageWindow")
+        if (msgElem != null) {
+          msgElem.textContent = s"Initialization failed: ${e.getMessage}"
+        }
     }
   }
 

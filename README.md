@@ -1,4 +1,7 @@
 # mog-frontend
+
+[![CI](https://github.com/mogproject/mog-frontend/actions/workflows/ci.yml/badge.svg)](https://github.com/mogproject/mog-frontend/actions/workflows/ci.yml)
+
 Common frontend components of Shogi Playground
 
 # Testing
@@ -10,14 +13,16 @@ npm install uglifycss
 make test
 ```
 
-### Support for older Java versions
+### Java home for sbt
 
-Create `.sbtopts` in the project directory and specify the path to your Java 1.8 directory.
+Set the Java home for sbt in `.sbtopts` in the project root. sbt reads this file automatically, so you do not need to pass `-java-home` from the `Makefile`.
 
 ```
 -java-home
-~/Library/Java/JavaVirtualMachines/corretto-1.8.0_352/Contents/Home
+/Users/master/Library/Java/JavaVirtualMachines/openjdk-19.0.1/Contents/Home
 ```
+
+If you use a different JDK, replace the path above with the Java home directory for your environment.
 
 ### Local Testing
 
@@ -81,4 +86,8 @@ make publish-commit
   - Use ImageMagick and this script: `scripts/extract_pieces.sh`
   - Usage: `extract_pieces.sh <large_image>.png`
 - Use www.aconvert.com to convert PNG files to SVG
+
+### GitHub Actions
+
+GitHub Actions runs the build and test suite automatically on pushes and pull requests.
 

@@ -48,20 +48,25 @@ class SAMEnvironment[M <: SAMModel]() {
   private[this] val observers: ListBuffer[SAMObserver[M]] = ListBuffer.empty
 
   def addObserver[N <: SAMModel](observer: SAMObserver[N]): Unit = observer match {
-    case o: SAMObserver[M] => observers.+=:(o)
+    case o: SAMObserver[_] => observers.+=:(o.asInstanceOf[SAMObserver[M]])
     case _ => // do nothing
   }
 
   def removeObserver[N <: SAMModel](observer: SAMObserver[N]): Unit = observer match {
-    case o: SAMObserver[M] => observers -= o
+    case o: SAMObserver[_] => observers -= o.asInstanceOf[SAMObserver[M]]
     case _ => // do nothing
   }
 
-  private[this] def notifyObservers(flag: Long, model: M): Unit = observers.foreach { o =>
-    if (scalajs.js.isUndefined(o)) {
-      observers -= o
-    } else if ((o.samObserveMask & flag) != 0) {
-      o.refresh(model, flag)
+  private[this] def notifyObservers(flag: Long, model: M): Unit = {
+    // Iterate over a snapshot to avoid mutating the underlying buffer mid-iteration.
+    val currentObservers = observers.toList
+
+    currentObservers.foreach { o =>
+      if (!scalajs.js.isUndefined(o) && (o.samObserveMask() & flag) != 0) {
+        o.refresh(model, flag)
+      }
     }
+
+    observers --= currentObservers.filter(o => scalajs.js.isUndefined(o))
   }
 }

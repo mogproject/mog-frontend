@@ -12,12 +12,9 @@ import scalajs.js.annotation.JSGlobal
 @JSGlobal("WebAudioAPISound")
 class WebAudioAPISound(url: String, options: js.Object = ???) extends js.Object {
 
-  @js.native
   def play(): Boolean = js.native
 
-  @js.native
   def stop(): Unit = js.native
 
-  @js.native
   def setVolume(volume: Double): Unit = js.native
 }

@@ -5,7 +5,7 @@ lazy val root = (project in file("."))
   .settings(
     inThisBuild(List(
       organization := "com.mogproject",
-      scalaVersion := "2.13.2"
+      scalaVersion := "2.13.18"
     )),
     name := "mog-frontend",
     libraryDependencies ++= Seq(
@@ -17,7 +17,7 @@ lazy val root = (project in file("."))
       "org.scalacheck" %%% "scalacheck" % "1.14.3" % Test,
       "org.scalatestplus" %%% "scalacheck-1-14" % "3.1.2.0" % Test
     ),
-    scalacOptions in ThisBuild ++= Seq("-unchecked", "-deprecation", "-feature"),
+    ThisBuild / scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
 
     scalaJSUseMainModuleInitializer := false,
 
@@ -25,10 +25,10 @@ lazy val root = (project in file("."))
 
     Test / scalaJSUseTestModuleInitializer := sys.env.get("UNITTEST").contains("true"),
 
-    skip in packageJSDependencies := false,
+    packageJSDependencies / skip := false,
 
     jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv(
-      org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv.Config().withArgs(List("--dns-result-order=ipv4first"))
+      org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv.Config().withArgs(List("--dns-result-order=ipv4first", "--no-deprecation"))
     ),
 
     jsDependencies ++= Seq(
@@ -40,5 +40,5 @@ lazy val root = (project in file("."))
   )
   .dependsOn(mogCore)
 
-lazy val mogCore = ProjectRef(uri("ssh://git@github.com/mogproject/mog-core-scala.git#master"), "mogCoreJS")
+lazy val mogCore = ProjectRef(uri("https://github.com/mogproject/mog-core-scala.git#master"), "mogCoreJS")
 
