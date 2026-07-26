@@ -7,7 +7,7 @@ import scala.concurrent.duration._
   */
 object FrontendSettings {
 
-  val currentYear = 2023
+  val currentYear = 2026
 
   val imageVersion = 4
 
@@ -17,9 +17,6 @@ object FrontendSettings {
     val baseUrl = "https://play.mogproject.com/"
     val authorSiteUrl = "https://mogproject.com"
     val authorContactUrl = "https://twitter.com/mogproject"
-    val donationUrl = "https://www.paypal.me/mogproject/5"
-    val shogiBotUrl = "https://www.facebook.com/shogibot/"
-    val playgroundLiveUrl = "https://live.mogproject.com"
     val queryParamDocUrl = "https://github.com/mogproject/mog-playground/wiki/Query-Parameters"
 
     object credit {
@@ -30,6 +27,10 @@ object FrontendSettings {
       val couchTomatoUrl = "https://github.com/CouchTomato87/InternationalizedPieces/tree/master/Shogi"
     }
 
+    // @note deprecated
+    // val donationUrl = "https://www.paypal.me/mogproject/5"
+    // val shogiBotUrl = "https://www.facebook.com/shogibot/"
+    // val playgroundLiveUrl = "https://live.mogproject.com"
   }
 
   object api {

@@ -15,11 +15,11 @@ trait FooterLike extends WebComponent {
     small(p(cls := "footer-text",
       s"Shogi Playground © 2017-${FrontendSettings.currentYear} ",
       a(href := FrontendSettings.url.authorSiteUrl, "mogproject"),
-      " - ",
-      a(href := FrontendSettings.url.donationUrl, "Donate $5"),
-      br,
-      "Try ", a(href := FrontendSettings.url.shogiBotUrl, "Shogi Bot"),
-      " and ", a(href := FrontendSettings.url.playgroundLiveUrl, "Shogi Playground Live!"),
+      // " - ",
+      // a(href := FrontendSettings.url.donationUrl, "Donate $5"),
+      // br,
+      // "Try ", a(href := FrontendSettings.url.shogiBotUrl, "Shogi Bot"),
+      // " and ", a(href := FrontendSettings.url.playgroundLiveUrl, "Shogi Playground Live!"),
       " - ",
       a(href := "./privacy/", "Privacy Policy")
     ))
